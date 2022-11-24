@@ -1,9 +1,9 @@
 {
   "name": "payload-plugin-lexical",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Lexical plugin for Payload CMS",
   "license": "Apache 2.0",
-  "main": "dist/index.js",
+  "main": "dist/fields/lexicalRichTextField.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
