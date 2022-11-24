@@ -166,6 +166,8 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
   }, [editor, queryString]);
 
   const options = useMemo(() => {
+    // @ts-ignore
+    // @ts-ignore
     const baseOptions = [
       new ComponentPickerOption('Paragraph', {
         icon: <i className="icon paragraph" />,
@@ -263,6 +265,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         onSelect: () => showModal('Insert Equation', (onClose) => (
           <InsertEquationDialog
             activeEditor={editor}
+              // @ts-ignore
             onClose={onClose}
           />
         )),

@@ -49,6 +49,7 @@ export function LinkPlugin({ validateUrl }: Props): null {
             } else {
               return false;
             }
+              // @ts-ignore
           } else if (payload.payloadType && payload.payloadType === 'payload') {
             const receivedLinkData: PayloadLinkData = payload as PayloadLinkData;
             linkData.linkType = receivedLinkData.linkType;

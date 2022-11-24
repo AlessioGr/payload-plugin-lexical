@@ -62,6 +62,7 @@ const LexicalRichText2: React.FC<Props> = (props: Props) => {
       <LexicalEditorComponent
           onChange={(editorState: EditorState, editor: LexicalEditor) => {
               const json = editorState.toJSON();
+              // @ts-ignore TODO
               if (!readOnly && /* json !== defaultValue && */ json !== value) {
                   setValue(json);
               }
