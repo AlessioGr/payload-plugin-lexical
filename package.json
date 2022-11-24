@@ -1,0 +1,60 @@
+{
+  "name": "@AlessioGr/payload-plugin-lexical",
+  "version": "0.0.1",
+  "description": "Lexical plugin for Payload CMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "payload",
+    "cms",
+    "plugin",
+    "typescript",
+    "react",
+    "lexical",
+    "richtext"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "payload": "^0.18.5 || ^1.0.0",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  },
+  "devDependencies": {
+    "@lexical/clipboard": "0.6.3",
+    "@lexical/code": "0.6.3",
+    "@lexical/file": "0.6.3",
+    "@lexical/hashtag": "0.6.3",
+    "@lexical/headless": "0.6.3",
+    "@lexical/html": "0.6.3",
+    "@lexical/link": "0.6.3",
+    "@lexical/list": "0.6.3",
+    "@lexical/mark": "0.6.3",
+    "@lexical/markdown": "0.6.3",
+    "@lexical/overflow": "0.6.3",
+    "@lexical/plain-text": "0.6.3",
+    "@lexical/react": "0.6.3",
+    "@lexical/rich-text": "0.6.3",
+    "@lexical/selection": "0.6.3",
+    "@lexical/table": "0.6.3",
+    "@lexical/utils": "0.6.3",
+    "@lexical/yjs": "0.6.3",
+    "lexical": "0.6.3",
+    "payload": "1.2.1",
+    "react": "^18.0.0",
+    "typescript": "^4.5.5",
+    "yjs": "^13.5.42"
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@faceless-ui/modal": "^2.0.1",
+    "@types/react-dom": "^18.0.9",
+    "katex": "^0.16.3",
+    "lodash": "^4.17.21",
+    "react-dom": "^18.2.0"
+  }
+}

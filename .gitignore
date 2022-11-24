@@ -1,0 +1,3 @@
+# Project exclude paths
+/demo/node_modules/
+/node_modules/
