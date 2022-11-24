@@ -1,4 +1,4 @@
-# Payload SEO Plugin
+# Payload Lexical Plugin
 
 [![NPM](https://img.shields.io/npm/v/payload-plugin-lexical)](https://www.npmjs.com/package/payload-plugin-lexical)
 
