@@ -1,6 +1,6 @@
 {
   "name": "payload-plugin-lexical",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Lexical plugin for Payload CMS",
   "license": "Apache 2.0",
   "main": "dist/fields/lexicalRichTextField.js",
@@ -31,7 +31,7 @@
     "payload": "^0.18.5 || ^1.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
-  "devDependencies": {
+  "dependencies": {
     "@lexical/clipboard": "0.6.3",
     "@lexical/code": "0.6.3",
     "@lexical/file": "0.6.3",
@@ -51,15 +51,16 @@
     "@lexical/utils": "0.6.3",
     "@lexical/yjs": "0.6.3",
     "lexical": "0.6.3",
-    "payload": "1.2.1",
-    "react": "^18.0.0",
-    "typescript": "^4.5.5",
     "yjs": "^13.5.42",
-    "@faceless-ui/modal": "^2.0.1",
-    "@types/react-dom": "^18.0.9",
     "katex": "^0.16.3",
     "lodash": "^4.17.21",
     "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "payload": "1.2.1",
+    "react": "^18.0.0",
+    "typescript": "^4.5.5",
+    "@types/react-dom": "^18.0.9"
   },
   "files": [
     "dist"
