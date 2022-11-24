@@ -2,12 +2,22 @@
   "name": "@AlessioGr/payload-plugin-lexical",
   "version": "0.0.1",
   "description": "Lexical plugin for Payload CMS",
+  "license": "Apache 2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AlessioGr/payload-plugin-lexical"
+  },
+  "author": "Alessio Gravili",
+  "bugs": {
+    "url": "https://github.com/AlessioGr/payload-plugin-lexical/issues"
+  },
+  "homepage": "https://github.com/AlessioGr/payload-plugin-lexical",
   "keywords": [
     "payload",
     "cms",
@@ -17,7 +27,6 @@
     "lexical",
     "richtext"
   ],
-  "license": "MIT",
   "peerDependencies": {
     "payload": "^0.18.5 || ^1.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
