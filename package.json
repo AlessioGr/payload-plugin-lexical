@@ -1,6 +1,6 @@
 {
   "name": "payload-plugin-lexical",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Lexical plugin for Payload CMS",
   "license": "Apache 2.0",
   "main": "src/fields/lexicalRichTextField.ts",
@@ -64,5 +64,6 @@
   },
   "files": [
     "src"
-  ]
+  ],
+  "type": "module"
 }
