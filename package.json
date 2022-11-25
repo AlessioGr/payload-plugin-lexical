@@ -1,13 +1,14 @@
 {
   "name": "payload-plugin-lexical",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Lexical plugin for Payload CMS",
   "license": "Apache 2.0",
-  "main": "src/fields/lexicalRichTextField.ts",
-  "types": "src/types.ts",
+  "main": "dist/fields/lexicalRichTextField.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-sass": "node-sass src -o dist --output-style compressed"
   },
   "repository": {
     "type": "git",
@@ -50,20 +51,19 @@
     "@lexical/table": "0.6.3",
     "@lexical/utils": "0.6.3",
     "@lexical/yjs": "0.6.3",
-    "lexical": "0.6.3",
-    "yjs": "^13.5.42",
     "katex": "^0.16.3",
+    "lexical": "0.6.3",
     "lodash": "^4.17.21",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "yjs": "^13.5.42"
   },
   "devDependencies": {
+    "@types/react-dom": "^18.0.9",
     "payload": "1.2.1",
     "react": "^18.0.0",
-    "typescript": "^4.5.5",
-    "@types/react-dom": "^18.0.9"
+    "typescript": "^4.5.5"
   },
   "files": [
     "src"
-  ],
-  "type": "module"
+  ]
 }
