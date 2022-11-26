@@ -33,7 +33,7 @@ import getSelection from '../../shared/getDOMSelection';
 import {
   $createImageNode,
   $isImageNode,
-  ImageNode, ImagePayload,
+  ImageNode,
   RawImagePayload,
 } from '../../nodes/ImageNode';
 
@@ -72,11 +72,17 @@ export default function UploadPlugin({
     return mergeRegister(
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
-        (insertImagePayload) => { // This is run on the browser. Can't just use 'payload' object
+        (insertImagePayload: RawImagePayload) => { // This is run on the browser. Can't just use 'payload' object
           console.log('Received INSERT_IMAGE_COMMAND with payload', insertImagePayload);
+          editor.update(() => {
+            const imageNode = $createImageNode(insertImagePayload);
+            $insertNodes([imageNode]);
+            if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
+              $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
+            }
+          });
 
-
-          const relatedCollection = collections.find((coll) => {
+          /*const relatedCollection = collections.find((coll) => {
             console.log('coll.slug', coll.slug, 'insertImagePayload.relationTo', insertImagePayload.relationTo);
             return coll.slug === insertImagePayload.relationTo;
           });
@@ -108,7 +114,7 @@ export default function UploadPlugin({
 
 
           console.log('relatedCollection', relatedCollection);
-
+*/
           /*
           const { collections, serverURL, routes: { api } } = payload.config;
           const relatedCollection = collections.find((coll) => coll.slug === insertImagePayload.relationTo);

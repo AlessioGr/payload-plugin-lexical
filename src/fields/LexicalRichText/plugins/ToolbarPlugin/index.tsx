@@ -396,10 +396,9 @@ export default function ToolbarPlugin(): JSX.Element {
   const [isRTL, setIsRTL] = useState(false);
   const [codeLanguage, setCodeLanguage] = useState<string>('');
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
-  console.log("useModal", useModal)
-  console.log("useModal2", useModal())
 
-  const { toggleModal = () => {console.log("Error: useModal() from facelessui did not work correctly")} , isModalOpen = () => false } = useModal();
+
+  const { toggleModal = () => {console.log("Error: useModal() from FacelessUI did not work correctly")} , isModalOpen = () => false } = useModal();
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();

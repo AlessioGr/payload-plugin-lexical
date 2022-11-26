@@ -2,8 +2,8 @@
   "name": "payload-plugin-lexical",
   "version": "0.0.17",
   "description": "Lexical plugin for Payload CMS",
-  "license": "Apache 2.0",
-  "main": "dist/fields/lexicalRichTextField.js",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png}\" dist/",
@@ -52,22 +52,19 @@
     "@lexical/table": "0.6.3",
     "@lexical/utils": "0.6.3",
     "@lexical/yjs": "0.6.3",
-    "@types/sass": "^1.43.1",
-    "copyfiles": "^2.4.1",
     "katex": "^0.16.3",
     "lexical": "0.6.3",
     "lodash": "^4.17.21",
-    "react-dom": "^18.2.0",
-    "react-i18next": "^11.18.6",
-    "sass": "^1.56.1",
-    "sass-loader": "^13.2.0",
     "yjs": "^13.5.42"
   },
   "devDependencies": {
     "@types/react-dom": "^18.0.9",
+    "copyfiles": "^2.4.1",
     "payload": "^1.2.1",
+    "typescript": "^4.9.3",
     "react": "^18.0.0",
-    "typescript": "^4.9.3"
+    "react-dom": "^18.2.0",
+    "react-i18next": "^11.18.6"
   },
   "files": [
     "dist"

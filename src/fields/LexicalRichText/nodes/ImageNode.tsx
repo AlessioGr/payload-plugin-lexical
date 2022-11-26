@@ -5,6 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import { requests } from 'payload/dist/admin/api';
 
 import type {
   DOMConversionMap,
@@ -21,13 +22,15 @@ import type {
 
 import { $applyNodeReplacement, createEditor, DecoratorNode } from 'lexical';
 import * as React from 'react';
-import { Suspense } from 'react';
+import {Suspense, useEffect, useState} from 'react';
+import {useConfig} from "payload/dist/admin/components/utilities/Config";
+import {useTranslation} from "react-i18next";
 
 const ImageComponent = React.lazy(
   () => import('./ImageComponent'),
 );
 
-export interface ImagePayload {
+/* export interface ImagePayload {
   altText: string;
   caption?: LexicalEditor;
   height?: number;
@@ -37,7 +40,7 @@ export interface ImagePayload {
   src: string;
   width?: number;
   captionsEnabled?: boolean;
-}
+} */
 
 export interface RawImagePayload {
   type: string;
@@ -49,22 +52,17 @@ export interface RawImagePayload {
 
 function convertImageElement(domNode: Node): null | DOMConversionOutput {
   if (domNode instanceof HTMLImageElement) {
-    const { alt: altText, src } = domNode;
-    const node = $createImageNode({ altText, src });
-    return { node };
+    //const { alt: altText, src } = domNode;
+    //const node = $createImageNode({ altText, src });
+    //return { node };
+    //TODO: Auto-upload functionality here!
   }
   return null;
 }
 
-export type SerializedImageNode = Spread<
+ export type SerializedImageNode = Spread<
   {
-    altText: string;
-    caption: SerializedEditor;
-    height?: number;
-    maxWidth: number;
-    showCaption: boolean;
-    src: string;
-    width?: number;
+    rawImagePayload: RawImagePayload;
     type: 'image';
     version: 1;
   },
@@ -72,22 +70,7 @@ export type SerializedImageNode = Spread<
 >;
 
 export class ImageNode extends DecoratorNode<JSX.Element> {
-  __src: string;
-
-  __altText: string;
-
-  __width: 'inherit' | number;
-
-  __height: 'inherit' | number;
-
-  __maxWidth: number;
-
-  __showCaption: boolean;
-
-  __caption: LexicalEditor;
-
-  // Captions cannot yet be used within editor cells
-  __captionsEnabled: boolean;
+  __rawImagePayload: RawImagePayload;
 
   static getType(): string {
     return 'image';
@@ -95,40 +78,25 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   static clone(node: ImageNode): ImageNode {
     return new ImageNode(
-      node.__src,
-      node.__altText,
-      node.__maxWidth,
-      node.__width,
-      node.__height,
-      node.__showCaption,
-      node.__caption,
-      node.__captionsEnabled,
-      node.__key,
+      node.__rawImagePayload
     );
   }
 
   static importJSON(serializedNode: SerializedImageNode): ImageNode {
-    const { altText, height, width, maxWidth, caption, src, showCaption } = serializedNode;
-    const node = $createImageNode({
-      altText,
-      height,
-      maxWidth,
-      showCaption,
-      src,
-      width,
-    });
-    const nestedEditor = node.__caption;
+    const { rawImagePayload, type, version } = serializedNode;
+    const node = $createImageNode(rawImagePayload);
+    /* const nestedEditor = node.__caption;
     const editorState = nestedEditor.parseEditorState(caption.editorState);
     if (!editorState.isEmpty()) {
       nestedEditor.setEditorState(editorState);
-    }
+    } */
     return node;
   }
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement('img');
     element.setAttribute('src', this.__src);
-    element.setAttribute('alt', this.__altText);
+    element.setAttribute('alt', this.__altText); //TODO
     return { element };
   }
 
@@ -142,54 +110,21 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   constructor(
-    src: string,
-    altText: string,
-    maxWidth: number,
-    width?: 'inherit' | number,
-    height?: 'inherit' | number,
-    showCaption?: boolean,
-    caption?: LexicalEditor,
-    captionsEnabled?: boolean,
-    key?: NodeKey,
+    rawImagePayload: RawImagePayload
   ) {
-    super(key);
-    this.__src = src;
-    this.__altText = altText;
-    this.__maxWidth = maxWidth;
-    this.__width = width || 'inherit';
-    this.__height = height || 'inherit';
-    this.__showCaption = showCaption || false;
-    this.__caption = caption || createEditor();
-    this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined;
+    super(undefined); //TODO: Do I need a key?
+    this.__rawImagePayload = rawImagePayload;
   }
 
   exportJSON(): SerializedImageNode {
     return {
-      altText: this.getAltText(),
-      caption: this.__caption.toJSON(),
-      height: this.__height === 'inherit' ? 0 : this.__height,
-      maxWidth: this.__maxWidth,
-      showCaption: this.__showCaption,
-      src: this.getSrc(),
+      rawImagePayload: this.__rawImagePayload,
       type: 'image',
       version: 1,
-      width: this.__width === 'inherit' ? 0 : this.__width,
     };
   }
 
-  setWidthAndHeight(
-    width: 'inherit' | number,
-    height: 'inherit' | number,
-  ): void {
-    const writable = this.getWritable();
-    writable.__width = width;
-    writable.__height = height;
-  }
 
-  setShowCaption(showCaption: boolean): void {
-    const writable = this.getWritable();
-    writable.__showCaption = showCaption;
-  }
 
   // View
 
@@ -209,27 +144,73 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     return false;
   }
 
-  getSrc(): string {
-    return this.__src;
-  }
 
-  getAltText(): string {
-    return this.__altText;
-  }
 
   decorate(): JSX.Element {
+    console.log("decorate Image...")
+
+    const { collections, serverURL, routes: { api } } = useConfig();
+    console.log("decorate Image 1...")
+
+    const { i18n } = useTranslation();
+    console.log("decorate Image 2...")
+
+
+    const [imageData, setImageData] = useState<any>(null)
+    console.log("decorate Image 3...")
+
+
+    useEffect(() => {
+      const { collections, serverURL, routes: { api } } = useConfig();
+      console.log("UseEffect")
+      async function loadImageData() {
+        console.log("loadImageData")
+
+
+        const relatedCollection = collections.find((coll) => {
+          console.log('coll.slug', coll.slug, 'insertImagePayload.relationTo', this.__rawImagePayload.relationTo);
+          return coll.slug === this.__rawImagePayload.relationTo;
+        });
+
+        const response = await requests.get(`${serverURL}${api}/${relatedCollection?.slug}/${this.__rawImagePayload.value?.id}`, {
+          headers: {
+            'Accept-Language': i18n.language,
+          },
+        });
+        const json = await response.json();
+        console.log('JSON', json);
+
+        const imagePayload = {
+          altText: json?.text,
+          height: json?.height,
+          maxWidth: json?.width,
+          src: json?.url,
+        };
+
+        setImageData(imagePayload);
+        console.log('image payload', imagePayload);
+
+
+
+        console.log('relatedCollection', relatedCollection);
+      }
+
+      loadImageData()
+    }, [])
+
+
     return (
-      <Suspense fallback={null}>
+      <Suspense fallback={<p>Loading image...</p>}>
         <ImageComponent
-          src={this.__src}
-          altText={this.__altText}
-          width={this.__width}
-          height={this.__height}
-          maxWidth={this.__maxWidth}
+          src={imageData.src}
+          altText={imageData.altText}
+          width={undefined}
+          height={imageData.height}
+          maxWidth={imageData.maxWidth}
           nodeKey={this.getKey()}
-          showCaption={this.__showCaption}
-          caption={this.__caption}
-          captionsEnabled={this.__captionsEnabled}
+          showCaption={false}
+          caption={undefined}
+          captionsEnabled={false}
           resizable
         />
       </Suspense>
@@ -237,28 +218,11 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $createImageNode({
-  altText,
-  height,
-  maxWidth = 500,
-  captionsEnabled,
-  src,
-  width,
-  showCaption,
-  caption,
-  key,
-}: ImagePayload): ImageNode {
+export function $createImageNode(rawImagePayload: RawImagePayload): ImageNode {
+  console.log("$createImageNode")
   return $applyNodeReplacement(
     new ImageNode(
-      src,
-      altText,
-      maxWidth,
-      width,
-      height,
-      showCaption,
-      caption,
-      captionsEnabled,
-      key,
+        rawImagePayload
     ),
   );
 }

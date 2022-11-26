@@ -1,10 +1,10 @@
 import { buildConfig } from 'payload/config';
 import path from 'path';
 // import seo from '../../dist';
-import lexical from '../../src';
 import Users from './collections/Users';
-import Lexical from './collections/Lexical';
 import Media from './collections/Media';
+import RichText from './collections/RichText';
+import Lexical from './collections/Lexical';
 
 export default buildConfig({
   serverURL: 'http://localhost:3000',
@@ -29,8 +29,9 @@ export default buildConfig({
   },
   collections: [
     Users,
+    Media,
+    RichText,
     Lexical,
-    Media
   ],
   localization: {
     locales: [
@@ -42,7 +43,6 @@ export default buildConfig({
     fallback: true,
   },
   plugins: [
-    lexical({}),
   ],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts')
