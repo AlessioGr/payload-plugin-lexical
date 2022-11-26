@@ -4,6 +4,8 @@
 
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) to add a lexical-based editor.
 
+MINIMUM REQUIRED PAYLOAD VERSION: 1.2.1
+
 This plugin is super-alpha.
 
 ## How to use - example collection
