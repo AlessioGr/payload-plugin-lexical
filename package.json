@@ -1,10 +1,10 @@
 {
   "name": "payload-plugin-lexical",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Lexical plugin for Payload CMS",
   "license": "Apache 2.0",
-  "main": "src/fields/lexicalRichTextField.ts",
-  "types": "src/types.ts",
+  "main": "dist/fields/lexicalRichTextField.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -68,6 +68,5 @@
   },
   "files": [
     "src"
-  ],
-  "type": "module"
+  ]
 }
