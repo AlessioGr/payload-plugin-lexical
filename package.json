@@ -55,6 +55,7 @@
     "katex": "^0.16.3",
     "lexical": "0.6.3",
     "lodash": "^4.17.21",
+    "node-sass": "^8.0.0",
     "react-dom": "^18.2.0",
     "sass": "^1.56.1",
     "sass-loader": "^13.2.0",
