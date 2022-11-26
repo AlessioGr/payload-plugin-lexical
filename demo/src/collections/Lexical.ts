@@ -1,7 +1,7 @@
 import { CollectionConfig } from 'payload/types';
 import lexicalRichTextField from '../../../src/fields/lexicalRichTextField'
 
-const Pages: CollectionConfig = {
+const Lexical: CollectionConfig = {
   slug: 'lexicalRichText',
   admin: {
     useAsTitle: 'title',
@@ -19,4 +19,4 @@ const Pages: CollectionConfig = {
   ]
 }
 
-export default Pages;
+export default Lexical;

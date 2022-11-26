@@ -3,7 +3,7 @@ import path from 'path';
 // import seo from '../../dist';
 import lexical from '../../src';
 import Users from './collections/Users';
-import Pages from './collections/Pages';
+import Lexical from './collections/Lexical';
 import Media from './collections/Media';
 
 export default buildConfig({
@@ -29,7 +29,7 @@ export default buildConfig({
   },
   collections: [
     Users,
-    Pages,
+    Lexical,
     Media
   ],
   localization: {
