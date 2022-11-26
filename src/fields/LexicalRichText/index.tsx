@@ -79,8 +79,6 @@ async function traverseLexicalField(node: SerializedLexicalNode, locale: string)
 export const populateLexicalRelationships: FieldHook = async ({originalDoc, data, value, siblingData, req}) =>  {
     const lexicalRichTextField: SerializedEditorState = value;
 
-    let a = lexicalRichTextField.root.children;
-
     if(lexicalRichTextField.root.children){
 
         let newChildren = [];
