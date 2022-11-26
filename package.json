@@ -6,7 +6,9 @@
   "main": "dist/fields/lexicalRichTextField.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc",
+    "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png}\" dist/",
+    "build": "yarn copyfiles && yarn build:tsc",
+    "build:tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build-sass": "node-sass src -o dist --output-style compressed"
   },
@@ -52,6 +54,7 @@
     "@lexical/utils": "0.6.3",
     "@lexical/yjs": "0.6.3",
     "@types/sass": "^1.43.1",
+    "copyfiles": "^2.4.1",
     "katex": "^0.16.3",
     "lexical": "0.6.3",
     "lodash": "^4.17.21",
