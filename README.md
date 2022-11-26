@@ -1,5 +1,10 @@
 # Payload Lexical Plugin
 
+NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+
+What isn't working when using npm:
+- Faceless UI modals don't work
+
 [![NPM](https://img.shields.io/npm/v/payload-plugin-lexical)](https://www.npmjs.com/package/payload-plugin-lexical)
 
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) to add a lexical-based editor.
