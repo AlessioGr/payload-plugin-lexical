@@ -17,8 +17,6 @@ import {ExtraAttributes, RawImagePayload} from "./nodes/ImageNode";
 import payload from "payload";
 
 async function loadUploadData(rawImagePayload: RawImagePayload, locale: string) {
-    console.log("loadImageData", rawImagePayload);
-
 
     const foundUpload = await payload.findByID({
         collection: rawImagePayload.relationTo, // required
@@ -28,15 +26,10 @@ async function loadUploadData(rawImagePayload: RawImagePayload, locale: string) 
     });
 
 
-    console.log('foundUpload', foundUpload);
-
-
     return foundUpload;
 }
 
 async function loadInternalLinkDocData(value: string, relationTo: string, locale: string) { //TODO: Adjustable depth
-    console.log("loadInternalLinkDocData value:", value, " relationTo:", relationTo);
-
 
     const foundDoc = await payload.findByID({
         collection: relationTo, // required
@@ -46,18 +39,14 @@ async function loadInternalLinkDocData(value: string, relationTo: string, locale
     });
 
 
-    console.log('foundDoc', foundDoc);
-
-
     return foundDoc;
 }
 
 async function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode> {
     //Find replacements
-
     if(node.type === 'upload'){
         const rawImagePayload: RawImagePayload = node["rawImagePayload"];
-        const extraAttributes: ExtraAttributes = node["extraAttributes"];
+        //const extraAttributes: ExtraAttributes = node["extraAttributes"];
         const uploadData = await loadUploadData(rawImagePayload, locale);
         if(uploadData){
             node["data"] = uploadData;
@@ -89,8 +78,6 @@ async function traverseLexicalField(node: SerializedLexicalNode, locale: string)
 
 export const populateLexicalRelationships: FieldHook = async ({originalDoc, data, value, siblingData, req}) =>  {
     const lexicalRichTextField: SerializedEditorState = value;
-    console.log("lexicalRichTextField", lexicalRichTextField);
-
 
     let a = lexicalRichTextField.root.children;
 
@@ -103,19 +90,6 @@ export const populateLexicalRelationships: FieldHook = async ({originalDoc, data
         lexicalRichTextField.root.children = newChildren;
 
     }
-
-    console.warn("Output", lexicalRichTextField)
-
-
-    // Iterate through all children nodes recursively:
-   /* lexicalRichTextField.root.children.forEach((childNode) => {
-        if (childNode.type === "image") {
-            console.log("childNode", childNode);
-        } else if(childNode.type === "link"){
-            console.log("childNode", childNode);
-        }
-    }); */
-
 
     return lexicalRichTextField;
 }
@@ -167,15 +141,15 @@ const LexicalRichText2: React.FC<Props> = (props: Props) => {
     //console.log("Value", value)
 
     return (
-      <LexicalEditorComponent
-          onChange={(editorState: EditorState, editor: LexicalEditor) => {
-              const json = editorState.toJSON();
-              // @ts-ignore TODO
-              if (!readOnly && /* json !== defaultValue && */ json !== value) {
-                  setValue(json);
-              }
-          }}
-          initialJSON={value}
-      />
-  );
+        <LexicalEditorComponent
+            onChange={(editorState: EditorState, editor: LexicalEditor) => {
+                const json = editorState.toJSON();
+                // @ts-ignore TODO
+                if (!readOnly && /* json !== defaultValue && */ json !== value) {
+                    setValue(json);
+                }
+            }}
+            initialJSON={value}
+        />
+    );
 };
