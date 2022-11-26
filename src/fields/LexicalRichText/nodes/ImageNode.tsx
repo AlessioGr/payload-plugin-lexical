@@ -5,29 +5,24 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { requests } from 'payload/dist/admin/api';
 
 import type {
   DOMConversionMap,
   DOMConversionOutput,
   DOMExportOutput,
   EditorConfig,
-  LexicalEditor,
   LexicalNode,
-  NodeKey,
-  SerializedEditor,
   SerializedLexicalNode,
   Spread,
 } from 'lexical';
 
-import { $applyNodeReplacement, createEditor, DecoratorNode } from 'lexical';
+import { $applyNodeReplacement, DecoratorNode } from 'lexical';
 import * as React from 'react';
-import {Suspense, useEffect, useState} from 'react';
-import {useConfig} from "payload/dist/admin/components/utilities/Config";
-import {useTranslation} from "react-i18next";
 
-const ImageComponent = React.lazy(
-  () => import('./ImageComponent'),
+
+
+const RawImageComponent = React.lazy(
+    () => import('./RawImageComponent'),
 );
 
 /* export interface ImagePayload {
@@ -43,11 +38,15 @@ const ImageComponent = React.lazy(
 } */
 
 export interface RawImagePayload {
-  type: string;
   value: {
     id: string;
   };
   relationTo: string;
+}
+
+export interface ExtraAttributes {
+  widthOverride: undefined|number;
+  heightOverride: undefined|number;
 }
 
 function convertImageElement(domNode: Node): null | DOMConversionOutput {
@@ -63,7 +62,8 @@ function convertImageElement(domNode: Node): null | DOMConversionOutput {
  export type SerializedImageNode = Spread<
   {
     rawImagePayload: RawImagePayload;
-    type: 'image';
+    extraAttributes: ExtraAttributes;
+    type: 'upload';
     version: 1;
   },
   SerializedLexicalNode
@@ -71,20 +71,26 @@ function convertImageElement(domNode: Node): null | DOMConversionOutput {
 
 export class ImageNode extends DecoratorNode<JSX.Element> {
   __rawImagePayload: RawImagePayload;
+  __extraAttributes: ExtraAttributes = {
+    widthOverride: undefined,
+    heightOverride: undefined
+  };
 
   static getType(): string {
-    return 'image';
+    return 'upload';
   }
 
   static clone(node: ImageNode): ImageNode {
     return new ImageNode(
-      node.__rawImagePayload
+      node.__rawImagePayload,
+      node.__extraAttributes
     );
   }
 
   static importJSON(serializedNode: SerializedImageNode): ImageNode {
-    const { rawImagePayload, type, version } = serializedNode;
-    const node = $createImageNode(rawImagePayload);
+    const { rawImagePayload, type, version, extraAttributes } = serializedNode;
+    const node = $createImageNode(rawImagePayload, extraAttributes);
+
     /* const nestedEditor = node.__caption;
     const editorState = nestedEditor.parseEditorState(caption.editorState);
     if (!editorState.isEmpty()) {
@@ -95,8 +101,8 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   exportDOM(): DOMExportOutput {
     const element = document.createElement('img');
-    element.setAttribute('src', this.__src);
-    element.setAttribute('alt', this.__altText); //TODO
+    // element.setAttribute('src', this.__src);
+    // element.setAttribute('alt', this.__altText); //TODO
     return { element };
   }
 
@@ -110,18 +116,44 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   constructor(
-    rawImagePayload: RawImagePayload
+    rawImagePayload: RawImagePayload,
+    extraAttributes: ExtraAttributes,
   ) {
     super(undefined); //TODO: Do I need a key?
     this.__rawImagePayload = rawImagePayload;
+    this.__extraAttributes = extraAttributes;
   }
 
   exportJSON(): SerializedImageNode {
-    return {
-      rawImagePayload: this.__rawImagePayload,
-      type: 'image',
+    console.warn("Exported", {
+      type: "upload",
       version: 1,
+      rawImagePayload: this.__rawImagePayload,
+      extraAttributes: this.__extraAttributes,
+    })
+    return {
+      type: "upload",
+      version: 1,
+      rawImagePayload: this.__rawImagePayload,
+      extraAttributes: this.__extraAttributes,
     };
+  }
+
+  setWidthAndHeightOverride(
+      width: undefined | number,
+      height: undefined | number,
+  ): void {
+    const writable = this.getWritable();
+    if(!writable.__extraAttributes){
+      writable.__extraAttributes = {
+        widthOverride: width,
+        heightOverride: height
+      }
+    }else {
+      writable.__extraAttributes.widthOverride = width;
+      writable.__extraAttributes.heightOverride = height;
+    }
+
   }
 
 
@@ -149,80 +181,22 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   decorate(): JSX.Element {
     console.log("decorate Image...")
 
-    const { collections, serverURL, routes: { api } } = useConfig();
-    console.log("decorate Image 1...")
-
-    const { i18n } = useTranslation();
-    console.log("decorate Image 2...")
-
-
-    const [imageData, setImageData] = useState<any>(null)
-    console.log("decorate Image 3...")
-
-
-    useEffect(() => {
-      const { collections, serverURL, routes: { api } } = useConfig();
-      console.log("UseEffect")
-      async function loadImageData() {
-        console.log("loadImageData")
-
-
-        const relatedCollection = collections.find((coll) => {
-          console.log('coll.slug', coll.slug, 'insertImagePayload.relationTo', this.__rawImagePayload.relationTo);
-          return coll.slug === this.__rawImagePayload.relationTo;
-        });
-
-        const response = await requests.get(`${serverURL}${api}/${relatedCollection?.slug}/${this.__rawImagePayload.value?.id}`, {
-          headers: {
-            'Accept-Language': i18n.language,
-          },
-        });
-        const json = await response.json();
-        console.log('JSON', json);
-
-        const imagePayload = {
-          altText: json?.text,
-          height: json?.height,
-          maxWidth: json?.width,
-          src: json?.url,
-        };
-
-        setImageData(imagePayload);
-        console.log('image payload', imagePayload);
-
-
-
-        console.log('relatedCollection', relatedCollection);
-      }
-
-      loadImageData()
-    }, [])
-
-
     return (
-      <Suspense fallback={<p>Loading image...</p>}>
-        <ImageComponent
-          src={imageData.src}
-          altText={imageData.altText}
-          width={undefined}
-          height={imageData.height}
-          maxWidth={imageData.maxWidth}
-          nodeKey={this.getKey()}
-          showCaption={false}
-          caption={undefined}
-          captionsEnabled={false}
-          resizable
+        <RawImageComponent
+            rawImagePayload={this.__rawImagePayload}
+            extraAttributes={this.__extraAttributes}
+            nodeKey={this.getKey()}
         />
-      </Suspense>
     );
   }
 }
 
-export function $createImageNode(rawImagePayload: RawImagePayload): ImageNode {
+export function $createImageNode(rawImagePayload: RawImagePayload, extraAttributes: ExtraAttributes): ImageNode {
   console.log("$createImageNode")
   return $applyNodeReplacement(
     new ImageNode(
-        rawImagePayload
+        rawImagePayload,
+        extraAttributes
     ),
   );
 }

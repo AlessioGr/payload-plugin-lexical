@@ -37,7 +37,7 @@ export default function ImageResizer({
   buttonRef: {current: null | HTMLButtonElement};
   imageRef: {current: null | HTMLElement};
   maxWidth?: number;
-  onResizeEnd: (width: 'inherit' | number, height: 'inherit' | number) => void;
+  onResizeEnd: (width: undefined | number, height: undefined | number) => void;
   onResizeStart: () => void;
   setShowCaption: (show: boolean) => void;
   showCaption: boolean;
@@ -49,8 +49,8 @@ export default function ImageResizer({
     value: 'default',
   });
   const positioningRef = useRef<{
-    currentHeight: 'inherit' | number;
-    currentWidth: 'inherit' | number;
+    currentHeight: undefined | number;
+    currentWidth: undefined | number;
     direction: number;
     isResizing: boolean;
     ratio: number;

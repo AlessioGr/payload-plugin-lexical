@@ -25,7 +25,7 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import * as React from 'react';
 import getSelection from '../../shared/getDOMSelection';
 
@@ -37,22 +37,10 @@ import {
   RawImagePayload,
 } from '../../nodes/ImageNode';
 
-import payload from 'payload';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import { SanitizedCollectionConfig } from 'payload/dist/collections/config/types';
-import usePayloadAPI from 'payload/dist/admin/hooks/usePayloadAPI';
-
-import { useTranslation } from 'react-i18next';
-import { requests } from 'payload/dist/admin/api';
-
-
 export type InsertImagePayload = Readonly<RawImagePayload>;
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> = createCommand('INSERT_IMAGE_COMMAND');
 
-const initialParams = {
-  depth: 0,
-};
 
 export default function UploadPlugin({
   captionsEnabled,
@@ -60,9 +48,6 @@ export default function UploadPlugin({
   captionsEnabled?: boolean;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-
-  const { collections, serverURL, routes: { api } } = useConfig();
-  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
@@ -75,7 +60,7 @@ export default function UploadPlugin({
         (insertImagePayload: RawImagePayload) => { // This is run on the browser. Can't just use 'payload' object
           console.log('Received INSERT_IMAGE_COMMAND with payload', insertImagePayload);
           editor.update(() => {
-            const imageNode = $createImageNode(insertImagePayload);
+            const imageNode = $createImageNode(insertImagePayload, {widthOverride: undefined, heightOverride: undefined});
             $insertNodes([imageNode]);
             if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
               $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
@@ -195,16 +180,11 @@ function onDragStart(event: DragEvent): boolean {
     'application/x-lexical-drag',
     JSON.stringify({
       data: {
-        altText: node.__altText,
-        caption: node.__caption,
-        height: node.__height,
+        rawImagePayload: node.__rawImagePayload,
+        extraAttributes: node.__extraAttributes,
         key: node.getKey(),
-        maxWidth: node.__maxWidth,
-        showCaption: node.__showCaption,
-        src: node.__src,
-        width: node.__width,
       },
-      type: 'image',
+      type: 'upload',
     }),
   );
 
@@ -261,7 +241,7 @@ function getDragImageData(event: DragEvent): null | InsertImagePayload {
     return null;
   }
   const { type, data } = JSON.parse(dragData);
-  if (type !== 'image') {
+  if (type !== 'upload') {
     return null;
   }
 

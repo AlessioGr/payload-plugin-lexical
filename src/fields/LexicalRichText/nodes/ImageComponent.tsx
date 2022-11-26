@@ -275,8 +275,8 @@ export default function ImageComponent({
   };
 
   const onResizeEnd = (
-    nextWidth: 'inherit' | number,
-    nextHeight: 'inherit' | number,
+    nextWidth: undefined | number,
+    nextHeight: undefined | number,
   ) => {
     // Delay hiding the resize bars for click case
     setTimeout(() => {
@@ -286,7 +286,7 @@ export default function ImageComponent({
     editor.update(() => {
       const node = $getNodeByKey(nodeKey);
       if ($isImageNode(node)) {
-        node.setWidthAndHeight(nextWidth, nextHeight);
+        node.setWidthAndHeightOverride(nextWidth, nextHeight);
       }
     });
   };

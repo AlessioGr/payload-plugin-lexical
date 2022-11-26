@@ -33,7 +33,6 @@ const insertUpload = ({
   console.log('insertUpload value:', value, 'relationTo:', relationTo);
 
   const rawImagePayload: RawImagePayload = {
-    type: 'upload',
     value,
     relationTo,
   };
