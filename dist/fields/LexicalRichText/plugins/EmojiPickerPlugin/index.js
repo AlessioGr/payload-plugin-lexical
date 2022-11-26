@@ -62,7 +62,7 @@ function EmojiPickerPlugin() {
     const [emojis, setEmojis] = (0, react_1.useState)([]);
     (0, react_1.useEffect)(() => {
         // @ts-ignore
-        Promise.resolve().then(() => __importStar(require('./emoji-list.ts'))).then((file) => setEmojis(file.default));
+        Promise.resolve().then(() => __importStar(require('./emoji-list'))).then((file) => setEmojis(file.default));
     }, []);
     const emojiOptions = (0, react_1.useMemo)(() => (emojis != null
         ? emojis.map(({ emoji, aliases, tags }) => new EmojiOption(aliases[0], emoji, {
