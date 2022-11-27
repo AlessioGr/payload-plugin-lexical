@@ -1,4 +1,4 @@
-import React, { Suspense, useCallback } from 'react';
+import React, { Suspense } from 'react';
 import {$getRoot, EditorState, LexicalEditor, SerializedEditorState, SerializedLexicalNode} from 'lexical';
 import { Props } from './types';
 import { LexicalEditorComponent } from './LexicalEditorComponent';
@@ -76,21 +76,37 @@ async function traverseLexicalField(node: SerializedLexicalNode, locale: string)
     return node;
 }
 
-export const populateLexicalRelationships: FieldHook = async ({originalDoc, data, value, siblingData, req}) =>  {
-    const lexicalRichTextField: SerializedEditorState = value;
+type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
 
-    if(lexicalRichTextField.root.children){
+export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({ value, req }): Promise<SerializedEditorState> => {
+    if(value.root.children){
 
-        let newChildren = [];
-        for(let childNode of lexicalRichTextField.root.children){
+        const newChildren = [];
+        for(let childNode of value.root.children){
             newChildren.push(await traverseLexicalField(childNode, req.locale));
         }
-        lexicalRichTextField.root.children = newChildren;
+        value.root.children = newChildren;
 
     }
 
-    return lexicalRichTextField;
-}
+    return value;
+};
+
+/*
+export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}) =>  {
+
+    if(value.root.children){
+
+        const newChildren = [];
+        for(let childNode of value.root.children){
+            newChildren.push(await traverseLexicalField(childNode, req.locale));
+        }
+        value.root.children = newChildren;
+
+    }
+
+    return value;
+}*/
 
 export const LexicalRichTextCell: React.FC<any> = (props) => {
     const { field, colIndex, collection, cellData, rowData } = props;
@@ -135,19 +151,36 @@ export const LexicalRichTextField: React.FC<Props> = (props) => {
 const LexicalRichText2: React.FC<Props> = (props: Props) => {
     let readOnly = false;
     const {path} = props;
-    const { value, setValue } = useField<Props>({ path });
+    //const { value, setValue } = useField<Props>({ path });
+
+    const field = useField<SerializedEditorState>({
+        path: path, // required
+        // validate: myValidateFunc, // optional
+        // disableFormData?: false, // if true, the field's data will be ignored
+        // condition?: myConditionHere, // optional, used to skip validation if condition fails
+    })
+
+    // Here is what `useField` sends back
+    const {
+        showError, // whether the field should show as errored
+        errorMessage, // the error message to show, if showError
+        value, // the current value of the field from the form
+        formSubmitted, // if the form has been submitted
+        formProcessing, // if the form is currently processing
+        setValue, // method to set the field's value in form state
+        initialValue, // the initial value that the field mounted with
+    } = field;
     //console.log("Value", value)
 
     return (
-        <LexicalEditorComponent
-            onChange={(editorState: EditorState, editor: LexicalEditor) => {
-                const json = editorState.toJSON();
-                // @ts-ignore TODO
-                if (!readOnly && /* json !== defaultValue && */ json !== value) {
-                    setValue(json);
-                }
-            }}
-            initialJSON={value}
-        />
-    );
+      <LexicalEditorComponent
+          onChange={(editorState: EditorState, editor: LexicalEditor) => {
+              const json = editorState.toJSON();
+              if (!readOnly && /* json !== defaultValue && */ json !== value) {
+                  setValue(json);
+              }
+          }}
+          initialJSON={value}
+      />
+  );
 };
