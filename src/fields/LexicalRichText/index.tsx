@@ -14,8 +14,20 @@ import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import {createHeadlessEditor} from "@lexical/headless";
 import {ExtraAttributes, RawImagePayload} from "./nodes/ImageNode";
 import payload from "payload";
+import {FieldHook, FieldWithPath} from "payload/types";
 
+type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
+export const populateLexicalRelationships2: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<SerializedEditorState> =>  {
+    if(value.root.children){
+        const newChildren = [];
+        for(let childNode of value.root.children){
+            newChildren.push(await traverseLexicalField(childNode, ""));
+        }
+        value.root.children = newChildren;
+    }
 
+    return value;
+};
 
 export async function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode> {
     //Find replacements
@@ -76,8 +88,6 @@ async function loadInternalLinkDocData(value: string, relationTo: string, locale
     return foundDoc;
 }
 
-
-
 export const LexicalRichTextCell: React.FC<any> = (props) => {
     const { field, colIndex, collection, cellData, rowData } = props;
     console.log("Props", props);
@@ -111,16 +121,20 @@ export const LexicalRichTextCell: React.FC<any> = (props) => {
 
 
 
-export const LexicalRichTextField: React.FC<Props> = (props) => {
+
+
+
+export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
     return (
         <Suspense fallback={<Loading/>}>
-            <LexicalRichText2 {...props} />
+            <LexicalRichTextFieldComponent2 {...props} />
         </Suspense>
     );
 }
-const LexicalRichText2: React.FC<Props> = (props: Props) => {
+const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     let readOnly = false;
-    const {path} = props;
+    const {path, editorConfig} = props;
+    console.log("path", path)
     //const { value, setValue } = useField<Props>({ path });
 
     const field = useField<SerializedEditorState>({
