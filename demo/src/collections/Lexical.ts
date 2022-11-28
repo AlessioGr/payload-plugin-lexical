@@ -1,6 +1,6 @@
 import { CollectionConfig } from 'payload/types';
-//import lexicalRichTextField from '../../../src/fields/lexicalRichTextField'
-import lexicalRichTextField from '../../../dist/fields/lexicalRichTextField'
+import lexicalRichTextField from '../../../src/fields/lexicalRichTextField'
+//import lexicalRichTextField from '../../../dist/fields/lexicalRichTextField'
 
 const Lexical: CollectionConfig = {
   slug: 'lexicalRichText',

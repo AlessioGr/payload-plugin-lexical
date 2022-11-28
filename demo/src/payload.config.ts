@@ -1,7 +1,7 @@
 import { buildConfig } from 'payload/config';
 import path from 'path';
-//import LexicalPlugin from '../../src/index'
-import LexicalPlugin from '../../dist/index'
+import LexicalPlugin from '../../src/index'
+//import LexicalPlugin from '../../dist/index'
 
 import Users from './collections/Users';
 import Media from './collections/Media';
