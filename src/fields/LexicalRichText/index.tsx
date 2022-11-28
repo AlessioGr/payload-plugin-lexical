@@ -12,37 +12,12 @@ import { useField } from "payload/components/forms";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import {createHeadlessEditor} from "@lexical/headless";
-import {FieldHook} from "payload/types";
 import {ExtraAttributes, RawImagePayload} from "./nodes/ImageNode";
 import payload from "payload";
 
-async function loadUploadData(rawImagePayload: RawImagePayload, locale: string) {
-
-    const foundUpload = await payload.findByID({
-        collection: rawImagePayload.relationTo, // required
-        id: rawImagePayload.value.id, // required
-        depth: 2,
-        locale: locale,
-    });
 
 
-    return foundUpload;
-}
-
-async function loadInternalLinkDocData(value: string, relationTo: string, locale: string) { //TODO: Adjustable depth
-
-    const foundDoc = await payload.findByID({
-        collection: relationTo, // required
-        id: value, // required
-        depth: 2,
-        locale: locale,
-    });
-
-
-    return foundDoc;
-}
-
-async function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode> {
+export async function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode> {
     //Find replacements
     if(node.type === 'upload'){
         const rawImagePayload: RawImagePayload = node["rawImagePayload"];
@@ -75,38 +50,33 @@ async function traverseLexicalField(node: SerializedLexicalNode, locale: string)
 
     return node;
 }
+async function loadUploadData(rawImagePayload: RawImagePayload, locale: string) {
 
-type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
+    const foundUpload = await payload.findByID({
+        collection: rawImagePayload.relationTo, // required
+        id: rawImagePayload.value.id, // required
+        depth: 2,
+        locale: locale,
+    });
 
-export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({ value, req }): Promise<SerializedEditorState> => {
-    if(value.root.children){
 
-        const newChildren = [];
-        for(let childNode of value.root.children){
-            newChildren.push(await traverseLexicalField(childNode, req.locale));
-        }
-        value.root.children = newChildren;
+    return foundUpload;
+}
 
-    }
+async function loadInternalLinkDocData(value: string, relationTo: string, locale: string) { //TODO: Adjustable depth
 
-    return value;
-};
+    const foundDoc = await payload.findByID({
+        collection: relationTo, // required
+        id: value, // required
+        depth: 2,
+        locale: locale,
+    });
 
-/*
-export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}) =>  {
 
-    if(value.root.children){
+    return foundDoc;
+}
 
-        const newChildren = [];
-        for(let childNode of value.root.children){
-            newChildren.push(await traverseLexicalField(childNode, req.locale));
-        }
-        value.root.children = newChildren;
 
-    }
-
-    return value;
-}*/
 
 export const LexicalRichTextCell: React.FC<any> = (props) => {
     const { field, colIndex, collection, cellData, rowData } = props;
@@ -173,14 +143,14 @@ const LexicalRichText2: React.FC<Props> = (props: Props) => {
     //console.log("Value", value)
 
     return (
-      <LexicalEditorComponent
-          onChange={(editorState: EditorState, editor: LexicalEditor) => {
-              const json = editorState.toJSON();
-              if (!readOnly && /* json !== defaultValue && */ json !== value) {
-                  setValue(json);
-              }
-          }}
-          initialJSON={value}
-      />
-  );
+        <LexicalEditorComponent
+            onChange={(editorState: EditorState, editor: LexicalEditor) => {
+                const json = editorState.toJSON();
+                if (!readOnly && /* json !== defaultValue && */ json !== value) {
+                    setValue(json);
+                }
+            }}
+            initialJSON={value}
+        />
+    );
 };
