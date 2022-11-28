@@ -1,0 +1,11 @@
+import React from 'react';
+import { SerializedEditorState, SerializedLexicalNode } from 'lexical';
+import { Props } from './types';
+import './index.scss';
+import { FieldHook } from "payload/types";
+type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
+export declare const populateLexicalRelationships2: LexicalRichTextFieldAfterReadFieldHook;
+export declare function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode>;
+export declare const LexicalRichTextCell: React.FC<any>;
+export declare const LexicalRichTextFieldComponent: React.FC<Props>;
+export {};
