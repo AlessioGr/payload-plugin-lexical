@@ -31,36 +31,59 @@ import { MentionNode } from './MentionNode';
 import { TableNode as NewTableNode } from './TableNode';
 import { TweetNode } from './TweetNode';
 import { YouTubeNode } from './YouTubeNode';
+import type {EditorConfig} from "../../../types";
 
-const PlaygroundNodes: Array<Klass<LexicalNode>> = [
-  HeadingNode,
-  ListNode,
-  ListItemNode,
-  QuoteNode,
-  CodeNode,
-  NewTableNode,
-  TableNode,
-  TableCellNode,
-  TableRowNode,
-  HashtagNode,
-  CodeHighlightNode,
-  AutoLinkNode,
-  LinkNode,
-  OverflowNode,
-  ImageNode,
-  MentionNode,
-  EmojiNode,
-  EquationNode,
-  AutocompleteNode,
-  KeywordNode,
-  HorizontalRuleNode,
-  TweetNode,
-  YouTubeNode,
-  FigmaNode,
-  MarkNode,
-  CollapsibleContainerNode,
-  CollapsibleContentNode,
-  CollapsibleTitleNode,
-];
+function PlaygroundNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
+  const nodes: Array<Klass<LexicalNode>> = [];
+  if(editorConfig.features.tables.enabled){
+    nodes.push(NewTableNode, TableNode, TableCellNode, TableRowNode);
+  }
+
+  if(editorConfig.features.upload.enabled){
+    nodes.push(ImageNode);
+  }
+
+  if(editorConfig.features.mentions.enabled){
+    nodes.push(MentionNode);
+  }
+  if(editorConfig.features.twitter.enabled){
+    nodes.push(TweetNode);
+  }
+  if(editorConfig.features.horizontalRule.enabled){
+    nodes.push(HorizontalRuleNode);
+  }
+  if(editorConfig.features.youtube.enabled){
+    nodes.push(YouTubeNode);
+  }
+  if(editorConfig.features.figma.enabled){
+    nodes.push(FigmaNode);
+  }
+  if(editorConfig.features.equations.enabled){
+    nodes.push(EquationNode);
+  }
+
+  nodes.push(
+      HeadingNode,
+      ListNode,
+      ListItemNode,
+      QuoteNode,
+      CodeNode,
+      HashtagNode,
+      CodeHighlightNode,
+      AutoLinkNode,
+      LinkNode,
+      OverflowNode,
+      MentionNode,
+      EmojiNode,
+      AutocompleteNode,
+      KeywordNode,
+      MarkNode,
+      CollapsibleContainerNode,
+      CollapsibleContentNode,
+      CollapsibleTitleNode
+  )
+
+  return nodes;
+}
 
 export default PlaygroundNodes;

@@ -9,4 +9,5 @@ export type Props = FieldWithPath & {
 export type OnChangeProps = {
   onChange: (editorState: EditorState, editor: LexicalEditor) => void;
   initialJSON: any;
+  editorConfig: EditorConfig,
 };

@@ -35,11 +35,12 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import useModal from '../../hooks/useModal';
-import { EmbedConfigs } from '../AutoEmbedPlugin';
+import { getEmbedConfigs } from '../AutoEmbedPlugin';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
 import { InsertEquationDialog } from '../EquationsPlugin';
 import { INSERT_IMAGE_COMMAND/* , InsertImageDialog */ } from '../UploadPlugin'; //TODO: InsertImageDialog begone! What is ComponentPickerPlugin even used for?
 import { InsertTableDialog } from '../TablePlugin';
+import {EditorConfig} from "../../../../types";
 
 class ComponentPickerOption extends TypeaheadOption {
   // What shows up in the editor
@@ -110,7 +111,8 @@ function ComponentPickerMenuItem({
   );
 }
 
-export default function ComponentPickerMenuPlugin(): JSX.Element {
+export default function ComponentPickerMenuPlugin(props: {editorConfig: EditorConfig}): JSX.Element {
+  const editorConfig = props.editorConfig;
   const [editor] = useLexicalComposerContext();
   const [modal, showModal] = useModal();
   const [queryString, setQueryString] = useState<string | null>(null);
@@ -252,7 +254,7 @@ export default function ComponentPickerMenuPlugin(): JSX.Element {
         keywords: ['horizontal rule', 'divider', 'hr'],
         onSelect: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
       }),
-      ...EmbedConfigs.map(
+      ...getEmbedConfigs(editorConfig).map(
         (embedConfig) => new ComponentPickerOption(`Embed ${embedConfig.contentName}`, {
           icon: embedConfig.icon,
           keywords: [...embedConfig.keywords, 'embed'],

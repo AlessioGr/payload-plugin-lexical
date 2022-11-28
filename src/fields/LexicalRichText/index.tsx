@@ -89,13 +89,13 @@ async function loadInternalLinkDocData(value: string, relationTo: string, locale
 }
 
 export const LexicalRichTextCell: React.FC<any> = (props) => {
-    const { field, colIndex, collection, cellData, rowData } = props;
+    const { field, colIndex, collection, cellData, rowData, editorConfig } = props;
     console.log("Props", props);
     const data = cellData;
 
     const initialConfig = {
         namespace: 'Playground',
-        nodes: [...PlaygroundNodes],
+        nodes: [...PlaygroundNodes(editorConfig)],
         theme: PlaygroundEditorTheme,
     };
 
@@ -134,7 +134,6 @@ export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     let readOnly = false;
     const {path, editorConfig} = props;
-    console.log("path", path)
     //const { value, setValue } = useField<Props>({ path });
 
     const field = useField<SerializedEditorState>({
@@ -165,6 +164,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
                 }
             }}
             initialJSON={value}
+            editorConfig={editorConfig}
         />
     );
 };

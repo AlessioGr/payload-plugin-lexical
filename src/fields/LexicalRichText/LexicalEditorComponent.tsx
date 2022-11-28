@@ -26,6 +26,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
   const {
     onChange,
     initialJSON,
+    editorConfig
   } = props;
 
   const {
@@ -35,7 +36,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
   const initialConfig = {
     editorState: initialJSON != null ? JSON.stringify(initialJSON) : undefined,
     namespace: 'Playground',
-    nodes: [...PlaygroundNodes],
+    nodes: [...PlaygroundNodes(editorConfig)],
     onError: (error: Error) => {
       throw error;
     },
@@ -52,6 +53,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
               <Editor
                 onChange={onChange}
                 initialJSON={initialJSON}
+                editorConfig={editorConfig}
               />
             </div>
             <Settings />
@@ -69,6 +71,7 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
   const {
     onChange,
     initialJSON,
+    editorConfig
   } = props;
 
   return (
@@ -76,6 +79,7 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
       <LexicalEditor
         onChange={onChange}
         initialJSON={initialJSON}
+        editorConfig={editorConfig}
       />
     </SettingsContext>
   );

@@ -26,40 +26,60 @@ function lexicalRichTextField(props: {name?: string, label?: string, editorConfi
     const defaultEditorConfig: EditorConfig = {
         features: {
             tables: {
-                enabled: false
+                enabled: true,
+                display: false
             },
             upload: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             twitter: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             youtube: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             figma: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             horizontalRule: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             equations: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             collapsible: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             fontSize: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             font: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             textColor: {
-                enabled: true
+                enabled: true,
+                display: true
             },
             textBackground: {
-                enabled: true
+                enabled: true,
+                display: true
+            },
+            mentions: {
+                enabled: false,
+                display: false
+            },
+            align: {
+                enabled: true,
+                display: true
             },
         }
     }
@@ -78,7 +98,7 @@ function lexicalRichTextField(props: {name?: string, label?: string, editorConfi
         admin: {
             components: {
                 Field: (args) => LexicalRichTextFieldComponent({ ...args, editorConfig: finalEditorConfig }),
-                Cell: LexicalRichTextCell
+                Cell: (args) => LexicalRichTextCell({ ...args, editorConfig: finalEditorConfig }),
             }
         }
     }

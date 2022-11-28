@@ -69,6 +69,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
   const {
     onChange,
     initialJSON,
+    editorConfig
   } = props;
 
   const { historyState } = useSharedHistoryContext();
@@ -107,7 +108,9 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
   return (
     <React.Fragment>
-      {isRichText && <ToolbarPlugin />}
+      {isRichText && (
+          <ToolbarPlugin editorConfig={editorConfig} />
+      )}
       <div
         className={`editor-container ${showTreeView ? 'tree-view' : ''} ${
           !isRichText ? 'plain-text' : ''
@@ -117,10 +120,12 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <DragDropPaste />
         <AutoFocusPlugin />
         <ClearEditorPlugin />
-        <ComponentPickerPlugin />
+        <ComponentPickerPlugin editorConfig={editorConfig} />
         <EmojiPickerPlugin />
-        <AutoEmbedPlugin />
-        <MentionsPlugin />
+        <AutoEmbedPlugin editorConfig={editorConfig} />
+        {editorConfig.features.mentions.enabled && (
+            <MentionsPlugin />
+        )}
         <EmojisPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />
@@ -148,44 +153,67 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             <ListPlugin />
             <CheckListPlugin />
             <ListMaxIndentLevelPlugin maxDepth={7} />
-            <TablePlugin />
-            <TableCellResizer />
-            <NewTablePlugin cellEditorConfig={cellEditorConfig}>
-              <AutoFocusPlugin />
-              <RichTextPlugin
-                contentEditable={
-                  <ContentEditable className="TableNode__contentEditable" />
-                }
-                placeholder=""
-                ErrorBoundary={LexicalErrorBoundary}
-              />
-              <MentionsPlugin />
-              <HistoryPlugin />
-              <UploadPlugin captionsEnabled={false} />
-              <LinkPlugin />
-              <ClickableLinkPlugin />
-              <FloatingTextFormatToolbarPlugin />
-            </NewTablePlugin>
-            <UploadPlugin captionsEnabled={false} />
+            {editorConfig.features.tables.enabled && (
+                <TablePlugin />
+            )}
+            {editorConfig.features.tables.enabled && (
+                <TableCellResizer />
+            )}
+            {editorConfig.features.tables.enabled && (
+                <NewTablePlugin cellEditorConfig={cellEditorConfig}>
+                  <AutoFocusPlugin />
+                  <RichTextPlugin
+                      contentEditable={
+                        <ContentEditable className="TableNode__contentEditable" />
+                      }
+                      placeholder=""
+                      ErrorBoundary={LexicalErrorBoundary}
+                  />
+                  <MentionsPlugin />
+                  <HistoryPlugin />
+                  <UploadPlugin captionsEnabled={false} />
+                  <LinkPlugin />
+                  <ClickableLinkPlugin />
+                  <FloatingTextFormatToolbarPlugin />
+                </NewTablePlugin>
+            )}
+            {editorConfig.features.upload.enabled && (
+                <UploadPlugin captionsEnabled={false} />
+            )}
             <LinkPlugin />
-            <TwitterPlugin />
-            <YouTubePlugin />
+            {editorConfig.features.twitter.enabled && (
+                <TwitterPlugin />
+            )}
+            {editorConfig.features.youtube.enabled && (
+                <YouTubePlugin />
+            )}
             <OnChangePlugin onChange={(editorState, editor) => {
               onChange(editorState, editor);
             }}
             />
-            <FigmaPlugin />
+            {editorConfig.features.figma.enabled && (
+                <FigmaPlugin />
+            )}
             <ClickableLinkPlugin />
-            <HorizontalRulePlugin />
-            <EquationsPlugin />
+            {editorConfig.features.horizontalRule.enabled && (
+                <HorizontalRulePlugin />
+            )}
+            {editorConfig.features.equations.enabled && (
+                <EquationsPlugin />
+            )}
+
             <TabFocusPlugin />
-            <CollapsiblePlugin />
+            {editorConfig.features.collapsible.enabled && (
+                <CollapsiblePlugin />
+            )}
             {floatingAnchorElem && (
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
                 <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} />
-                <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} />
+                {editorConfig.features.tables.enabled && (
+                    <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} />
+                )}
                 <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}
                 />

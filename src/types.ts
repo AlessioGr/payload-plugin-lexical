@@ -1,40 +1,60 @@
 export type EditorConfig = {
     features: {
         tables: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         upload: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         twitter: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         youtube: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         figma: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         horizontalRule: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         equations: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         collapsible: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         fontSize: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         font: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
+        },
+        align: {
+            enabled: boolean,
+            display: boolean
         },
         textColor: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
         },
         textBackground: {
-            enabled?: boolean
+            enabled: boolean,
+            display: boolean
+        },
+        mentions: {
+            enabled: boolean,
+            display: boolean
         },
     }
 }

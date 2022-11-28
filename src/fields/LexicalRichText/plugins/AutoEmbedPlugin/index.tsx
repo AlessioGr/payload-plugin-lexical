@@ -26,6 +26,7 @@ import { DialogActions } from '../../ui/Dialog';
 import { INSERT_FIGMA_COMMAND } from '../FigmaPlugin';
 import { INSERT_TWEET_COMMAND } from '../TwitterPlugin';
 import { INSERT_YOUTUBE_COMMAND } from '../YouTubePlugin';
+import {EditorConfig} from "../../../../types";
 
 interface PlaygroundEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
@@ -143,11 +144,28 @@ export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
   type: 'figma',
 };
 
-export const EmbedConfigs = [
-  TwitterEmbedConfig,
-  YoutubeEmbedConfig,
-  FigmaEmbedConfig,
-];
+export function getEmbedConfigs(editorConfig: EditorConfig) {
+  const embedConfigs = [];
+
+  if(editorConfig.features.twitter.enabled && editorConfig.features.twitter.display){
+    embedConfigs.push(
+        TwitterEmbedConfig,
+    );
+  }
+  if(editorConfig.features.youtube.enabled && editorConfig.features.youtube.display){
+    embedConfigs.push(
+        YoutubeEmbedConfig,
+    );
+  }
+  if(editorConfig.features.figma.enabled && editorConfig.features.figma.display){
+    embedConfigs.push(
+        FigmaEmbedConfig,
+    );
+  }
+  return embedConfigs;
+}
+
+
 
 function AutoEmbedMenuItem({
   index,
@@ -259,7 +277,8 @@ export function AutoEmbedDialog({
   );
 }
 
-export default function AutoEmbedPlugin(): JSX.Element {
+export default function AutoEmbedPlugin(props: {editorConfig: EditorConfig}): JSX.Element {
+  const editorConfig = props.editorConfig;
   const [modal, showModal] = useModal();
 
   const openEmbedModal = (embedConfig: PlaygroundEmbedConfig) => {
@@ -290,7 +309,7 @@ export default function AutoEmbedPlugin(): JSX.Element {
     <React.Fragment>
       {modal}
       <LexicalAutoEmbedPlugin<PlaygroundEmbedConfig>
-        embedConfigs={EmbedConfigs}
+        embedConfigs={getEmbedConfigs(editorConfig)}
         onOpenEmbedModalForConfig={openEmbedModal}
         getMenuOptions={getMenuOptions}
         menuRenderFn={(

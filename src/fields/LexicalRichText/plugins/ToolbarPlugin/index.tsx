@@ -76,11 +76,12 @@ import ColorPicker from '../../ui/ColorPicker';
 import DropDown, { DropDownItem } from '../../ui/DropDown';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { sanitizeUrl } from '../../utils/url';
-import { EmbedConfigs } from '../AutoEmbedPlugin';
+import { getEmbedConfigs } from '../AutoEmbedPlugin';
 import { INSERT_COLLAPSIBLE_COMMAND } from '../CollapsiblePlugin';
 import { InsertEquationDialog } from '../EquationsPlugin';
 import { InsertTableDialog } from '../TablePlugin';
 import { UploadModal } from '../UploadPlugin/UploadUI';
+import {EditorConfig} from "../../../../types";
 
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
@@ -372,7 +373,8 @@ function FontDropDown({
   );
 }
 
-export default function ToolbarPlugin(): JSX.Element {
+export default function ToolbarPlugin(props: {editorConfig: EditorConfig}): JSX.Element {
+  const editorConfig = props.editorConfig;
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const [blockType, setBlockType] = useState<keyof typeof blockTypeToBlockName>('paragraph');
@@ -656,18 +658,23 @@ export default function ToolbarPlugin(): JSX.Element {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          <FontDropDown
-            disabled={!isEditable}
-            styleText="font-family"
-            value={fontFamily}
-            editor={editor}
-          />
-          <FontDropDown
-            disabled={!isEditable}
-            styleText="font-size"
-            value={fontSize}
-            editor={editor}
-          />
+          {editorConfig.features.font.enabled && editorConfig.features.font.display && (
+              <FontDropDown
+                  disabled={!isEditable}
+                  styleText="font-family"
+                  value={fontFamily}
+                  editor={editor}
+              />
+          )}
+          {editorConfig.features.fontSize.enabled && editorConfig.features.fontSize.display && (
+              <FontDropDown
+                  disabled={!isEditable}
+                  styleText="font-size"
+                  value={fontSize}
+                  editor={editor}
+              />
+          )}
+
           <Divider />
           <button
             type="button"
@@ -740,24 +747,28 @@ export default function ToolbarPlugin(): JSX.Element {
           >
             <i className="format link" />
           </button>
-          <ColorPicker
-            disabled={!isEditable}
-            buttonClassName="toolbar-item color-picker"
-            buttonAriaLabel="Formatting text color"
-            buttonIconClassName="icon font-color"
-            color={fontColor}
-            onChange={onFontColorSelect}
-            title="text color"
-          />
-          <ColorPicker
-            disabled={!isEditable}
-            buttonClassName="toolbar-item color-picker"
-            buttonAriaLabel="Formatting background color"
-            buttonIconClassName="icon bg-color"
-            color={bgColor}
-            onChange={onBgColorSelect}
-            title="bg color"
-          />
+          {editorConfig.features.textColor.enabled && editorConfig.features.textColor.display && (
+              <ColorPicker
+                  disabled={!isEditable}
+                  buttonClassName="toolbar-item color-picker"
+                  buttonAriaLabel="Formatting text color"
+                  buttonIconClassName="icon font-color"
+                  color={fontColor}
+                  onChange={onFontColorSelect}
+                  title="text color"
+              />
+          )}
+          {editorConfig.features.textBackground.enabled && editorConfig.features.textBackground.display && (
+              <ColorPicker
+                  disabled={!isEditable}
+                  buttonClassName="toolbar-item color-picker"
+                  buttonAriaLabel="Formatting background color"
+                  buttonIconClassName="icon bg-color"
+                  color={bgColor}
+                  onChange={onBgColorSelect}
+                  title="bg color"
+              />
+          )}
           <DropDown
             disabled={!isEditable}
             buttonClassName="toolbar-item spaced"
@@ -822,56 +833,68 @@ export default function ToolbarPlugin(): JSX.Element {
             buttonAriaLabel="Insert specialized editor node"
             buttonIconClassName="icon plus"
           >
-            <DropDownItem
-              onClick={() => {
-                activeEditor.dispatchCommand(
-                  INSERT_HORIZONTAL_RULE_COMMAND,
-                  undefined,
-                );
-              }}
-              className="item"
-            >
-              <i className="icon horizontal-rule" />
-              <span className="text">Horizontal Rule</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                toggleModal('lexicalRichText-add-upload');
-              }}
-              className="item"
-            >
-              <i className="icon image" />
-              <span className="text">Upload</span>
-            </DropDownItem>
-            {/* <DropDownItem
-              onClick={() => {
-                toggleModal('lexicalRichText-add-table');
-              }}
-              className="item"
-            >
-              <i className="icon table" />
-              <span className="text">Table</span>
-            </DropDownItem> TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */}
+            {editorConfig.features.horizontalRule.enabled && editorConfig.features.horizontalRule.display && (
+                <DropDownItem
+                    onClick={() => {
+                      activeEditor.dispatchCommand(
+                          INSERT_HORIZONTAL_RULE_COMMAND,
+                          undefined,
+                      );
+                    }}
+                    className="item"
+                >
+                  <i className="icon horizontal-rule" />
+                  <span className="text">Horizontal Rule</span>
+                </DropDownItem>
+            )}
+            {editorConfig.features.upload.enabled && editorConfig.features.upload.display && (
+                <DropDownItem
+                    onClick={() => {
+                      toggleModal('lexicalRichText-add-upload');
+                    }}
+                    className="item"
+                >
+                  <i className="icon image" />
+                  <span className="text">Upload</span>
+                </DropDownItem>
+            )}
+            {editorConfig.features.tables.enabled && editorConfig.features.tables.display && (
+                <DropDownItem
+                  onClick={() => {
+                    toggleModal('lexicalRichText-add-table');
+                  }}
+                  className="item"
+                >
+                  <i className="icon table" />
+                  <span className="text">Table</span>
+              </DropDownItem>
+            ) //TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
+            }
 
-            <DropDownItem
-              onClick={() => {
-                toggleModal('lexicalRichText-add-equation');
-              }}
-              className="item"
-            >
-              <i className="icon equation" />
-              <span className="text">Equation</span>
-            </DropDownItem>
-            <DropDownItem
-              onClick={() => {
-                editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);
-              }}
-              className="item"
-            >
-              <i className="icon caret-right" />
-              <span className="text">Collapsible container</span>
-            </DropDownItem>
-            {EmbedConfigs.map((embedConfig) => (
+            {editorConfig.features.equations.enabled && editorConfig.features.equations.display && (
+                <DropDownItem
+                    onClick={() => {
+                      toggleModal('lexicalRichText-add-equation');
+                    }}
+                    className="item"
+                >
+                  <i className="icon equation" />
+                  <span className="text">Equation</span>
+                </DropDownItem>
+            )}
+            {editorConfig.features.collapsible.enabled && editorConfig.features.collapsible.display && (
+                <DropDownItem
+                    onClick={() => {
+                      editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined);
+                    }}
+                    className="item"
+                >
+                  <i className="icon caret-right" />
+                  <span className="text">Collapsible container</span>
+                </DropDownItem>
+            )}
+
+            {getEmbedConfigs(editorConfig).map((embedConfig) => (
               <DropDownItem
                 key={embedConfig.type}
                 onClick={() => {
@@ -890,69 +913,71 @@ export default function ToolbarPlugin(): JSX.Element {
         </React.Fragment>
       )}
       <Divider />
-      <DropDown
-        disabled={!isEditable}
-        buttonLabel="Align"
-        buttonIconClassName="icon left-align"
-        buttonClassName="toolbar-item spaced alignment"
-        buttonAriaLabel="Formatting options for text alignment"
-      >
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
-          }}
-          className="item"
-        >
-          <i className="icon left-align" />
-          <span className="text">Left Align</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
-          }}
-          className="item"
-        >
-          <i className="icon center-align" />
-          <span className="text">Center Align</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
-          }}
-          className="item"
-        >
-          <i className="icon right-align" />
-          <span className="text">Right Align</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
-          }}
-          className="item"
-        >
-          <i className="icon justify-align" />
-          <span className="text">Justify Align</span>
-        </DropDownItem>
-        <Divider />
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined);
-          }}
-          className="item"
-        >
-          <i className={`icon ${isRTL ? 'indent' : 'outdent'}`} />
-          <span className="text">Outdent</span>
-        </DropDownItem>
-        <DropDownItem
-          onClick={() => {
-            activeEditor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
-          }}
-          className="item"
-        >
-          <i className={`icon ${isRTL ? 'outdent' : 'indent'}`} />
-          <span className="text">Indent</span>
-        </DropDownItem>
-      </DropDown>
+      {editorConfig.features.align.enabled && editorConfig.features.align.display && (
+          <DropDown
+              disabled={!isEditable}
+              buttonLabel="Align"
+              buttonIconClassName="icon left-align"
+              buttonClassName="toolbar-item spaced alignment"
+              buttonAriaLabel="Formatting options for text alignment"
+          >
+            <DropDownItem
+                onClick={() => {
+                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
+                }}
+                className="item"
+            >
+              <i className="icon left-align" />
+              <span className="text">Left Align</span>
+            </DropDownItem>
+            <DropDownItem
+                onClick={() => {
+                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
+                }}
+                className="item"
+            >
+              <i className="icon center-align" />
+              <span className="text">Center Align</span>
+            </DropDownItem>
+            <DropDownItem
+                onClick={() => {
+                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
+                }}
+                className="item"
+            >
+              <i className="icon right-align" />
+              <span className="text">Right Align</span>
+            </DropDownItem>
+            <DropDownItem
+                onClick={() => {
+                  activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
+                }}
+                className="item"
+            >
+              <i className="icon justify-align" />
+              <span className="text">Justify Align</span>
+            </DropDownItem>
+            <Divider />
+            <DropDownItem
+                onClick={() => {
+                  activeEditor.dispatchCommand(OUTDENT_CONTENT_COMMAND, undefined);
+                }}
+                className="item"
+            >
+              <i className={`icon ${isRTL ? 'indent' : 'outdent'}`} />
+              <span className="text">Outdent</span>
+            </DropDownItem>
+            <DropDownItem
+                onClick={() => {
+                  activeEditor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
+                }}
+                className="item"
+            >
+              <i className={`icon ${isRTL ? 'outdent' : 'indent'}`} />
+              <span className="text">Indent</span>
+            </DropDownItem>
+          </DropDown>
+      )}
 
       {/* modal */}
       {isModalOpen('lexicalRichText-add-upload') && (
