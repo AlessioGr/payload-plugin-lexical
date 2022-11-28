@@ -1,12 +1,5 @@
 # Payload Lexical Plugin
 
-NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
-
-What isn't working when using npm:
-- Faceless UI modals don't work
-
-[![NPM](https://img.shields.io/npm/v/payload-plugin-lexical)](https://www.npmjs.com/package/payload-plugin-lexical)
-
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) to add a lexical-based editor.
 
 ![203127349-2be29de4-aff3-4e13-9ebe-56be5fc3fc97 (1)](https://user-images.githubusercontent.com/70709113/204068103-a09f39e1-14e4-45fc-868a-68558380b74e.png)
@@ -15,16 +8,14 @@ A plugin for [Payload CMS](https://github.com/payloadcms/payload) to add a lexic
 
 MINIMUM REQUIRED PAYLOAD VERSION: 1.2.1
 
-This plugin is super-alpha.
-
 ## How to use - example collection
 
-1. yarn add payload-plugin-lexical
+1. Add the src files manually into your payload project. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
 
 2. :
 ```ts
 import { CollectionConfig } from 'payload/types';
-import lexicalRichTextField from 'payload-plugin-lexical/dist/fields/lexicalRichTextField'
+import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
 
 const Lexical: CollectionConfig = {
     slug: 'lexicalRichText',
