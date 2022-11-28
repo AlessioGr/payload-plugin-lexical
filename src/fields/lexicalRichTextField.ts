@@ -7,21 +7,21 @@ type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorSta
 
 //I cannot put this in LexicalRichText/index as that causes an error => https://github.com/payloadcms/payload/issues/1518
 const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<SerializedEditorState> =>  {
-        if(value.root.children){
-            const newChildren = [];
-            for(let childNode of value.root.children){
-                newChildren.push(await traverseLexicalField(childNode, ""));
-            }
-            value.root.children = newChildren;
+    if(value.root.children){
+        const newChildren = [];
+        for(let childNode of value.root.children){
+            newChildren.push(await traverseLexicalField(childNode, ""));
         }
+        value.root.children = newChildren;
+    }
 
-        return value;
+    return value;
 };
 
 
 
-function lexicalRichTextField(props: {name?: string, label?: string, editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig   }): Field {
-    const {name, label, editorConfigModifier} = props;
+function lexicalRichTextField(props: {name?: string, label?: string, localized?: boolean, editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig   }): Field {
+    const {name, label, localized, editorConfigModifier} = props;
 
     const defaultEditorConfig: EditorConfig = {
         features: {
@@ -90,6 +90,7 @@ function lexicalRichTextField(props: {name?: string, label?: string, editorConfi
         name: name ? name : 'richText',
         type: 'richText',
         label: label ? label : 'Rich Text',
+        localized: localized,
         hooks: {
             afterRead: [
                 populateLexicalRelationships,
