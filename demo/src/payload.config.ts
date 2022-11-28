@@ -1,6 +1,6 @@
 import { buildConfig } from 'payload/config';
 import path from 'path';
-import LexicalPlugin from '../../src/index'
+//import LexicalPlugin from '../../src/index'
 //import LexicalPlugin from '../../dist/index'
 
 import Users from './collections/Users';
@@ -22,7 +22,7 @@ export default buildConfig({
             react: path.join(__dirname, "../node_modules/react"),
             "react-dom": path.join(__dirname, "../node_modules/react-dom"),
             "payload": path.join(__dirname, "../node_modules/payload"),
-            '@faceless-ui/modal': path.resolve(__dirname, '../../node_modules/@faceless-ui/modal')
+            '@faceless-ui/modal': path.join(__dirname, '../node_modules/@faceless-ui/modal')
           },
         },
       };
@@ -46,7 +46,7 @@ export default buildConfig({
     fallback: true,
   },
   plugins: [
-    LexicalPlugin(),
+    //LexicalPlugin(),
   ],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts')
