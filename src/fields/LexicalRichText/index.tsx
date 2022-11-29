@@ -18,7 +18,7 @@ import {FieldHook, FieldWithPath} from "payload/types";
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
 export const populateLexicalRelationships2: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<SerializedEditorState> =>  {
-    if(value.root.children){
+    if(value && value.root && value.root.children){
         const newChildren = [];
         for(let childNode of value.root.children){
             newChildren.push(await traverseLexicalField(childNode, ""));
@@ -90,8 +90,13 @@ async function loadInternalLinkDocData(value: string, relationTo: string, locale
 
 export const LexicalRichTextCell: React.FC<any> = (props) => {
     const { field, colIndex, collection, cellData, rowData, editorConfig } = props;
-    console.log("Props", props);
     const data = cellData;
+
+    if(!data){
+        return (
+            <span></span>
+        );
+    }
 
     const initialConfig = {
         namespace: 'Playground',
