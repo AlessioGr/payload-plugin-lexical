@@ -56,10 +56,18 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
                 editorConfig={editorConfig}
               />
             </div>
-            <Settings />
-            {true ? <PasteLogPlugin /> : null}
-            {true ? <TestRecorderPlugin /> : null}
-            {measureTypingPerf ? <TypingPerfPlugin /> : null}
+            {editorConfig.debug && (
+                <Settings />
+            )}
+            {editorConfig.debug && (
+                <PasteLogPlugin />
+            )}
+            {editorConfig.debug && (
+                <TestRecorderPlugin />
+            )}
+            {measureTypingPerf && editorConfig.debug && (
+                <TypingPerfPlugin />
+            )}
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>

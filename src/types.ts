@@ -1,4 +1,8 @@
+import {ElementNode, LexicalEditor} from "lexical";
+
 export type EditorConfig = {
+    debug: boolean;
+    nodes: CustomNode[];
     features: {
         tables: {
             enabled: boolean,
@@ -57,5 +61,13 @@ export type EditorConfig = {
             display: boolean
         },
     }
+}
+
+export type CustomNode = {
+    node: typeof ElementNode;
+    displayName: string;
+    identifier: string;
+    createFunction: () => void;
+    formatFunction: ({blockType, editor}: {blockType: string, editor: LexicalEditor}) => void;
 }
 

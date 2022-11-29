@@ -62,6 +62,12 @@ function PlaygroundNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> 
     nodes.push(EquationNode);
   }
 
+  if(editorConfig.nodes.length > 0){
+    for(const customNode of editorConfig.nodes){
+      nodes.push(customNode.node);
+    }
+  }
+
   nodes.push(
       HeadingNode,
       ListNode,

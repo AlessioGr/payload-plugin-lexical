@@ -237,7 +237,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         <ActionsPlugin isRichText={isRichText} />
       </div>
-      {showTreeView && <TreeViewPlugin />}
+      {showTreeView && editorConfig.debug && <TreeViewPlugin />}
     </React.Fragment>
   );
 };

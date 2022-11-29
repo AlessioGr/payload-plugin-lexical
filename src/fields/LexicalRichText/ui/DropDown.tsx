@@ -56,6 +56,7 @@ export function DropDownItem({
       onClick={onClick}
       ref={ref}
       title={title}
+      type="button"
     >
       {children}
     </button>

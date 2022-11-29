@@ -142,10 +142,12 @@ function BlockFormatDropDown({
   editor,
   blockType,
   disabled = false,
+  editorConfig
 }: {
   blockType: keyof typeof blockTypeToBlockName;
   editor: LexicalEditor;
   disabled?: boolean;
+  editorConfig: EditorConfig;
 }): JSX.Element {
   const formatParagraph = () => {
     if (blockType !== 'paragraph') {
@@ -309,6 +311,20 @@ function BlockFormatDropDown({
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
+      {editorConfig.nodes.length > 0 && (
+          editorConfig.nodes.map(
+              (customNode) => (
+                  <DropDownItem
+                      className={`item ${dropDownActiveClass(blockType === customNode.identifier)}`}
+                      onClick={() => customNode.formatFunction({blockType: blockType, editor: editor})}
+                      key={customNode.identifier}
+                  >
+                    <i className="icon code" />
+                    <span className="text">{customNode.displayName} Block</span>
+                  </DropDownItem>
+              ),
+          )
+      )}
     </DropDown>
   );
 }
@@ -629,6 +645,7 @@ export default function ToolbarPlugin(props: {editorConfig: EditorConfig}): JSX.
             disabled={!isEditable}
             blockType={blockType}
             editor={editor}
+            editorConfig={editorConfig}
           />
           <Divider />
         </React.Fragment>
