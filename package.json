@@ -57,9 +57,9 @@
     "lexical": "0.6.4",
     "lodash": "^4.17.21",
     "react-dom": "^18.2.0",
-    "yjs": "^13.5.42",
+    "yjs": "^13.5.43",
     "@types/react-dom": "^18.0.9",
-    "payload": "^1.2.1",
+    "payload": "^1.2.4",
     "react": "^18.0.0",
     "react-i18next": "^11.18.6"
   },
