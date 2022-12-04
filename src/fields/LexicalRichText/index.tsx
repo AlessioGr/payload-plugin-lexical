@@ -14,7 +14,7 @@ import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import {createHeadlessEditor} from "@lexical/headless";
 import {ExtraAttributes, RawImagePayload} from "./nodes/ImageNode";
 import payload from "payload";
-import {FieldHook, FieldWithPath} from "payload/types";
+import {FieldHook, FieldWithPath, RichTextField, Validate} from "payload/types";
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
 export const populateLexicalRelationships2: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<SerializedEditorState> =>  {
@@ -136,13 +136,25 @@ export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
         </Suspense>
     );
 }
+
+export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (value, { t, required }) => {
+    if (required) {
+        /* const stringifiedDefaultValue = JSON.stringify(defaultRichTextValue);
+        if (value && JSON.stringify(value) !== stringifiedDefaultValue) return true;
+        return t('validation:required'); */
+    }
+
+    return true;
+};
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     let readOnly = false;
     const {path, editorConfig} = props;
     //const { value, setValue } = useField<Props>({ path });
 
+
     const field = useField<SerializedEditorState>({
         path: path, // required
+        validate: lexicalValidate,
         // validate: myValidateFunc, // optional
         // disableFormData?: false, // if true, the field's data will be ignored
         // condition?: myConditionHere, // optional, used to skip validation if condition fails
@@ -156,15 +168,19 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
         formSubmitted, // if the form has been submitted
         formProcessing, // if the form is currently processing
         setValue, // method to set the field's value in form state
-        initialValue, // the initial value that the field mounted with
+        initialValue, // the initial value that the field mounted with,
     } = field;
-    //console.log("Value", value)
+
+
+
+    console.log("Value", value);
+
 
     return (
         <LexicalEditorComponent
             onChange={(editorState: EditorState, editor: LexicalEditor) => {
                 const json = editorState.toJSON();
-                if (!readOnly && /* json !== defaultValue && */ json !== value) {
+                if (!readOnly && /* json !== defaultValue && */ json != value && JSON.stringify(json) !== JSON.stringify(value)) {
                     setValue(json);
                 }
             }}
