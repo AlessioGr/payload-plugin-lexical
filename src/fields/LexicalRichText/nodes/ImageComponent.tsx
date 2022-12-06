@@ -32,6 +32,7 @@ import {
   $setSelection,
   CLICK_COMMAND,
   COMMAND_PRIORITY_LOW,
+  DRAGSTART_COMMAND,
   KEY_BACKSPACE_COMMAND,
   KEY_DELETE_COMMAND,
   KEY_ENTER_COMMAND,
@@ -235,6 +236,19 @@ export default function ImageComponent({
           return false;
         },
         COMMAND_PRIORITY_LOW,
+      ),
+      editor.registerCommand(
+          DRAGSTART_COMMAND,
+          (event) => {
+            if (event.target === imageRef.current) {
+              // TODO This is just a temporary workaround for FF to behave like other browsers.
+              // Ideally, this handles drag & drop too (and all browsers).
+              event.preventDefault();
+              return true;
+            }
+            return false;
+          },
+          COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_DELETE_COMMAND,

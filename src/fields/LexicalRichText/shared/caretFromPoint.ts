@@ -6,14 +6,35 @@
  *
  */
 
-export default function caretFromPoint(x: number, y: number): null | Range {
+export default function caretFromPoint(
+    x: number,
+    y: number,
+): null | {
+  offset: number;
+  node: Node;
+} {
   if (typeof document.caretRangeFromPoint !== 'undefined') {
-    return document.caretRangeFromPoint(x, y);
+    const range = document.caretRangeFromPoint(x, y);
+    if (range === null) {
+      return null;
+    }
+    return {
+      node: range.startContainer,
+      offset: range.startOffset,
+    };
     // @ts-ignore
-  } if (document.caretPositionFromPoint !== 'undefined') {
+  } else if (document.caretPositionFromPoint !== 'undefined') {
     // @ts-ignore FF - no types
-    return document.caretPositionFromPoint(x, y);
+    const range = document.caretPositionFromPoint(x, y);
+    if (range === null) {
+      return null;
+    }
+    return {
+      node: range.offsetNode,
+      offset: range.offset,
+    };
+  } else {
+    // Gracefully handle IE
+    return null;
   }
-  // Gracefully handle IE
-  return null;
 }
