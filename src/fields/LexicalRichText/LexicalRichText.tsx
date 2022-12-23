@@ -166,7 +166,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                       contentEditable={
                         <ContentEditable className="TableNode__contentEditable" />
                       }
-                      placeholder=""
+                      placeholder={null}
                       ErrorBoundary={LexicalErrorBoundary}
                   />
                   <MentionsPlugin />

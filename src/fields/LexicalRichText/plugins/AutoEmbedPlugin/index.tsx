@@ -16,7 +16,7 @@ import {
   URL_MATCHER,
 } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useState } from 'react';
+import {useMemo, useState} from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
@@ -60,7 +60,7 @@ export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
   keywords: ['youtube', 'video'],
 
   // Determine if a given URL is a match and return url data.
-  parseUrl: (url: string) => {
+  parseUrl: async (url: string) => {
     const match = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url);
 
     const id = match ? (match?.[2].length === 11 ? match[2] : null) : null;
@@ -229,6 +229,15 @@ function AutoEmbedMenu({
     </div>
   );
 }
+const debounce = (callback: (text: string) => void, delay: number) => {
+  let timeoutId: number;
+  return (text: string) => {
+    window.clearTimeout(timeoutId);
+    timeoutId = window.setTimeout(() => {
+      callback(text);
+    }, delay);
+  };
+};
 
 export function AutoEmbedDialog({
   embedConfig,
@@ -240,8 +249,24 @@ export function AutoEmbedDialog({
   const [text, setText] = useState('');
   const [editor] = useLexicalComposerContext();
 
-  const urlMatch = URL_MATCHER.exec(text);
-  const embedResult = text != null && urlMatch != null ? embedConfig.parseUrl(text) : null;
+  const [embedResult, setEmbedResult] = useState<EmbedMatchResult | null>(null);
+
+  const validateText = useMemo(
+    () =>
+      debounce((inputText: string) => {
+        const urlMatch = URL_MATCHER.exec(inputText);
+        if (embedConfig != null && inputText != null && urlMatch != null) {
+          Promise.resolve(embedConfig.parseUrl(inputText)).then(
+            (parseResult) => {
+              setEmbedResult(parseResult);
+            },
+          );
+        } else if (embedResult != null) {
+          setEmbedResult(null);
+        }
+      }, 200),
+    [embedConfig, embedResult],
+  );
 
   const onClick = () => {
     if (embedResult != null) {
@@ -261,6 +286,9 @@ export function AutoEmbedDialog({
           data-test-id={`${embedConfig.type}-embed-modal-url`}
           onChange={(e) => {
             setText(e.target.value);
+            const {value} = e.target;
+            setText(value);
+            validateText(value);
           }}
         />
       </div>
@@ -321,6 +349,7 @@ export default function AutoEmbedPlugin(props: {editorConfig: EditorConfig}): JS
               className="typeahead-popover auto-embed-menu"
               style={{
                 marginLeft: anchorElementRef.current.style.width,
+                width: 200,
               }}
             >
               <AutoEmbedMenu

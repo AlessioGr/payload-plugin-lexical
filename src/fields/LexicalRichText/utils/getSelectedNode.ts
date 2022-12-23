@@ -22,5 +22,5 @@ export function getSelectedNode(
   if (isBackward) {
     return $isAtNodeEnd(focus) ? anchorNode : focusNode;
   }
-  return $isAtNodeEnd(anchor) ? focusNode : anchorNode;
+  return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
 }

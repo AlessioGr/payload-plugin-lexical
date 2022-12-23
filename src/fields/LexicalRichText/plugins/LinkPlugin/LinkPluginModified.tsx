@@ -18,49 +18,50 @@ import type {
   NodeSelection,
   RangeSelection,
   SerializedElementNode,
-} from 'lexical';
+} from "lexical";
 
-import { addClassNamesToElement } from '@lexical/utils';
+import { addClassNamesToElement } from "@lexical/utils";
 import {
+  $applyNodeReplacement,
   $getSelection,
   $isElementNode,
   $isRangeSelection,
   createCommand,
   ElementNode,
   Spread,
-} from 'lexical';
+} from "lexical";
 
 // This is just what's passed in the command - not what's used as attributes in the final link
 export type PayloadLinkData = {
-  payloadType?: string,
-  url: string,
-  linkType: 'custom'|'internal',
-  newTab: boolean,
+  payloadType?: string;
+  url: string;
+  linkType: "custom" | "internal";
+  newTab: boolean;
   doc: {
-    value: string,
-    relationTo: string
-  }|null,
-  fields?: any
+    value: string;
+    relationTo: string;
+  } | null;
+  fields?: any;
 };
 
 export type LinkAttributes = {
   rel?: null | string;
   newTab?: boolean;
   doc?: {
-    value: string,
-    relationTo: string
-  }|null;
-  linkType?: 'custom'|'internal';
+    value: string;
+    relationTo: string;
+  } | null;
+  linkType?: "custom" | "internal";
 };
 
 export type SerializedLinkNode = Spread<
   {
-    type: 'link';
+    type: "link";
     url: string;
     version: 1;
   },
   Spread<LinkAttributes, SerializedElementNode>
-  >;
+>;
 
 /** @noInheritDoc */
 export class LinkNode extends ElementNode {
@@ -72,31 +73,41 @@ export class LinkNode extends ElementNode {
 
   /** @internal */
   __doc: {
-    value: string,
-    relationTo: string
-  }|null;
+    value: string;
+    relationTo: string;
+  } | null;
 
   /** @internal */
-  __linkType: 'custom'|'internal';
+  __linkType: "custom" | "internal";
 
   /** @internal */
   __rel: null | string;
 
   static getType(): string {
-    return 'link';
+    return "link";
   }
 
   static clone(node: LinkNode): LinkNode {
     return new LinkNode(
       node.__url,
-      { rel: node.__rel, newTab: node.__newTab, doc: node.__doc, linkType: node.__linkType },
-      node.__key,
+      {
+        rel: node.__rel,
+        newTab: node.__newTab,
+        doc: node.__doc,
+        linkType: node.__linkType,
+      },
+      node.__key
     );
   }
 
   constructor(url: string, attributes: LinkAttributes = {}, key?: NodeKey) {
     super(key);
-    const { newTab = false, rel = null, doc = null, linkType = 'custom' } = attributes;
+    const {
+      newTab = false,
+      rel = null,
+      doc = null,
+      linkType = "custom",
+    } = attributes;
     this.__url = url;
     this.__newTab = newTab;
     this.__rel = rel;
@@ -105,12 +116,12 @@ export class LinkNode extends ElementNode {
   }
 
   createDOM(config: EditorConfig): HTMLAnchorElement {
-    const element = document.createElement('a');
-    if (this.__linkType === 'custom') {
+    const element = document.createElement("a");
+    if (this.__linkType === "custom") {
       element.href = this.__url;
     }
     if (this.__newTab) {
-      element.target = '_blank';
+      element.target = "_blank";
     }
 
     if (this.__rel !== null) {
@@ -123,23 +134,23 @@ export class LinkNode extends ElementNode {
   updateDOM(
     prevNode: LinkNode,
     anchor: HTMLAnchorElement,
-    config: EditorConfig,
+    config: EditorConfig
   ): boolean {
     const url = this.__url;
     const newTab = this.__newTab;
     const rel = this.__rel;
-    if (url !== prevNode.__url && this.__linkType === 'custom') {
+    if (url !== prevNode.__url && this.__linkType === "custom") {
       anchor.href = url;
     }
-    if (this.__linkType === 'internal' && prevNode.__linkType === 'custom') {
-      anchor.removeAttribute('href');
+    if (this.__linkType === "internal" && prevNode.__linkType === "custom") {
+      anchor.removeAttribute("href");
     }
 
     if (newTab !== prevNode.__newTab) {
       if (newTab) {
-        anchor.target = '_blank';
+        anchor.target = "_blank";
       } else {
-        anchor.removeAttribute('target');
+        anchor.removeAttribute("target");
       }
     }
 
@@ -147,7 +158,7 @@ export class LinkNode extends ElementNode {
       if (rel) {
         anchor.rel = rel;
       } else {
-        anchor.removeAttribute('rel');
+        anchor.removeAttribute("rel");
       }
     }
     return false;
@@ -163,7 +174,7 @@ export class LinkNode extends ElementNode {
   }
 
   static importJSON(
-    serializedNode: SerializedLinkNode | SerializedAutoLinkNode,
+    serializedNode: SerializedLinkNode | SerializedAutoLinkNode
   ): LinkNode {
     const node = $createLinkNode(serializedNode.url, {
       rel: serializedNode.rel,
@@ -182,7 +193,7 @@ export class LinkNode extends ElementNode {
       ...super.exportJSON(),
       rel: this.getRel(),
       newTab: this.isNewTab(),
-      type: 'link',
+      type: "link",
       url: this.getURL(),
       linkType: this.getLinkType(),
       doc: this.getDoc(),
@@ -208,20 +219,20 @@ export class LinkNode extends ElementNode {
     writable.__newTab = newTab;
   }
 
-  getDoc(): { value: string, relationTo: string }|null {
+  getDoc(): { value: string; relationTo: string } | null {
     return this.getLatest().__doc;
   }
 
-  setDoc(doc: { value: string, relationTo: string }|null): void {
+  setDoc(doc: { value: string; relationTo: string } | null): void {
     const writable = this.getWritable();
     writable.__doc = doc;
   }
 
-  getLinkType(): 'custom'|'internal' {
+  getLinkType(): "custom" | "internal" {
     return this.getLatest().__linkType;
   }
 
-  setLinkType(linkType: 'custom'|'internal'): void {
+  setLinkType(linkType: "custom" | "internal"): void {
     const writable = this.getWritable();
     writable.__linkType = linkType;
   }
@@ -235,8 +246,14 @@ export class LinkNode extends ElementNode {
     writable.__rel = rel;
   }
 
-  insertNewAfter(selection: RangeSelection): null | ElementNode {
-    const element = this.getParentOrThrow().insertNewAfter(selection);
+  insertNewAfter(
+    selection: RangeSelection,
+    restoreSelection = true
+  ): null | ElementNode {
+    const element = this.getParentOrThrow().insertNewAfter(
+      selection,
+      restoreSelection
+    );
     if ($isElementNode(element)) {
       const linkNode = $createLinkNode(this.__url, {
         rel: this.__rel,
@@ -269,7 +286,7 @@ export class LinkNode extends ElementNode {
   extractWithChild(
     child: LexicalNode,
     selection: RangeSelection | NodeSelection | GridSelection,
-    destination: 'clone' | 'html',
+    destination: "clone" | "html"
   ): boolean {
     if (!$isRangeSelection(selection)) {
       return false;
@@ -279,9 +296,9 @@ export class LinkNode extends ElementNode {
     const focusNode = selection.focus.getNode();
 
     return (
-      this.isParentOf(anchorNode)
-      && this.isParentOf(focusNode)
-      && selection.getTextContent().length > 0
+      this.isParentOf(anchorNode) &&
+      this.isParentOf(focusNode) &&
+      selection.getTextContent().length > 0
     );
   }
 }
@@ -290,11 +307,11 @@ function convertAnchorElement(domNode: Node): DOMConversionOutput {
   let node = null;
   if (domNode instanceof HTMLAnchorElement) {
     const content = domNode.textContent;
-    if (content !== null && content !== '') {
-      node = $createLinkNode(domNode.getAttribute('href') || '', {
-        rel: domNode.getAttribute('rel'),
-        newTab: domNode.getAttribute('target') === '_blank',
-        linkType: 'custom',
+    if (content !== null && content !== "") {
+      node = $createLinkNode(domNode.getAttribute("href") || "", {
+        rel: domNode.getAttribute("rel"),
+        newTab: domNode.getAttribute("target") === "_blank",
+        linkType: "custom",
         doc: null,
       });
     }
@@ -304,37 +321,42 @@ function convertAnchorElement(domNode: Node): DOMConversionOutput {
 
 export function $createLinkNode(
   url: string,
-  attributes?: LinkAttributes,
+  attributes?: LinkAttributes
 ): LinkNode {
-  return new LinkNode(url, attributes);
+  return $applyNodeReplacement(new LinkNode(url, attributes));
 }
 
 export function $isLinkNode(
-  node: LexicalNode | null | undefined,
+  node: LexicalNode | null | undefined
 ): node is LinkNode {
   return node instanceof LinkNode;
 }
 
 export type SerializedAutoLinkNode = Spread<
   {
-    type: 'autolink';
+    type: "autolink";
     version: 1;
   },
   SerializedLinkNode
-  >;
+>;
 
 // Custom node type to override `canInsertTextAfter` that will
 // allow typing within the link
 export class AutoLinkNode extends LinkNode {
   static getType(): string {
-    return 'autolink';
+    return "autolink";
   }
 
   static clone(node: AutoLinkNode): AutoLinkNode {
     return new AutoLinkNode(
       node.__url,
-      { rel: node.__rel, newTab: node.__newTab, linkType: node.__linkType, doc: node.__doc },
-      node.__key,
+      {
+        rel: node.__rel,
+        newTab: node.__newTab,
+        linkType: node.__linkType,
+        doc: node.__doc,
+      },
+      node.__key
     );
   }
 
@@ -359,13 +381,19 @@ export class AutoLinkNode extends LinkNode {
   exportJSON(): SerializedAutoLinkNode {
     return {
       ...super.exportJSON(),
-      type: 'autolink',
+      type: "autolink",
       version: 1,
     };
   }
 
-  insertNewAfter(selection: RangeSelection): null | ElementNode {
-    const element = this.getParentOrThrow().insertNewAfter(selection);
+  insertNewAfter(
+    selection: RangeSelection,
+    restoreSelection = true
+  ): null | ElementNode {
+    const element = this.getParentOrThrow().insertNewAfter(
+      selection,
+      restoreSelection
+    );
     if ($isElementNode(element)) {
       const linkNode = $createAutoLinkNode(this.__url, {
         rel: this.__rel,
@@ -382,25 +410,24 @@ export class AutoLinkNode extends LinkNode {
 
 export function $createAutoLinkNode(
   url: string,
-  attributes?: LinkAttributes,
+  attributes?: LinkAttributes
 ): AutoLinkNode {
-  return new AutoLinkNode(url, attributes);
+  return $applyNodeReplacement(new AutoLinkNode(url, attributes));
 }
 
 export function $isAutoLinkNode(
-  node: LexicalNode | null | undefined,
+  node: LexicalNode | null | undefined
 ): node is AutoLinkNode {
   return node instanceof AutoLinkNode;
 }
 
 export const TOGGLE_LINK_COMMAND: LexicalCommand<
-  string | ({url: string} & LinkAttributes) | null
-  > = createCommand('TOGGLE_LINK_COMMAND');
+  string | ({ url: string } & LinkAttributes) | null
+> = createCommand("TOGGLE_LINK_COMMAND");
 
-export function toggleLink(
-  linkData: PayloadLinkData,
-): void {
-  const rel = 'noopener'; /* attributes.rel === undefined ? 'noopener' : attributes.rel; */
+export function toggleLink(linkData: PayloadLinkData): void {
+  const rel =
+    "noopener"; /* attributes.rel === undefined ? 'noopener' : attributes.rel; */
   const selection = $getSelection();
 
   if (!$isRangeSelection(selection)) {
@@ -452,9 +479,9 @@ export function toggleLink(
       const parent = node.getParent();
 
       if (
-        parent === linkNode
-        || parent === null
-        || ($isElementNode(node) && !node.isInline())
+        parent === linkNode ||
+        parent === null ||
+        ($isElementNode(node) && !node.isInline())
       ) {
         return;
       }
@@ -474,7 +501,12 @@ export function toggleLink(
 
       if (!parent.is(prevParent)) {
         prevParent = parent;
-        linkNode = $createLinkNode(linkData.url, { rel, newTab: linkData.newTab, linkType: linkData.linkType, doc: linkData.doc });
+        linkNode = $createLinkNode(linkData.url, {
+          rel,
+          newTab: linkData.newTab,
+          linkType: linkData.linkType,
+          doc: linkData.doc,
+        });
 
         if ($isLinkNode(parent)) {
           if (node.getPreviousSibling() === null) {
@@ -516,13 +548,13 @@ function $getLinkAncestor(node: LexicalNode): null | LexicalNode {
 
 function $getAncestor(
   node: LexicalNode,
-  predicate: (ancestor: LexicalNode) => boolean,
+  predicate: (ancestor: LexicalNode) => boolean
 ): null | LexicalNode {
   let parent: null | LexicalNode = node;
   while (
-    parent !== null
-    && (parent = parent.getParent()) !== null
-    && !predicate(parent)
+    parent !== null &&
+    (parent = parent.getParent()) !== null &&
+    !predicate(parent)
   );
   return parent;
 }
