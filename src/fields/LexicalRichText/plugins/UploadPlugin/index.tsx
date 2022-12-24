@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $wrapNodeInElement, mergeRegister } from "@lexical/utils";
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -24,26 +24,25 @@ import {
   DROP_COMMAND,
   LexicalCommand,
   LexicalEditor,
-} from 'lexical';
-import { useEffect } from 'react';
-import * as React from 'react';
-import {CAN_USE_DOM} from '../../shared/canUseDOM';
-
+} from "lexical";
+import { useEffect } from "react";
+import * as React from "react";
+import { CAN_USE_DOM } from "../../shared/canUseDOM";
 
 import {
   $createImageNode,
   $isImageNode,
   ImageNode,
   RawImagePayload,
-} from '../../nodes/ImageNode';
+} from "../../nodes/ImageNode";
 
 export type InsertImagePayload = Readonly<RawImagePayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
 
-export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> = createCommand('INSERT_IMAGE_COMMAND');
-
+export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
+  createCommand("INSERT_IMAGE_COMMAND");
 
 export default function UploadPlugin({
   captionsEnabled,
@@ -54,16 +53,23 @@ export default function UploadPlugin({
 
   useEffect(() => {
     if (!editor.hasNodes([ImageNode])) {
-      throw new Error('ImagesPlugin: ImageNode not registered on editor');
+      throw new Error("ImagesPlugin: ImageNode not registered on editor");
     }
 
     return mergeRegister(
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
-        (insertImagePayload: RawImagePayload) => { // This is run on the browser. Can't just use 'payload' object
-          console.log('Received INSERT_IMAGE_COMMAND with payload', insertImagePayload);
+        (insertImagePayload: RawImagePayload) => {
+          // This is run on the browser. Can't just use 'payload' object
+          console.log(
+            "Received INSERT_IMAGE_COMMAND with payload",
+            insertImagePayload
+          );
           editor.update(() => {
-            const imageNode = $createImageNode(insertImagePayload, {widthOverride: undefined, heightOverride: undefined});
+            const imageNode = $createImageNode(insertImagePayload, {
+              widthOverride: undefined,
+              heightOverride: undefined,
+            });
             $insertNodes([imageNode]);
             if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
               $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
@@ -132,36 +138,37 @@ export default function UploadPlugin({
 
           return true;
         },
-        COMMAND_PRIORITY_EDITOR,
+        COMMAND_PRIORITY_EDITOR
       ),
       editor.registerCommand<DragEvent>(
         DRAGSTART_COMMAND,
         (event) => {
           return onDragStart(event);
         },
-        COMMAND_PRIORITY_HIGH,
+        COMMAND_PRIORITY_HIGH
       ),
       editor.registerCommand<DragEvent>(
         DRAGOVER_COMMAND,
         (event) => {
           return onDragover(event);
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand<DragEvent>(
         DROP_COMMAND,
         (event) => {
           return onDrop(event, editor);
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [captionsEnabled, editor]);
 
   return null;
 }
 
-const TRANSPARENT_IMAGE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+const TRANSPARENT_IMAGE =
+  "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 let img = null;
 
 function onDragStart(event: DragEvent): boolean {
@@ -173,22 +180,22 @@ function onDragStart(event: DragEvent): boolean {
   if (!dataTransfer) {
     return false;
   }
-  dataTransfer.setData('text/plain', '_');
-  if(!img){
-    img = document.createElement('img');
+  dataTransfer.setData("text/plain", "_");
+  if (!img) {
+    img = document.createElement("img");
     img.src = TRANSPARENT_IMAGE;
   }
   dataTransfer.setDragImage(img, 0, 0);
   dataTransfer.setData(
-    'application/x-lexical-drag',
+    "application/x-lexical-drag",
     JSON.stringify({
       data: {
         rawImagePayload: node.__rawImagePayload,
         extraAttributes: node.__extraAttributes,
         key: node.getKey(),
       },
-      type: 'upload',
-    }),
+      type: "upload",
+    })
   );
 
   return true;
@@ -239,12 +246,12 @@ function getImageNodeInSelection(): ImageNode | null {
 }
 
 function getDragImageData(event: DragEvent): null | InsertImagePayload {
-  const dragData = event.dataTransfer?.getData('application/x-lexical-drag');
+  const dragData = event.dataTransfer?.getData("application/x-lexical-drag");
   if (!dragData) {
     return null;
   }
   const { type, data } = JSON.parse(dragData);
-  if (type !== 'upload') {
+  if (type !== "upload") {
     return null;
   }
 
@@ -261,11 +268,11 @@ declare global {
 function canDropImage(event: DragEvent): boolean {
   const { target } = event;
   return !!(
-    target
-    && target instanceof HTMLElement
-    && !target.closest('code, span.editor-image')
-    && target.parentElement
-    && target.parentElement.closest('div.ContentEditable__root')
+    target &&
+    target instanceof HTMLElement &&
+    !target.closest("code, span.editor-image") &&
+    target.parentElement &&
+    target.parentElement.closest("div.ContentEditable__root")
   );
 }
 
@@ -285,7 +292,7 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
     domSelection.collapse(event.rangeParent, event.rangeOffset || 0);
     range = domSelection.getRangeAt(0);
   } else {
-    throw Error('Cannot get the selection when dragging');
+    throw Error("Cannot get the selection when dragging");
   }
 
   return range;

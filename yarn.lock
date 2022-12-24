@@ -4510,10 +4510,10 @@ graphql-type-json@^0.3.1:
   resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.2.tgz#f53a851dbfe07bd1c8157d24150064baab41e115"
   integrity sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==
 
-graphql@15.4.0:
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/graphql/-/graphql-15.4.0.tgz#e459dea1150da5a106486ba7276518b5295a4347"
-  integrity sha512-EB3zgGchcabbsU9cFe1j+yxdzKQKAbGUWRb13DsrsMN1yyfmmIq+2+L5MqVWcDCE4V89R5AyUOi7sMOGxdsYtA==
+graphql@^16.6.0:
+  version "16.6.0"
+  resolved "https://registry.yarnpkg.com/graphql/-/graphql-16.6.0.tgz#c2dcffa4649db149f6282af726c8c83f1c7c5fdb"
+  integrity sha512-KPIBPDlW7NxrbT/eh4qPXz5FiFdL5UbaA0XUNz2Rp3Z3hqBSkbj0GVjwFDztsWVauZUWsbKHgMg++sk8UX0bkw==
 
 growly@^1.3.0:
   version "1.3.0"
@@ -6280,6 +6280,11 @@ mongodb@4.8.1:
   optionalDependencies:
     saslprep "^1.0.3"
 
+mongoose-aggregate-paginate-v2@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/mongoose-aggregate-paginate-v2/-/mongoose-aggregate-paginate-v2-1.0.6.tgz#fd2f2564d1bbf52f49a196f0b7b03675913dacca"
+  integrity sha512-UuALu+mjhQa1K9lMQvjLL3vm3iALvNw8PQNIh2gp1b+tO5hUa0NC0Wf6/8QrT9PSJVTihXaD8hQVy3J4e0jO0Q==
+
 mongoose-paginate-v2@^1.6.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/mongoose-paginate-v2/-/mongoose-paginate-v2-1.7.1.tgz#0b390f5eb8e5dca55ffcb1fd7b4d8078636cb8f1"
@@ -6851,10 +6856,10 @@ pause@0.0.1:
   resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
   integrity sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg==
 
-payload@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/payload/-/payload-1.3.4.tgz#d98b6d4181daf3b4133c4af55962d088b883bce2"
-  integrity sha512-x/jEoIcXda1+FoQiYg5ZXJAekzglRGEUij7pYEZk+WiCNjLEFzCia/dBWYu9OpyWxx0AjbULSo1/0OnKWqIrXw==
+payload@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/payload/-/payload-1.4.1.tgz#77bfcf044049d7f7de2fb68498df3ea6733dfea7"
+  integrity sha512-bVwMjIHfz3UD/TIW6x/4Q6DsiDkR8TMwmOqXS5NS2C5G+B8R+ygmB6jCcngHNXGihpZaPjbz+mv+bfrbuDEWSg==
   dependencies:
     "@babel/cli" "^7.12.8"
     "@babel/core" "^7.11.6"
@@ -6897,7 +6902,7 @@ payload@^1.3.4:
     find-up "4.1.0"
     flatley "^5.2.0"
     fs-extra "^10.0.0"
-    graphql "15.4.0"
+    graphql "^16.6.0"
     graphql-playground-middleware-express "^1.7.14"
     graphql-query-complexity "^0.7.0"
     graphql-scalars "^1.4.0"
@@ -6922,6 +6927,7 @@ payload@^1.3.4:
     minimist "^1.2.0"
     mkdirp "^1.0.4"
     mongoose "6.5.0"
+    mongoose-aggregate-paginate-v2 "^1.0.6"
     mongoose-paginate-v2 "^1.6.1"
     nodemailer "^6.4.2"
     object-to-formdata "^4.1.0"

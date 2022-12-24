@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import './index.scss';
+import "./index.scss";
 
 // import { $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $findMatchingParent, mergeRegister } from '@lexical/utils';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $findMatchingParent, mergeRegister } from "@lexical/utils";
 import {
   $getSelection,
   $isRangeSelection,
@@ -21,34 +21,38 @@ import {
   NodeSelection,
   RangeSelection,
   SELECTION_CHANGE_COMMAND,
-} from 'lexical';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
+} from "lexical";
+import { useCallback, useEffect, useRef, useState } from "react";
+import * as React from "react";
+import { createPortal } from "react-dom";
 
-import { Modal, useModal } from '@faceless-ui/modal';
-import { useTranslation } from 'react-i18next';
-import { $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '../LinkPlugin/LinkPluginModified';
-import type { PayloadLinkData } from '../LinkPlugin/LinkPluginModified';
-import LinkPreview from '../../ui/LinkPreview';
-import { getSelectedNode } from '../../utils/getSelectedNode';
-import { sanitizeUrl } from '../../utils/url';
-import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
-import MinimalTemplate from 'payload/dist/admin/components/templates/Minimal'
-import Button from 'payload/dist/admin/components/elements/Button'
-import './modal.scss';
-import RenderFields from 'payload/dist/admin/components/forms/RenderFields';
-import fieldTypes from 'payload/dist/admin/components/forms/field-types';
-import FormSubmit from 'payload/dist/admin/components/forms/Submit';
-import Form from 'payload/dist/admin/components/forms/Form';
-import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues'
-import { Fields } from 'payload/dist/admin/components/forms/Form/types';
-import { Field } from 'payload/dist/fields/config/types';
-import {getBaseFields} from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/Modal/baseFields'
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
-import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
+import { Modal, useModal } from "@faceless-ui/modal";
+import { useTranslation } from "react-i18next";
+import {
+  $isAutoLinkNode,
+  $isLinkNode,
+  TOGGLE_LINK_COMMAND,
+} from "../LinkPlugin/LinkPluginModified";
+import type { PayloadLinkData } from "../LinkPlugin/LinkPluginModified";
+import LinkPreview from "../../ui/LinkPreview";
+import { getSelectedNode } from "../../utils/getSelectedNode";
+import { sanitizeUrl } from "../../utils/url";
+import { setFloatingElemPosition } from "../../utils/setFloatingElemPosition";
+import MinimalTemplate from "payload/dist/admin/components/templates/Minimal";
+import Button from "payload/dist/admin/components/elements/Button";
+import "./modal.scss";
+import RenderFields from "payload/dist/admin/components/forms/RenderFields";
+import fieldTypes from "payload/dist/admin/components/forms/field-types";
+import FormSubmit from "payload/dist/admin/components/forms/Submit";
+import Form from "payload/dist/admin/components/forms/Form";
+import reduceFieldsToValues from "payload/dist/admin/components/forms/Form/reduceFieldsToValues";
+import { Fields } from "payload/dist/admin/components/forms/Form/types";
+import { Field } from "payload/dist/fields/config/types";
+import { getBaseFields } from "payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields";
+import { useConfig } from "payload/dist/admin/components/utilities/Config";
+import buildStateFromSchema from "payload/dist/admin/components/forms/Form/buildStateFromSchema";
+import { useAuth } from "payload/dist/admin/components/utilities/Auth";
+import { useLocale } from "payload/dist/admin/components/utilities/Locale";
 
 function LinkEditor({
   editor,
@@ -58,29 +62,27 @@ function LinkEditor({
   anchorElem: HTMLElement;
 }): JSX.Element {
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const [linkUrl, setLinkUrl] = useState('');
+  const [linkUrl, setLinkUrl] = useState("");
   const [isEditMode, setEditMode] = useState(false);
   const [lastSelection, setLastSelection] = useState<
     RangeSelection | GridSelection | NodeSelection | null
   >(null);
 
-  const customFieldSchema = false/* fieldProps?.admin?.link?.fields */; // TODO: Field props
+  const customFieldSchema = false; /* fieldProps?.admin?.link?.fields */ // TODO: Field props
   const config = useConfig();
 
   const { user } = useAuth();
   const locale = useLocale();
-  const { t } = useTranslation('fields');
+  const { t } = useTranslation("fields");
 
   const [initialState, setInitialState] = useState<Fields>({});
   const [fieldSchema] = useState(() => {
-    const fields: Field[] = [
-      ...getBaseFields(config),
-    ];
+    const fields: Field[] = [...getBaseFields(config)];
 
     if (customFieldSchema) {
       fields.push({
-        name: 'fields',
-        type: 'group',
+        name: "fields",
+        type: "group",
         admin: {
           style: {
             margin: 0,
@@ -96,12 +98,9 @@ function LinkEditor({
     return fields;
   });
 
-  const {
-    toggleModal,
-    isModalOpen,
-  } = useModal();
-  const modalSlug = 'lexicalRichText-edit-link';
-  const baseModalClass = 'rich-text-link-edit-modal';
+  const { toggleModal, isModalOpen } = useModal();
+  const modalSlug = "lexicalRichText-edit-link";
+  const baseModalClass = "rich-text-link-edit-modal";
 
   const updateLinkEditor = useCallback(() => {
     const selection = $getSelection();
@@ -109,26 +108,24 @@ function LinkEditor({
       const node = getSelectedNode(selection);
       const parent = node.getParent();
 
-
       // Initial state thingy
 
       // Initial state:
       const data: {
-        text: string,
-        url: string,
-        linkType?: 'custom'|'internal',
-        newTab?: boolean,
-        doc?: { value: string, relationTo: string }|null,
-        fields: unknown
+        text: string;
+        url: string;
+        linkType?: "custom" | "internal";
+        newTab?: boolean;
+        doc?: { value: string; relationTo: string } | null;
+        fields: unknown;
       } = {
-        text: '',
-        url: '',
+        text: "",
+        url: "",
         linkType: undefined,
         newTab: undefined,
         doc: undefined,
         fields: undefined,
       };
-
 
       if ($isLinkNode(parent)) {
         data.text = parent.getTextContent();
@@ -136,10 +133,15 @@ function LinkEditor({
         data.newTab = parent.isNewTab();
         data.linkType = parent.getLinkType();
         data.doc = parent.getDoc();
-        if (parent.getLinkType() === 'custom') {
+        if (parent.getLinkType() === "custom") {
           setLinkUrl(parent.getURL());
-        } else { // internal
-          setLinkUrl(`relation to ${parent.getDoc()?.relationTo}: ${parent.getDoc()?.value}`);
+        } else {
+          // internal
+          setLinkUrl(
+            `relation to ${parent.getDoc()?.relationTo}: ${
+              parent.getDoc()?.value
+            }`
+          );
         }
       } else if ($isLinkNode(node)) {
         data.text = node.getTextContent();
@@ -147,20 +149,28 @@ function LinkEditor({
         data.newTab = node.isNewTab();
         data.linkType = node.getLinkType();
         data.doc = node.getDoc();
-        if (node.getLinkType() === 'custom') {
+        if (node.getLinkType() === "custom") {
           setLinkUrl(node.getURL());
-        } else { // internal
-          setLinkUrl(`relation to ${node.getDoc()?.relationTo}: ${node.getDoc()?.value}`);
+        } else {
+          // internal
+          setLinkUrl(
+            `relation to ${node.getDoc()?.relationTo}: ${node.getDoc()?.value}`
+          );
         }
       } else {
-        setLinkUrl('');
+        setLinkUrl("");
       }
 
-      buildStateFromSchema({ fieldSchema, data, user, operation: 'create', locale, t }).then(
-        (state) => {
-          setInitialState(state);
-        },
-      );
+      buildStateFromSchema({
+        fieldSchema,
+        data,
+        user,
+        operation: "create",
+        locale,
+        t,
+      }).then((state) => {
+        setInitialState(state);
+      });
     }
 
     const editorElem = editorRef.current;
@@ -174,11 +184,11 @@ function LinkEditor({
     const rootElement = editor.getRootElement();
 
     if (
-      selection !== null
-      && nativeSelection !== null
-      && rootElement !== null
-      && rootElement.contains(nativeSelection.anchorNode)
-      && editor.isEditable()
+      selection !== null &&
+      nativeSelection !== null &&
+      rootElement !== null &&
+      rootElement.contains(nativeSelection.anchorNode) &&
+      editor.isEditable()
     ) {
       const domRange = nativeSelection.getRangeAt(0);
       let rect;
@@ -194,13 +204,13 @@ function LinkEditor({
 
       setFloatingElemPosition(rect, editorElem, anchorElem);
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== 'link-input') {
+    } else if (!activeElement || activeElement.className !== "link-input") {
       if (rootElement !== null) {
         setFloatingElemPosition(null, editorElem, anchorElem);
       }
       setLastSelection(null);
       setEditMode(false);
-      setLinkUrl('');
+      setLinkUrl("");
     }
 
     return true;
@@ -215,17 +225,17 @@ function LinkEditor({
       });
     };
 
-    window.addEventListener('resize', update);
+    window.addEventListener("resize", update);
 
     if (scrollerElem) {
-      scrollerElem.addEventListener('scroll', update);
+      scrollerElem.addEventListener("scroll", update);
     }
 
     return () => {
-      window.removeEventListener('resize', update);
+      window.removeEventListener("resize", update);
 
       if (scrollerElem) {
-        scrollerElem.removeEventListener('scroll', update);
+        scrollerElem.removeEventListener("scroll", update);
       }
     };
   }, [anchorElem.parentElement, editor, updateLinkEditor]);
@@ -244,8 +254,8 @@ function LinkEditor({
           updateLinkEditor();
           return true;
         },
-        COMMAND_PRIORITY_LOW,
-      ),
+        COMMAND_PRIORITY_LOW
+      )
     );
   }, [editor, updateLinkEditor]);
 
@@ -255,17 +265,10 @@ function LinkEditor({
     });
   }, [editor, updateLinkEditor]);
 
-
   return (
-    <div
-      ref={editorRef}
-      className="link-editor"
-    >
+    <div ref={editorRef} className="link-editor">
       {isEditMode && isModalOpen(modalSlug) ? (
-        <Modal
-          className={baseModalClass}
-          slug={modalSlug}
-        >
+        <Modal className={baseModalClass} slug={modalSlug}>
           <EditLinkModal
             editor={editor}
             setEditMode={setEditMode}
@@ -273,12 +276,11 @@ function LinkEditor({
             fieldSchema={fieldSchema}
             initialState={initialState}
             handleModalSubmit={(fields: Fields) => {
-              console.log('Submit! fields:', fields);
+              console.log("Submit! fields:", fields);
               // setLinkUrl(sanitizeUrl(fields.url.value));
 
               setEditMode(false);
               toggleModal(modalSlug);
-
 
               const data = reduceFieldsToValues(fields, true);
 
@@ -292,34 +294,26 @@ function LinkEditor({
                 children: [],
               }; */
 
-
               const newNode: PayloadLinkData = {
                 newTab: data.newTab,
-                url: data.linkType === 'custom' ? data.url : undefined,
+                url: data.linkType === "custom" ? data.url : undefined,
                 linkType: data.linkType,
-                doc: data.linkType === 'internal' ? data.doc : undefined,
-                payloadType: 'payload',
+                doc: data.linkType === "internal" ? data.doc : undefined,
+                payloadType: "payload",
               };
 
               if (customFieldSchema) {
                 newNode.fields = data.fields;
               }
 
-              editor.dispatchCommand(
-                TOGGLE_LINK_COMMAND,
-                newNode,
-              );
+              editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
             }}
           />
         </Modal>
       ) : (
         <React.Fragment>
           <div className="link-input">
-            <a
-              href={linkUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={linkUrl} target="_blank" rel="noopener noreferrer">
               {linkUrl}
             </a>
             <div
@@ -342,7 +336,7 @@ function LinkEditor({
 
 function useFloatingLinkEditorToolbar(
   editor: LexicalEditor,
-  anchorElem: HTMLElement,
+  anchorElem: HTMLElement
 ): JSX.Element | null {
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLink, setIsLink] = useState(false);
@@ -369,18 +363,15 @@ function useFloatingLinkEditorToolbar(
         setActiveEditor(newEditor);
         return false;
       },
-      COMMAND_PRIORITY_CRITICAL,
+      COMMAND_PRIORITY_CRITICAL
     );
   }, [editor, updateToolbar]);
 
   return isLink
     ? createPortal(
-      <LinkEditor
-        editor={activeEditor}
-        anchorElem={anchorElem}
-      />,
-      anchorElem,
-    )
+        <LinkEditor editor={activeEditor} anchorElem={anchorElem} />,
+        anchorElem
+      )
     : null;
 }
 
@@ -392,7 +383,6 @@ export default function FloatingLinkEditorPlugin({
   const [editor] = useLexicalComposerContext();
   return useFloatingLinkEditorToolbar(editor, anchorElem);
 }
-
 
 export function EditLinkModal({
   editor,
@@ -409,25 +399,21 @@ export function EditLinkModal({
   initialState;
   fieldSchema;
 }): JSX.Element {
-  const baseModalClass = 'rich-text-link-edit-modal';
-  const {
-    toggleModal,
-  } = useModal();
+  const baseModalClass = "rich-text-link-edit-modal";
+  const { toggleModal } = useModal();
 
   const inputRef = useRef<HTMLInputElement>(null);
   if (inputRef.current) {
     inputRef.current.focus();
   }
 
-  console.log('ISTATE', initialState);
+  console.log("ISTATE", initialState);
 
   return (
     <React.Fragment>
       <MinimalTemplate className={`${baseModalClass}__template`}>
         <header className={`${baseModalClass}__header`}>
-          <h3>
-            Edit Link
-          </h3>
+          <h3>Edit Link</h3>
           <Button
             icon="x"
             round
@@ -463,20 +449,15 @@ export function EditLinkModal({
               event.preventDefault();
               setEditMode(false);
             }
-          }}/> */ }
-        <Form
-          onSubmit={handleModalSubmit}
-          initialState={initialState}
-        >
+          }}/> */}
+        <Form onSubmit={handleModalSubmit} initialState={initialState}>
           <RenderFields
             fieldTypes={fieldTypes}
             readOnly={false}
             fieldSchema={fieldSchema}
             forceRender
           />
-          <FormSubmit>
-            Confirm
-          </FormSubmit>
+          <FormSubmit>Confirm</FormSubmit>
         </Form>
       </MinimalTemplate>
     </React.Fragment>
