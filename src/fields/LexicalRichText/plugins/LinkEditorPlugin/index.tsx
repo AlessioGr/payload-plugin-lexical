@@ -26,7 +26,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
-import { Modal, useModal } from "@faceless-ui/modal";
+import { useModal } from "@faceless-ui/modal";
 import { useTranslation } from "react-i18next";
 import {
   $isAutoLinkNode,
@@ -36,15 +36,7 @@ import {
 import type { PayloadLinkData } from "../LinkPlugin/LinkPluginModified";
 import LinkPreview from "../../ui/LinkPreview";
 import { getSelectedNode } from "../../utils/getSelectedNode";
-import { sanitizeUrl } from "../../utils/url";
 import { setFloatingElemPosition } from "../../utils/setFloatingElemPosition";
-import MinimalTemplate from "payload/dist/admin/components/templates/Minimal";
-import Button from "payload/dist/admin/components/elements/Button";
-import "./modal.scss";
-import RenderFields from "payload/dist/admin/components/forms/RenderFields";
-import fieldTypes from "payload/dist/admin/components/forms/field-types";
-import FormSubmit from "payload/dist/admin/components/forms/Submit";
-import Form from "payload/dist/admin/components/forms/Form";
 import reduceFieldsToValues from "payload/dist/admin/components/forms/Form/reduceFieldsToValues";
 import { Fields } from "payload/dist/admin/components/forms/Form/types";
 import { Field } from "payload/dist/fields/config/types";
@@ -53,6 +45,9 @@ import { useConfig } from "payload/dist/admin/components/utilities/Config";
 import buildStateFromSchema from "payload/dist/admin/components/forms/Form/buildStateFromSchema";
 import { useAuth } from "payload/dist/admin/components/utilities/Auth";
 import { useLocale } from "payload/dist/admin/components/utilities/Locale";
+import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
+import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
+import { LinkDrawer } from "./LinkDrawer";
 
 function LinkEditor({
   editor,
@@ -98,9 +93,13 @@ function LinkEditor({
     return fields;
   });
 
-  const { toggleModal, isModalOpen } = useModal();
-  const modalSlug = "lexicalRichText-edit-link";
-  const baseModalClass = "rich-text-link-edit-modal";
+  const { toggleModal, isModalOpen, closeModal } = useModal();
+  const editDepth = useEditDepth();
+
+  const drawerSlug = formatDrawerSlug({
+    slug: `rich-text-link-lexicalRichText`, // TODO: Add uuid for the slug?
+    depth: editDepth,
+  });
 
   const updateLinkEditor = useCallback(() => {
     const selection = $getSelection();
@@ -267,49 +266,39 @@ function LinkEditor({
 
   return (
     <div ref={editorRef} className="link-editor">
-      {isEditMode && isModalOpen(modalSlug) ? (
-        <Modal className={baseModalClass} slug={modalSlug}>
-          <EditLinkModal
-            editor={editor}
-            setEditMode={setEditMode}
-            modalSlug={modalSlug}
-            fieldSchema={fieldSchema}
-            initialState={initialState}
-            handleModalSubmit={(fields: Fields) => {
-              console.log("Submit! fields:", fields);
-              // setLinkUrl(sanitizeUrl(fields.url.value));
+      {isEditMode && isModalOpen(drawerSlug) ? (
+        <LinkDrawer // TODO: Might aswell import from payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/index.tsx instead?
+          drawerSlug={drawerSlug}
+          fieldSchema={fieldSchema}
+          initialState={initialState}
+          handleClose={() => {
+            setEditMode(false);
+            closeModal(drawerSlug);
+          }}
+          handleModalSubmit={(fields: Fields) => {
+            console.log("Submit! fields:", fields);
+            // setLinkUrl(sanitizeUrl(fields.url.value));
 
-              setEditMode(false);
-              toggleModal(modalSlug);
+            setEditMode(false);
+            closeModal(drawerSlug);
 
-              const data = reduceFieldsToValues(fields, true);
+            const data = reduceFieldsToValues(fields, true);
 
-              /* const newLink = {
-                type: 'link',
-                linkType: data.linkType,
-                url: data.linkType === 'custom' ? data.url : undefined,
-                doc: data.linkType === 'internal' ? data.doc : undefined,
-                newTab: data.newTab,
-                fields: data.fields,
-                children: [],
-              }; */
+            const newNode: PayloadLinkData = {
+              newTab: data.newTab,
+              url: data.linkType === "custom" ? data.url : undefined,
+              linkType: data.linkType,
+              doc: data.linkType === "internal" ? data.doc : undefined,
+              payloadType: "payload",
+            };
 
-              const newNode: PayloadLinkData = {
-                newTab: data.newTab,
-                url: data.linkType === "custom" ? data.url : undefined,
-                linkType: data.linkType,
-                doc: data.linkType === "internal" ? data.doc : undefined,
-                payloadType: "payload",
-              };
+            if (customFieldSchema) {
+              newNode.fields = data.fields;
+            }
 
-              if (customFieldSchema) {
-                newNode.fields = data.fields;
-              }
-
-              editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
-            }}
-          />
-        </Modal>
+            editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
+          }}
+        />
       ) : (
         <React.Fragment>
           <div className="link-input">
@@ -323,7 +312,7 @@ function LinkEditor({
               onMouseDown={(event) => event.preventDefault()}
               onClick={() => {
                 setEditMode(true);
-                toggleModal(modalSlug);
+                toggleModal(drawerSlug);
               }}
             />
           </div>
@@ -382,84 +371,4 @@ export default function FloatingLinkEditorPlugin({
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   return useFloatingLinkEditorToolbar(editor, anchorElem);
-}
-
-export function EditLinkModal({
-  editor,
-  setEditMode,
-  modalSlug,
-  handleModalSubmit,
-  initialState,
-  fieldSchema,
-}: {
-  editor: LexicalEditor;
-  setEditMode;
-  modalSlug: string;
-  handleModalSubmit;
-  initialState;
-  fieldSchema;
-}): JSX.Element {
-  const baseModalClass = "rich-text-link-edit-modal";
-  const { toggleModal } = useModal();
-
-  const inputRef = useRef<HTMLInputElement>(null);
-  if (inputRef.current) {
-    inputRef.current.focus();
-  }
-
-  console.log("ISTATE", initialState);
-
-  return (
-    <React.Fragment>
-      <MinimalTemplate className={`${baseModalClass}__template`}>
-        <header className={`${baseModalClass}__header`}>
-          <h3>Edit Link</h3>
-          <Button
-            icon="x"
-            round
-            buttonStyle="icon-label"
-            iconStyle="with-border"
-            onClick={() => {
-              setEditMode(false);
-              toggleModal(modalSlug);
-            }}
-          />
-        </header>
-        {/* Add functionality here
-        <input
-          ref={inputRef}
-          className="link-input"
-          value={linkUrl}
-          onChange={(event) => {
-            setLinkUrl(event.target.value);
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              if (lastSelection !== null) {
-                if (linkUrl !== '') {
-                  editor.dispatchCommand(
-                    TOGGLE_LINK_COMMAND,
-                    sanitizeUrl(linkUrl),
-                  );
-                }
-                setEditMode(false);
-              }
-            } else if (event.key === 'Escape') {
-              event.preventDefault();
-              setEditMode(false);
-            }
-          }}/> */}
-        <Form onSubmit={handleModalSubmit} initialState={initialState}>
-          <RenderFields
-            fieldTypes={fieldTypes}
-            readOnly={false}
-            fieldSchema={fieldSchema}
-            forceRender
-          />
-          <FormSubmit>Confirm</FormSubmit>
-        </Form>
-      </MinimalTemplate>
-    </React.Fragment>
-  );
 }
