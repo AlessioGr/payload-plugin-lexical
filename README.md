@@ -1,6 +1,6 @@
 # Payload Lexical Plugin
 
-A plugin for [Payload CMS](https://github.com/payloadcms/payload) to add a lexical-based editor.
+A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor.
 
 ![203127349-2be29de4-aff3-4e13-9ebe-56be5fc3fc97 (1)](https://user-images.githubusercontent.com/70709113/204068103-a09f39e1-14e4-45fc-868a-68558380b74e.png)
 ![203127640-caa1f279-1555-48e6-9465-8c441ea65149](https://user-images.githubusercontent.com/70709113/204068104-8dcf337a-b18e-47b8-8ba3-3e777a1f834c.png)
@@ -38,3 +38,64 @@ const Lexical: CollectionConfig = {
 export default Lexical;
 
 ```
+
+## Example: with more customization and own, custom node:
+```ts
+import { CollectionConfig } from 'payload/types';
+import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
+
+const Lexical: CollectionConfig = {
+    slug: 'lexicalRichText',
+    admin: {
+        useAsTitle: 'title',
+    },
+    fields: [
+        {
+            name: 'title',
+            type: 'text',
+            required: true
+        },
+        lexicalRichTextField({
+            name: 'lexicalRichTextEditor',
+            label: 'cool richtext editor!,
+            localized: true,
+            editorConfigModifier: defaultEditorConfig => {
+                defaultEditorConfig.debug = false;
+                defaultEditorConfig.features.textColor.enabled = false;
+                defaultEditorConfig.features.textBackground.enabled = false;
+                defaultEditorConfig.features.figma.enabled = false;
+                defaultEditorConfig.features.fontSize.enabled = false;
+                defaultEditorConfig.features.font.enabled = false;
+                defaultEditorConfig.features.align.enabled = false;
+
+                //Add my own, custom node here
+                defaultEditorConfig.nodes.push({
+                    displayName: 'Introduction',
+                    identifier: 'introduction',
+                    createFunction: $createIntroductionNode,
+                    formatFunction: formatIntroductionNode,
+                    node: IntroductionNode
+                })
+
+
+                return defaultEditorConfig;
+            }
+        })
+    ]
+}
+
+export default Lexical;
+
+```
+
+## Todo-list:
+
+- [ ] Ability to add custom fields to uploads like captions
+- [ ] (relationship node?)
+- [ ] Update slash commands to reflect the toolbar
+- [ ] Fix internal collection search for internal link editor
+- [ ] Edit Upload Button
+- [ ] Improve design & UX of links
+- [ ] lazy loading lexical editor to reduce load times. or maybe just the images?
+- [x] Add wordcount, charactercount & preview to the json output
+- [ ] New format/node: "highlight"
