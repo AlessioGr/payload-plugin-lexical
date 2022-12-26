@@ -38,3 +38,60 @@ const Lexical: CollectionConfig = {
 export default Lexical;
 
 ```
+
+## Example: with more customization and own, custom node:
+```ts
+import { CollectionConfig } from 'payload/types';
+import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
+
+const Lexical: CollectionConfig = {
+    slug: 'lexicalRichText',
+    admin: {
+        useAsTitle: 'title',
+    },
+    fields: [
+        {
+            name: 'title',
+            type: 'text',
+            required: true
+        },
+        lexicalRichTextField({
+            name: 'lexicalRichTextEditor',
+            label: 'cool richtext editor!,
+            localized: true,
+            editorConfigModifier: defaultEditorConfig => {
+                defaultEditorConfig.debug = false;
+                defaultEditorConfig.features.textColor.enabled = false;
+                defaultEditorConfig.features.textBackground.enabled = false;
+                defaultEditorConfig.features.figma.enabled = false;
+                defaultEditorConfig.features.fontSize.enabled = false;
+                defaultEditorConfig.features.font.enabled = false;
+                defaultEditorConfig.features.align.enabled = false;
+
+                //Add my own, custom node here
+                defaultEditorConfig.nodes.push({
+                    displayName: 'Introduction',
+                    identifier: 'introduction',
+                    createFunction: $createIntroductionNode,
+                    formatFunction: formatIntroductionNode,
+                    node: IntroductionNode
+                })
+
+
+                return defaultEditorConfig;
+            }
+        })
+    ]
+}
+
+export default Lexical;
+
+```
+
+## Todo-list:
+[ ] Ability to add custom fields to uploads like captions
+[ ] (relationship node?)
+[ ] Update slash commands to reflect the toolbar
+[ ] Fix internal collection search for internal link editor
+[ ] Edit Upload Button
+[ ] Improve design & UX of links
