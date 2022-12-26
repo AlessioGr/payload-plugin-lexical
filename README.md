@@ -89,6 +89,7 @@ export default Lexical;
 ```
 
 ## Todo-list:
+
 - [ ] Ability to add custom fields to uploads like captions
 - [ ] (relationship node?)
 - [ ] Update slash commands to reflect the toolbar
@@ -96,5 +97,5 @@ export default Lexical;
 - [ ] Edit Upload Button
 - [ ] Improve design & UX of links
 - [ ] lazy loading lexical editor to reduce load times. or maybe just the images?
-- [x] Add wordcount, charactercount & preview to the json output
+- [x] Add wordcount, charactercount & preview to the json output
 - [ ] New format/node: "highlight"
