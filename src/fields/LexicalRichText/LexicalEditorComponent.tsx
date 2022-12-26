@@ -6,28 +6,24 @@
  *
  */
 
-import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import * as React from 'react';
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import * as React from "react";
 
-import { SettingsContext, useSettings } from './context/SettingsContext';
-import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
-import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { Editor } from './LexicalRichText';
-import PlaygroundNodes from './nodes/PlaygroundNodes';
-import PasteLogPlugin from './plugins/PasteLogPlugin';
-import { TableContext } from './plugins/TablePlugin';
-import TestRecorderPlugin from './plugins/TestRecorderPlugin';
-import TypingPerfPlugin from './plugins/TypingPerfPlugin';
-import Settings from './Settings';
-import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
-import { OnChangeProps } from './types';
+import { SettingsContext, useSettings } from "./context/SettingsContext";
+import { SharedAutocompleteContext } from "./context/SharedAutocompleteContext";
+import { SharedHistoryContext } from "./context/SharedHistoryContext";
+import { Editor } from "./LexicalRichText";
+import PlaygroundNodes from "./nodes/PlaygroundNodes";
+import PasteLogPlugin from "./plugins/PasteLogPlugin";
+import { TableContext } from "./plugins/TablePlugin";
+import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
+import TypingPerfPlugin from "./plugins/TypingPerfPlugin";
+import Settings from "./Settings";
+import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
+import { OnChangeProps } from "./types";
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig
-  } = props;
+  const { onChange, initialJSON, editorConfig } = props;
 
   const {
     settings: { measureTypingPerf },
@@ -35,7 +31,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
 
   const initialConfig = {
     editorState: initialJSON != null ? JSON.stringify(initialJSON) : undefined,
-    namespace: 'Playground',
+    namespace: "Playground",
     nodes: [...PlaygroundNodes(editorConfig)],
     onError: (error: Error) => {
       throw error;
@@ -56,18 +52,10 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
                 editorConfig={editorConfig}
               />
             </div>
-            {editorConfig.debug && (
-                <Settings />
-            )}
-            {editorConfig.debug && (
-                <PasteLogPlugin />
-            )}
-            {editorConfig.debug && (
-                <TestRecorderPlugin />
-            )}
-            {measureTypingPerf && editorConfig.debug && (
-                <TypingPerfPlugin />
-            )}
+            {editorConfig.debug && <Settings />}
+            {editorConfig.debug && <PasteLogPlugin />}
+            {editorConfig.debug && <TestRecorderPlugin />}
+            {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>
@@ -76,13 +64,8 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
 };
 
 export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig
-  } = props;
+  const { onChange, initialJSON, editorConfig } = props;
 
-  console.log("Receivedij", initialJSON)
   return (
     <SettingsContext>
       <LexicalEditor

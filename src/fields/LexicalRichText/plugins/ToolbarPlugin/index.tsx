@@ -6,8 +6,6 @@
  *
  */
 
-import { useListDrawer } from 'payload/dist/admin/components/elements/ListDrawer';
-
 import type { LexicalEditor, NodeKey } from "lexical";
 
 import {
@@ -70,7 +68,6 @@ import {
 } from "lexical";
 import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
-import { Modal, useModal } from "@faceless-ui/modal";
 import {
   $isLinkNode,
   TOGGLE_LINK_COMMAND,
@@ -83,11 +80,8 @@ import { getSelectedNode } from "../../utils/getSelectedNode";
 import { sanitizeUrl } from "../../utils/url";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
 import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
-import { InsertEquationDialog } from "../EquationsPlugin";
-import { InsertTableDialog } from "../TablePlugin";
 import { EditorConfig } from "../../../../types";
-import { INSERT_IMAGE_COMMAND } from '../UploadPlugin';
-import { RawImagePayload } from '../../nodes/ImageNode';
+import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
 
 const blockTypeToBlockName = {
   bullet: "Bulleted List",
@@ -436,13 +430,6 @@ export default function ToolbarPlugin(props: {
   const [codeLanguage, setCodeLanguage] = useState<string>("");
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
 
-  const {
-    toggleModal = () => {
-      console.log("Error: useModal() from FacelessUI did not work correctly");
-    },
-    isModalOpen = () => false,
-  } = useModal();
-
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
@@ -636,48 +623,6 @@ export default function ToolbarPlugin(props: {
     },
     [activeEditor, selectedElementKey]
   );
-
-
-
-  //For upload
-  const [
-    ListDrawer,
-    ListDrawerToggler,
-    {
-      closeDrawer,
-      openDrawer,
-      toggleDrawer,
-    },
-  ] = useListDrawer({
-    uploads: true,
-  });
-  const onUploadSelect = useCallback(({ docID, collectionConfig }) => {
-    insertUpload({
-      value: {
-        id: docID,
-      },
-      relationTo: collectionConfig.slug,
-      activeEditor,
-    });
-    closeDrawer();
-  }, [editor, closeDrawer]);
-  const insertUpload = ({
-    value,
-    relationTo,
-    activeEditor,
-  }) => {
-    console.log('insertUpload value:', value, 'relationTo:', relationTo);
-  
-    const rawImagePayload: RawImagePayload = {
-      value,
-      relationTo,
-    };
-  
-    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, rawImagePayload);
-    console.log('Dispatched insert image command');
-  
-    // injectVoidElement(editor, upload);
-  };
 
   return (
     <div className="toolbar">
@@ -942,8 +887,7 @@ export default function ToolbarPlugin(props: {
               editorConfig.features.upload.display && (
                 <DropDownItem
                   onClick={() => {
-                    openDrawer();
-                    //toggleModal("lexicalRichText-add-upload");
+                    editor.dispatchCommand(OPEN_MODAL_COMMAND, "upload");
                   }}
                   className="item"
                 >
@@ -956,7 +900,7 @@ export default function ToolbarPlugin(props: {
                 editorConfig.features.tables.display && (
                   <DropDownItem
                     onClick={() => {
-                      toggleModal("lexicalRichText-add-table");
+                      editor.dispatchCommand(OPEN_MODAL_COMMAND, "table");
                     }}
                     className="item"
                   >
@@ -970,7 +914,7 @@ export default function ToolbarPlugin(props: {
               editorConfig.features.equations.display && (
                 <DropDownItem
                   onClick={() => {
-                    toggleModal("lexicalRichText-add-equation");
+                    editor.dispatchCommand(OPEN_MODAL_COMMAND, "equation");
                   }}
                   className="item"
                 >
@@ -1082,27 +1026,6 @@ export default function ToolbarPlugin(props: {
             </DropDownItem>
           </DropDown>
         )}
-
-      {/* modal */}
-      <ListDrawer onSelect={onUploadSelect} />
-
-      {isModalOpen("lexicalRichText-add-table") && (
-        <Modal
-          className="rich-text-table-modal"
-          slug="lexicalRichText-add-table"
-        >
-          <InsertTableDialog activeEditor={activeEditor} onClose={() => {}} />
-        </Modal>
-      )}
-
-      {isModalOpen("lexicalRichText-add-equation") && (
-        <Modal
-          className="rich-text-equation-modal"
-          slug="lexicalRichText-add-equation"
-        >
-          <InsertEquationDialog activeEditor={activeEditor} />
-        </Modal>
-      )}
     </div>
   );
 }
