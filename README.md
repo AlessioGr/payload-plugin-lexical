@@ -95,6 +95,6 @@ export default Lexical;
 - [ ] Fix internal collection search for internal link editor
 - [ ] Edit Upload Button
 - [ ] Improve design & UX of links
-- [ ] lazy loading lexical editor to reduce load times. or maybe just the images?
-- [X] Add wordcount, charactercount & preview to the json output
+- [ ] lazy loading lexical editor to reduce load times. or maybe just the images?
+- [x] Add wordcount, charactercount & preview to the json output
 - [ ] New format/node: "highlight"
