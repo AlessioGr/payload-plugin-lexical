@@ -48,7 +48,7 @@ import {
   $isEquationNode,
   EquationNode,
 } from '../../nodes/EquationNode';
-import { $createImageNode, $isImageNode, ImageNode } from '../../nodes/ImageNode';
+import { $isImageNode, ImageNode } from '../../nodes/ImageNode';
 import { $createTweetNode, $isTweetNode, TweetNode } from '../../nodes/TweetNode';
 
 export const HR: ElementTransformer = {

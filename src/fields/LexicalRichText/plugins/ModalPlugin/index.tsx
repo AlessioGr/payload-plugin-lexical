@@ -6,7 +6,7 @@ import {
 } from "payload/dist/admin/components/elements/ListDrawer";
 import { InsertTableDialog } from "../TablePlugin";
 import { InsertEquationDialog } from "../EquationsPlugin";
-import { RawImagePayload } from "../../nodes/ImageNode";
+import { ImagePayload, RawImagePayload } from "../../nodes/ImageNode";
 import { INSERT_IMAGE_COMMAND } from "../UploadPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
@@ -17,9 +17,11 @@ import {
 } from "lexical";
 import { Modal, useModal } from "@faceless-ui/modal";
 import { useCallback, useEffect, useState } from "react";
+import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
+import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
-  "upload" | "table" | "equation"
+  "upload" | "table" | "equation" | "link"
 > = createCommand("OPEN_MODAL_COMMAND");
 
 export default function ModalPlugin(props: {
@@ -32,11 +34,19 @@ export default function ModalPlugin(props: {
     toggleModal = () => {
       console.log("Error: useModal() from FacelessUI did not work correctly");
     },
+    openModal,
     isModalOpen = () => false,
   } = useModal();
 
+  const editDepth = useEditDepth();
+
+  const linkDrawerSlug = formatDrawerSlug({
+    slug: `rich-text-link-lexicalRichText`, // TODO: Add uuid for the slug?
+    depth: editDepth,
+  });
+
   // Register commands:
-  editor.registerCommand<"upload" | "table" | "equation">(
+  editor.registerCommand<"upload" | "table" | "equation" | "link">(
     OPEN_MODAL_COMMAND,
     (toOpen: "upload" | "table" | "equation") => {
       if (toOpen === "upload") {
@@ -45,6 +55,8 @@ export default function ModalPlugin(props: {
         toggleModal("lexicalRichText-add-table");
       } else if (toOpen === "equation") {
         toggleModal("lexicalRichText-add-equation");
+      } else if (toOpen === "link") {
+        //openModal(linkDrawerSlug); //TODO
       }
       return true;
     },
@@ -75,12 +87,14 @@ export default function ModalPlugin(props: {
   const insertUpload = ({ value, relationTo, activeEditor }) => {
     console.log("insertUpload value:", value, "relationTo:", relationTo);
 
-    const rawImagePayload: RawImagePayload = {
-      value,
-      relationTo,
+    const imagePayload: ImagePayload = {
+      rawImagePayload: {
+        value,
+        relationTo,
+      },
     };
 
-    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, rawImagePayload);
+    activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, imagePayload);
     console.log("Dispatched insert image command");
 
     // injectVoidElement(editor, upload);

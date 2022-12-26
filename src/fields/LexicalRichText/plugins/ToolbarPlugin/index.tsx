@@ -773,6 +773,7 @@ export default function ToolbarPlugin(props: {
             onClick={(event) => {
               event.preventDefault();
               insertLink();
+              activeEditor.dispatchCommand(OPEN_MODAL_COMMAND, "link");
             }}
             className={`toolbar-item spaced ${isLink ? "active" : ""}`}
             aria-label="Insert link"

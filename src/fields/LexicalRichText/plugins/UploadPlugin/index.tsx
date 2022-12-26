@@ -33,10 +33,10 @@ import {
   $createImageNode,
   $isImageNode,
   ImageNode,
-  RawImagePayload,
+  ImagePayload,
 } from "../../nodes/ImageNode";
 
-export type InsertImagePayload = Readonly<RawImagePayload>;
+export type InsertImagePayload = Readonly<ImagePayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
   CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
@@ -59,17 +59,23 @@ export default function UploadPlugin({
     return mergeRegister(
       editor.registerCommand<InsertImagePayload>(
         INSERT_IMAGE_COMMAND,
-        (insertImagePayload: RawImagePayload) => {
+        (insertImagePayload: ImagePayload) => {
           // This is run on the browser. Can't just use 'payload' object
           console.log(
             "Received INSERT_IMAGE_COMMAND with payload",
             insertImagePayload
           );
           editor.update(() => {
-            const imageNode = $createImageNode(insertImagePayload, {
-              widthOverride: undefined,
-              heightOverride: undefined,
-            });
+            const imageNode = $createImageNode(
+              insertImagePayload.rawImagePayload,
+              {
+                widthOverride: undefined,
+                heightOverride: undefined,
+              },
+              insertImagePayload?.showCaption,
+              insertImagePayload?.caption,
+              insertImagePayload?.captionsEnabled
+            );
             $insertNodes([imageNode]);
             if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
               $wrapNodeInElement(imageNode, $createParagraphNode).selectEnd();
