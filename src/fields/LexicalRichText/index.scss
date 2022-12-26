@@ -1284,6 +1284,10 @@ button.action-button:disabled {
   padding: 4px;
   vertical-align: middle;
   border: 1px solid var(--theme-elevation-150);
+  position: sticky;
+  top: 100px;
+  background-color: white;
+  z-index: 10;
 }
 
 

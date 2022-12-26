@@ -82,6 +82,7 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
     editorConfig
   } = props;
 
+  console.log("Receivedij", initialJSON)
   return (
     <SettingsContext>
       <LexicalEditor

@@ -102,12 +102,14 @@ export class LinkNode extends ElementNode {
 
   constructor(url: string, attributes: LinkAttributes = {}, key?: NodeKey) {
     super(key);
+    console.warn("Constructor linknode", attributes)
     const {
       newTab = false,
       rel = null,
       doc = null,
       linkType = "custom",
     } = attributes;
+    console.warn("attributes", attributes)
     this.__url = url;
     this.__newTab = newTab;
     this.__rel = rel;
@@ -410,11 +412,10 @@ export class AutoLinkNode extends LinkNode {
 
 export function $createAutoLinkNode(
   url: string,
-  attributes?: LinkAttributes
+  attributes?: LinkAttributes,
 ): AutoLinkNode {
   return $applyNodeReplacement(new AutoLinkNode(url, attributes));
 }
-
 export function $isAutoLinkNode(
   node: LexicalNode | null | undefined
 ): node is AutoLinkNode {

@@ -1,19 +1,24 @@
 import {Field, FieldHook} from 'payload/types';
-import {LexicalRichTextFieldComponent, LexicalRichTextCell, traverseLexicalField, populateLexicalRelationships2} from './LexicalRichText'
+import {LexicalRichTextFieldComponent, LexicalRichTextCell, traverseLexicalField, populateLexicalRelationships2, getJsonContentFromValue} from './LexicalRichText'
 import {SerializedEditorState} from "lexical";
 import {EditorConfig} from "../types";
 
-type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
+type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, {jsonContent: SerializedEditorState, preview: string, characters: number, words: number}, any>;
 
 //I cannot put this in LexicalRichText/index as that causes an error => https://github.com/payloadcms/payload/issues/1518
-const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<SerializedEditorState> =>  {
-    if(value && value.root && value.root.children){
+const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<{jsonContent: SerializedEditorState, preview: string, characters: number, words: number}> =>  {
+    if(!value) {
+        return value;
+    }
+    const jsonContent = getJsonContentFromValue(value);
+    if(jsonContent && jsonContent.root && jsonContent.root.children){
         const newChildren = [];
-        for(let childNode of value.root.children){
+        for(let childNode of jsonContent.root.children){
             newChildren.push(await traverseLexicalField(childNode, ""));
         }
-        value.root.children = newChildren;
+        jsonContent.root.children = newChildren;
      }
+     value.jsonContent = {...jsonContent};
 
     return value;
 };

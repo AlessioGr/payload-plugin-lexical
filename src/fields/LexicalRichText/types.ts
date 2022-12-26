@@ -1,8 +1,8 @@
 import { EditorState, LexicalEditor } from 'lexical';
 import type {EditorConfig} from "../../types";
-import {FieldWithPath} from "payload/types";
+import {FieldWithPath, RichTextField} from "payload/types";
 
-export type Props = FieldWithPath & {
+export type Props = FieldWithPath & Omit<RichTextField, 'type'> & {
   editorConfig: EditorConfig,
 }
 

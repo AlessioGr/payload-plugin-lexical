@@ -9,13 +9,12 @@ import Loading from 'payload/dist/admin/components/elements/Loading'
 const baseClass = 'lexicalRichTextEditor';
 
 import { useField } from "payload/components/forms";
-import PlaygroundNodes from "./nodes/PlaygroundNodes";
-import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
-import {createHeadlessEditor} from "@lexical/headless";
-import {ExtraAttributes, RawImagePayload} from "./nodes/ImageNode";
+import {RawImagePayload} from "./nodes/ImageNode";
 import payload from "payload";
-import {FieldHook, FieldWithPath, RichTextField, Validate} from "payload/types";
-
+import {FieldHook, RichTextField, Validate} from "payload/types";
+import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription'
+import Label from 'payload/dist/admin/components/forms/Label';
+import Error from 'payload/dist/admin/components/forms/Error';
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, SerializedEditorState, any>;
 export const populateLexicalRelationships2: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<SerializedEditorState> =>  {
     if(value && value.root && value.root.children){
@@ -28,40 +27,6 @@ export const populateLexicalRelationships2: LexicalRichTextFieldAfterReadFieldHo
 
     return value;
 };
-
-export async function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode> {
-    //Find replacements
-    if(node.type === 'upload'){
-        const rawImagePayload: RawImagePayload = node["rawImagePayload"];
-        //const extraAttributes: ExtraAttributes = node["extraAttributes"];
-        const uploadData = await loadUploadData(rawImagePayload, locale);
-        if(uploadData){
-            node["data"] = uploadData;
-        }
-
-    } else if(node.type === 'link' && node["linkType"] && node["linkType"] === 'internal'){
-        const doc: {
-            value: string,
-            relationTo: string,
-        } = node["doc"];
-
-        const foundDoc = await loadInternalLinkDocData(doc.value, doc.relationTo, locale);
-        if(foundDoc){
-            node["doc"]["data"] = foundDoc;
-        }
-    }
-
-    //Run for its children
-    if(node["children"] && node["children"].length > 0){
-        let newChildren = [];
-        for(let childNode of node["children"]){
-            newChildren.push(await traverseLexicalField(childNode, locale));
-        }
-        node["children"] = newChildren;
-    }
-
-    return node;
-}
 async function loadUploadData(rawImagePayload: RawImagePayload, locale: string) {
 
     const foundUpload = await payload.findByID({
@@ -87,6 +52,41 @@ async function loadInternalLinkDocData(value: string, relationTo: string, locale
 
     return foundDoc;
 }
+export async function traverseLexicalField(node: SerializedLexicalNode, locale: string): Promise<SerializedLexicalNode> {
+    //Find replacements
+    if(node.type === 'upload'){
+        const rawImagePayload: RawImagePayload = node["rawImagePayload"];
+        //const extraAttributes: ExtraAttributes = node["extraAttributes"];
+        const uploadData = await loadUploadData(rawImagePayload, locale);
+        if(uploadData){
+            node["data"] = uploadData;
+        }
+        console.warn("Upload node", node["data"])
+
+    } else if(node.type === 'link' && node["linkType"] && node["linkType"] === 'internal'){
+        const doc: {
+            value: string,
+            relationTo: string,
+        } = node["doc"];
+
+        const foundDoc = await loadInternalLinkDocData(doc.value, doc.relationTo, locale);
+        if(foundDoc){
+            node["doc"]["data"] = foundDoc;
+        }
+    }
+
+    //Run for its children
+    if(node["children"] && node["children"].length > 0){
+        let newChildren = [];
+        for(let childNode of node["children"]){
+            newChildren.push(await traverseLexicalField(childNode, locale));
+        }
+        node["children"] = newChildren;
+    }
+
+    return node;
+}
+
 
 export const LexicalRichTextCell: React.FC<any> = (props) => {
     const { field, colIndex, collection, cellData, rowData, editorConfig } = props;
@@ -98,29 +98,10 @@ export const LexicalRichTextCell: React.FC<any> = (props) => {
         );
     }
 
-    const initialConfig = {
-        namespace: 'Playground',
-        nodes: [...PlaygroundNodes(editorConfig)],
-        theme: PlaygroundEditorTheme,
-    };
-
-    let textToShow;
-    try {
-        const editor: LexicalEditor = createHeadlessEditor(initialConfig);
-        editor.setEditorState(editor.parseEditorState(data));
-
-        const textContent = editor.getEditorState().read(() => {
-            return $getRoot().getTextContent();
-        });
-
-        textToShow = textContent?.length > 100 ? `${textContent.slice(0, 100)}\u2026` : textContent;
-    }catch(e){
-        textToShow = "Error: " + e.text;
-    }
 
 
     return (
-        <span>{textToShow}</span>
+        <span>{data.preview}</span>
     );
 };
 
@@ -137,6 +118,7 @@ export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
     );
 }
 
+
 export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (value, { t, required }) => {
     if (required) {
         /* const stringifiedDefaultValue = JSON.stringify(defaultRichTextValue);
@@ -146,13 +128,43 @@ export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (value
 
     return true;
 };
+
+
+export function getJsonContentFromValue(value) {
+    if(!value?.jsonContent){
+        return value;
+    }
+
+    if(value?.jsonContent?.jsonContent){
+        return getJsonContentFromValue(value?.jsonContent);
+    }
+    return value?.jsonContent;
+}
+
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
-    let readOnly = false;
-    const {path, editorConfig} = props;
+    const {
+        editorConfig,
+        path,
+        required,
+        name,
+        label,
+        admin,
+        admin: {
+            readOnly,
+            style,
+            className,
+            width,
+            placeholder,
+            description,
+            condition,
+            hideGutter,
+        } = {},
+    } = props;
+
     //const { value, setValue } = useField<Props>({ path });
 
 
-    const field = useField<SerializedEditorState>({
+    const field = useField<{jsonContent: SerializedEditorState, preview: string, characters: number, words: number}>({
         path: path, // required
         validate: lexicalValidate,
         // validate: myValidateFunc, // optional
@@ -169,23 +181,77 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
         formProcessing, // if the form is currently processing
         setValue, // method to set the field's value in form state
         initialValue, // the initial value that the field mounted with,
+
     } = field;
 
+    const classes = [
+        baseClass,
+        'field-type',
+        className,
+        showError && 'error',
+        readOnly && `${baseClass}--read-only`,
+        !hideGutter && `${baseClass}--gutter`,
+      ].filter(Boolean).join(' ');
 
+      if(!value?.preview) {
+        //Convert...
+        setValue({
+            jsonContent: value,
+            preview: "none",
+            characters: 0,
+            words: 0
+        });
 
-    console.log("Value", value);
-
+      }
 
     return (
+        <div
+      className={classes}
+      style={{
+        ...style,
+        width,
+      }}
+    >
+      <div className={`${baseClass}__wrap`}>
+        <Error
+          showError={showError}
+          message={errorMessage}
+        />
+        <Label
+          htmlFor={`field-${path.replace(/\./gi, '__')}`}
+          label={label}
+          required={required}
+        />
+
         <LexicalEditorComponent
             onChange={(editorState: EditorState, editor: LexicalEditor) => {
+                console.log("onchange")
                 const json = editorState.toJSON();
-                if (!readOnly && /* json !== defaultValue && */ json != value && JSON.stringify(json) !== JSON.stringify(value)) {
-                    setValue(json);
+                const valueJsonContent = getJsonContentFromValue(value);
+                if (!readOnly && /* json !== defaultValue && */ json != valueJsonContent && JSON.stringify(json) !== JSON.stringify(valueJsonContent)) {
+                    console.log("1")
+                    const textContent = editor.getEditorState().read(() => {
+                        return $getRoot().getTextContent();
+                    });
+                    console.log("2")    
+                    const preview = textContent?.length > 100 ? `${textContent.slice(0, 100)}\u2026` : textContent;
+                    setValue({
+                        jsonContent: json,
+                        preview: preview,
+                        characters: textContent?.length,
+                        words: textContent?.split(" ").length,
+                    });
                 }
             }}
-            initialJSON={value}
+            initialJSON={getJsonContentFromValue(value)}
             editorConfig={editorConfig}
         />
+        <FieldDescription
+          value={value}
+          description={description}
+        />
+      </div>
+    </div>
+    
     );
 };
