@@ -99,3 +99,13 @@ export default Lexical;
 - [ ] lazy loading lexical editor to reduce load times. or maybe just the images?
 - [x] Add wordcount, charactercount & preview to the json output
 - [ ] New format/node: "highlight"
+
+## Updating lexical
+
+Since this is based on their playground, you gotta upstream their changes. Then, the following is additionally copied over outside of the playground package - needs to be considered in lexical updates as well:
+
+- https://github.com/facebook/lexical/blob/main/packages/lexical-react/src/LexicalOnChangePlugin.ts
+- https://github.com/facebook/lexical/blob/main/packages/lexical-react/src/LexicalLinkPlugin.ts
+- https://github.com/facebook/lexical/blob/main/packages/lexical-react/src/LexicalAutoLinkPlugin.ts
+- https://github.com/facebook/lexical/tree/main/packages/shared
+- https://github.com/facebook/lexical/blob/main/packages/lexical-link/src/index.ts
