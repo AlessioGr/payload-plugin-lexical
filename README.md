@@ -88,17 +88,22 @@ export default Lexical;
 
 ```
 
-## Todo-list:
+## Idea list:
 
 - [ ] Ability to add custom fields to uploads like captions
 - [ ] (relationship node?)
-- [ ] Update slash commands to reflect the toolbar
+- [x] Update slash commands to reflect the toolbar
 - [ ] Fix internal collection search for internal link editor
 - [ ] Edit Upload Button
-- [ ] Improve design & UX of links
+- [ ] Improve design & UX of links. For example, clicking on the link button should open the link drawer immediately
 - [ ] lazy loading lexical editor to reduce load times. or maybe just the images?
 - [x] Add wordcount, charactercount & preview to the json output
-- [ ] New format/node: "highlight"
+- [ ] New format/node: "highlight"/"mark"
+- [x] Commenting functionality
+- [x] Upload plugin/node captions
+- [ ] Increase customizability & DX. Plugins should all be set in the config. Slash commands & Toolbar items should come from the same place.
+- [ ] Add ExcaliDraw
+- [ ] Take a closer look at AutoLink - is it necessary and what does it do?
 
 ## Updating lexical
 
