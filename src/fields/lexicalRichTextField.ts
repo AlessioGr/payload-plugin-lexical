@@ -32,6 +32,9 @@ function lexicalRichTextField(props: {name?: string, label?: string, localized?:
         debug: true,
         nodes: [],
         features: {
+            comments: {
+                enabled: true,
+            },
             tables: {
                 enabled: true,
                 display: false

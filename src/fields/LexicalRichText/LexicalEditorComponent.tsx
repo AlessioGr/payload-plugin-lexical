@@ -14,6 +14,7 @@ import { SharedAutocompleteContext } from "./context/SharedAutocompleteContext";
 import { SharedHistoryContext } from "./context/SharedHistoryContext";
 import { Editor } from "./LexicalRichText";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
+import { CommentsContext } from "./plugins/CommentPlugin";
 import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
 import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
@@ -23,7 +24,7 @@ import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import { OnChangeProps } from "./types";
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig } = props;
+  const { onChange, initialJSON, editorConfig, initialComments } = props;
 
   const {
     settings: { measureTypingPerf },
@@ -45,17 +46,20 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
       <SharedHistoryContext>
         <TableContext>
           <SharedAutocompleteContext>
-            <div className="editor-shell">
-              <Editor
-                onChange={onChange}
-                initialJSON={initialJSON}
-                editorConfig={editorConfig}
-              />
-            </div>
-            {editorConfig.debug && <Settings />}
-            {editorConfig.debug && <PasteLogPlugin />}
-            {editorConfig.debug && <TestRecorderPlugin />}
-            {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
+            <CommentsContext initialComments={initialComments}>
+              <div className="editor-shell">
+                <Editor
+                  onChange={onChange}
+                  initialJSON={initialJSON}
+                  editorConfig={editorConfig}
+                  initialComments={initialComments}
+                />
+              </div>
+              {editorConfig.debug && <Settings />}
+              {editorConfig.debug && <PasteLogPlugin />}
+              {editorConfig.debug && <TestRecorderPlugin />}
+              {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
+            </CommentsContext>
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>
@@ -64,7 +68,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
 };
 
 export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig } = props;
+  const { onChange, initialJSON, editorConfig, initialComments } = props;
 
   return (
     <SettingsContext>
@@ -72,6 +76,7 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
         onChange={onChange}
         initialJSON={initialJSON}
         editorConfig={editorConfig}
+        initialComments={initialComments}
       />
     </SettingsContext>
   );

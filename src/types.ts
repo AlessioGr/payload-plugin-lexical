@@ -4,6 +4,9 @@ export type EditorConfig = {
     debug: boolean;
     nodes: CustomNode[];
     features: {
+        comments: {
+            enabled: boolean,
+        }
         tables: {
             enabled: boolean,
             display: boolean

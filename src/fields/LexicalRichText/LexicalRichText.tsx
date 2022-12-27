@@ -19,7 +19,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
 import * as React from "react";
 import { useState } from "react";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { OnChangePlugin } from "./plugins/OnChangePlugin";
 import LinkPlugin from "./plugins/LinkPlugin";
 
 import { useSettings } from "./context/SettingsContext";
@@ -65,9 +65,10 @@ import { OnChangeProps } from "./types";
 import UploadPlugin from "./plugins/UploadPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import ModalPlugin from "./plugins/ModalPlugin";
+import CommentPlugin from "./plugins/CommentPlugin";
 
 export const Editor: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig } = props;
+  const { onChange, initialJSON, editorConfig, initialComments } = props;
 
   const { historyState } = useSharedHistoryContext();
   const {
@@ -126,6 +127,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <KeywordsPlugin />
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
+        {editorConfig.features.comments.enabled && <CommentPlugin />}
         {isRichText ? (
           <React.Fragment>
             <HistoryPlugin externalHistoryState={historyState} />
@@ -172,8 +174,8 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             {editorConfig.features.twitter.enabled && <TwitterPlugin />}
             {editorConfig.features.youtube.enabled && <YouTubePlugin />}
             <OnChangePlugin
-              onChange={(editorState, editor) => {
-                onChange(editorState, editor);
+              onChange={(editorState, editor, commentStore) => {
+                onChange(editorState, editor, commentStore);
               }}
             />
             {editorConfig.features.figma.enabled && <FigmaPlugin />}

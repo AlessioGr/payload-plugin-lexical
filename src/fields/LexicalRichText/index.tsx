@@ -21,6 +21,7 @@ import { FieldHook, RichTextField, Validate } from "payload/types";
 import FieldDescription from "payload/dist/admin/components/forms/FieldDescription";
 import Label from "payload/dist/admin/components/forms/Label";
 import Error from "payload/dist/admin/components/forms/Error";
+import { Comments, CommentStore } from "./commenting";
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,
   SerializedEditorState,
@@ -184,6 +185,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     preview: string;
     characters: number;
     words: number;
+    comments: Comments;
   }>({
     path: path, // required
     validate: lexicalValidate,
@@ -203,6 +205,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     initialValue, // the initial value that the field mounted with,
   } = field;
 
+  console.warn("Loaded with comments:", value.comments);
+
   const classes = [
     baseClass,
     "field-type",
@@ -221,6 +225,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
       preview: "none",
       characters: 0,
       words: 0,
+      comments: undefined,
     });
   }
 
@@ -241,7 +246,11 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
         />
 
         <LexicalEditorComponent
-          onChange={(editorState: EditorState, editor: LexicalEditor) => {
+          onChange={(
+            editorState: EditorState,
+            editor: LexicalEditor,
+            commentStore: CommentStore
+          ) => {
             const json = editorState.toJSON();
             const valueJsonContent = getJsonContentFromValue(value);
             if (
@@ -261,11 +270,14 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
                 preview: preview,
                 characters: textContent?.length,
                 words: textContent?.split(" ").length,
+                comments: commentStore.getComments(),
               });
+              console.error("Saved with comments", commentStore.getComments());
             }
           }}
           initialJSON={getJsonContentFromValue(value)}
           editorConfig={editorConfig}
+          initialComments={value.comments}
         />
         <FieldDescription value={value} description={description} />
       </div>
