@@ -1280,13 +1280,12 @@ button.action-button:disabled {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 1rem;
-  /*background: #fff;*/
   padding: 4px;
   vertical-align: middle;
   border: 1px solid var(--theme-elevation-150);
   position: sticky;
   top: 100px;
-  background-color: white;
+  background-color: var(--theme-bg);
   z-index: 10;
 }
 
