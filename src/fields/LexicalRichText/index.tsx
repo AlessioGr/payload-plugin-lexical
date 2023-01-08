@@ -204,13 +204,6 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     initialValue, // the initial value that the field mounted with,
   } = field;
 
-  let tempValue = value;
-
-  useEffect(
-    () => setValue(tempValue),
-    [tempValue]
-  );
-
   console.log("Loaded with comments:", value?.comments);
 
   const classes = [
@@ -272,13 +265,13 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
                   ? `${textContent.slice(0, 100)}\u2026`
                   : textContent;
 
-              tempValue = {
+              setValue({
                 jsonContent: json,
                 preview: preview,
                 characters: textContent?.length,
                 words: textContent?.split(" ").length,
                 comments: commentStore.getComments(),
-              }
+              });
               console.log("Saved with comments", commentStore.getComments());
             }
           }}
