@@ -44,6 +44,8 @@ export function LinkPlugin({ validateUrl }: Props): null {
             doc: null,
             linkType: "custom",
             newTab: false,
+            sponsored: false,
+            nofollow: false,
           };
 
           if (payload === null) {
@@ -60,6 +62,8 @@ export function LinkPlugin({ validateUrl }: Props): null {
               payload as PayloadLinkData;
             linkData.linkType = receivedLinkData.linkType;
             linkData.newTab = receivedLinkData.newTab;
+            linkData.sponsored = receivedLinkData.sponsored;
+            linkData.nofollow = receivedLinkData.nofollow;
             linkData.fields = receivedLinkData.fields;
             if (receivedLinkData.linkType === "custom") {
               // Just a simple URL! No doc

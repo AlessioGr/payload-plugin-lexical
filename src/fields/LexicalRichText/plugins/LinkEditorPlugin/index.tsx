@@ -90,6 +90,28 @@ function LinkEditor({
       });
     }
 
+    fields.push({
+      name: 'sponsored',
+      label: 'Sponsored',
+      type: 'checkbox',
+      admin: {
+        condition: ({ linkType }) => {
+          return linkType === 'custom';
+        },
+      },
+    });
+
+    fields.push({
+      name: 'nofollow',
+      label: 'Nofollow',
+      type: 'checkbox',
+      admin: {
+        condition: ({ linkType }) => {
+          return linkType === 'custom';
+        },
+      },
+    });
+
     return fields;
   });
 
@@ -115,6 +137,8 @@ function LinkEditor({
         url: string;
         linkType?: "custom" | "internal";
         newTab?: boolean;
+        sponsored?: boolean;
+        nofollow?: boolean;
         doc?: { value: string; relationTo: string } | null;
         fields: unknown;
       } = {
@@ -122,6 +146,8 @@ function LinkEditor({
         url: "",
         linkType: undefined,
         newTab: undefined,
+        sponsored: undefined,
+        nofollow: undefined,
         doc: undefined,
         fields: undefined,
       };
@@ -130,6 +156,8 @@ function LinkEditor({
         data.text = parent.getTextContent();
         data.url = parent.getURL();
         data.newTab = parent.isNewTab();
+        data.sponsored = parent.isSponsored();
+        data.nofollow = parent.isNoFollow();
         data.linkType = parent.getLinkType();
         data.doc = parent.getDoc();
         if (parent.getLinkType() === "custom") {
@@ -146,6 +174,8 @@ function LinkEditor({
         data.text = node.getTextContent();
         data.url = node.getURL();
         data.newTab = node.isNewTab();
+        data.sponsored = node.isSponsored();
+        data.nofollow = node.isNoFollow();
         data.linkType = node.getLinkType();
         data.doc = node.getDoc();
         if (node.getLinkType() === "custom") {
@@ -286,6 +316,8 @@ function LinkEditor({
 
             const newNode: PayloadLinkData = {
               newTab: data.newTab,
+              sponsored: data.sponsored,
+              nofollow: data.nofollow,
               url: data.linkType === "custom" ? data.url : undefined,
               linkType: data.linkType,
               doc: data.linkType === "internal" ? data.doc : undefined,

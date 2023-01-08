@@ -37,6 +37,8 @@ export type PayloadLinkData = {
   url: string;
   linkType: "custom" | "internal";
   newTab: boolean;
+  sponsored: boolean;
+  nofollow: boolean;
   doc: {
     value: string;
     relationTo: string;
@@ -47,6 +49,8 @@ export type PayloadLinkData = {
 export type LinkAttributes = {
   rel?: null | string;
   newTab?: boolean;
+  sponsored?: boolean;
+  nofollow?: boolean;
   doc?: {
     value: string;
     relationTo: string;
@@ -72,6 +76,12 @@ export class LinkNode extends ElementNode {
   __newTab: boolean;
 
   /** @internal */
+  __sponsored: boolean;
+
+  /** @internal */
+  __nofollow: boolean;
+
+  /** @internal */
   __doc: {
     value: string;
     relationTo: string;
@@ -93,6 +103,8 @@ export class LinkNode extends ElementNode {
       {
         rel: node.__rel,
         newTab: node.__newTab,
+        sponsored: node.__sponsored,
+        nofollow: node.__nofollow,
         doc: node.__doc,
         linkType: node.__linkType,
       },
@@ -102,9 +114,10 @@ export class LinkNode extends ElementNode {
 
   constructor(url: string, attributes: LinkAttributes = {}, key?: NodeKey) {
     super(key);
-    console.warn("Constructor linknode", attributes)
     const {
       newTab = false,
+      sponsored = false,
+      nofollow = false,
       rel = null,
       doc = null,
       linkType = "custom",
@@ -112,6 +125,8 @@ export class LinkNode extends ElementNode {
     console.warn("attributes", attributes)
     this.__url = url;
     this.__newTab = newTab;
+    this.__sponsored = sponsored;
+    this.__nofollow = nofollow;
     this.__rel = rel;
     this.__doc = doc;
     this.__linkType = linkType;
@@ -126,8 +141,18 @@ export class LinkNode extends ElementNode {
       element.target = "_blank";
     }
 
+    element.rel = "";
+
+    if (this.__sponsored) {
+      element.rel += "sponsored";
+    }
+
+    if (this.__nofollow) {
+      element.rel += " nofollow";
+    }
+
     if (this.__rel !== null) {
-      element.rel = this.__rel;
+      element.rel += " " + this.__rel;
     }
     addClassNamesToElement(element, config.theme.link);
     return element;
@@ -140,6 +165,8 @@ export class LinkNode extends ElementNode {
   ): boolean {
     const url = this.__url;
     const newTab = this.__newTab;
+    const sponsored = this.__sponsored;
+    const nofollow = this.__nofollow;
     const rel = this.__rel;
     if (url !== prevNode.__url && this.__linkType === "custom") {
       anchor.href = url;
@@ -156,9 +183,29 @@ export class LinkNode extends ElementNode {
       }
     }
 
+    if(!anchor.rel){
+      anchor.rel = "";
+    }
+
+    if (sponsored !== prevNode.sponsored) {
+      if (sponsored) {
+        anchor.rel += "sponsored";
+      } else {
+        anchor.rel.replace(" sponsored", "").replace("sponsored", "")
+      }
+    }
+
+    if (nofollow !== prevNode.nofollow) {
+      if (nofollow) {
+        anchor.rel += "nofollow";
+      } else {
+        anchor.rel.replace(" nofollow", "").replace("nofollow", "")
+      }
+    }
+
     if (rel !== prevNode.__rel) {
       if (rel) {
-        anchor.rel = rel;
+        anchor.rel += rel;
       } else {
         anchor.removeAttribute("rel");
       }
@@ -181,6 +228,8 @@ export class LinkNode extends ElementNode {
     const node = $createLinkNode(serializedNode.url, {
       rel: serializedNode.rel,
       newTab: serializedNode.newTab,
+      sponsored: serializedNode.sponsored,
+      nofollow: serializedNode.nofollow,
       linkType: serializedNode.linkType,
       doc: serializedNode.doc,
     });
@@ -195,6 +244,8 @@ export class LinkNode extends ElementNode {
       ...super.exportJSON(),
       rel: this.getRel(),
       newTab: this.isNewTab(),
+      sponsored: this.isSponsored(),
+      nofollow: this.isNoFollow(),
       type: "link",
       url: this.getURL(),
       linkType: this.getLinkType(),
@@ -216,9 +267,27 @@ export class LinkNode extends ElementNode {
     return this.getLatest().__newTab;
   }
 
+  isSponsored(): boolean {
+    return this.getLatest().__sponsored;
+  }
+
+  isNoFollow(): boolean {
+    return this.getLatest().__nofollow;
+  }
+
   setNewTab(newTab: boolean): void {
     const writable = this.getWritable();
     writable.__newTab = newTab;
+  }
+
+  setSponsored(sponsored: boolean): void {
+    const writable = this.getWritable();
+    writable.__sponsored = sponsored;
+  }
+
+  setNoFollow(nofollow: boolean): void {
+    const writable = this.getWritable();
+    writable.__nofollow = nofollow;
   }
 
   getDoc(): { value: string; relationTo: string } | null {
@@ -260,6 +329,8 @@ export class LinkNode extends ElementNode {
       const linkNode = $createLinkNode(this.__url, {
         rel: this.__rel,
         newTab: this.__newTab,
+        sponsored: this.__sponsored,
+        nofollow: this.__nofollow,
         linkType: this.__linkType,
         doc: this.__doc,
       });
@@ -313,6 +384,8 @@ function convertAnchorElement(domNode: Node): DOMConversionOutput {
       node = $createLinkNode(domNode.getAttribute("href") || "", {
         rel: domNode.getAttribute("rel"),
         newTab: domNode.getAttribute("target") === "_blank",
+        sponsored: domNode.getAttribute("rel")?.includes("sponsored") || false,
+        nofollow: domNode.getAttribute("rel")?.includes("nofollow") || false,
         linkType: "custom",
         doc: null,
       });
@@ -355,6 +428,8 @@ export class AutoLinkNode extends LinkNode {
       {
         rel: node.__rel,
         newTab: node.__newTab,
+        sponsored: node.__sponsored,
+        nofollow: node.__nofollow,
         linkType: node.__linkType,
         doc: node.__doc,
       },
@@ -366,6 +441,8 @@ export class AutoLinkNode extends LinkNode {
     const node = $createAutoLinkNode(serializedNode.url, {
       rel: serializedNode.rel,
       newTab: serializedNode.newTab,
+      sponsored: serializedNode.sponsored,
+      nofollow: serializedNode.nofollow,
       linkType: serializedNode.linkType,
       doc: serializedNode.doc,
     });
@@ -400,6 +477,8 @@ export class AutoLinkNode extends LinkNode {
       const linkNode = $createAutoLinkNode(this.__url, {
         rel: this.__rel,
         newTab: this.__newTab,
+        sponsored: this.__sponsored,
+        nofollow: this.__nofollow,
         linkType: this.__linkType,
         doc: this.__doc,
       });
@@ -463,6 +542,8 @@ export function toggleLink(linkData: PayloadLinkData): void {
       if (linkNode !== null) {
         linkNode.setURL(linkData.url);
         linkNode.setNewTab(linkData.newTab);
+        linkNode.setSponsored(linkData.sponsored);
+        linkNode.setNoFollow(linkData.nofollow);
         linkNode.setLinkType(linkData.linkType);
         linkNode.setDoc(linkData.doc);
 
@@ -491,6 +572,8 @@ export function toggleLink(linkData: PayloadLinkData): void {
         linkNode = parent;
         parent.setURL(linkData.url);
         parent.setNewTab(linkData.newTab);
+        parent.setSponsored(linkData.sponsored);
+        parent.setNoFollow(linkData.nofollow)
         parent.setLinkType(linkData.linkType);
         parent.setDoc(linkData.doc);
 
@@ -505,6 +588,8 @@ export function toggleLink(linkData: PayloadLinkData): void {
         linkNode = $createLinkNode(linkData.url, {
           rel,
           newTab: linkData.newTab,
+          sponsored: linkData.sponsored,
+          nofollow: linkData.nofollow,
           linkType: linkData.linkType,
           doc: linkData.doc,
         });
