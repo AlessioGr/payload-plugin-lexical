@@ -81,7 +81,6 @@ export async function traverseLexicalField(
     if (uploadData) {
       node["data"] = uploadData;
     }
-    console.warn("Upload node", node["data"]);
   } else if (
     node.type === "link" &&
     node["linkType"] &&
@@ -205,7 +204,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     initialValue, // the initial value that the field mounted with,
   } = field;
 
-  console.warn("Loaded with comments:", value.comments);
+  console.log("Loaded with comments:", value?.comments);
 
   const classes = [
     baseClass,
@@ -277,7 +276,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
           }}
           initialJSON={getJsonContentFromValue(value)}
           editorConfig={editorConfig}
-          initialComments={value.comments}
+          initialComments={value?.comments}
         />
         <FieldDescription value={value} description={description} />
       </div>
