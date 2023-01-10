@@ -30,7 +30,7 @@ function lexicalRichTextField(props: {name?: string, label?: string, localized?:
 
     const defaultEditorConfig: EditorConfig = {
         debug: true,
-        nodes: [],
+        simpleNodes: [],
         features: {
             comments: {
                 enabled: true,
@@ -91,6 +91,12 @@ function lexicalRichTextField(props: {name?: string, label?: string, localized?:
                 enabled: true,
                 display: true
             },
+        },
+        extraPlugins: [],
+        extraNodes: [],
+        extraModals: [],
+        extraToolbarElements: {
+            insert: [],
         }
     }
 

@@ -1,27 +1,25 @@
 import { EditorConfig } from "../../../../types";
 import * as React from "react";
 import {
-  ListDrawer,
   useListDrawer,
 } from "payload/dist/admin/components/elements/ListDrawer";
 import { InsertTableDialog } from "../TablePlugin";
 import { InsertEquationDialog } from "../EquationsPlugin";
-import { ImagePayload, RawImagePayload } from "../../nodes/ImageNode";
+import { ImagePayload } from "../../nodes/ImageNode";
 import { INSERT_IMAGE_COMMAND } from "../UploadPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   COMMAND_PRIORITY_NORMAL,
   createCommand,
   LexicalCommand,
-  LexicalEditor,
 } from "lexical";
 import { Modal, useModal } from "@faceless-ui/modal";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
-  "upload" | "table" | "equation" | "link"
+  "upload" | "table" | "equation" | "link" | string
 > = createCommand("OPEN_MODAL_COMMAND");
 
 export default function ModalPlugin(props: {
@@ -46,9 +44,9 @@ export default function ModalPlugin(props: {
   });
 
   // Register commands:
-  editor.registerCommand<"upload" | "table" | "equation" | "link">(
+  editor.registerCommand<"upload" | "table" | "equation" | "link" | string>(
     OPEN_MODAL_COMMAND,
-    (toOpen: "upload" | "table" | "equation") => {
+    (toOpen: "upload" | "table" | "equation" | "link" | string) => {
       if (toOpen === "upload") {
         openDrawer();
       } else if (toOpen === "table") {
@@ -57,7 +55,15 @@ export default function ModalPlugin(props: {
         toggleModal("lexicalRichText-add-equation");
       } else if (toOpen === "link") {
         //openModal(linkDrawerSlug); //TODO
+      }else {
+        for(const customModal of editorConfig.extraModals){
+          if(toOpen === customModal.openModalCommand.type) {
+            customModal.openModalCommand.command(toggleModal);
+            continue;
+          }
       }
+      }
+      
       return true;
     },
     COMMAND_PRIORITY_NORMAL
@@ -121,6 +127,12 @@ export default function ModalPlugin(props: {
           <InsertEquationDialog activeEditor={activeEditor} />
         </Modal>
       )}
+
+
+
+      {editorConfig.extraModals.map((customModal) => {
+        return customModal.modal({editorConfig});
+      })}
     </>
   );
 }

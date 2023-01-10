@@ -204,7 +204,6 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
     initialValue, // the initial value that the field mounted with,
   } = field;
 
-  console.log("Loaded with comments:", value?.comments);
 
   const classes = [
     baseClass,
@@ -272,7 +271,6 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props: Props) => {
                 words: textContent?.split(" ").length,
                 comments: commentStore.getComments(),
               });
-              console.log("Saved with comments", commentStore.getComments());
             }
           }}
           initialJSON={getJsonContentFromValue(value)}

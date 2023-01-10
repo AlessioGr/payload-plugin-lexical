@@ -70,8 +70,9 @@ import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
 import {
   $isLinkNode,
+  LinkAttributes,
   TOGGLE_LINK_COMMAND,
-} from "../LinkPlugin/LinkPluginModified";
+} from "../LinkPlugin/LinkNodeModified";
 import { IS_APPLE } from "../../shared/environment";
 
 import ColorPicker from "../../ui/ColorPicker";
@@ -317,8 +318,8 @@ function BlockFormatDropDown({
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
-      {editorConfig.nodes.length > 0 &&
-        editorConfig.nodes.map((customNode) => (
+      {editorConfig.simpleNodes.length > 0 &&
+        editorConfig.simpleNodes.map((customNode) => (
           <DropDownItem
             className={`item ${dropDownActiveClass(
               blockType === customNode.identifier
@@ -604,7 +605,11 @@ export default function ToolbarPlugin(props: {
 
   const insertLink = useCallback(() => {
     if (!isLink) {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, sanitizeUrl("https://"));
+      const linkAttributes: LinkAttributes = {
+        linkType: "custom",
+        url: "https://",
+      }
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
     } else {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
@@ -923,6 +928,7 @@ export default function ToolbarPlugin(props: {
                   <span className="text">Equation</span>
                 </DropDownItem>
               )}
+
             {editorConfig.features.collapsible.enabled &&
               editorConfig.features.collapsible.display && (
                 <DropDownItem
@@ -954,6 +960,10 @@ export default function ToolbarPlugin(props: {
                 <span className="text">{embedConfig.contentName}</span>
               </DropDownItem>
             ))}
+
+            {editorConfig.extraToolbarElements.insert.map((customInsertElement) => {
+              return customInsertElement(editor);
+            })}
           </DropDown>
         </React.Fragment>
       )}

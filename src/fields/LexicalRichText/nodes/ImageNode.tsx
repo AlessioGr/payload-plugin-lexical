@@ -151,9 +151,6 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       undefined
     );
 
-    console.warn("Caption import", caption);
-    console.warn("Caption import after node creation", node.__caption);
-
     const nestedEditor = node.__caption;
 
     try {
@@ -170,7 +167,6 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   exportJSON(): SerializedImageNode {
-    console.warn("Caption export", this.__caption.toJSON());
     return {
       type: "upload",
       version: 1,
@@ -221,7 +217,6 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   decorate(): JSX.Element {
-    console.log("decorate Image...");
 
     return (
       <RawImageComponent
@@ -243,7 +238,6 @@ export function $createImageNode(
   caption,
   captionsEnabled
 ): ImageNode {
-  console.log("$createImageNode");
   return $applyNodeReplacement(
     new ImageNode(
       rawImagePayload,

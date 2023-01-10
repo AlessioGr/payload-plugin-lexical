@@ -16,7 +16,7 @@ import { OverflowNode } from '@lexical/overflow';
 import { HorizontalRuleNode } from '@lexical/react/LexicalHorizontalRuleNode';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
-import { AutoLinkNode, LinkNode } from '../plugins/LinkPlugin/LinkPluginModified';
+import { AutoLinkNode, LinkNode } from '../plugins/LinkPlugin/LinkNodeModified';
 
 import { CollapsibleContainerNode } from '../plugins/CollapsiblePlugin/CollapsibleContainerNode';
 import { CollapsibleContentNode } from '../plugins/CollapsiblePlugin/CollapsibleContentNode';
@@ -62,11 +62,12 @@ function PlaygroundNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> 
     nodes.push(EquationNode);
   }
 
-  if(editorConfig.nodes.length > 0){
-    for(const customNode of editorConfig.nodes){
+  if(editorConfig.simpleNodes.length > 0){
+    for(const customNode of editorConfig.simpleNodes){
       nodes.push(customNode.node);
     }
   }
+
 
   nodes.push(
       HeadingNode,
@@ -79,7 +80,6 @@ function PlaygroundNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> 
       AutoLinkNode,
       LinkNode,
       OverflowNode,
-      MentionNode,
       EmojiNode,
       AutocompleteNode,
       KeywordNode,
@@ -88,6 +88,9 @@ function PlaygroundNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> 
       CollapsibleContentNode,
       CollapsibleTitleNode
   )
+
+  // push all editorConfig.nodes into nodes
+  nodes.push(...editorConfig.extraNodes);
 
   return nodes;
 }

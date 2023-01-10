@@ -1,8 +1,8 @@
-import {ElementNode, LexicalEditor} from "lexical";
+import {ElementNode, LexicalEditor, LexicalNode, Klass} from "lexical";
 
 export type EditorConfig = {
     debug: boolean;
-    nodes: CustomNode[];
+    simpleNodes: CustomNode[];
     features: {
         comments: {
             enabled: boolean,
@@ -63,6 +63,18 @@ export type EditorConfig = {
             enabled: boolean,
             display: boolean
         },
+    },
+    extraPlugins: JSX.Element[]
+    extraNodes: Array<Klass<LexicalNode>>,
+    extraModals: {
+        openModalCommand: {
+            type: string,
+            command: (toggleModal: (slug: string) => void) => void,
+        }
+        modal: (props: { editorConfig: EditorConfig; }) => JSX.Element,
+    }[],
+    extraToolbarElements: {
+        insert: ((editor: LexicalEditor) => JSX.Element)[]
     }
 }
 

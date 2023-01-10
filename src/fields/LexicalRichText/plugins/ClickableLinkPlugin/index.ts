@@ -15,8 +15,8 @@ import {
   $isRangeSelection,
 } from 'lexical';
 import { useEffect } from 'react';
-import { $isLinkNode } from '../LinkPlugin/LinkPluginModified';
-import type { LinkNode } from '../LinkPlugin/LinkPluginModified';
+import { $isLinkNode } from '../LinkPlugin/LinkNodeModified';
+import type { LinkNode } from '../LinkPlugin/LinkNodeModified';
 
 type LinkFilter = (event: MouseEvent, linkNode: LinkNode) => boolean;
 

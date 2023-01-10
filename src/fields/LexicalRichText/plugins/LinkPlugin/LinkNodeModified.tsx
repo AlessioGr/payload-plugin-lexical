@@ -31,22 +31,9 @@ import {
   Spread,
 } from "lexical";
 
-// This is just what's passed in the command - not what's used as attributes in the final link
-export type PayloadLinkData = {
-  payloadType?: string;
-  url: string;
-  linkType: "custom" | "internal";
-  newTab: boolean;
-  sponsored: boolean;
-  nofollow: boolean;
-  doc: {
-    value: string;
-    relationTo: string;
-  } | null;
-  fields?: any;
-};
 
 export type LinkAttributes = {
+  url?: string;
   rel?: null | string;
   newTab?: boolean;
   sponsored?: boolean;
@@ -61,37 +48,19 @@ export type LinkAttributes = {
 export type SerializedLinkNode = Spread<
   {
     type: "link";
-    url: string;
-    version: 1;
+    version: 2;
+    attributes: LinkAttributes
   },
-  Spread<LinkAttributes, SerializedElementNode>
+  SerializedElementNode
 >;
+
+
 
 /** @noInheritDoc */
 export class LinkNode extends ElementNode {
-  /** @internal */
-  __url: string;
 
-  /** @internal */
-  __newTab: boolean;
+  __attributes: LinkAttributes;
 
-  /** @internal */
-  __sponsored: boolean;
-
-  /** @internal */
-  __nofollow: boolean;
-
-  /** @internal */
-  __doc: {
-    value: string;
-    relationTo: string;
-  } | null;
-
-  /** @internal */
-  __linkType: "custom" | "internal";
-
-  /** @internal */
-  __rel: null | string;
 
   static getType(): string {
     return "link";
@@ -99,59 +68,38 @@ export class LinkNode extends ElementNode {
 
   static clone(node: LinkNode): LinkNode {
     return new LinkNode(
-      node.__url,
       {
-        rel: node.__rel,
-        newTab: node.__newTab,
-        sponsored: node.__sponsored,
-        nofollow: node.__nofollow,
-        doc: node.__doc,
-        linkType: node.__linkType,
-      },
-      node.__key
+        attributes: node.__attributes,
+        key: node.__key
+      }
     );
   }
 
-  constructor(url: string, attributes: LinkAttributes = {}, key?: NodeKey) {
+  constructor({attributes = {url: null, newTab: false, sponsored: false, nofollow: false, rel: null, doc: null, linkType: "custom"}, key}: {attributes: LinkAttributes , key?: NodeKey}) {
     super(key);
-    const {
-      newTab = false,
-      sponsored = false,
-      nofollow = false,
-      rel = null,
-      doc = null,
-      linkType = "custom",
-    } = attributes;
-    console.warn("attributes", attributes)
-    this.__url = url;
-    this.__newTab = newTab;
-    this.__sponsored = sponsored;
-    this.__nofollow = nofollow;
-    this.__rel = rel;
-    this.__doc = doc;
-    this.__linkType = linkType;
+    this.__attributes = attributes;
   }
 
   createDOM(config: EditorConfig): HTMLAnchorElement {
     const element = document.createElement("a");
-    if (this.__linkType === "custom") {
-      element.href = this.__url;
+    if (this.__attributes?.linkType === "custom") {
+      element.href = this.__attributes.url;
     }
-    if (this.__newTab) {
+    if (this.__attributes?.newTab) {
       element.target = "_blank";
     }
 
     element.rel = "";
 
-    if (this.__sponsored) {
+    if (this.__attributes?.sponsored) {
       element.rel += "sponsored";
     }
 
-    if (this.__nofollow) {
+    if (this.__attributes?.nofollow) {
       element.rel += " nofollow";
     }
 
-    if (this.__rel !== null) {
+    if (this.__attributes?.rel !== null) {
       element.rel += " " + this.__rel;
     }
     addClassNamesToElement(element, config.theme.link);
@@ -163,19 +111,19 @@ export class LinkNode extends ElementNode {
     anchor: HTMLAnchorElement,
     config: EditorConfig
   ): boolean {
-    const url = this.__url;
-    const newTab = this.__newTab;
-    const sponsored = this.__sponsored;
-    const nofollow = this.__nofollow;
-    const rel = this.__rel;
-    if (url !== prevNode.__url && this.__linkType === "custom") {
+    const url = this.__attributes?.url;
+    const newTab = this.__attributes?.newTab;
+    const sponsored = this.__attributes?.sponsored;
+    const nofollow = this.__attributes?.nofollow;
+    const rel = this.__attributes?.rel;
+    if (url !== prevNode.__attributes?.url && this.__attributes?.linkType === "custom") {
       anchor.href = url;
     }
-    if (this.__linkType === "internal" && prevNode.__linkType === "custom") {
+    if (this.__attributes?.linkType === "internal" && prevNode.__attributes?.linkType === "custom") {
       anchor.removeAttribute("href");
     }
 
-    if (newTab !== prevNode.__newTab) {
+    if (newTab !== prevNode.__attributes?.newTab) {
       if (newTab) {
         anchor.target = "_blank";
       } else {
@@ -187,7 +135,7 @@ export class LinkNode extends ElementNode {
       anchor.rel = "";
     }
 
-    if (sponsored !== prevNode.sponsored) {
+    if (sponsored !== prevNode.__attributes.sponsored) {
       if (sponsored) {
         anchor.rel += "sponsored";
       } else {
@@ -195,7 +143,7 @@ export class LinkNode extends ElementNode {
       }
     }
 
-    if (nofollow !== prevNode.nofollow) {
+    if (nofollow !== prevNode.__attributes.nofollow) {
       if (nofollow) {
         anchor.rel += "nofollow";
       } else {
@@ -203,7 +151,7 @@ export class LinkNode extends ElementNode {
       }
     }
 
-    if (rel !== prevNode.__rel) {
+    if (rel !== prevNode.__attributes.rel) {
       if (rel) {
         anchor.rel += rel;
       } else {
@@ -225,13 +173,8 @@ export class LinkNode extends ElementNode {
   static importJSON(
     serializedNode: SerializedLinkNode | SerializedAutoLinkNode
   ): LinkNode {
-    const node = $createLinkNode(serializedNode.url, {
-      rel: serializedNode.rel,
-      newTab: serializedNode.newTab,
-      sponsored: serializedNode.sponsored,
-      nofollow: serializedNode.nofollow,
-      linkType: serializedNode.linkType,
-      doc: serializedNode.doc,
+    const node = $createLinkNode({
+      attributes: serializedNode.attributes
     });
     node.setFormat(serializedNode.format);
     node.setIndent(serializedNode.indent);
@@ -242,79 +185,19 @@ export class LinkNode extends ElementNode {
   exportJSON(): SerializedLinkNode | SerializedAutoLinkNode {
     return {
       ...super.exportJSON(),
-      rel: this.getRel(),
-      newTab: this.isNewTab(),
-      sponsored: this.isSponsored(),
-      nofollow: this.isNoFollow(),
+      attributes: this.getAttributes(),
       type: "link",
-      url: this.getURL(),
-      linkType: this.getLinkType(),
-      doc: this.getDoc(),
-      version: 1,
+      version: 2,
     };
   }
 
-  getURL(): string {
-    return this.getLatest().__url;
+  getAttributes(): LinkAttributes {
+    return this.getLatest().__attributes;
   }
 
-  setURL(url: string): void {
+  setAttributes(attributes: LinkAttributes): void {
     const writable = this.getWritable();
-    writable.__url = url;
-  }
-
-  isNewTab(): boolean {
-    return this.getLatest().__newTab;
-  }
-
-  isSponsored(): boolean {
-    return this.getLatest().__sponsored;
-  }
-
-  isNoFollow(): boolean {
-    return this.getLatest().__nofollow;
-  }
-
-  setNewTab(newTab: boolean): void {
-    const writable = this.getWritable();
-    writable.__newTab = newTab;
-  }
-
-  setSponsored(sponsored: boolean): void {
-    const writable = this.getWritable();
-    writable.__sponsored = sponsored;
-  }
-
-  setNoFollow(nofollow: boolean): void {
-    const writable = this.getWritable();
-    writable.__nofollow = nofollow;
-  }
-
-  getDoc(): { value: string; relationTo: string } | null {
-    return this.getLatest().__doc;
-  }
-
-  setDoc(doc: { value: string; relationTo: string } | null): void {
-    const writable = this.getWritable();
-    writable.__doc = doc;
-  }
-
-  getLinkType(): "custom" | "internal" {
-    return this.getLatest().__linkType;
-  }
-
-  setLinkType(linkType: "custom" | "internal"): void {
-    const writable = this.getWritable();
-    writable.__linkType = linkType;
-  }
-
-  getRel(): null | string {
-    return this.getLatest().__rel;
-  }
-
-  setRel(rel: null | string): void {
-    const writable = this.getWritable();
-    writable.__rel = rel;
+    writable.__attributes = attributes;
   }
 
   insertNewAfter(
@@ -326,14 +209,7 @@ export class LinkNode extends ElementNode {
       restoreSelection
     );
     if ($isElementNode(element)) {
-      const linkNode = $createLinkNode(this.__url, {
-        rel: this.__rel,
-        newTab: this.__newTab,
-        sponsored: this.__sponsored,
-        nofollow: this.__nofollow,
-        linkType: this.__linkType,
-        doc: this.__doc,
-      });
+      const linkNode = $createLinkNode({attributes: this.__attributes});
       element.append(linkNode);
       return linkNode;
     }
@@ -381,24 +257,24 @@ function convertAnchorElement(domNode: Node): DOMConversionOutput {
   if (domNode instanceof HTMLAnchorElement) {
     const content = domNode.textContent;
     if (content !== null && content !== "") {
-      node = $createLinkNode(domNode.getAttribute("href") || "", {
+      node = $createLinkNode({attributes: {
+        url: domNode.getAttribute("href") || "",
         rel: domNode.getAttribute("rel"),
         newTab: domNode.getAttribute("target") === "_blank",
         sponsored: domNode.getAttribute("rel")?.includes("sponsored") || false,
         nofollow: domNode.getAttribute("rel")?.includes("nofollow") || false,
         linkType: "custom",
         doc: null,
-      });
+      }});
     }
   }
   return { node };
 }
 
 export function $createLinkNode(
-  url: string,
-  attributes?: LinkAttributes
+  {attributes}: {attributes?: LinkAttributes}
 ): LinkNode {
-  return $applyNodeReplacement(new LinkNode(url, attributes));
+  return $applyNodeReplacement(new LinkNode({attributes: attributes}));
 }
 
 export function $isLinkNode(
@@ -423,29 +299,12 @@ export class AutoLinkNode extends LinkNode {
   }
 
   static clone(node: AutoLinkNode): AutoLinkNode {
-    return new AutoLinkNode(
-      node.__url,
-      {
-        rel: node.__rel,
-        newTab: node.__newTab,
-        sponsored: node.__sponsored,
-        nofollow: node.__nofollow,
-        linkType: node.__linkType,
-        doc: node.__doc,
-      },
-      node.__key
-    );
+    return new AutoLinkNode({attributes: node.__attributes, key: node.__key});
   }
 
   static importJSON(serializedNode: SerializedAutoLinkNode): AutoLinkNode {
-    const node = $createAutoLinkNode(serializedNode.url, {
-      rel: serializedNode.rel,
-      newTab: serializedNode.newTab,
-      sponsored: serializedNode.sponsored,
-      nofollow: serializedNode.nofollow,
-      linkType: serializedNode.linkType,
-      doc: serializedNode.doc,
-    });
+    const node = $createAutoLinkNode({attributes: serializedNode.attributes});
+    
     node.setFormat(serializedNode.format);
     node.setIndent(serializedNode.indent);
     node.setDirection(serializedNode.direction);
@@ -474,14 +333,7 @@ export class AutoLinkNode extends LinkNode {
       restoreSelection
     );
     if ($isElementNode(element)) {
-      const linkNode = $createAutoLinkNode(this.__url, {
-        rel: this.__rel,
-        newTab: this.__newTab,
-        sponsored: this.__sponsored,
-        nofollow: this.__nofollow,
-        linkType: this.__linkType,
-        doc: this.__doc,
-      });
+      const linkNode = $createAutoLinkNode({attributes: this.__attributes});
       element.append(linkNode);
       return linkNode;
     }
@@ -490,10 +342,9 @@ export class AutoLinkNode extends LinkNode {
 }
 
 export function $createAutoLinkNode(
-  url: string,
-  attributes?: LinkAttributes,
+  {attributes}: {attributes?: LinkAttributes}
 ): AutoLinkNode {
-  return $applyNodeReplacement(new AutoLinkNode(url, attributes));
+  return $applyNodeReplacement(new AutoLinkNode({attributes: attributes}));
 }
 export function $isAutoLinkNode(
   node: LexicalNode | null | undefined
@@ -501,13 +352,11 @@ export function $isAutoLinkNode(
   return node instanceof AutoLinkNode;
 }
 
-export const TOGGLE_LINK_COMMAND: LexicalCommand<
-  string | ({ url: string } & LinkAttributes) | null
+export const TOGGLE_LINK_COMMAND: LexicalCommand<LinkAttributes | null
 > = createCommand("TOGGLE_LINK_COMMAND");
 
-export function toggleLink(linkData: PayloadLinkData): void {
-  const rel =
-    "noopener"; /* attributes.rel === undefined ? 'noopener' : attributes.rel; */
+export function toggleLink(linkAttributes: LinkAttributes): void {
+
   const selection = $getSelection();
 
   if (!$isRangeSelection(selection)) {
@@ -515,7 +364,7 @@ export function toggleLink(linkData: PayloadLinkData): void {
   }
   const nodes = selection.extract();
 
-  if (linkData === null) {
+  if (linkAttributes === null) {
     // Remove LinkNodes
     nodes.forEach((node) => {
       const parent = node.getParent();
@@ -539,17 +388,9 @@ export function toggleLink(linkData: PayloadLinkData): void {
       const linkNode = $isLinkNode(firstNode)
         ? firstNode
         : $getLinkAncestor(firstNode);
-      if (linkNode !== null) {
-        linkNode.setURL(linkData.url);
-        linkNode.setNewTab(linkData.newTab);
-        linkNode.setSponsored(linkData.sponsored);
-        linkNode.setNoFollow(linkData.nofollow);
-        linkNode.setLinkType(linkData.linkType);
-        linkNode.setDoc(linkData.doc);
+      if (linkNode !== null) {     
+        linkNode.setAttributes(linkAttributes);
 
-        if (rel !== null) {
-          linkNode.setRel(rel);
-        }
         return;
       }
     }
@@ -570,29 +411,14 @@ export function toggleLink(linkData: PayloadLinkData): void {
 
       if ($isLinkNode(parent)) {
         linkNode = parent;
-        parent.setURL(linkData.url);
-        parent.setNewTab(linkData.newTab);
-        parent.setSponsored(linkData.sponsored);
-        parent.setNoFollow(linkData.nofollow)
-        parent.setLinkType(linkData.linkType);
-        parent.setDoc(linkData.doc);
+        parent.setAttributes(linkAttributes)
 
-        if (rel !== null) {
-          linkNode.setRel(rel);
-        }
         return;
       }
 
       if (!parent.is(prevParent)) {
         prevParent = parent;
-        linkNode = $createLinkNode(linkData.url, {
-          rel,
-          newTab: linkData.newTab,
-          sponsored: linkData.sponsored,
-          nofollow: linkData.nofollow,
-          linkType: linkData.linkType,
-          doc: linkData.doc,
-        });
+        linkNode = $createLinkNode({attributes: linkAttributes});
 
         if ($isLinkNode(parent)) {
           if (node.getPreviousSibling() === null) {

@@ -23,7 +23,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { $isLinkNode, TOGGLE_LINK_COMMAND } from '../LinkPlugin/LinkPluginModified';
+import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../LinkPlugin/LinkNodeModified';
 
 import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
 import { getSelectedNode } from '../../utils/getSelectedNode';
@@ -56,7 +56,11 @@ function TextFormatFloatingToolbar({
 
   const insertLink = useCallback(() => {
     if (!isLink) {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, 'https://');
+      const linkAttributes: LinkAttributes = {
+        linkType: "custom",
+        url: "https://",
+      }
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
     } else {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }

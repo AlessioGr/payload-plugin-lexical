@@ -6,7 +6,7 @@
  *
  */
 
-import type {LinkAttributes} from '../LinkPlugin/LinkPluginModified';
+import type {LinkAttributes} from '../LinkPlugin/LinkNodeModified';
 import type {ElementNode, LexicalEditor, LexicalNode} from 'lexical';
 
 import {
@@ -14,7 +14,7 @@ import {
   $isAutoLinkNode,
   $isLinkNode,
   AutoLinkNode,
-} from '../LinkPlugin/LinkPluginModified';
+} from '../LinkPlugin/LinkNodeModified';
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {mergeRegister} from '@lexical/utils';
 import {
@@ -148,7 +148,13 @@ function handleLinkCreation(
           invalidMatchEnd + matchStart + matchLength,
         );
       }
-      const linkNode = $createAutoLinkNode(match.url, match.attributes);
+      const attributes: LinkAttributes = {
+        url: match.url,
+        linkType: "custom",
+        ...match.attributes
+      }
+    
+      const linkNode = $createAutoLinkNode({attributes: attributes});
       const textNode = $createTextNode(match.text);
       textNode.setFormat(linkTextNode.getFormat());
       textNode.setDetail(linkTextNode.getDetail());
@@ -176,7 +182,7 @@ function handleLinkEdit(
     const child = children[i];
     if (!$isTextNode(child) || !child.isSimpleText()) {
       replaceWithChildren(linkNode);
-      onChange(null, linkNode.getURL());
+      onChange(null, linkNode.getAttributes()?.url);
       return;
     }
   }
@@ -186,27 +192,31 @@ function handleLinkEdit(
   const match = findFirstMatch(text, matchers);
   if (match === null || match.text !== text) {
     replaceWithChildren(linkNode);
-    onChange(null, linkNode.getURL());
+    onChange(null, linkNode.getAttributes()?.url);
     return;
   }
 
   // Check neighbors
   if (!isPreviousNodeValid(linkNode) || !isNextNodeValid(linkNode)) {
     replaceWithChildren(linkNode);
-    onChange(null, linkNode.getURL());
+    onChange(null, linkNode.getAttributes()?.url);
     return;
   }
 
-  const url = linkNode.getURL();
-  if (url !== match.url) {
-    linkNode.setURL(match.url);
+  const url = linkNode.getAttributes()?.url;
+  if (url !== match?.url) {
+    let attrs = linkNode.getAttributes();
+    attrs.url = match?.url;
+    linkNode.setAttributes(attrs);
     onChange(match.url, url);
   }
 
   if (match.attributes) {
-    const rel = linkNode.getRel();
+    const rel = linkNode.getAttributes().rel;
     if (rel !== match.attributes.rel) {
-      linkNode.setRel(match.attributes.rel || null);
+      let attrs = linkNode.getAttributes();
+      attrs.rel = match.attributes.rel || null;
+      linkNode.setAttributes(attrs);
       onChange(match.attributes.rel || null, rel);
     }
   }
@@ -221,12 +231,12 @@ function handleBadNeighbors(textNode: TextNode, onChange: ChangeHandler): void {
 
   if ($isAutoLinkNode(previousSibling) && !startsWithSeparator(text)) {
     replaceWithChildren(previousSibling);
-    onChange(null, previousSibling.getURL());
+    onChange(null, previousSibling.getAttributes()?.url);
   }
 
   if ($isAutoLinkNode(nextSibling) && !endsWithSeparator(text)) {
     replaceWithChildren(nextSibling);
-    onChange(null, nextSibling.getURL());
+    onChange(null, nextSibling.getAttributes()?.url);
   }
 }
 

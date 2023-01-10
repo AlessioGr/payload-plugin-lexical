@@ -24,37 +24,24 @@ export default function RawImageComponent({
   caption: LexicalEditor;
   captionsEnabled: boolean;
 }): JSX.Element {
-  console.log("rawImagePayload1", rawImagePayload);
   const {
     collections,
     serverURL,
     routes: { api },
   } = useConfig();
-  console.log("raw Image 1...");
 
   const { i18n } = useTranslation();
-  console.log("raw Image 2...");
 
   const [imageData, setImageData] = useState<any>(null);
-  console.log("raw Image 3...");
 
   useEffect(() => {
-    console.log("UseEffect");
 
     async function loadImageData() {
-      console.log("loadImageData", rawImagePayload);
 
       const relatedCollection = collections.find((coll) => {
-        console.log(
-          "coll.slug",
-          coll.slug,
-          "insertImagePayload.relationTo",
-          rawImagePayload.relationTo
-        );
         return coll.slug === rawImagePayload.relationTo;
       });
 
-      console.log("relatedCollection", relatedCollection);
 
       const response = await requests.get(
         `${serverURL}${api}/${relatedCollection?.slug}/${rawImagePayload.value?.id}`,
@@ -65,7 +52,6 @@ export default function RawImageComponent({
         }
       );
       const json = await response.json();
-      console.log("JSON", json);
 
       const imagePayload = {
         altText: json?.text,
@@ -81,15 +67,11 @@ export default function RawImageComponent({
       };
 
       setImageData(imagePayload);
-      console.log("image payload", imagePayload);
-
-      console.log("relatedCollection", relatedCollection);
     }
 
     loadImageData();
   }, []);
 
-  console.log("Caption", caption);
 
   return (
     <Suspense fallback={<p>Loading image...</p>}>

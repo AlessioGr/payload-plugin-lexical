@@ -20,8 +20,8 @@ import {
   LinkNode,
   TOGGLE_LINK_COMMAND,
   toggleLink,
-} from "./LinkPluginModified";
-import type { PayloadLinkData } from "./LinkPluginModified";
+} from "./LinkNodeModified";
+import type { LinkAttributes } from "./LinkNodeModified";
 
 type Props = {
   validateUrl?: (url: string) => boolean;
@@ -37,57 +37,21 @@ export function LinkPlugin({ validateUrl }: Props): null {
     return mergeRegister(
       editor.registerCommand(
         TOGGLE_LINK_COMMAND,
-        (payload) => {
+        (payload: LinkAttributes) => {
           console.log("Payload received:", payload);
-          let linkData: PayloadLinkData = {
-            url: null,
-            doc: null,
-            linkType: "custom",
-            newTab: false,
-            sponsored: false,
-            nofollow: false,
-          };
-
-          if (payload === null) {
-            linkData = null;
-          } else if (typeof payload === "string") {
-            if (validateUrl === undefined || validateUrl(payload)) {
-              linkData.url = payload;
-            } else {
+          let linkAttributes: LinkAttributes = payload;
+          
+          //validate
+          if (linkAttributes?.linkType === "custom") {
+            if (
+              !(validateUrl === undefined ||
+              validateUrl(linkAttributes?.url))
+            ) {
               return false;
             }
-            // @ts-ignore
-          } else if (payload.payloadType && payload.payloadType === "payload") {
-            const receivedLinkData: PayloadLinkData =
-              payload as PayloadLinkData;
-            linkData.linkType = receivedLinkData.linkType;
-            linkData.newTab = receivedLinkData.newTab;
-            linkData.sponsored = receivedLinkData.sponsored;
-            linkData.nofollow = receivedLinkData.nofollow;
-            linkData.fields = receivedLinkData.fields;
-            if (receivedLinkData.linkType === "custom") {
-              // Just a simple URL! No doc
-              if (
-                validateUrl === undefined ||
-                validateUrl(receivedLinkData.url)
-              ) {
-                linkData.url = receivedLinkData.url;
-              } else {
-                return false;
-              }
-            } else if (receivedLinkData.linkType === "internal") {
-              linkData.doc = receivedLinkData.doc;
-              if (!linkData.doc) {
-                linkData = null;
-              }
-            } else {
-              return false;
-            }
-          } else {
-            return false;
-          }
+          } 
 
-          toggleLink(linkData);
+          toggleLink(linkAttributes);
           return true;
         },
         COMMAND_PRIORITY_LOW
@@ -111,7 +75,11 @@ export function LinkPlugin({ validateUrl }: Props): null {
               }
               // If we select nodes that are elements then avoid applying the link.
               if (!selection.getNodes().some((node) => $isElementNode(node))) {
-                editor.dispatchCommand(TOGGLE_LINK_COMMAND, clipboardText);
+                const linkAttributes: LinkAttributes = {
+                  linkType: "custom",
+                  url: clipboardText,
+                };
+                editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
                 event.preventDefault();
                 return true;
               }

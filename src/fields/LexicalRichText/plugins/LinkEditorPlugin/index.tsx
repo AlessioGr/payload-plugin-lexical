@@ -31,9 +31,9 @@ import { useTranslation } from "react-i18next";
 import {
   $isAutoLinkNode,
   $isLinkNode,
+  LinkAttributes,
   TOGGLE_LINK_COMMAND,
-} from "../LinkPlugin/LinkPluginModified";
-import type { PayloadLinkData } from "../LinkPlugin/LinkPluginModified";
+} from "../LinkPlugin/LinkNodeModified";
 import LinkPreview from "../../ui/LinkPreview";
 import { getSelectedNode } from "../../utils/getSelectedNode";
 import { setFloatingElemPosition } from "../../utils/setFloatingElemPosition";
@@ -131,17 +131,9 @@ function LinkEditor({
 
       // Initial state thingy
 
+
       // Initial state:
-      const data: {
-        text: string;
-        url: string;
-        linkType?: "custom" | "internal";
-        newTab?: boolean;
-        sponsored?: boolean;
-        nofollow?: boolean;
-        doc?: { value: string; relationTo: string } | null;
-        fields: unknown;
-      } = {
+      let data: LinkAttributes & { text: string, fields: undefined } = {
         text: "",
         url: "",
         linkType: undefined,
@@ -153,37 +145,37 @@ function LinkEditor({
       };
 
       if ($isLinkNode(parent)) {
-        data.text = parent.getTextContent();
-        data.url = parent.getURL();
-        data.newTab = parent.isNewTab();
-        data.sponsored = parent.isSponsored();
-        data.nofollow = parent.isNoFollow();
-        data.linkType = parent.getLinkType();
-        data.doc = parent.getDoc();
-        if (parent.getLinkType() === "custom") {
-          setLinkUrl(parent.getURL());
+        data = {
+          ...parent.getAttributes(),
+          text: parent.getTextContent(),
+          fields: undefined
+        };
+       
+        if (parent.getAttributes()?.linkType === "custom") {
+          setLinkUrl(parent.getAttributes()?.url);
         } else {
           // internal
           setLinkUrl(
-            `relation to ${parent.getDoc()?.relationTo}: ${
-              parent.getDoc()?.value
+            `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
+              parent.getAttributes()?.doc?.value
             }`
           );
         }
       } else if ($isLinkNode(node)) {
-        data.text = node.getTextContent();
-        data.url = node.getURL();
-        data.newTab = node.isNewTab();
-        data.sponsored = node.isSponsored();
-        data.nofollow = node.isNoFollow();
-        data.linkType = node.getLinkType();
-        data.doc = node.getDoc();
-        if (node.getLinkType() === "custom") {
-          setLinkUrl(node.getURL());
+        data = {
+          ...node.getAttributes(),
+          text: node.getTextContent(),
+          fields: undefined
+        };
+      
+        if (node.getAttributes()?.linkType === "custom") {
+          setLinkUrl(node.getAttributes()?.url);
         } else {
           // internal
           setLinkUrl(
-            `relation to ${node.getDoc()?.relationTo}: ${node.getDoc()?.value}`
+            `relation to ${node.getAttributes()?.doc?.relationTo}: ${
+              node.getAttributes()?.doc?.value
+            }`
           );
         }
       } else {
@@ -306,7 +298,6 @@ function LinkEditor({
             closeModal(drawerSlug);
           }}
           handleModalSubmit={(fields: Fields) => {
-            console.log("Submit! fields:", fields);
             // setLinkUrl(sanitizeUrl(fields.url.value));
 
             setEditMode(false);
@@ -314,19 +305,18 @@ function LinkEditor({
 
             const data = reduceFieldsToValues(fields, true);
 
-            const newNode: PayloadLinkData = {
+            const newNode: LinkAttributes = {
               newTab: data.newTab,
               sponsored: data.sponsored,
               nofollow: data.nofollow,
               url: data.linkType === "custom" ? data.url : undefined,
               linkType: data.linkType,
               doc: data.linkType === "internal" ? data.doc : undefined,
-              payloadType: "payload",
             };
 
-            if (customFieldSchema) {
-              newNode.fields = data.fields;
-            }
+            /*if (customFieldSchema) {
+              newNode.fields += data.fields;
+            }*/ //TODO
 
             editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
           }}

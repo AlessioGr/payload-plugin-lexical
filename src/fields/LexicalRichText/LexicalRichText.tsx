@@ -114,7 +114,9 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
           !isRichText ? "plain-text" : ""
         }`}
       >
+        {...editorConfig.extraPlugins}
         {isMaxLength && <MaxLengthPlugin maxLength={30} />}
+
         <DragDropPaste />
         <AutoFocusPlugin />
         <ClearEditorPlugin />
@@ -159,7 +161,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                   placeholder={null}
                   ErrorBoundary={LexicalErrorBoundary}
                 />
-                <MentionsPlugin />
+                {editorConfig.features.mentions.enabled && <MentionsPlugin />}
                 <HistoryPlugin />
                 <UploadPlugin captionsEnabled={false} />
                 <LinkPlugin />

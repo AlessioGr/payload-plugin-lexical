@@ -24,11 +24,12 @@ const PREVIEW_CACHE: Record<string, Promise<Preview> | {preview: Preview}> = {};
 const URL_MATCHER = /((https?:\/\/(www\.)?)|(www\.))[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/;
 
 function useSuspenseRequest(url: string) {
-  let cached = PREVIEW_CACHE[url];
 
-  if (!url.match(URL_MATCHER)) {
+  if (!url || !url.match(URL_MATCHER)) {
     return { preview: null };
   }
+
+  let cached = PREVIEW_CACHE[url];
 
   if (!cached) {
     cached = PREVIEW_CACHE[url] = fetch(
