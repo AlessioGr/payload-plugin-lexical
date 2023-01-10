@@ -121,6 +121,10 @@ export default Lexical;
 
 ```
 
+## Serializing
+
+Feel free to use my serializer in the [serialize-example](https://github.com/AlessioGr/payload-plugin-lexical/tree/master/serialize-example) folder of this repo. Lexical is using bitwise operations for the node formats.
+
 ## Idea list:
 
 - [x] Update slash commands to reflect the toolbar
