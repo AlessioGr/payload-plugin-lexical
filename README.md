@@ -106,6 +106,8 @@ export default Lexical;
 - [ ] Increase customizability & DX. Plugins should all be set in the config. Slash commands & Toolbar items should come from the same place.
 - [ ] Add ExcaliDraw
 - [ ] Take a closer look at AutoLink. Is it necessary and what does it do?
+- [ ] Make extranodes, extraplugins ... config options hold the ENTIRE nodes, and rename to just "nodes" and "plugins". Makes it easier to remove them and start from scratch, or to insert one at a special position, instead of just pushing it to the end. Especially useful for the Toolbar plugin.
+- [ ] extraFloatingToolbarElements
 
 ## Updating lexical
 
