@@ -70,18 +70,21 @@ const Lexical: CollectionConfig = {
                 defaultEditorConfig.features.font.enabled = false;
                 defaultEditorConfig.features.align.enabled = false;
 
-                //Add my own, simple custom node here
+                //Add my own, simple custom node here. This is for simple nodes!
                 defaultEditorConfig.simpleNodes.push({
                     displayName: 'Introduction',
                     identifier: 'introduction',
                     createFunction: $createIntroductionNode,
                     formatFunction: formatIntroductionNode,
                     node: IntroductionNode
-                })
+                });
                 
                 //Add my own, more complex plugin/node:
+                //This adds a plugin. Plugins handle all kinds of stuff, usually lexical commants, like an insertYourCustomNode command
                 defaultEditorConfig.extraPlugins.push(<InlineProductPlugin />);
+                //This is the node. It controls what's displayed in the editor, but also all the fields / what's imported and exported. Nodes are important!
                 defaultEditorConfig.extraNodes.push(InlineProductNode);
+                //This allows you to add a modal to the modal plugin, which is just used as a "place" to add some modals
                 defaultEditorConfig.extraModals.push({
                     modal: InlineProductModal,
                     openModalCommand: {
@@ -91,6 +94,7 @@ const Lexical: CollectionConfig = {
                         }
                     }
                 });
+                //Here you can add extra items to the editor toolbar. You need a button to add your new node, don't you?
                 defaultEditorConfig.extraToolbarElements.insert.push((editor: LexicalEditor) => {
                     return (
                         <DropDownItem
