@@ -8,6 +8,8 @@ A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a 
 
 MINIMUM REQUIRED PAYLOAD VERSION: 1.4.0
 
+Important: I currently do not shy away from breaking things in this plugin at this stage. So, please be careful when you update this plugin.
+
 ## How to use - example collection
 
 1. Add the src files manually into your payload project. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
