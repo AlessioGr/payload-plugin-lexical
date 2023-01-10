@@ -12,7 +12,7 @@ Important: I currently do not shy away from breaking things in this plugin at th
 
 ## How to use - example collection
 
-1. Add the src files manually into your payload project. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+1. Add the files inside of the src folder of this repo manually into your payload project. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
 
 2. :
 ```ts
@@ -70,15 +70,46 @@ const Lexical: CollectionConfig = {
                 defaultEditorConfig.features.font.enabled = false;
                 defaultEditorConfig.features.align.enabled = false;
 
-                //Add my own, custom node here
-                defaultEditorConfig.nodes.push({
+                //Add my own, simple custom node here. This is for simple nodes!
+                defaultEditorConfig.simpleNodes.push({
                     displayName: 'Introduction',
                     identifier: 'introduction',
                     createFunction: $createIntroductionNode,
                     formatFunction: formatIntroductionNode,
                     node: IntroductionNode
+                });
+                
+                //Add my own, more complex plugin/node:
+                //This adds a plugin. Plugins handle all kinds of stuff, usually lexical commants, like an insertYourCustomNode command
+                defaultEditorConfig.extraPlugins.push(<InlineProductPlugin />);
+                //This is the node. It controls what's displayed in the editor, but also all the fields / what's imported and exported. Nodes are important!
+                defaultEditorConfig.extraNodes.push(InlineProductNode);
+                //This allows you to add a modal to the modal plugin, which is just used as a "place" to add some modals
+                defaultEditorConfig.extraModals.push({
+                    modal: InlineProductModal,
+                    openModalCommand: {
+                        type: "inlineProduct",
+                        command: (toggleModal) => {
+                            toggleModal("inlineProduct");
+                        }
+                    }
+                });
+                //Here you can add extra items to the editor toolbar. You need a button to add your new node, don't you?
+                defaultEditorConfig.extraToolbarElements.insert.push((editor: LexicalEditor) => {
+                    return (
+                        <DropDownItem
+                            key="inlineProduct"
+                            onClick={() => {
+                                editor.dispatchCommand(OPEN_MODAL_COMMAND, "inlineProduct");
+                            }}
+                            className="item"
+                        >
+                            <i className="icon product" />
+                            <span className="text">Inline Product</span>
+                        </DropDownItem>
+                    );
                 })
-
+                
 
                 return defaultEditorConfig;
             }
