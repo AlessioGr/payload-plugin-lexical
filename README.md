@@ -70,15 +70,42 @@ const Lexical: CollectionConfig = {
                 defaultEditorConfig.features.font.enabled = false;
                 defaultEditorConfig.features.align.enabled = false;
 
-                //Add my own, custom node here
-                defaultEditorConfig.nodes.push({
+                //Add my own, simple custom node here
+                defaultEditorConfig.simpleNodes.push({
                     displayName: 'Introduction',
                     identifier: 'introduction',
                     createFunction: $createIntroductionNode,
                     formatFunction: formatIntroductionNode,
                     node: IntroductionNode
                 })
-
+                
+                //Add my own, more complex plugin/node:
+                defaultEditorConfig.extraPlugins.push(<InlineProductPlugin />);
+                defaultEditorConfig.extraNodes.push(InlineProductNode);
+                defaultEditorConfig.extraModals.push({
+                    modal: InlineProductModal,
+                    openModalCommand: {
+                        type: "inlineProduct",
+                        command: (toggleModal) => {
+                            toggleModal("inlineProduct");
+                        }
+                    }
+                });
+                defaultEditorConfig.extraToolbarElements.insert.push((editor: LexicalEditor) => {
+                    return (
+                        <DropDownItem
+                            key="inlineProduct"
+                            onClick={() => {
+                                editor.dispatchCommand(OPEN_MODAL_COMMAND, "inlineProduct");
+                            }}
+                            className="item"
+                        >
+                            <i className="icon product" />
+                            <span className="text">Inline Product</span>
+                        </DropDownItem>
+                    );
+                })
+                
 
                 return defaultEditorConfig;
             }
