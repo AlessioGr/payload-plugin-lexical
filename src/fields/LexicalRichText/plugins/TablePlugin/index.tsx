@@ -57,7 +57,7 @@ export type CellEditorConfig = Readonly<{
 
 export const INSERT_NEW_TABLE_COMMAND: LexicalCommand<InsertTableCommandPayload> = createCommand('INSERT_NEW_TABLE_COMMAND');
 
-export const CellContext: React.Context<CellContextShape> = createContext({
+export const CellContext = createContext<CellContextShape>({
   cellEditorConfig: null,
   cellEditorPlugins: null,
   set: () => {

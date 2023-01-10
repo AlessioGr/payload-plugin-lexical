@@ -128,6 +128,12 @@
   margin: 0 4px;
 }
 
+@media (max-width: 1024px) {
+  .floating-text-format-popup button.insert-comment {
+    display: none;
+  }
+}
+
 html[data-theme=dark] {
   .floating-text-format-popup {
     background-color: black;

@@ -166,7 +166,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 <UploadPlugin captionsEnabled={false} />
                 <LinkPlugin />
                 <ClickableLinkPlugin />
-                <FloatingTextFormatToolbarPlugin />
+                <FloatingTextFormatToolbarPlugin editorConfig={editorConfig}/>
               </NewTablePlugin>
             )}
             {editorConfig.features.upload.enabled && (
@@ -200,6 +200,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 )}
                 <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}
+                  editorConfig={editorConfig}
                 />
               </React.Fragment>
             )}
@@ -215,7 +216,10 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
           </React.Fragment>
         )}
         {(isCharLimit || isCharLimitUtf8) && (
-          <CharacterLimitPlugin charset={isCharLimit ? "UTF-16" : "UTF-8"} />
+          <CharacterLimitPlugin
+            charset={isCharLimit ? 'UTF-16' : 'UTF-8'}
+            maxLength={5}
+          />
         )}
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>

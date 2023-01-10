@@ -42,6 +42,12 @@
     vertical-align: -10px;
     background-image: url(../../images/icons/chat-left-text.svg);
   }
+
+  @media (max-width: 1024px) {
+    .CommentPlugin_AddCommentBox {
+      display: none;
+    }
+  }
   
   .CommentPlugin_CommentInputBox {
     display: block;
@@ -158,6 +164,12 @@
     background-image: url(../../images/icons/comments.svg);
     opacity: 0.5;
     transition: opacity 0.2s linear;
+  }
+
+  @media (max-width: 1024px) {
+    .CommentPlugin_ShowCommentsButton {
+      display: none;
+    }
   }
   
   .CommentPlugin_ShowCommentsButton:hover i.comments {

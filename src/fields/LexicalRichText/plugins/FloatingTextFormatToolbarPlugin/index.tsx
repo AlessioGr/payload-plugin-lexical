@@ -28,6 +28,8 @@ import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../LinkPlugin/
 import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
+import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
+import { EditorConfig } from '../../../../types';
 
 function TextFormatFloatingToolbar({
   editor,
@@ -40,6 +42,7 @@ function TextFormatFloatingToolbar({
   isStrikethrough,
   isSubscript,
   isSuperscript,
+  editorConfig,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
@@ -51,6 +54,7 @@ function TextFormatFloatingToolbar({
   isSubscript: boolean;
   isSuperscript: boolean;
   isUnderline: boolean;
+  editorConfig: EditorConfig;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
@@ -66,6 +70,9 @@ function TextFormatFloatingToolbar({
     }
   }, [editor, isLink]);
 
+  const insertComment = () => {
+    editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
+  };
 
   const updateTextFormatFloatingToolbar = useCallback(() => {
     const selection = $getSelection();
@@ -224,6 +231,15 @@ function TextFormatFloatingToolbar({
           >
             <i className="format link" />
           </button>
+          {editorConfig.features.comments.enabled && (
+              <button
+                onClick={insertComment}
+                className={'popup-item spaced insert-comment'}
+                aria-label="Insert comment">
+                <i className="format add-comment" />
+              </button>
+            )}
+
         </React.Fragment>
       )}
     </div>
@@ -233,6 +249,7 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
+  editorConfig: EditorConfig,
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -334,6 +351,7 @@ function useFloatingTextFormatToolbar(
       isSuperscript={isSuperscript}
       isUnderline={isUnderline}
       isCode={isCode}
+      editorConfig={editorConfig}
     />,
     anchorElem,
   );
@@ -341,9 +359,11 @@ function useFloatingTextFormatToolbar(
 
 export default function FloatingTextFormatToolbarPlugin({
   anchorElem = document.body,
+  editorConfig,
 }: {
   anchorElem?: HTMLElement;
+  editorConfig: EditorConfig;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem);
+  return useFloatingTextFormatToolbar(editor, anchorElem, editorConfig);
 }
