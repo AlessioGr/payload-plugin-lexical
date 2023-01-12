@@ -47,22 +47,20 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
       <SharedHistoryContext>
         <TableContext>
           <SharedAutocompleteContext>
-            <ModalContext>
-              <CommentsContext initialComments={initialComments}>
-                <div className="editor-shell">
-                  <Editor
-                    onChange={onChange}
-                    initialJSON={initialJSON}
-                    editorConfig={editorConfig}
-                    initialComments={initialComments}
-                  />
-                </div>
-                {editorConfig.debug && <Settings />}
-                {editorConfig.debug && <PasteLogPlugin />}
-                {editorConfig.debug && <TestRecorderPlugin />}
-                {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
-              </CommentsContext>
-            </ModalContext>
+            <CommentsContext initialComments={initialComments}>
+              <div className="editor-shell">
+                <Editor
+                  onChange={onChange}
+                  initialJSON={initialJSON}
+                  editorConfig={editorConfig}
+                  initialComments={initialComments}
+                />
+              </div>
+              {editorConfig.debug && <Settings />}
+              {editorConfig.debug && <PasteLogPlugin />}
+              {editorConfig.debug && <TestRecorderPlugin />}
+              {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
+            </CommentsContext>
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>

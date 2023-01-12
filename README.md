@@ -89,8 +89,12 @@ const Lexical: CollectionConfig = {
                     modal: InlineProductModal,
                     openModalCommand: {
                         type: "inlineProduct",
-                        command: (toggleModal, uuid) => {
-                            toggleModal("inlineProduct");
+                        command: (toggleModal, editDepth) => {
+                            const inlineProductDrawerSlug = formatDrawerSlug({
+                                slug: `inlineProduct`,
+                                depth: editDepth,
+                            });
+                            toggleModal(inlineProductDrawerSlug);
                         }
                     }
                 });

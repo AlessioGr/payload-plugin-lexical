@@ -37,8 +37,6 @@ export default function ModalPlugin(props: {
     isModalOpen = () => false,
   } = useModal();
 
-  const modalContext = useModalContext();
-
 
   const editDepth = useEditDepth();
 
@@ -47,6 +45,8 @@ export default function ModalPlugin(props: {
     depth: editDepth,
   });
 
+
+ 
   // Register commands:
   editor.registerCommand<"upload" | "table" | "equation" | "link" | string>(
     OPEN_MODAL_COMMAND,
@@ -62,7 +62,7 @@ export default function ModalPlugin(props: {
       }else {
         for(const customModal of editorConfig.extraModals){
           if(toOpen === customModal.openModalCommand.type) {
-            customModal.openModalCommand.command(toggleModal,  modalContext.uuid);
+            customModal.openModalCommand.command(toggleModal, editDepth);
             continue;
           }
       }
@@ -135,39 +135,8 @@ export default function ModalPlugin(props: {
 
 
       {editorConfig.extraModals.map((customModal) => {
-        return customModal.modal({editorConfig, uuid: modalContext.uuid});
+        return customModal.modal({editorConfig});
       })}
     </>
   );
 }
-
-
-const Context: React.Context<ContextShape> = createContext({});
-
-type ContextShape = {
-  uuid?: string;
-};
-export const ModalContext = ({
-  children,
-}: {
-  children: ReactNode;
-}): JSX.Element => {
-
-  let modalContext: ContextShape;
-  const [editor] = useLexicalComposerContext();
-
-  const newUUID = uuidv4();
-  
-  modalContext = useMemo(
-    () => ({ uuid: newUUID }),
-    [editor]
-  );
-
-  return (
-    <Context.Provider value={modalContext}>{children}</Context.Provider>
-  );
-};
-
-export const useModalContext = (): ContextShape => {
-  return useContext(Context);
-};
