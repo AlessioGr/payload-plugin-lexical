@@ -16,7 +16,6 @@ import type {
 
 import './ImageNode.scss';
 
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
@@ -337,7 +336,6 @@ export default function ImageComponent({
         {showCaption && (
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
-              <AutoFocusPlugin />
               <MentionsPlugin />
               <LinkPlugin />
               <EmojisPlugin />

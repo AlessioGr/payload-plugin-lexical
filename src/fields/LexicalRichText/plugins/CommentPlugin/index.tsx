@@ -24,7 +24,6 @@ import {
   $wrapSelectionInMarkNode,
   MarkNode,
 } from "@lexical/mark";
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
 import { LexicalComposer } from "@lexical/react/LexicalComposer";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -189,7 +188,6 @@ function PlainTextEditor({
         />
         <OnChangePlugin onChange={onChange} />
         <HistoryPlugin />
-        {autoFocus !== false && <AutoFocusPlugin />}
         <EscapeHandlerPlugin onEscape={onEscape} />
         <ClearEditorPlugin />
         {editorRef !== undefined && <EditorRefPlugin editorRef={editorRef} />}

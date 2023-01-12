@@ -6,7 +6,6 @@
  *
  */
 
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
 import { CharacterLimitPlugin } from "@lexical/react/LexicalCharacterLimitPlugin";
 import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
 import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
@@ -118,7 +117,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         {isMaxLength && <MaxLengthPlugin maxLength={30} />}
 
         <DragDropPaste />
-        <AutoFocusPlugin />
         <ClearEditorPlugin />
         <ComponentPickerPlugin editorConfig={editorConfig} />
         <EmojiPickerPlugin />
@@ -153,7 +151,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             {editorConfig.features.tables.enabled && <TableCellResizer />}
             {editorConfig.features.tables.enabled && (
               <NewTablePlugin cellEditorConfig={cellEditorConfig}>
-                <AutoFocusPlugin />
                 <RichTextPlugin
                   contentEditable={
                     <ContentEditable className="TableNode__contentEditable" />
