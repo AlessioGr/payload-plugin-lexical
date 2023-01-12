@@ -6,8 +6,8 @@ const baseClass = "lexicalRichTextEditor";
 
 import { useField, withCondition } from "payload/components/forms";
 import { LexicalEditorComponent } from "./LexicalEditorComponent";
-import React 
-from "react";
+import React, { useCallback } from 'react';
+
 import {
   $getRoot,
   EditorState,
@@ -16,6 +16,7 @@ import {
 } from "lexical";
 import { Props } from "./types";
 import { RichTextField, Validate } from 'payload/types';
+import defaultValue from './settings/defaultValue';
 
 
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
@@ -23,6 +24,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       editorConfig,
       path,
       required,
+      validate = lexicalValidate,
       name,
       label,
       admin,
@@ -39,6 +41,10 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     } = props;
   
     //const { value, setValue } = useField<Props>({ path });
+
+    const memoizedValidate = useCallback((value, validationOptions) => {
+      return validate(value, { ...validationOptions, required });
+    }, [validate, required]);
   
     const field = useField<{
       jsonContent: SerializedEditorState;
@@ -48,10 +54,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       comments: Comments;
     }>({
       path: path, // required
-      validate: lexicalValidate,
-      // validate: myValidateFunc, // optional
-      // disableFormData?: false, // if true, the field's data will be ignored
-      // condition?: myConditionHere, // optional, used to skip validation if condition fails
+      validate: memoizedValidate,
+      
     });
   
     // Here is what `useField` sends back
@@ -145,19 +149,16 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   };
 
 
-
-  export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (
-    value,
-    { t, required }
-  ) => {
+  export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (value, { t, required }) => {
     if (required) {
-      /* const stringifiedDefaultValue = JSON.stringify(defaultRichTextValue);
-          if (value && JSON.stringify(value) !== stringifiedDefaultValue) return true;
-          return t('validation:required'); */
+      const stringifiedDefaultValue = JSON.stringify(defaultValue);
+      if (value && JSON.stringify(value) !== stringifiedDefaultValue) return true;
+      return t('validation:required');
     }
   
     return true;
   };
+
 
   export function getJsonContentFromValue(value) {
     if (!value?.jsonContent) {

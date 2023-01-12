@@ -11,7 +11,6 @@ import {
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, {jsonContent: SerializedEditorState, preview: string, characters: number, words: number}, any>;
 
-//I cannot put this in LexicalRichText/index as that causes an error => https://github.com/payloadcms/payload/issues/1518
 export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<{jsonContent: SerializedEditorState, preview: string, characters: number, words: number}> =>  {
     if(!value) {
         return value;
