@@ -1,10 +1,12 @@
 import { EditorState, LexicalEditor } from 'lexical';
 import type {EditorConfig} from "../../types";
-import {FieldWithPath, RichTextField} from "payload/types";
+import {RichTextField} from "payload/types";
 import { Comments, CommentStore } from './commenting';
 
-export type Props = FieldWithPath & Omit<RichTextField, 'type'> & {
+
+export type Props = Omit<RichTextField, 'type'> & {
   editorConfig: EditorConfig,
+  path?: string
 }
 
 export type OnChangeProps = {

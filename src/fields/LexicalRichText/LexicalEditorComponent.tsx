@@ -19,7 +19,7 @@ import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
 import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
 import TypingPerfPlugin from "./plugins/TypingPerfPlugin";
-import Settings from "./Settings";
+import Settings from "./settings/Settings";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import { OnChangeProps } from "./types";
 

@@ -16,9 +16,9 @@ import {
   useMemo,
   useState,
 } from 'react';
-import type { SettingName } from '../appSettings';
+import type { SettingName } from '../settings/appSettings';
 
-import { DEFAULT_SETTINGS } from '../appSettings';
+import { DEFAULT_SETTINGS } from '../settings/appSettings';
 
 type SettingsContextShape = {
   setOption: (name: SettingName, value: boolean) => void;

@@ -9,8 +9,8 @@
 import * as React from 'react';
 import { useState } from 'react';
 
-import { useSettings } from './context/SettingsContext';
-import Switch from './ui/Switch';
+import { useSettings } from '../context/SettingsContext';
+import Switch from '../ui/Switch';
 
 export default function Settings(): JSX.Element {
   const {
