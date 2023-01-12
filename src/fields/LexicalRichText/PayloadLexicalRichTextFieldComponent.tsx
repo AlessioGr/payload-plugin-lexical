@@ -17,6 +17,7 @@ import {
 import { Props } from "./types";
 import { RichTextField, Validate } from 'payload/types';
 import defaultValue from './settings/defaultValue';
+import { deepEqual } from '../../tools/deepEqual';
 
 
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
@@ -117,9 +118,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
               const json = editorState.toJSON();
               const valueJsonContent = getJsonContentFromValue(value);
               if (
-                !readOnly &&
-                /* json !== defaultValue && */ json != valueJsonContent &&
-                JSON.stringify(json) !== JSON.stringify(valueJsonContent)
+                !readOnly && !deepEqual(json, valueJsonContent)
               ) {
                 const textContent = editor.getEditorState().read(() => {
                   return $getRoot().getTextContent();
@@ -147,6 +146,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       </div>
     );
   };
+
+
 
 
   export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (value, { t, required }) => {
