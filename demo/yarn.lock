@@ -3388,11 +3388,6 @@ mongodb@4.8.1:
   optionalDependencies:
     saslprep "^1.0.3"
 
-mongoose-aggregate-paginate-v2@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/mongoose-aggregate-paginate-v2/-/mongoose-aggregate-paginate-v2-1.0.6.tgz#fd2f2564d1bbf52f49a196f0b7b03675913dacca"
-  integrity sha512-UuALu+mjhQa1K9lMQvjLL3vm3iALvNw8PQNIh2gp1b+tO5hUa0NC0Wf6/8QrT9PSJVTihXaD8hQVy3J4e0jO0Q==
-
 mongoose-paginate-v2@^1.6.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/mongoose-paginate-v2/-/mongoose-paginate-v2-1.7.1.tgz#0b390f5eb8e5dca55ffcb1fd7b4d8078636cb8f1"
@@ -3816,10 +3811,10 @@ pause@0.0.1:
   resolved "https://registry.yarnpkg.com/pause/-/pause-0.0.1.tgz#1d408b3fdb76923b9543d96fb4c9dfd535d9cb5d"
   integrity sha512-KG8UEiEVkR3wGEb4m5yZkVCzigAD+cVEJck2CzYZO37ZGJfctvVptVO192MwrtPhzONn6go8ylnOdMhKqi4nfg==
 
-payload@1.5.4:
-  version "1.5.4"
-  resolved "https://registry.yarnpkg.com/payload/-/payload-1.5.4.tgz#bf15cfa758c5c8b2f73656f7e1c60035e5042020"
-  integrity sha512-Oo2HgTl+kGzyiU+wHT0NHHMpJWUYysRh2kTyZ2ejF/6IC5+bBJ4H47EBr+4dGItCJ3Z9GD2fns1pnKFGcYGkEQ==
+payload@1.5.8:
+  version "1.5.8"
+  resolved "https://registry.yarnpkg.com/payload/-/payload-1.5.8.tgz#cb14d117a5440eb5684bcfc7a54c42e17480a977"
+  integrity sha512-3keazFH3NjLMW6XhJr6cWAYgZ1kLKBcJYnyYC/TxCOOb0BwCzgydMJPSqjQtB3s9LHVG0hj4l95TTPlBI6F/6A==
   dependencies:
     "@date-io/date-fns" "^2.10.6"
     "@dnd-kit/core" "^6.0.5"
@@ -3875,7 +3870,6 @@ payload@1.5.4:
     minimist "^1.2.0"
     mkdirp "^1.0.4"
     mongoose "6.5.0"
-    mongoose-aggregate-paginate-v2 "^1.0.6"
     mongoose-paginate-v2 "^1.6.1"
     nodemailer "^6.4.2"
     object-to-formdata "^4.1.0"

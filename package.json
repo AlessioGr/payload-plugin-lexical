@@ -27,10 +27,11 @@
     "typescript",
     "react",
     "lexical",
-    "richtext"
+    "richtext",
+    "payload-plugin"
   ],
   "peerDependencies": {
-    "payload": "^1.5.4",
+    "payload": "^1.5.8",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
@@ -58,7 +59,7 @@
     "lodash": "^4.17.21",
     "react-dom": "^18.2.0",
     "@types/react-dom": "^18.0.10",
-    "payload": "^1.4.1",
+    "payload": "^1.5.8",
     "react": "^18.0.0",
     "react-i18next": "^11.18.6"
   },
