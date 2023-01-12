@@ -6,8 +6,8 @@ import { populateLexicalRelationships } from './LexicalAfterReadHook';
 
 
 
-function lexicalRichTextField(props: {name?: string, label?: string, localized?: boolean, editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig   }): Field {
-    const {name, label, localized, editorConfigModifier} = props;
+function lexicalRichTextField(props: {name?: string, label?: string, localized?: boolean, required?: boolean, editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig   }): Field {
+    const {name, label, localized, required, editorConfigModifier} = props;
 
     const defaultEditorConfig: EditorConfig = {
         debug: true,
@@ -88,6 +88,7 @@ function lexicalRichTextField(props: {name?: string, label?: string, localized?:
         type: 'richText',
         label: label ? label : 'Rich Text',
         localized: localized,
+        required: required,
         hooks: {
             afterRead: [
                 populateLexicalRelationships,

@@ -15,6 +15,7 @@ import { SharedHistoryContext } from "./context/SharedHistoryContext";
 import { Editor } from "./LexicalRichText";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
 import { CommentsContext } from "./plugins/CommentPlugin";
+import { ModalContext } from './plugins/ModalPlugin';
 import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
 import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
@@ -46,20 +47,22 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
       <SharedHistoryContext>
         <TableContext>
           <SharedAutocompleteContext>
-            <CommentsContext initialComments={initialComments}>
-              <div className="editor-shell">
-                <Editor
-                  onChange={onChange}
-                  initialJSON={initialJSON}
-                  editorConfig={editorConfig}
-                  initialComments={initialComments}
-                />
-              </div>
-              {editorConfig.debug && <Settings />}
-              {editorConfig.debug && <PasteLogPlugin />}
-              {editorConfig.debug && <TestRecorderPlugin />}
-              {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
-            </CommentsContext>
+            <ModalContext>
+              <CommentsContext initialComments={initialComments}>
+                <div className="editor-shell">
+                  <Editor
+                    onChange={onChange}
+                    initialJSON={initialJSON}
+                    editorConfig={editorConfig}
+                    initialComments={initialComments}
+                  />
+                </div>
+                {editorConfig.debug && <Settings />}
+                {editorConfig.debug && <PasteLogPlugin />}
+                {editorConfig.debug && <TestRecorderPlugin />}
+                {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
+              </CommentsContext>
+            </ModalContext>
           </SharedAutocompleteContext>
         </TableContext>
       </SharedHistoryContext>

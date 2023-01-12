@@ -69,9 +69,9 @@ export type EditorConfig = {
     extraModals: {
         openModalCommand: {
             type: string,
-            command: (toggleModal: (slug: string) => void) => void,
+            command: (toggleModal: (slug: string) => void, uuid: string) => void,
         }
-        modal: (props: { editorConfig: EditorConfig; }) => JSX.Element,
+        modal: (props: { editorConfig: EditorConfig; uuid?: string }) => JSX.Element,
     }[],
     extraToolbarElements: {
         insert: ((editor: LexicalEditor) => JSX.Element)[]

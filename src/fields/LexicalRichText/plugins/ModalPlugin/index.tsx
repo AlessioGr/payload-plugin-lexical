@@ -14,9 +14,10 @@ import {
   LexicalCommand,
 } from "lexical";
 import { Modal, useModal } from "@faceless-ui/modal";
-import { useCallback, useState } from "react";
+import { useCallback, useState, ReactNode, useMemo, createContext, useContext } from "react";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
+import { v4 as uuidv4 } from 'uuid';
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
   "upload" | "table" | "equation" | "link" | string
@@ -35,6 +36,9 @@ export default function ModalPlugin(props: {
     openModal,
     isModalOpen = () => false,
   } = useModal();
+
+  const modalContext = useModalContext();
+
 
   const editDepth = useEditDepth();
 
@@ -58,7 +62,7 @@ export default function ModalPlugin(props: {
       }else {
         for(const customModal of editorConfig.extraModals){
           if(toOpen === customModal.openModalCommand.type) {
-            customModal.openModalCommand.command(toggleModal);
+            customModal.openModalCommand.command(toggleModal,  modalContext.uuid);
             continue;
           }
       }
@@ -131,8 +135,39 @@ export default function ModalPlugin(props: {
 
 
       {editorConfig.extraModals.map((customModal) => {
-        return customModal.modal({editorConfig});
+        return customModal.modal({editorConfig, uuid: modalContext.uuid});
       })}
     </>
   );
 }
+
+
+const Context: React.Context<ContextShape> = createContext({});
+
+type ContextShape = {
+  uuid?: string;
+};
+export const ModalContext = ({
+  children,
+}: {
+  children: ReactNode;
+}): JSX.Element => {
+
+  let modalContext: ContextShape;
+  const [editor] = useLexicalComposerContext();
+
+  const newUUID = uuidv4();
+  
+  modalContext = useMemo(
+    () => ({ uuid: newUUID }),
+    [editor]
+  );
+
+  return (
+    <Context.Provider value={modalContext}>{children}</Context.Provider>
+  );
+};
+
+export const useModalContext = (): ContextShape => {
+  return useContext(Context);
+};

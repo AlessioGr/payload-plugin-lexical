@@ -1,4 +1,4 @@
-export default [{
+export default {
     "root": {
         "children": [
             {
@@ -16,4 +16,4 @@ export default [{
         "type": "root",
         "version": 1
     }
-  }];
+  };

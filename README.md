@@ -89,7 +89,7 @@ const Lexical: CollectionConfig = {
                     modal: InlineProductModal,
                     openModalCommand: {
                         type: "inlineProduct",
-                        command: (toggleModal) => {
+                        command: (toggleModal, uuid) => {
                             toggleModal("inlineProduct");
                         }
                     }

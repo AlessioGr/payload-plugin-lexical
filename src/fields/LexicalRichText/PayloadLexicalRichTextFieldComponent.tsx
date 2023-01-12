@@ -15,9 +15,10 @@ import {
   SerializedEditorState,
 } from "lexical";
 import { Props } from "./types";
-import { RichTextField, Validate } from 'payload/types';
+import { Validate } from 'payload/types';
 import defaultValue from './settings/defaultValue';
 import { deepEqual } from '../../tools/deepEqual';
+
 
 
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
@@ -44,7 +45,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     //const { value, setValue } = useField<Props>({ path });
 
     const memoizedValidate = useCallback((value, validationOptions) => {
-      return validate(value, { ...validationOptions, required });
+
+      return lexicalValidate(value, { ...validationOptions, required }); //TODO use "validate" here so people can customize their validate. Sadly that breaks for some reason (it uses no validate rather than lexical as default one if that's done)
     }, [validate, required]);
   
     const field = useField<{
@@ -150,10 +152,14 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
 
 
 
-  export const lexicalValidate: Validate<unknown, unknown, RichTextField> = (value, { t, required }) => {
+  export const lexicalValidate: Validate<unknown, unknown, any> = (value, { t, required }) => {
     if (required) {
-      const stringifiedDefaultValue = JSON.stringify(defaultValue);
-      if (value && JSON.stringify(value) !== stringifiedDefaultValue) return true;
+      const jsonContent = getJsonContentFromValue(value);
+
+      if (jsonContent && !deepEqual(jsonContent, defaultValue)){
+        return true;
+      }
+      console.log("false")
       return t('validation:required');
     }
   
