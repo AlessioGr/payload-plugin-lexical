@@ -15,7 +15,6 @@ import { SharedHistoryContext } from "./context/SharedHistoryContext";
 import { Editor } from "./LexicalRichText";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
 import { CommentsContext } from "./plugins/CommentPlugin";
-import { ModalContext } from './plugins/ModalPlugin';
 import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
 import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
