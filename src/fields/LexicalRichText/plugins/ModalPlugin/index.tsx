@@ -41,7 +41,17 @@ export default function ModalPlugin(props: {
   const editDepth = useEditDepth();
 
   const linkDrawerSlug = formatDrawerSlug({
-    slug: `rich-text-link-lexicalRichText`, // TODO: Add uuid for the slug?
+    slug: `rich-text-link-lexicalRichText`,
+    depth: editDepth,
+  });
+
+  const addTableDrawerSlug = formatDrawerSlug({
+    slug: `lexicalRichText-add-table`,
+    depth: editDepth,
+  });
+
+  const addEquationDrawerSlug = formatDrawerSlug({
+    slug: `lexicalRichText-add-equation`,
     depth: editDepth,
   });
 
@@ -56,7 +66,7 @@ export default function ModalPlugin(props: {
       } else if (toOpen === "table") {
         toggleModal("lexicalRichText-add-table");
       } else if (toOpen === "equation") {
-        toggleModal("lexicalRichText-add-equation");
+        toggleModal(addEquationDrawerSlug);
       } else if (toOpen === "link") {
         //openModal(linkDrawerSlug); //TODO
       }else {
@@ -110,6 +120,9 @@ export default function ModalPlugin(props: {
     // injectVoidElement(editor, upload);
   };
 
+  
+
+
   return (
     <>
       <ListDrawer onSelect={onUploadSelect} />
@@ -123,13 +136,8 @@ export default function ModalPlugin(props: {
         </Modal>
       )}
 
-      {isModalOpen("lexicalRichText-add-equation") && (
-        <Modal
-          className="rich-text-equation-modal"
-          slug="lexicalRichText-add-equation"
-        >
-          <InsertEquationDialog activeEditor={activeEditor} />
-        </Modal>
+      {isModalOpen(addEquationDrawerSlug) && (
+        <InsertEquationDialog activeEditor={activeEditor} />
       )}
 
 

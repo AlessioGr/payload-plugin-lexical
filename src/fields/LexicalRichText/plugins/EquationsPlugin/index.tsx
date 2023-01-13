@@ -26,8 +26,13 @@ import * as React from 'react';
 import { useModal } from '@faceless-ui/modal';
 import { $createEquationNode, EquationNode } from '../../nodes/EquationNode';
 import KatexEquationAlterer from '../../ui/KatexEquationAlterer';
-import MinimalTemplate from 'payload/dist/admin/components/templates/Minimal';
-import Button from 'payload/dist/admin/components/elements/Button';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer } from "payload/dist/admin/components/elements/Drawer";
+import Button from "payload/dist/admin/components/elements/Button";
+import X from "payload/dist/admin/components/icons/X";
+import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+
 
 type CommandPayload = {
   equation: string;
@@ -36,46 +41,51 @@ type CommandPayload = {
 
 export const INSERT_EQUATION_COMMAND: LexicalCommand<CommandPayload> = createCommand('INSERT_EQUATION_COMMAND');
 
+const baseClass = "rich-text-equation-modal";
+
 export function InsertEquationDialog({
   activeEditor,
 }: {
   activeEditor: LexicalEditor;
 }): JSX.Element {
 
+  const editDepth = useEditDepth();
+
+  const equationDrawerSlug = formatDrawerSlug({
+    slug: `lexicalRichText-add-equation`, // TODO: Add uuid for the slug?
+    depth: editDepth,
+  });
+
   const {
     toggleModal,
   } = useModal();
-  const modalSlug = 'lexicalRichText-add-equation';
-  const baseModalClass = 'rich-text-equation-modal';
 
   const onEquationConfirm = useCallback(
     (equation: string, inline: boolean) => {
       activeEditor.dispatchCommand(INSERT_EQUATION_COMMAND, { equation, inline });
-      toggleModal(modalSlug);
+      toggleModal(equationDrawerSlug);
     },
     [activeEditor/* , onClose */],
   );
 
   return (
-    <React.Fragment>
-      <MinimalTemplate width="wide">
-        <header className={`${baseModalClass}__header`}>
-          <h1>
-            Add equation
-          </h1>
+    <Drawer slug={equationDrawerSlug} formatSlug={false} className={baseClass}>
+      <Gutter className={`${baseClass}__template`}>
+        <header className={`${baseClass}__header`}>
+          <h2 className={`${baseClass}__header-text`}>Add equation</h2>
           <Button
-            icon="x"
-            round
-            buttonStyle="icon-label"
-            iconStyle="with-border"
+            className={`${baseClass}__header-close`}
+            buttonStyle="none"
             onClick={() => {
-              toggleModal(modalSlug);
+              toggleModal(equationDrawerSlug);
             }}
-          />
+          >
+            <X />
+          </Button>
         </header>
         <KatexEquationAlterer onConfirm={onEquationConfirm} />
-      </MinimalTemplate>
-    </React.Fragment>
+      </Gutter>
+    </Drawer>
   );
 
 }
