@@ -912,16 +912,10 @@ i.prettier-error {
 
 .editor-shell .editor-image .image-caption-container {
   display: block;
-  position: absolute;
-  bottom: 4px;
-  left: 0;
-  right: 0;
+  position: relative;
   padding: 0;
   margin: 0;
-  border-top: 1px solid #fff;
-  background-color: rgba(255, 255, 255, 0.9);
   min-width: 100px;
-  color: #000;
   overflow: hidden;
 }
 
