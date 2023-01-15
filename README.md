@@ -59,7 +59,7 @@ const Lexical: CollectionConfig = {
         },
         lexicalRichTextField({
             name: 'lexicalRichTextEditor',
-            label: 'cool richtext editor!,
+            label: 'cool richtext editor',
             localized: true,
             editorConfigModifier: defaultEditorConfig => {
                 defaultEditorConfig.debug = false;
