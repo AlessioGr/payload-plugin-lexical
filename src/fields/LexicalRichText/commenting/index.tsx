@@ -92,7 +92,7 @@ function triggerOnChange(commentStore: CommentStore): void {
     listener();
   }
   //update
-  console.log("Update comments!", commentStore.getComments()); //TODO make sure onchange is triggered here too. Else it does not register subcomments!
+  //console.log("Update comments!", commentStore.getComments()); //TODO make sure onchange is triggered here too. Else it does not register subcomments!
 }
 
 export class CommentStore {
@@ -104,7 +104,6 @@ export class CommentStore {
     this._comments = initialComments ? initialComments : [];
     this._editor = editor;
     this._changeListeners = new Set();
-    console.log("New commentsstore with comments", this._comments);
   }
 
   getComments(): Comments {
@@ -116,7 +115,6 @@ export class CommentStore {
     thread?: Thread,
     offset?: number
   ): void {
-    console.log("addcomment");
     const nextComments = Array.from(this._comments);
     // The YJS types explicitly use `any` as well.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
