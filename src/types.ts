@@ -19,14 +19,16 @@ import { CollapsibleFeature } from "./features/collapsible/CollapsibleFeature";
 
 export type Feature = {
   plugins?: {
+    // plugins are anything which is not directly part of the editor. Like, creating a command which creates a node, or opens a modal, or some other more "outside" functionality
     component: JSX.Element;
     position?: "normal" | "bottom";
   }[];
-  subEditorPlugins?: JSX.Element[]; //Like image captions
-  tablePlugins?: JSX.Element[]; //Put inside the newtable plugin
-  nodes?: Array<Klass<LexicalNode>>;
-  tableCellNodes?: Array<Klass<LexicalNode>>;
+  subEditorPlugins?: JSX.Element[]; // Plugins which are embedded in other sub-editor, like image captions (which is basically an editor inside of an editor)
+  tablePlugins?: JSX.Element[]; // Plugins which are put inside of the newtable plugin
+  nodes?: Array<Klass<LexicalNode>>; //Nodes = Leaves and elements in Slate. Nodes are what's actually part of the editor JSON
+  tableCellNodes?: Array<Klass<LexicalNode>>; // Nodes which are put inside of the newtable plugin
   modals?: {
+    // Modals / Drawers. They can be defined here in order to be able to open or close them with a simple lexical command. This also ensures the modals/drawers are "placed" at the correct position
     openModalCommand: {
       type: string;
       command: (toggleModal: (slug: string) => void, editDepth: number) => void;
@@ -37,6 +39,7 @@ export type Feature = {
     }) => JSX.Element;
   }[];
   toolbar?: {
+    // You can customize the items displayed in the toolbar here
     // TODO: Revamp toolbar completely
     insert: ((
       editor: LexicalEditor,
@@ -44,13 +47,14 @@ export type Feature = {
     ) => JSX.Element)[];
   };
   componentPicker?: {
+    // Component picker is the thing which pops up when you type "/". Basically slash commands.
     componentPickerOptions: ((
       editor: LexicalEditor,
       editorConfig: EditorConfig
     ) => ComponentPickerOption)[];
   };
-  markdownTransformers?: Transformer[];
-  embedConfigs?: PlaygroundEmbedConfig[];
+  markdownTransformers?: Transformer[]; // Not sure what this is exactly
+  embedConfigs?: PlaygroundEmbedConfig[]; // Every embed plugin / node (like twitter, youtube or figma embeds) should define one of those
   actions?: JSX.Element[]; //Actions are added in the ActionsPlugin - it's the buttons you see on the bottom right of the editor
 };
 
