@@ -68,6 +68,19 @@ const Lexical: CollectionConfig = {
                 defaultEditorConfig.featuresold.fontSize.enabled = false;
                 defaultEditorConfig.featuresold.font.enabled = false;
                 defaultEditorConfig.featuresold.align.enabled = false;
+
+                // Optional: these are the default features. Feel free to customize them or remove the ones you do not like!
+                defaultEditorConfig.features = [
+                    EquationsFeature({}),
+                    EmojisFeature({}),
+                    EmojiPickerFeature({}),
+                    HorizontalRuleFeature({}),
+                    FigmaFeature({}),
+                    YouTubeFeature({}),
+                    TwitterFeature({}),
+                    SpeechToTextFeature({}),
+                    ClearEditorFeature({}),
+                ];
                 
                 // A feature can consist of nodes, plugins, modals, toolbar elements and more!
                 defaultEditorConfig.features.push(YourOwnCustomFeature({}))
