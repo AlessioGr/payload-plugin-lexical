@@ -694,8 +694,8 @@ export default function ToolbarPlugin(props: {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          {editorConfig.features.font.enabled &&
-            editorConfig.features.font.display && (
+          {editorConfig.featuresold.font.enabled &&
+            editorConfig.featuresold.font.display && (
               <FontDropDown
                 disabled={!isEditable}
                 styleText="font-family"
@@ -703,8 +703,8 @@ export default function ToolbarPlugin(props: {
                 editor={editor}
               />
             )}
-          {editorConfig.features.fontSize.enabled &&
-            editorConfig.features.fontSize.display && (
+          {editorConfig.featuresold.fontSize.enabled &&
+            editorConfig.featuresold.fontSize.display && (
               <FontDropDown
                 disabled={!isEditable}
                 styleText="font-size"
@@ -786,8 +786,8 @@ export default function ToolbarPlugin(props: {
           >
             <i className="format link" />
           </button>
-          {editorConfig.features.textColor.enabled &&
-            editorConfig.features.textColor.display && (
+          {editorConfig.featuresold.textColor.enabled &&
+            editorConfig.featuresold.textColor.display && (
               <ColorPicker
                 disabled={!isEditable}
                 buttonClassName="toolbar-item color-picker"
@@ -798,8 +798,8 @@ export default function ToolbarPlugin(props: {
                 title="text color"
               />
             )}
-          {editorConfig.features.textBackground.enabled &&
-            editorConfig.features.textBackground.display && (
+          {editorConfig.featuresold.textBackground.enabled &&
+            editorConfig.featuresold.textBackground.display && (
               <ColorPicker
                 disabled={!isEditable}
                 buttonClassName="toolbar-item color-picker"
@@ -874,8 +874,8 @@ export default function ToolbarPlugin(props: {
             buttonAriaLabel="Insert specialized editor node"
             buttonIconClassName="icon plus"
           >
-            {editorConfig.features.horizontalRule.enabled &&
-              editorConfig.features.horizontalRule.display && (
+            {editorConfig.featuresold.horizontalRule.enabled &&
+              editorConfig.featuresold.horizontalRule.display && (
                 <DropDownItem
                   onClick={() => {
                     activeEditor.dispatchCommand(
@@ -889,8 +889,8 @@ export default function ToolbarPlugin(props: {
                   <span className="text">Horizontal Rule</span>
                 </DropDownItem>
               )}
-            {editorConfig.features.upload.enabled &&
-              editorConfig.features.upload.display && (
+            {editorConfig.featuresold.upload.enabled &&
+              editorConfig.featuresold.upload.display && (
                 <DropDownItem
                   onClick={() => {
                     editor.dispatchCommand(OPEN_MODAL_COMMAND, "upload");
@@ -902,8 +902,8 @@ export default function ToolbarPlugin(props: {
                 </DropDownItem>
               )}
             {
-              editorConfig.features.tables.enabled &&
-                editorConfig.features.tables.display && (
+              editorConfig.featuresold.tables.enabled &&
+                editorConfig.featuresold.tables.display && (
                   <DropDownItem
                     onClick={() => {
                       editor.dispatchCommand(OPEN_MODAL_COMMAND, "table");
@@ -916,21 +916,8 @@ export default function ToolbarPlugin(props: {
                 ) //TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
             }
 
-            {editorConfig.features.equations.enabled &&
-              editorConfig.features.equations.display && (
-                <DropDownItem
-                  onClick={() => {
-                    editor.dispatchCommand(OPEN_MODAL_COMMAND, "equation");
-                  }}
-                  className="item"
-                >
-                  <i className="icon equation" />
-                  <span className="text">Equation</span>
-                </DropDownItem>
-              )}
-
-            {editorConfig.features.collapsible.enabled &&
-              editorConfig.features.collapsible.display && (
+            {editorConfig.featuresold.collapsible.enabled &&
+              editorConfig.featuresold.collapsible.display && (
                 <DropDownItem
                   onClick={() => {
                     editor.dispatchCommand(
@@ -961,6 +948,16 @@ export default function ToolbarPlugin(props: {
               </DropDownItem>
             ))}
 
+
+            {editorConfig.features.map((feature) => {
+              if(feature.toolbar && feature.toolbar.insert) {
+                return feature.toolbar?.insert?.map((insertToolbarItem) => {
+                  return insertToolbarItem(editor, editorConfig);
+                });
+              }
+              
+            })}
+
             {editorConfig.extraToolbarElements.insert.map((customInsertElement) => {
               return customInsertElement(editor);
             })}
@@ -968,8 +965,8 @@ export default function ToolbarPlugin(props: {
         </React.Fragment>
       )}
       <Divider />
-      {editorConfig.features.align.enabled &&
-        editorConfig.features.align.display && (
+      {editorConfig.featuresold.align.enabled &&
+        editorConfig.featuresold.align.display && (
           <DropDown
             disabled={!isEditable}
             buttonLabel="Align"

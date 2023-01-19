@@ -6,37 +6,48 @@
  *
  */
 
-import type { Klass, LexicalNode } from 'lexical';
+import type { Klass, LexicalNode } from "lexical";
 
-import { CodeHighlightNode, CodeNode } from '@lexical/code';
-import { HashtagNode } from '@lexical/hashtag';
-import { ListItemNode, ListNode } from '@lexical/list';
-import { HeadingNode, QuoteNode } from '@lexical/rich-text';
-import { AutoLinkNode, LinkNode } from '../plugins/LinkPlugin/LinkNodeModified';
+import { CodeHighlightNode, CodeNode } from "@lexical/code";
+import { HashtagNode } from "@lexical/hashtag";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
-import { AutocompleteNode } from './AutocompleteNode';
-import { EmojiNode } from './EmojiNode';
-import { EquationNode } from './EquationNode';
-import { ImageNode } from './ImageNode';
-import { KeywordNode } from './KeywordNode';
-import { MentionNode } from './MentionNode';
+import { AutocompleteNode } from "./AutocompleteNode";
+import { EmojiNode } from "./EmojiNode";
+import { ImageNode } from "./ImageNode";
+import { KeywordNode } from "./KeywordNode";
+import { MentionNode } from "./MentionNode";
+import { EditorConfig } from "../../../types";
 
-const PlaygroundNodes: Array<Klass<LexicalNode>> = [
-  HeadingNode,
-  ListNode,
-  ListItemNode,
-  QuoteNode,
-  CodeNode,
-  HashtagNode,
-  CodeHighlightNode,
-  AutoLinkNode,
-  LinkNode,
-  ImageNode,
-  MentionNode,
-  EmojiNode,
-  EquationNode,
-  AutocompleteNode,
-  KeywordNode,
-];
+function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
+  const nodes: Array<Klass<LexicalNode>> = [
+    HeadingNode,
+    ListNode,
+    ListItemNode,
+    QuoteNode,
+    CodeNode,
+    HashtagNode,
+    CodeHighlightNode,
+    AutoLinkNode,
+    LinkNode,
+    ImageNode,
+    MentionNode,
+    EmojiNode,
+    AutocompleteNode,
+    KeywordNode,
+  ];
 
-export default PlaygroundNodes;
+  for (const feature of editorConfig.features) {
+    if (feature.tableCellNodes && feature.tableCellNodes.length > 0) {
+      for (const node of feature.tableCellNodes) {
+        nodes.push(node);
+      }
+    }
+  }
+
+  return nodes;
+}
+
+export default TableCellNodes;

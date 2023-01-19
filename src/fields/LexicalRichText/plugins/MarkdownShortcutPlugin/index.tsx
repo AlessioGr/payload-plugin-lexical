@@ -8,9 +8,10 @@
 
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import * as React from 'react';
+import { EditorConfig } from '../../../../types';
 
 import { PLAYGROUND_TRANSFORMERS } from '../MarkdownTransformers';
 
-export default function MarkdownPlugin(): JSX.Element {
-  return <MarkdownShortcutPlugin transformers={PLAYGROUND_TRANSFORMERS} />;
+export default function MarkdownPlugin({editorConfig}: {editorConfig: EditorConfig}): JSX.Element {
+  return <MarkdownShortcutPlugin transformers={PLAYGROUND_TRANSFORMERS(editorConfig)} />;
 }

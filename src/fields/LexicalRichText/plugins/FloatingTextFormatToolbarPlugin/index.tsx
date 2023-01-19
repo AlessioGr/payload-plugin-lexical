@@ -231,7 +231,7 @@ function TextFormatFloatingToolbar({
           >
             <i className="format link" />
           </button>
-          {editorConfig.features.comments.enabled && (
+          {editorConfig.featuresold.comments.enabled && (
               <button
                 onClick={insertComment}
                 className={'popup-item spaced insert-comment'}

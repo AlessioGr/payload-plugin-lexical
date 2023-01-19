@@ -32,6 +32,7 @@ import {
   SPEECH_TO_TEXT_COMMAND,
   isSUPPORT_SPEECH_RECOGNITION,
 } from '../SpeechToTextPlugin';
+import { EditorConfig } from '../../../../types';
 
 async function sendEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());
@@ -73,8 +74,10 @@ async function validateEditorState(editor: LexicalEditor): Promise<void> {
 
 export default function ActionsPlugin({
   isRichText,
+  editorConfig,
 }: {
   isRichText: boolean;
+  editorConfig: EditorConfig;
 }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
@@ -127,10 +130,10 @@ export default function ActionsPlugin({
       if ($isCodeNode(firstChild) && firstChild.getLanguage() === 'markdown') {
         $convertFromMarkdownString(
           firstChild.getTextContent(),
-          PLAYGROUND_TRANSFORMERS,
+          PLAYGROUND_TRANSFORMERS(editorConfig),
         );
       } else {
-        const markdown = $convertToMarkdownString(PLAYGROUND_TRANSFORMERS);
+        const markdown = $convertToMarkdownString(PLAYGROUND_TRANSFORMERS(editorConfig));
         root
           .clear()
           .append(

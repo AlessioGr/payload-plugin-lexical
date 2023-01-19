@@ -4,7 +4,6 @@ import {
   useListDrawer,
 } from "payload/dist/admin/components/elements/ListDrawer";
 import { InsertTableDialog } from "../TablePlugin";
-import { InsertEquationDialog } from "../EquationsPlugin";
 import { ImagePayload } from "../../nodes/ImageNode";
 import { INSERT_IMAGE_COMMAND } from "../UploadPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -20,7 +19,7 @@ import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer"
 import { v4 as uuidv4 } from 'uuid';
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
-  "upload" | "table" | "equation" | "link" | string
+  "upload" | "table" | "link" | string
 > = createCommand("OPEN_MODAL_COMMAND");
 
 export default function ModalPlugin(props: {
@@ -50,32 +49,36 @@ export default function ModalPlugin(props: {
     depth: editDepth,
   });
 
-  const addEquationDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-equation`,
-    depth: editDepth,
-  });
-
-
+  
  
   // Register commands:
-  editor.registerCommand<"upload" | "table" | "equation" | "link" | string>(
+  editor.registerCommand<"upload" | "table" | "link" | string>(
     OPEN_MODAL_COMMAND,
-    (toOpen: "upload" | "table" | "equation" | "link" | string) => {
+    (toOpen: "upload" | "table" | "link" | string) => {
       if (toOpen === "upload") {
         openDrawer();
       } else if (toOpen === "table") {
         toggleModal("lexicalRichText-add-table");
-      } else if (toOpen === "equation") {
-        toggleModal(addEquationDrawerSlug);
-      } else if (toOpen === "link") {
+      }else if (toOpen === "link") {
         //openModal(linkDrawerSlug); //TODO
       }else {
+        for(const feature of editorConfig.features){
+          if(feature.modals && feature.modals.length > 0){
+            for(const featureModal of feature.modals){
+              if(toOpen === featureModal.openModalCommand.type){
+                featureModal.openModalCommand.command(toggleModal, editDepth);
+                return true;
+              }
+            }
+          }
+        }
+
         for(const customModal of editorConfig.extraModals){
           if(toOpen === customModal.openModalCommand.type) {
             customModal.openModalCommand.command(toggleModal, editDepth);
-            continue;
+            return true;
           }
-      }
+        }
       }
       
       return true;
@@ -136,12 +139,14 @@ export default function ModalPlugin(props: {
         </Modal>
       )}
 
-      {isModalOpen(addEquationDrawerSlug) && (
-        <InsertEquationDialog activeEditor={activeEditor} />
-      )}
 
-
-
+      {editorConfig.features.map((feature) => {
+        if(feature.modals && feature.modals.length > 0) {
+          return feature.modals.map((customModal) => {
+            return customModal.modal({activeEditor, editorConfig});
+          });
+        }
+      })}
       {editorConfig.extraModals.map((customModal) => {
         return customModal.modal({editorConfig});
       })}

@@ -10,20 +10,20 @@ import type {
   ElementTransformer,
   TextMatchTransformer,
   Transformer,
-} from '@lexical/markdown';
-import type { ElementNode, LexicalNode } from 'lexical';
+} from "@lexical/markdown";
+import type { ElementNode, LexicalNode } from "lexical";
 
 import {
   CHECK_LIST,
   ELEMENT_TRANSFORMERS,
   TEXT_FORMAT_TRANSFORMERS,
   TEXT_MATCH_TRANSFORMERS,
-} from '@lexical/markdown';
+} from "@lexical/markdown";
 import {
   $createHorizontalRuleNode,
   $isHorizontalRuleNode,
   HorizontalRuleNode,
-} from '@lexical/react/LexicalHorizontalRuleNode';
+} from "@lexical/react/LexicalHorizontalRuleNode";
 import {
   $createTableCellNode,
   $createTableNode,
@@ -34,27 +34,27 @@ import {
   TableCellNode,
   TableNode,
   TableRowNode,
-} from '@lexical/table';
+} from "@lexical/table";
 import {
   $createParagraphNode,
   $createTextNode,
   $isElementNode,
   $isParagraphNode,
   $isTextNode,
-} from 'lexical';
+} from "lexical";
 
+import { $isImageNode, ImageNode } from "../../nodes/ImageNode";
 import {
-  $createEquationNode,
-  $isEquationNode,
-  EquationNode,
-} from '../../nodes/EquationNode';
-import { $isImageNode, ImageNode } from '../../nodes/ImageNode';
-import { $createTweetNode, $isTweetNode, TweetNode } from '../../nodes/TweetNode';
+  $createTweetNode,
+  $isTweetNode,
+  TweetNode,
+} from "../../nodes/TweetNode";
+import { EditorConfig } from "../../../../types";
 
 export const HR: ElementTransformer = {
   dependencies: [HorizontalRuleNode],
   export: (node: LexicalNode) => {
-    return $isHorizontalRuleNode(node) ? '***' : null;
+    return $isHorizontalRuleNode(node) ? "***" : null;
   },
   regExp: /^(---|\*\*\*|___)\s?$/,
   replace: (parentNode, _1, _2, isImport) => {
@@ -69,7 +69,7 @@ export const HR: ElementTransformer = {
 
     line.selectNext();
   },
-  type: 'element',
+  type: "element",
 };
 
 export const IMAGE: TextMatchTransformer = {
@@ -92,28 +92,8 @@ export const IMAGE: TextMatchTransformer = {
     });
     textNode.replace(imageNode); */ //TODO
   },
-  trigger: ')',
-  type: 'text-match',
-};
-
-export const EQUATION: TextMatchTransformer = {
-  dependencies: [EquationNode],
-  export: (node, exportChildren, exportFormat) => {
-    if (!$isEquationNode(node)) {
-      return null;
-    }
-
-    return `$${node.getEquation()}$`;
-  },
-  importRegExp: /\$([^$].+?)\$/,
-  regExp: /\$([^$].+?)\$$/,
-  replace: (textNode, match) => {
-    const [, equation] = match;
-    const equationNode = $createEquationNode(equation, true);
-    textNode.replace(equationNode);
-  },
-  trigger: '$',
-  type: 'text-match',
+  trigger: ")",
+  type: "text-match",
 };
 
 export const TWEET: ElementTransformer = {
@@ -131,7 +111,7 @@ export const TWEET: ElementTransformer = {
     const tweetNode = $createTweetNode(id);
     textNode.replace(tweetNode);
   },
-  type: 'element',
+  type: "element",
 };
 
 // Very primitive table setup
@@ -142,7 +122,7 @@ export const TABLE: ElementTransformer = {
   dependencies: [TableNode, TableRowNode, TableCellNode],
   export: (
     node: LexicalNode,
-    exportChildren: (elementNode: ElementNode) => string,
+    exportChildren: (elementNode: ElementNode) => string
   ) => {
     if (!$isTableNode(node)) {
       return null;
@@ -162,10 +142,10 @@ export const TABLE: ElementTransformer = {
         }
       }
 
-      output.push(`| ${rowOutput.join(' | ')} |`);
+      output.push(`| ${rowOutput.join(" | ")} |`);
     }
 
-    return output.join('\n');
+    return output.join("\n");
   },
   regExp: TABLE_ROW_REG_EXP,
   replace: (parentNode, _1, match) => {
@@ -220,8 +200,8 @@ export const TABLE: ElementTransformer = {
 
     const previousSibling = parentNode.getPreviousSibling();
     if (
-      $isTableNode(previousSibling)
-      && getTableColumnsSize(previousSibling) === maxCells
+      $isTableNode(previousSibling) &&
+      getTableColumnsSize(previousSibling) === maxCells
     ) {
       previousSibling.append(...table.getChildren());
       parentNode.remove();
@@ -231,7 +211,7 @@ export const TABLE: ElementTransformer = {
 
     table.selectEnd();
   },
-  type: 'element',
+  type: "element",
 };
 
 function getTableColumnsSize(table: TableNode) {
@@ -240,7 +220,7 @@ function getTableColumnsSize(table: TableNode) {
 }
 
 const createTableCell = (
-  textContent: string | null | undefined,
+  textContent: string | null | undefined
 ): TableCellNode => {
   const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS);
   const paragraph = $createParagraphNode();
@@ -263,17 +243,33 @@ const mapToTableCells = (textContent: string): Array<TableCellNode> | null => {
     return null;
   }
 
-  return match[1].split('|').map((text) => createTableCell(text));
+  return match[1].split("|").map((text) => createTableCell(text));
 };
 
-export const PLAYGROUND_TRANSFORMERS: Array<Transformer> = [
-  TABLE,
-  HR,
-  IMAGE,
-  EQUATION,
-  TWEET,
-  CHECK_LIST,
-  ...ELEMENT_TRANSFORMERS,
-  ...TEXT_FORMAT_TRANSFORMERS,
-  ...TEXT_MATCH_TRANSFORMERS,
-];
+export const PLAYGROUND_TRANSFORMERS: (
+  editorConfig: EditorConfig
+) => Array<Transformer> = (editorConfig) => {
+  const defaultTransformers = [
+    TABLE,
+    HR,
+    IMAGE,
+    TWEET,
+    CHECK_LIST,
+    ...ELEMENT_TRANSFORMERS,
+    ...TEXT_FORMAT_TRANSFORMERS,
+    ...TEXT_MATCH_TRANSFORMERS,
+  ];
+
+  for (const feature of editorConfig.features) {
+    if (
+      feature.markdownTransformers &&
+      feature.markdownTransformers.length > 0
+    ) {
+      for (const transformer of feature.markdownTransformers) {
+        defaultTransformers.push(transformer.textMatchTransformer);
+      }
+    }
+  }
+
+  return defaultTransformers;
+};

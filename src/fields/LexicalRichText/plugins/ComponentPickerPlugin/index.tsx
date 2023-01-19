@@ -37,7 +37,6 @@ import * as ReactDOM from "react-dom";
 import useModal from "../../hooks/useModal";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
 import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
-import { InsertEquationDialog } from "../EquationsPlugin";
 import { InsertTableDialog } from "../TablePlugin";
 import { EditorConfig } from "../../../../types";
 import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
@@ -45,7 +44,7 @@ import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
 /**
  * Used for / commands
  */
-class ComponentPickerOption extends TypeaheadOption {
+export class ComponentPickerOption extends TypeaheadOption {
   // What shows up in the editor
   title: string;
 
@@ -133,8 +132,8 @@ export default function ComponentPickerMenuPlugin(props: {
       return options;
     }
     if (
-      !editorConfig.features.tables.enabled ||
-      !editorConfig.features.tables.display
+      !editorConfig.featuresold.tables.enabled ||
+      !editorConfig.featuresold.tables.display
     ) {
       return options;
     }
@@ -220,8 +219,8 @@ export default function ComponentPickerMenuPlugin(props: {
     );
 
     if (
-      editorConfig.features.tables.enabled &&
-      editorConfig.features.tables.display
+      editorConfig.featuresold.tables.enabled &&
+      editorConfig.featuresold.tables.display
     ) {
       baseOptions.push(
         new ComponentPickerOption("Table", {
@@ -300,8 +299,8 @@ export default function ComponentPickerMenuPlugin(props: {
     );
 
     if (
-      editorConfig.features.horizontalRule.enabled &&
-      editorConfig.features.horizontalRule.display
+      editorConfig.featuresold.horizontalRule.enabled &&
+      editorConfig.featuresold.horizontalRule.display
     ) {
       baseOptions.push(
         new ComponentPickerOption("Horizontal Rule", {
@@ -325,29 +324,10 @@ export default function ComponentPickerMenuPlugin(props: {
       )
     );
 
-    if (
-      editorConfig.features.equations.enabled &&
-      editorConfig.features.equations.display
-    ) {
-      baseOptions.push(
-        new ComponentPickerOption("Equation", {
-          icon: <i className="icon equation" />,
-          keywords: ["equation", "latex", "math"],
-          onSelect: () =>
-            showModal("Insert Equation", (onClose) => (
-              <InsertEquationDialog
-                activeEditor={editor}
-                // @ts-ignore
-                onClose={onClose}
-              />
-            )),
-        })
-      );
-    }
 
     if (
-      editorConfig.features.upload.enabled &&
-      editorConfig.features.upload.display
+      editorConfig.featuresold.upload.enabled &&
+      editorConfig.featuresold.upload.display
     ) {
       baseOptions.push(
         new ComponentPickerOption("Upload", {
@@ -361,8 +341,8 @@ export default function ComponentPickerMenuPlugin(props: {
     }
 
     if (
-      editorConfig.features.collapsible.enabled &&
-      editorConfig.features.collapsible.display
+      editorConfig.featuresold.collapsible.enabled &&
+      editorConfig.featuresold.collapsible.display
     ) {
       baseOptions.push(
         new ComponentPickerOption("Collapsible", {
@@ -375,8 +355,8 @@ export default function ComponentPickerMenuPlugin(props: {
     }
 
     if (
-      editorConfig.features.align.enabled &&
-      editorConfig.features.align.display
+      editorConfig.featuresold.align.enabled &&
+      editorConfig.featuresold.align.display
     ) {
       baseOptions.push(
         ...["left", "center", "right", "justify"].map(
@@ -390,6 +370,14 @@ export default function ComponentPickerMenuPlugin(props: {
             })
         )
       );
+    }
+
+    for(const feature of editorConfig.features) {
+      if(feature.componentPicker && feature.componentPicker.componentPickerOptions && feature.componentPicker.componentPickerOptions.length > 0) {
+        for(const componentPickerOption of feature.componentPicker.componentPickerOptions) {
+          baseOptions.push(componentPickerOption(editor, editorConfig));
+        }
+      }
     }
 
     const dynamicOptions = getDynamicOptions();

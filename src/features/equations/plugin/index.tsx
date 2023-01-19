@@ -24,14 +24,15 @@ import { useCallback, useEffect } from 'react';
 import * as React from 'react';
 
 import { useModal } from '@faceless-ui/modal';
-import { $createEquationNode, EquationNode } from '../../nodes/EquationNode';
-import KatexEquationAlterer from '../../ui/KatexEquationAlterer';
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { Drawer } from "payload/dist/admin/components/elements/Drawer";
 import Button from "payload/dist/admin/components/elements/Button";
 import X from "payload/dist/admin/components/icons/X";
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+import { $createEquationNode, EquationNode } from '../node/EquationNode';
+import { EditorConfig } from '../../../types';
+import KatexEquationAlterer from '../ui/KatexEquationAlterer';
 
 
 type CommandPayload = {
@@ -43,11 +44,12 @@ export const INSERT_EQUATION_COMMAND: LexicalCommand<CommandPayload> = createCom
 
 const baseClass = "rich-text-equation-modal";
 
-export function InsertEquationDialog({
-  activeEditor,
-}: {
+export function InsertEquationDrawer(props: {
   activeEditor: LexicalEditor;
+  editorConfig: EditorConfig;
 }): JSX.Element {
+
+  const {activeEditor, editorConfig} = props;
 
   const editDepth = useEditDepth();
 
@@ -69,7 +71,7 @@ export function InsertEquationDialog({
   );
 
   return (
-    <Drawer slug={equationDrawerSlug} formatSlug={false} className={baseClass}>
+    <Drawer slug={equationDrawerSlug} key={equationDrawerSlug} formatSlug={false} className={baseClass}>
       <Gutter className={`${baseClass}__template`}>
         <header className={`${baseClass}__header`}>
           <h2 className={`${baseClass}__header-text`}>Add equation</h2>

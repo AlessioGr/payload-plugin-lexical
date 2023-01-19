@@ -37,7 +37,6 @@ import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
 import EmojiPickerPlugin from "./plugins/EmojiPickerPlugin";
 import EmojisPlugin from "./plugins/EmojisPlugin";
-import EquationsPlugin from "./plugins/EquationsPlugin";
 import FigmaPlugin from "./plugins/FigmaPlugin";
 import FloatingLinkEditorPlugin from "./plugins/LinkEditorPlugin";
 import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
@@ -97,7 +96,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
   const cellEditorConfig = {
     namespace: "Playground",
-    nodes: [...TableCellNodes],
+    nodes: [...TableCellNodes(editorConfig)],
     onError: (error: Error) => {
       throw error;
     },
@@ -114,6 +113,17 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         }`}
       >
         {...editorConfig.extraPlugins}
+
+        {editorConfig.features.map(feature => {
+          if (feature.plugins && feature.plugins.length > 0){
+            return feature.plugins.map(plugin => {
+              return plugin;
+            })
+
+          }
+        })}
+
+
         {isMaxLength && <MaxLengthPlugin maxLength={30} />}
 
         <DragDropPaste />
@@ -121,13 +131,13 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <ComponentPickerPlugin editorConfig={editorConfig} />
         <EmojiPickerPlugin />
         <AutoEmbedPlugin editorConfig={editorConfig} />
-        {editorConfig.features.mentions.enabled && <MentionsPlugin />}
+        {editorConfig.featuresold.mentions.enabled && <MentionsPlugin />}
         <EmojisPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />
         <SpeechToTextPlugin />
         <AutoLinkPlugin />
-        {editorConfig.features.comments.enabled && <CommentPlugin />}
+        {editorConfig.featuresold.comments.enabled && <CommentPlugin />}
         {isRichText ? (
           <React.Fragment>
             <HistoryPlugin externalHistoryState={historyState} />
@@ -142,14 +152,14 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               placeholder={placeholder}
               ErrorBoundary={LexicalErrorBoundary}
             />
-            <MarkdownShortcutPlugin />
+            <MarkdownShortcutPlugin editorConfig={editorConfig} />
             <CodeHighlightPlugin />
             <ListPlugin />
             <CheckListPlugin />
             <ListMaxIndentLevelPlugin maxDepth={7} />
-            {editorConfig.features.tables.enabled && <TablePlugin />}
-            {editorConfig.features.tables.enabled && <TableCellResizer />}
-            {editorConfig.features.tables.enabled && (
+            {editorConfig.featuresold.tables.enabled && <TablePlugin />}
+            {editorConfig.featuresold.tables.enabled && <TableCellResizer />}
+            {editorConfig.featuresold.tables.enabled && (
               <NewTablePlugin cellEditorConfig={cellEditorConfig}>
                 <RichTextPlugin
                   contentEditable={
@@ -158,7 +168,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                   placeholder={null}
                   ErrorBoundary={LexicalErrorBoundary}
                 />
-                {editorConfig.features.mentions.enabled && <MentionsPlugin />}
+                {editorConfig.featuresold.mentions.enabled && <MentionsPlugin />}
                 <HistoryPlugin />
                 <UploadPlugin captionsEnabled={false} />
                 <LinkPlugin />
@@ -166,33 +176,32 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 <FloatingTextFormatToolbarPlugin editorConfig={editorConfig}/>
               </NewTablePlugin>
             )}
-            {editorConfig.features.upload.enabled && (
+            {editorConfig.featuresold.upload.enabled && (
               <UploadPlugin captionsEnabled={false} />
             )}
             <LinkPlugin />
-            {editorConfig.features.twitter.enabled && <TwitterPlugin />}
-            {editorConfig.features.youtube.enabled && <YouTubePlugin />}
+            {editorConfig.featuresold.twitter.enabled && <TwitterPlugin />}
+            {editorConfig.featuresold.youtube.enabled && <YouTubePlugin />}
             <OnChangePlugin
               onChange={(editorState, editor, commentStore) => {
                 onChange(editorState, editor, commentStore);
               }}
             />
-            {editorConfig.features.figma.enabled && <FigmaPlugin />}
+            {editorConfig.featuresold.figma.enabled && <FigmaPlugin />}
             <ClickableLinkPlugin />
-            {editorConfig.features.horizontalRule.enabled && (
+            {editorConfig.featuresold.horizontalRule.enabled && (
               <HorizontalRulePlugin />
             )}
-            {editorConfig.features.equations.enabled && <EquationsPlugin />}
 
             <TabFocusPlugin />
             <TabIndentationPlugin />
-            {editorConfig.features.collapsible.enabled && <CollapsiblePlugin />}
+            {editorConfig.featuresold.collapsible.enabled && <CollapsiblePlugin />}
             {floatingAnchorElem && (
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
                 <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} />
-                {editorConfig.features.tables.enabled && (
+                {editorConfig.featuresold.tables.enabled && (
                   <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} />
                 )}
                 <FloatingTextFormatToolbarPlugin
@@ -220,7 +229,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         )}
         {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
-        <ActionsPlugin isRichText={isRichText} />
+        <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
       </div>
       {showTreeView && editorConfig.debug && <TreeViewPlugin />}
     </React.Fragment>

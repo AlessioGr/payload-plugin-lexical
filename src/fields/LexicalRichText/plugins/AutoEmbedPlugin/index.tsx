@@ -147,17 +147,17 @@ export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
 export function getEmbedConfigs(editorConfig: EditorConfig) {
   const embedConfigs = [];
 
-  if(editorConfig.features.twitter.enabled && editorConfig.features.twitter.display){
+  if(editorConfig.featuresold.twitter.enabled && editorConfig.featuresold.twitter.display){
     embedConfigs.push(
         TwitterEmbedConfig,
     );
   }
-  if(editorConfig.features.youtube.enabled && editorConfig.features.youtube.display){
+  if(editorConfig.featuresold.youtube.enabled && editorConfig.featuresold.youtube.display){
     embedConfigs.push(
         YoutubeEmbedConfig,
     );
   }
-  if(editorConfig.features.figma.enabled && editorConfig.features.figma.display){
+  if(editorConfig.featuresold.figma.enabled && editorConfig.featuresold.figma.display){
     embedConfigs.push(
         FigmaEmbedConfig,
     );
