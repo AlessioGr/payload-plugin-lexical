@@ -7,19 +7,17 @@
  */
 
 export type SettingName =
-  | 'disableBeforeInput'
-  | 'measureTypingPerf'
-  | 'isRichText'
-  | 'isCharLimit'
-  | 'isMaxLength'
-  | 'isCharLimitUtf8'
-  | 'isAutocomplete'
-  | 'showTreeView'
-  | 'showNestedEditorTreeView'
-  | 'showTableOfContents';
+  | "disableBeforeInput"
+  | "measureTypingPerf"
+  | "isRichText"
+  | "isCharLimit"
+  | "isMaxLength"
+  | "isCharLimitUtf8"
+  | "isAutocomplete"
+  | "showNestedEditorTreeView"
+  | "showTableOfContents";
 
 export type Settings = Record<SettingName, boolean>;
-
 
 export const DEFAULT_SETTINGS: Settings = {
   disableBeforeInput: false,
@@ -31,5 +29,4 @@ export const DEFAULT_SETTINGS: Settings = {
   measureTypingPerf: false,
   showNestedEditorTreeView: false,
   showTableOfContents: false,
-  showTreeView: true,
 };

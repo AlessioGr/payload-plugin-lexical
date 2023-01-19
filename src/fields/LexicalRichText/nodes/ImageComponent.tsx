@@ -45,8 +45,7 @@ import LinkPlugin from '../plugins/LinkPlugin';
 import { useSettings } from '../context/SettingsContext';
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
 import KeywordsPlugin from '../plugins/KeywordsPlugin';
-import MentionsPlugin from '../plugins/MentionsPlugin';
-import TreeViewPlugin from '../plugins/TreeViewPlugin';
+import TreeViewPlugin from '../../../features/debug/treeview/plugins';
 import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
@@ -339,14 +338,12 @@ export default function ImageComponent({
         {showCaption && (
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
-              <MentionsPlugin />
               <LinkPlugin />
               {editorConfig.features.map(feature => {
                 if (feature.subEditorPlugins && feature.subEditorPlugins.length > 0) {
                   return feature.subEditorPlugins.map(subEditorPlugin => {
                     return subEditorPlugin;
                   })
-
                 }
               })}
               <HashtagPlugin />

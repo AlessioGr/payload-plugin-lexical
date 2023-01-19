@@ -49,7 +49,7 @@ function ClearEditorAction(): JSX.Element {
 
 export function ClearEditorFeature(props: {}): Feature {
     return {
-        actions: [<ClearEditorAction />],
+        actions: [<ClearEditorAction key="cleareditor" />],
         modals: [
             {
                 modal: ClearEditorDrawer,

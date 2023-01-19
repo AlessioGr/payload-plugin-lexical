@@ -7,7 +7,9 @@ import * as React from "react";
 export function EmojisFeature(props: {}): Feature {
     return {
         plugins: [
-            (<EmojisPlugin key="emojis" />),
+            {
+                component: (<EmojisPlugin key="emojis" />),
+            }
         ],
         subEditorPlugins: [
             (<EmojisPlugin key="emojis" />),

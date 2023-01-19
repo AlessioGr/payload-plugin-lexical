@@ -80,7 +80,9 @@ const Lexical: CollectionConfig = {
                     TwitterFeature({}),
                     SpeechToTextFeature({}),
                     ClearEditorFeature({}),
-                ];
+                    MentionsFeature({}),
+                    TreeViewFeature({enabled: defaultEditorConfig.debug}),
+                ],
                 
                 // A feature can consist of nodes, plugins, modals, toolbar elements and more!
                 defaultEditorConfig.features.push(YourOwnCustomFeature({}))

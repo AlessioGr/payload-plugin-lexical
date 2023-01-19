@@ -40,7 +40,9 @@ export function HorizontalRuleFeature(props: {}): Feature {
 
     return {
         plugins: [
-            (<HorizontalRulePlugin key="horizontalrule" />),
+            {
+                component: (<HorizontalRulePlugin key="horizontalrule" />),
+            }
         ],
         nodes: [
             HorizontalRuleNode

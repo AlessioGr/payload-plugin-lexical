@@ -46,7 +46,9 @@ export function YouTubeFeature(props: {}): Feature {
 
     return {
         plugins: [
-            (<YouTubePlugin key="youtube" />),
+            {
+              component: (<YouTubePlugin key="youtube" />),
+            }
         ],
         nodes: [
             YouTubeNode

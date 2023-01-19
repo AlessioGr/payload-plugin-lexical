@@ -66,7 +66,9 @@ export function TwitterFeature(props: {}): Feature {
 
     return {
         plugins: [
-            (<TwitterPlugin key="twitter" />),
+            {
+              component: (<TwitterPlugin key="twitter" />),
+            }
         ],
         nodes: [
             TweetNode

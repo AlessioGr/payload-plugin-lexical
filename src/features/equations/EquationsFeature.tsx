@@ -44,7 +44,9 @@ export function EquationsFeature(props: {}): Feature {
 
     return {
         plugins: [
-            (<EquationsPlugin key="equations" />),
+            {
+                component: (<EquationsPlugin key="equations" />),
+            }
         ],
         nodes: [
             EquationNode

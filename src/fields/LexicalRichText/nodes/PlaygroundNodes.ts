@@ -23,7 +23,6 @@ import { CollapsibleTitleNode } from "../plugins/CollapsiblePlugin/CollapsibleTi
 import { AutocompleteNode } from "./AutocompleteNode";
 import { ImageNode } from "./ImageNode";
 import { KeywordNode } from "./KeywordNode";
-import { MentionNode } from "./MentionNode";
 import { TableNode as NewTableNode } from "./TableNode";
 import type { EditorConfig } from "../../../types";
 
@@ -37,10 +36,6 @@ function PlaygroundNodes(
 
   if (editorConfig.featuresold.upload.enabled) {
     nodes.push(ImageNode);
-  }
-
-  if (editorConfig.featuresold.mentions.enabled) {
-    nodes.push(MentionNode);
   }
 
   nodes.push(

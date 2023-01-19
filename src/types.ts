@@ -11,10 +11,16 @@ import { YouTubeFeature } from "./features/embeds/youtube/YouTubeFeature";
 import { TwitterFeature } from "./features/embeds/twitter/TwitterFeature";
 import { SpeechToTextFeature } from "./features/actions/speechtotext/SpeechToTextFeature";
 import { ClearEditorFeature } from "./features/actions/cleareditor/ClearEditorFeature";
+import { MentionsFeature } from "./features/mentions/MentionsFeature";
+import { TreeViewFeature } from "./features/debug/treeview/TreeViewFeature";
 
 export type Feature = {
-  plugins?: JSX.Element[];
+  plugins?: {
+    component: JSX.Element;
+    position?: "normal" | "bottom";
+  }[];
   subEditorPlugins?: JSX.Element[]; //Like image captions
+  tablePlugins?: JSX.Element[]; //Put inside the newtable plugin
   nodes?: Array<Klass<LexicalNode>>;
   tableCellNodes?: Array<Klass<LexicalNode>>;
   modals?: {
@@ -84,10 +90,6 @@ export type EditorConfig = {
       enabled: boolean;
       display: boolean;
     };
-    mentions: {
-      enabled: boolean;
-      display: boolean;
-    };
   };
 };
 
@@ -103,6 +105,8 @@ export const defaultEditorConfig: EditorConfig = {
     TwitterFeature({}),
     SpeechToTextFeature({}),
     ClearEditorFeature({}),
+    MentionsFeature({}),
+    TreeViewFeature({ enabled: false }),
   ],
   featuresold: {
     comments: {
@@ -135,10 +139,6 @@ export const defaultEditorConfig: EditorConfig = {
     textBackground: {
       enabled: true,
       display: true,
-    },
-    mentions: {
-      enabled: false,
-      display: false,
     },
     align: {
       enabled: true,

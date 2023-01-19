@@ -40,14 +40,12 @@ import KeywordsPlugin from "./plugins/KeywordsPlugin";
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
 import { MaxLengthPlugin } from "./plugins/MaxLengthPlugin";
-import MentionsPlugin from "./plugins/MentionsPlugin";
 import TabFocusPlugin from "./plugins/TabFocusPlugin";
 import TableCellActionMenuPlugin from "./plugins/TableActionMenuPlugin";
 import TableCellResizer from "./plugins/TableCellResizer";
 import TableOfContentsPlugin from "./plugins/TableOfContentsPlugin";
 import { TablePlugin as NewTablePlugin } from "./plugins/TablePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import TreeViewPlugin from "./plugins/TreeViewPlugin";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import ContentEditable from "./ui/ContentEditable";
 import Placeholder from "./ui/Placeholder";
@@ -68,7 +66,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
       isCharLimit,
       isCharLimitUtf8,
       isRichText,
-      showTreeView,
       showTableOfContents,
     },
   } = useSettings();
@@ -100,16 +97,16 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
       <ModalPlugin editorConfig={editorConfig} />
       {isRichText && <ToolbarPlugin editorConfig={editorConfig} />}
       <div
-        className={`editor-container ${showTreeView ? "tree-view" : ""} ${
-          !isRichText ? "plain-text" : ""
-        }`}
+        className={`editor-container ${editorConfig.debug ? "tree-view" : ""} ${!isRichText ? "plain-text" : ""
+          }`}
       >
         {editorConfig.features.map(feature => {
-          if (feature.plugins && feature.plugins.length > 0){
+          if (feature.plugins && feature.plugins.length > 0) {
             return feature.plugins.map(plugin => {
-              return plugin;
+              if(!plugin.position || plugin.position === "normal"){
+                return plugin.component;
+              }
             })
-
           }
         })}
 
@@ -120,7 +117,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <ClearEditorPlugin />
         <ComponentPickerPlugin editorConfig={editorConfig} />
         <AutoEmbedPlugin editorConfig={editorConfig} />
-        {editorConfig.featuresold.mentions.enabled && <MentionsPlugin />}
         <HashtagPlugin />
         <KeywordsPlugin />
         <AutoLinkPlugin />
@@ -155,12 +151,20 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                   placeholder={null}
                   ErrorBoundary={LexicalErrorBoundary}
                 />
-                {editorConfig.featuresold.mentions.enabled && <MentionsPlugin />}
+                <React.Fragment>
+                  {editorConfig.features.map(feature => {
+                    if (feature.tablePlugins && feature.tablePlugins.length > 0) {
+                      return feature.tablePlugins.map(tablePlugin => {
+                        return tablePlugin;
+                      })
+                    }
+                  })}
+                </React.Fragment>
                 <HistoryPlugin />
                 <UploadPlugin captionsEnabled={false} />
                 <LinkPlugin />
                 <ClickableLinkPlugin />
-                <FloatingTextFormatToolbarPlugin editorConfig={editorConfig}/>
+                <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
               </NewTablePlugin>
             )}
             {editorConfig.featuresold.upload.enabled && (
@@ -212,7 +216,15 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
       </div>
-      {showTreeView && editorConfig.debug && <TreeViewPlugin />}
+      {editorConfig.features.map(feature => {
+          if (feature.plugins && feature.plugins.length > 0) {
+            return feature.plugins.map(plugin => {
+              if(plugin.position === "bottom"){
+                return plugin.component;
+              }
+            })
+          }
+        })}
     </React.Fragment>
   );
 };

@@ -44,7 +44,9 @@ export function FigmaFeature(props: {}): Feature {
 
     return {
         plugins: [
-            (<FigmaPlugin key="figma" />),
+            {
+              component: (<FigmaPlugin key="figma" />),
+            }
         ],
         nodes: [
             FigmaNode

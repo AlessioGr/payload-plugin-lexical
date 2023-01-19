@@ -34,9 +34,11 @@ function SpeechToTextAction(): JSX.Element {
 export function SpeechToTextFeature(props: {}): Feature {
     return {
         plugins: [
-            (<SpeechToTextPlugin key="speechtotext" />),
+            {
+                component: (<SpeechToTextPlugin key="speechtotext" />),
+            }
         ],
-        actions: [<SpeechToTextAction  />],
+        actions: [<SpeechToTextAction key="speechtotext"  />],
 
     }
 }

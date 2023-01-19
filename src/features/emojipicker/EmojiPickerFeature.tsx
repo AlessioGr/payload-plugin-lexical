@@ -6,7 +6,9 @@ import EmojiPickerPlugin from './plugins';
 export function EmojiPickerFeature(props: {}): Feature {
     return {
         plugins: [
-            (<EmojiPickerPlugin key="emojipicker" />),
+            {
+                component: (<EmojiPickerPlugin key="emojipicker" />),
+            }
         ],
         subEditorPlugins: [
             (<EmojiPickerPlugin key="emojipicker" />),
