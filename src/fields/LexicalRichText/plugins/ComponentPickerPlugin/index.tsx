@@ -14,7 +14,6 @@ import {
 } from "@lexical/list";
 import { INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
 import {
   LexicalTypeaheadMenuPlugin,
   TypeaheadOption,
@@ -298,19 +297,6 @@ export default function ComponentPickerMenuPlugin(props: {
       })
     );
 
-    if (
-      editorConfig.featuresold.horizontalRule.enabled &&
-      editorConfig.featuresold.horizontalRule.display
-    ) {
-      baseOptions.push(
-        new ComponentPickerOption("Horizontal Rule", {
-          icon: <i className="icon horizontal-rule" />,
-          keywords: ["horizontal rule", "divider", "hr"],
-          onSelect: () =>
-            editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
-        })
-      );
-    }
 
     baseOptions.push(
       ...getEmbedConfigs(editorConfig).map(

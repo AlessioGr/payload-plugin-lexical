@@ -26,7 +26,6 @@ import {
 import { INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
-import { INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
 import {
   $createHeadingNode,
   $createQuoteNode,
@@ -857,21 +856,6 @@ export default function ToolbarPlugin(props: {
             buttonAriaLabel="Insert specialized editor node"
             buttonIconClassName="icon plus"
           >
-            {editorConfig.featuresold.horizontalRule.enabled &&
-              editorConfig.featuresold.horizontalRule.display && (
-                <DropDownItem
-                  onClick={() => {
-                    activeEditor.dispatchCommand(
-                      INSERT_HORIZONTAL_RULE_COMMAND,
-                      undefined
-                    );
-                  }}
-                  className="item"
-                >
-                  <i className="icon horizontal-rule" />
-                  <span className="text">Horizontal Rule</span>
-                </DropDownItem>
-              )}
             {editorConfig.featuresold.upload.enabled &&
               editorConfig.featuresold.upload.display && (
                 <DropDownItem

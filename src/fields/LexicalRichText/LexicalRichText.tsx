@@ -20,7 +20,6 @@ import * as React from "react";
 import { useState } from "react";
 import { OnChangePlugin } from "./plugins/OnChangePlugin";
 import LinkPlugin from "./plugins/LinkPlugin";
-
 import { useSettings } from "./context/SettingsContext";
 import { useSharedHistoryContext } from "./context/SharedHistoryContext";
 import TableCellNodes from "./nodes/TableCellNodes";
@@ -35,11 +34,8 @@ import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
-import EmojiPickerPlugin from "./plugins/EmojiPickerPlugin";
-import FigmaPlugin from "./plugins/FigmaPlugin";
 import FloatingLinkEditorPlugin from "./plugins/LinkEditorPlugin";
 import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
-import HorizontalRulePlugin from "./plugins/HorizontalRulePlugin";
 import KeywordsPlugin from "./plugins/KeywordsPlugin";
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
@@ -53,8 +49,6 @@ import TableOfContentsPlugin from "./plugins/TableOfContentsPlugin";
 import { TablePlugin as NewTablePlugin } from "./plugins/TablePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import TreeViewPlugin from "./plugins/TreeViewPlugin";
-import TwitterPlugin from "./plugins/TwitterPlugin";
-import YouTubePlugin from "./plugins/YouTubePlugin";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import ContentEditable from "./ui/ContentEditable";
 import Placeholder from "./ui/Placeholder";
@@ -126,7 +120,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <DragDropPaste />
         <ClearEditorPlugin />
         <ComponentPickerPlugin editorConfig={editorConfig} />
-        <EmojiPickerPlugin />
         <AutoEmbedPlugin editorConfig={editorConfig} />
         {editorConfig.featuresold.mentions.enabled && <MentionsPlugin />}
         <HashtagPlugin />
@@ -176,18 +169,12 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               <UploadPlugin captionsEnabled={false} />
             )}
             <LinkPlugin />
-            {editorConfig.featuresold.twitter.enabled && <TwitterPlugin />}
-            {editorConfig.featuresold.youtube.enabled && <YouTubePlugin />}
             <OnChangePlugin
               onChange={(editorState, editor, commentStore) => {
                 onChange(editorState, editor, commentStore);
               }}
             />
-            {editorConfig.featuresold.figma.enabled && <FigmaPlugin />}
             <ClickableLinkPlugin />
-            {editorConfig.featuresold.horizontalRule.enabled && (
-              <HorizontalRulePlugin />
-            )}
 
             <TabFocusPlugin />
             <TabIndentationPlugin />

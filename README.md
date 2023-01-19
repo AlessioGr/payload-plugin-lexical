@@ -65,7 +65,6 @@ const Lexical: CollectionConfig = {
                 defaultEditorConfig.debug = false;
                 defaultEditorConfig.featuresold.textColor.enabled = false;
                 defaultEditorConfig.featuresold.textBackground.enabled = false;
-                defaultEditorConfig.featuresold.figma.enabled = false;
                 defaultEditorConfig.featuresold.fontSize.enabled = false;
                 defaultEditorConfig.featuresold.font.enabled = false;
                 defaultEditorConfig.featuresold.align.enabled = false;

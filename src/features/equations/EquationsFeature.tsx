@@ -91,8 +91,6 @@ export function EquationsFeature(props: {}): Feature {
                 componentPickerOption
             ]
         },
-        markdownTransformers: [{
-            textMatchTransformer: equationMarkdownTextMatchTransformer
-        }],
+        markdownTransformers: [equationMarkdownTextMatchTransformer],
     }
 }

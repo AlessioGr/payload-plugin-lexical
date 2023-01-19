@@ -19,11 +19,7 @@ import {
   TEXT_FORMAT_TRANSFORMERS,
   TEXT_MATCH_TRANSFORMERS,
 } from "@lexical/markdown";
-import {
-  $createHorizontalRuleNode,
-  $isHorizontalRuleNode,
-  HorizontalRuleNode,
-} from "@lexical/react/LexicalHorizontalRuleNode";
+
 import {
   $createTableCellNode,
   $createTableNode,
@@ -44,33 +40,8 @@ import {
 } from "lexical";
 
 import { $isImageNode, ImageNode } from "../../nodes/ImageNode";
-import {
-  $createTweetNode,
-  $isTweetNode,
-  TweetNode,
-} from "../../nodes/TweetNode";
+
 import { EditorConfig } from "../../../../types";
-
-export const HR: ElementTransformer = {
-  dependencies: [HorizontalRuleNode],
-  export: (node: LexicalNode) => {
-    return $isHorizontalRuleNode(node) ? "***" : null;
-  },
-  regExp: /^(---|\*\*\*|___)\s?$/,
-  replace: (parentNode, _1, _2, isImport) => {
-    const line = $createHorizontalRuleNode();
-
-    // TODO: Get rid of isImport flag
-    if (isImport || parentNode.getNextSibling() != null) {
-      parentNode.replace(line);
-    } else {
-      parentNode.insertBefore(line);
-    }
-
-    line.selectNext();
-  },
-  type: "element",
-};
 
 export const IMAGE: TextMatchTransformer = {
   dependencies: [ImageNode],
@@ -94,24 +65,6 @@ export const IMAGE: TextMatchTransformer = {
   },
   trigger: ")",
   type: "text-match",
-};
-
-export const TWEET: ElementTransformer = {
-  dependencies: [TweetNode],
-  export: (node) => {
-    if (!$isTweetNode(node)) {
-      return null;
-    }
-
-    return `<tweet id="${node.getId()}" />`;
-  },
-  regExp: /<tweet id="([^"]+?)"\s?\/>\s?$/,
-  replace: (textNode, _1, match) => {
-    const [, id] = match;
-    const tweetNode = $createTweetNode(id);
-    textNode.replace(tweetNode);
-  },
-  type: "element",
 };
 
 // Very primitive table setup
@@ -251,9 +204,7 @@ export const PLAYGROUND_TRANSFORMERS: (
 ) => Array<Transformer> = (editorConfig) => {
   const defaultTransformers = [
     TABLE,
-    HR,
     IMAGE,
-    TWEET,
     CHECK_LIST,
     ...ELEMENT_TRANSFORMERS,
     ...TEXT_FORMAT_TRANSFORMERS,
@@ -266,7 +217,7 @@ export const PLAYGROUND_TRANSFORMERS: (
       feature.markdownTransformers.length > 0
     ) {
       for (const transformer of feature.markdownTransformers) {
-        defaultTransformers.push(transformer.textMatchTransformer);
+        defaultTransformers.push(transformer);
       }
     }
   }

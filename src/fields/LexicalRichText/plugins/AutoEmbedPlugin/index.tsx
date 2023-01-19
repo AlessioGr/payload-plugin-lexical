@@ -6,8 +6,6 @@
  *
  */
 
-import type { LexicalEditor } from 'lexical';
-
 import {
   AutoEmbedOption,
   EmbedConfig,
@@ -23,12 +21,9 @@ import * as ReactDOM from 'react-dom';
 import useModal from '../../hooks/useModal';
 import Button from 'payload/dist/admin/components/elements/Button';
 import { DialogActions } from '../../ui/Dialog';
-import { INSERT_FIGMA_COMMAND } from '../FigmaPlugin';
-import { INSERT_TWEET_COMMAND } from '../TwitterPlugin';
-import { INSERT_YOUTUBE_COMMAND } from '../YouTubePlugin';
 import {EditorConfig} from "../../../../types";
 
-interface PlaygroundEmbedConfig extends EmbedConfig {
+export interface PlaygroundEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
   contentName: string;
 
@@ -45,123 +40,15 @@ interface PlaygroundEmbedConfig extends EmbedConfig {
   description?: string;
 }
 
-export const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
-  contentName: 'Youtube Video',
-
-  exampleUrl: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
-
-  // Icon for display.
-  icon: <i className="icon youtube" />,
-
-  insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_YOUTUBE_COMMAND, result.id);
-  },
-
-  keywords: ['youtube', 'video'],
-
-  // Determine if a given URL is a match and return url data.
-  parseUrl: async (url: string) => {
-    const match = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url);
-
-    const id = match ? (match?.[2].length === 11 ? match[2] : null) : null;
-
-    if (id != null) {
-      return {
-        id,
-        url,
-      };
-    }
-
-    return null;
-  },
-
-  type: 'youtube-video',
-};
-
-export const TwitterEmbedConfig: PlaygroundEmbedConfig = {
-  // e.g. Tweet or Google Map.
-  contentName: 'Tweet',
-
-  exampleUrl: 'https://twitter.com/jack/status/20',
-
-  // Icon for display.
-  icon: <i className="icon tweet" />,
-
-  // Create the Lexical embed node from the url data.
-  insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_TWEET_COMMAND, result.id);
-  },
-
-  // For extra searching.
-  keywords: ['tweet', 'twitter'],
-
-  // Determine if a given URL is a match and return url data.
-  parseUrl: (text: string) => {
-    const match = /^https:\/\/twitter\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)$/.exec(text);
-
-    if (match != null) {
-      return {
-        id: match[4],
-        url: match[0],
-      };
-    }
-
-    return null;
-  },
-
-  type: 'tweet',
-};
-
-export const FigmaEmbedConfig: PlaygroundEmbedConfig = {
-  contentName: 'Figma Document',
-
-  exampleUrl: 'https://www.figma.com/file/LKQ4FJ4bTnCSjedbRpk931/Sample-File',
-
-  icon: <i className="icon figma" />,
-
-  insertNode: (editor: LexicalEditor, result: EmbedMatchResult) => {
-    editor.dispatchCommand(INSERT_FIGMA_COMMAND, result.id);
-  },
-
-  keywords: ['figma', 'figma.com', 'mock-up'],
-
-  // Determine if a given URL is a match and return url data.
-  parseUrl: (text: string) => {
-    const match = /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(
-      text,
-    );
-
-    if (match != null) {
-      return {
-        id: match[3],
-        url: match[0],
-      };
-    }
-
-    return null;
-  },
-
-  type: 'figma',
-};
-
 export function getEmbedConfigs(editorConfig: EditorConfig) {
   const embedConfigs = [];
 
-  if(editorConfig.featuresold.twitter.enabled && editorConfig.featuresold.twitter.display){
-    embedConfigs.push(
-        TwitterEmbedConfig,
-    );
+  for(const feature of editorConfig.features){
+    if(feature.embedConfigs && feature.embedConfigs.length > 0){
+      embedConfigs.push(...feature.embedConfigs);
+    }
   }
-  if(editorConfig.featuresold.youtube.enabled && editorConfig.featuresold.youtube.display){
-    embedConfigs.push(
-        YoutubeEmbedConfig,
-    );
-  }
-  if(editorConfig.featuresold.figma.enabled && editorConfig.featuresold.figma.display){
-    embedConfigs.push(
-        FigmaEmbedConfig,
-    );
-  }
+
   return embedConfigs;
 }
 

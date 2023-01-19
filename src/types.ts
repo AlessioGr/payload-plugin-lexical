@@ -1,8 +1,14 @@
-import { TextMatchTransformer } from "@lexical/markdown";
 import { LexicalEditor, LexicalNode, Klass } from "lexical";
+import { EmojiPickerFeature } from "./features/emojipicker/EmojiPickerFeature";
 import { EmojisFeature } from "./features/emojis/EmojisFeature";
 import { EquationsFeature } from "./features/equations/EquationsFeature";
+import { HorizontalRuleFeature } from "./features/horizontalrule/HorizontalRuleFeature";
 import { ComponentPickerOption } from "./fields/LexicalRichText/plugins/ComponentPickerPlugin";
+import { Transformer } from "@lexical/markdown";
+import { FigmaFeature } from "./features/embeds/figma/FigmaFeature";
+import { PlaygroundEmbedConfig } from "./fields/LexicalRichText/plugins/AutoEmbedPlugin";
+import { YouTubeFeature } from "./features/embeds/youtube/YouTubeFeature";
+import { TwitterFeature } from "./features/embeds/twitter/TwitterFeature";
 
 export type Feature = {
   plugins?: JSX.Element[];
@@ -32,9 +38,8 @@ export type Feature = {
       editorConfig: EditorConfig
     ) => ComponentPickerOption)[];
   };
-  markdownTransformers?: {
-    textMatchTransformer: TextMatchTransformer;
-  }[];
+  markdownTransformers?: Transformer[];
+  embedConfigs?: PlaygroundEmbedConfig[];
 };
 
 export type EditorConfig = {
@@ -49,22 +54,6 @@ export type EditorConfig = {
       display: boolean;
     };
     upload: {
-      enabled: boolean;
-      display: boolean;
-    };
-    twitter: {
-      enabled: boolean;
-      display: boolean;
-    };
-    youtube: {
-      enabled: boolean;
-      display: boolean;
-    };
-    figma: {
-      enabled: boolean;
-      display: boolean;
-    };
-    horizontalRule: {
       enabled: boolean;
       display: boolean;
     };
@@ -101,7 +90,15 @@ export type EditorConfig = {
 
 export const defaultEditorConfig: EditorConfig = {
   debug: true,
-  features: [EquationsFeature({}), EmojisFeature({})],
+  features: [
+    EquationsFeature({}),
+    EmojisFeature({}),
+    EmojiPickerFeature({}),
+    HorizontalRuleFeature({}),
+    FigmaFeature({}),
+    YouTubeFeature({}),
+    TwitterFeature({}),
+  ],
   featuresold: {
     comments: {
       enabled: true,
@@ -111,22 +108,6 @@ export const defaultEditorConfig: EditorConfig = {
       display: false,
     },
     upload: {
-      enabled: true,
-      display: true,
-    },
-    twitter: {
-      enabled: true,
-      display: true,
-    },
-    youtube: {
-      enabled: true,
-      display: true,
-    },
-    figma: {
-      enabled: true,
-      display: true,
-    },
-    horizontalRule: {
       enabled: true,
       display: true,
     },

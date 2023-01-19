@@ -13,7 +13,6 @@ import { HashtagNode } from "@lexical/hashtag";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { MarkNode } from "@lexical/mark";
 import { OverflowNode } from "@lexical/overflow";
-import { HorizontalRuleNode } from "@lexical/react/LexicalHorizontalRuleNode";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
@@ -22,13 +21,10 @@ import { CollapsibleContainerNode } from "../plugins/CollapsiblePlugin/Collapsib
 import { CollapsibleContentNode } from "../plugins/CollapsiblePlugin/CollapsibleContentNode";
 import { CollapsibleTitleNode } from "../plugins/CollapsiblePlugin/CollapsibleTitleNode";
 import { AutocompleteNode } from "./AutocompleteNode";
-import { FigmaNode } from "./FigmaNode";
 import { ImageNode } from "./ImageNode";
 import { KeywordNode } from "./KeywordNode";
 import { MentionNode } from "./MentionNode";
 import { TableNode as NewTableNode } from "./TableNode";
-import { TweetNode } from "./TweetNode";
-import { YouTubeNode } from "./YouTubeNode";
 import type { EditorConfig } from "../../../types";
 
 function PlaygroundNodes(
@@ -45,18 +41,6 @@ function PlaygroundNodes(
 
   if (editorConfig.featuresold.mentions.enabled) {
     nodes.push(MentionNode);
-  }
-  if (editorConfig.featuresold.twitter.enabled) {
-    nodes.push(TweetNode);
-  }
-  if (editorConfig.featuresold.horizontalRule.enabled) {
-    nodes.push(HorizontalRuleNode);
-  }
-  if (editorConfig.featuresold.youtube.enabled) {
-    nodes.push(YouTubeNode);
-  }
-  if (editorConfig.featuresold.figma.enabled) {
-    nodes.push(FigmaNode);
   }
 
   nodes.push(

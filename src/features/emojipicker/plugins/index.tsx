@@ -21,6 +21,7 @@ import {
 import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as ReactDOM from 'react-dom';
+import './index.scss';
 
 class EmojiOption extends TypeaheadOption {
   title: string;

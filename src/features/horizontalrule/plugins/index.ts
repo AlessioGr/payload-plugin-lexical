@@ -6,18 +6,19 @@
  *
  */
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   $createHorizontalRuleNode,
   INSERT_HORIZONTAL_RULE_COMMAND,
-} from '@lexical/react/LexicalHorizontalRuleNode';
-import {$insertNodeToNearestRoot} from '@lexical/utils';
+} from "@lexical/react/LexicalHorizontalRuleNode";
+import { $insertNodeToNearestRoot } from "@lexical/utils";
 import {
   $getSelection,
   $isRangeSelection,
   COMMAND_PRIORITY_EDITOR,
-} from 'lexical';
-import { useEffect } from 'react';
+} from "lexical";
+import { useEffect } from "react";
+import "./index.scss";
 
 export default function HorizontalRulePlugin(): null {
   const [editor] = useLexicalComposerContext();
@@ -36,12 +37,12 @@ export default function HorizontalRulePlugin(): null {
 
         if (focusNode !== null) {
           const horizontalRuleNode = $createHorizontalRuleNode();
-            $insertNodeToNearestRoot(horizontalRuleNode);
+          $insertNodeToNearestRoot(horizontalRuleNode);
         }
 
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor]);
 
