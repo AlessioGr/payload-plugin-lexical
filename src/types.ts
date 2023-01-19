@@ -1,5 +1,5 @@
 import { TextMatchTransformer } from "@lexical/markdown";
-import { ElementNode, LexicalEditor, LexicalNode, Klass } from "lexical";
+import { LexicalEditor, LexicalNode, Klass } from "lexical";
 import { EmojisFeature } from "./features/emojis/EmojisFeature";
 import { EquationsFeature } from "./features/equations/EquationsFeature";
 import { ComponentPickerOption } from "./fields/LexicalRichText/plugins/ComponentPickerPlugin";
@@ -39,7 +39,6 @@ export type Feature = {
 
 export type EditorConfig = {
   debug: boolean;
-  simpleNodes: CustomNode[];
   features: Feature[];
   featuresold: {
     comments: {
@@ -98,23 +97,10 @@ export type EditorConfig = {
       display: boolean;
     };
   };
-  extraPlugins: JSX.Element[];
-  extraNodes: Array<Klass<LexicalNode>>;
-  extraModals: {
-    openModalCommand: {
-      type: string;
-      command: (toggleModal: (slug: string) => void, editDepth: number) => void;
-    };
-    modal: (props: { editorConfig: EditorConfig }) => JSX.Element;
-  }[];
-  extraToolbarElements: {
-    insert: ((editor: LexicalEditor) => JSX.Element)[];
-  };
 };
 
 export const defaultEditorConfig: EditorConfig = {
   debug: true,
-  simpleNodes: [],
   features: [EquationsFeature({}), EmojisFeature({})],
   featuresold: {
     comments: {
@@ -173,24 +159,4 @@ export const defaultEditorConfig: EditorConfig = {
       display: true,
     },
   },
-  extraPlugins: [],
-  extraNodes: [],
-  extraModals: [],
-  extraToolbarElements: {
-    insert: [],
-  },
-};
-
-export type CustomNode = {
-  node: typeof ElementNode;
-  displayName: string;
-  identifier: string;
-  createFunction: () => void;
-  formatFunction: ({
-    blockType,
-    editor,
-  }: {
-    blockType: string;
-    editor: LexicalEditor;
-  }) => void;
 };

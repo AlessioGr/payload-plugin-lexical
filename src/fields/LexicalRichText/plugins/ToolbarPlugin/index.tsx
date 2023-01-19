@@ -318,24 +318,7 @@ function BlockFormatDropDown({
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
-      {editorConfig.simpleNodes.length > 0 &&
-        editorConfig.simpleNodes.map((customNode) => (
-          <DropDownItem
-            className={`item ${dropDownActiveClass(
-              blockType === customNode.identifier
-            )}`}
-            onClick={() =>
-              customNode.formatFunction({
-                blockType: blockType,
-                editor: editor,
-              })
-            }
-            key={customNode.identifier}
-          >
-            <i className="icon code" />
-            <span className="text">{customNode.displayName} Block</span>
-          </DropDownItem>
-        ))}
+    
     </DropDown>
   );
 }
@@ -956,10 +939,6 @@ export default function ToolbarPlugin(props: {
                 });
               }
               
-            })}
-
-            {editorConfig.extraToolbarElements.insert.map((customInsertElement) => {
-              return customInsertElement(editor);
             })}
           </DropDown>
         </React.Fragment>

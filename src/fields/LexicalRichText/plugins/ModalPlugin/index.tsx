@@ -72,13 +72,6 @@ export default function ModalPlugin(props: {
             }
           }
         }
-
-        for(const customModal of editorConfig.extraModals){
-          if(toOpen === customModal.openModalCommand.type) {
-            customModal.openModalCommand.command(toggleModal, editDepth);
-            return true;
-          }
-        }
       }
       
       return true;
@@ -146,9 +139,6 @@ export default function ModalPlugin(props: {
             return customModal.modal({activeEditor, editorConfig});
           });
         }
-      })}
-      {editorConfig.extraModals.map((customModal) => {
-        return customModal.modal({editorConfig});
       })}
     </>
   );

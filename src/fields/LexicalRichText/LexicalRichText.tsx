@@ -111,8 +111,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
           !isRichText ? "plain-text" : ""
         }`}
       >
-        {...editorConfig.extraPlugins}
-
         {editorConfig.features.map(feature => {
           if (feature.plugins && feature.plugins.length > 0){
             return feature.plugins.map(plugin => {

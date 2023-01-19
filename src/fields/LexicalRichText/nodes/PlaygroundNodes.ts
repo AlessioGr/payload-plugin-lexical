@@ -59,12 +59,6 @@ function PlaygroundNodes(
     nodes.push(FigmaNode);
   }
 
-  if (editorConfig.simpleNodes.length > 0) {
-    for (const customNode of editorConfig.simpleNodes) {
-      nodes.push(customNode.node);
-    }
-  }
-
   nodes.push(
     HeadingNode,
     ListNode,
@@ -91,9 +85,6 @@ function PlaygroundNodes(
       }
     }
   }
-
-  // push all editorConfig.nodes into nodes
-  nodes.push(...editorConfig.extraNodes);
 
   return nodes;
 }
