@@ -9,7 +9,8 @@ import { FigmaFeature } from "./features/embeds/figma/FigmaFeature";
 import { PlaygroundEmbedConfig } from "./fields/LexicalRichText/plugins/AutoEmbedPlugin";
 import { YouTubeFeature } from "./features/embeds/youtube/YouTubeFeature";
 import { TwitterFeature } from "./features/embeds/twitter/TwitterFeature";
-import { SpeechToTextFeature } from "./features/speechtotext/SpeechToTextFeature";
+import { SpeechToTextFeature } from "./features/actions/speechtotext/SpeechToTextFeature";
+import { ClearEditorFeature } from "./features/actions/cleareditor/ClearEditorFeature";
 
 export type Feature = {
   plugins?: JSX.Element[];
@@ -101,6 +102,7 @@ export const defaultEditorConfig: EditorConfig = {
     YouTubeFeature({}),
     TwitterFeature({}),
     SpeechToTextFeature({}),
+    ClearEditorFeature({}),
   ],
   featuresold: {
     comments: {

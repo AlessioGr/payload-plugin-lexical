@@ -19,14 +19,10 @@ import { mergeRegister } from '@lexical/utils';
 import {
   $createTextNode,
   $getRoot,
-  $isParagraphNode,
-  CLEAR_EDITOR_COMMAND,
 } from 'lexical';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
-import useModal from '../../hooks/useModal';
-import Button from 'payload/dist/admin/components/elements/Button';
 import { PLAYGROUND_TRANSFORMERS } from '../MarkdownTransformers';
 
 import { EditorConfig } from '../../../../types';
@@ -78,8 +74,6 @@ export default function ActionsPlugin({
 }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
-  const [isEditorEmpty, setIsEditorEmpty] = useState(true);
-  const [modal, showModal] = useModal();
 
   useEffect(() => {
     return mergeRegister(
@@ -102,19 +96,6 @@ export default function ActionsPlugin({
         ) {
           validateEditorState(editor);
         }
-        editor.getEditorState().read(() => {
-          const root = $getRoot();
-          const children = root.getChildren();
-
-          if (children.length > 1) {
-            setIsEditorEmpty(false);
-          } else if ($isParagraphNode(children[0])) {
-            const paragraphChildren = children[0].getChildren();
-            setIsEditorEmpty(paragraphChildren.length === 0);
-          } else {
-            setIsEditorEmpty(false);
-          }
-        });
       },
     );
   }, [editor, isEditable]);
@@ -177,23 +158,6 @@ export default function ActionsPlugin({
         <i className="export" />
       </button>
       <button
-        className="action-button clear"
-        disabled={isEditorEmpty}
-        onClick={(event) => {
-          event.preventDefault();
-          showModal('Clear editor', (onClose) => (
-            <ShowClearDialog
-              editor={editor}
-              onClose={onClose}
-            />
-          ));
-        }}
-        title="Clear"
-        aria-label="Clear editor contents"
-      >
-        <i className="clear" />
-      </button>
-      <button
         className={`action-button ${!isEditable ? 'unlock' : 'lock'}`}
         onClick={(event) => {
           event.preventDefault();
@@ -219,41 +183,7 @@ export default function ActionsPlugin({
       >
         <i className="markdown" />
       </button>
-      {modal}
     </div>
   );
 }
 
-function ShowClearDialog({
-  editor,
-  onClose,
-}: {
-  editor: LexicalEditor;
-  onClose: () => void;
-}): JSX.Element {
-  return (
-    <React.Fragment>
-      Are you sure you want to clear the editor?
-      <div className="Modal__content">
-        <Button
-          onClick={() => {
-            editor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
-            editor.focus();
-            onClose();
-          }}
-        >
-          Clear
-        </Button>
-        {' '}
-        <Button
-          onClick={() => {
-            editor.focus();
-            onClose();
-          }}
-        >
-          Cancel
-        </Button>
-      </div>
-    </React.Fragment>
-  );
-}

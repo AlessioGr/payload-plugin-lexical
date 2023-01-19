@@ -1,4 +1,4 @@
-import { EditorConfig, Feature } from '../../types';
+import { EditorConfig, Feature } from '../../../types';
 import SpeechToTextPlugin, { isSUPPORT_SPEECH_RECOGNITION, SPEECH_TO_TEXT_COMMAND } from './plugins';
 import * as React from "react";
 import { useState } from "react";

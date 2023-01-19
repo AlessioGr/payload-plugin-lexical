@@ -19,7 +19,7 @@ import {
 } from "lexical";
 import { useEffect, useRef, useState } from "react";
 
-import useReport from "../../../fields/LexicalRichText/hooks/useReport";
+import useReport from "../../../../fields/LexicalRichText/hooks/useReport";
 
 export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> = createCommand(
   "SPEECH_TO_TEXT_COMMAND"
