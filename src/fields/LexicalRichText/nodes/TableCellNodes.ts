@@ -15,7 +15,6 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
 import { AutocompleteNode } from "./AutocompleteNode";
-import { EmojiNode } from "./EmojiNode";
 import { ImageNode } from "./ImageNode";
 import { KeywordNode } from "./KeywordNode";
 import { MentionNode } from "./MentionNode";
@@ -34,7 +33,6 @@ function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
     LinkNode,
     ImageNode,
     MentionNode,
-    EmojiNode,
     AutocompleteNode,
     KeywordNode,
   ];

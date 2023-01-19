@@ -44,7 +44,6 @@ import LinkPlugin from '../plugins/LinkPlugin';
 
 import { useSettings } from '../context/SettingsContext';
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
-import EmojisPlugin from '../plugins/EmojisPlugin';
 import KeywordsPlugin from '../plugins/KeywordsPlugin';
 import MentionsPlugin from '../plugins/MentionsPlugin';
 import TreeViewPlugin from '../plugins/TreeViewPlugin';
@@ -52,6 +51,8 @@ import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
 import { $isImageNode } from './ImageNode';
+import { EditorConfig } from '../../../types';
+import { useEditorConfigContext } from '../LexicalEditorComponent';
 
 const imageCache = new Set();
 
@@ -80,7 +81,7 @@ function LazyImage({
   altText: string;
   className: string | null;
   height: 'inherit' | number;
-  imageRef: {current: null | HTMLImageElement};
+  imageRef: { current: null | HTMLImageElement };
   maxWidth: number;
   src: string;
   width: 'inherit' | number;
@@ -237,17 +238,17 @@ export default function ImageComponent({
         COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
-          DRAGSTART_COMMAND,
-          (event) => {
-            if (event.target === imageRef.current) {
-              // TODO This is just a temporary workaround for FF to behave like other browsers.
-              // Ideally, this handles drag & drop too (and all browsers).
-              event.preventDefault();
-              return true;
-            }
-            return false;
-          },
-          COMMAND_PRIORITY_LOW,
+        DRAGSTART_COMMAND,
+        (event) => {
+          if (event.target === imageRef.current) {
+            // TODO This is just a temporary workaround for FF to behave like other browsers.
+            // Ideally, this handles drag & drop too (and all browsers).
+            event.preventDefault();
+            return true;
+          }
+          return false;
+        },
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_DELETE_COMMAND,
@@ -315,6 +316,8 @@ export default function ImageComponent({
 
   const draggable = isSelected && $isNodeSelection(selection) && !isResizing;
   const isFocused = isSelected || isResizing;
+
+  const {editorConfig} = useEditorConfigContext();
   return (
     <Suspense fallback={null}>
       <React.Fragment>
@@ -338,7 +341,14 @@ export default function ImageComponent({
             <LexicalNestedComposer initialEditor={caption}>
               <MentionsPlugin />
               <LinkPlugin />
-              <EmojisPlugin />
+              {editorConfig.features.map(feature => {
+                if (feature.subEditorPlugins && feature.subEditorPlugins.length > 0) {
+                  return feature.subEditorPlugins.map(subEditorPlugin => {
+                    return subEditorPlugin;
+                  })
+
+                }
+              })}
               <HashtagPlugin />
               <KeywordsPlugin />
               <HistoryPlugin externalHistoryState={historyState} />

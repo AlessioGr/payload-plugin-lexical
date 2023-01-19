@@ -36,7 +36,6 @@ import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
 import EmojiPickerPlugin from "./plugins/EmojiPickerPlugin";
-import EmojisPlugin from "./plugins/EmojisPlugin";
 import FigmaPlugin from "./plugins/FigmaPlugin";
 import FloatingLinkEditorPlugin from "./plugins/LinkEditorPlugin";
 import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
@@ -132,7 +131,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <EmojiPickerPlugin />
         <AutoEmbedPlugin editorConfig={editorConfig} />
         {editorConfig.featuresold.mentions.enabled && <MentionsPlugin />}
-        <EmojisPlugin />
         <HashtagPlugin />
         <KeywordsPlugin />
         <SpeechToTextPlugin />

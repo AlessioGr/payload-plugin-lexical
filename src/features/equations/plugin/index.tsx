@@ -8,6 +8,7 @@
 
 import 'katex/dist/katex.css';
 import './modal.scss';
+import './index.scss';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $wrapNodeInElement } from '@lexical/utils';

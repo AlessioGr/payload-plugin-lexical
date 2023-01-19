@@ -1,10 +1,12 @@
 import { TextMatchTransformer } from "@lexical/markdown";
 import { ElementNode, LexicalEditor, LexicalNode, Klass } from "lexical";
+import { EmojisFeature } from "./features/emojis/EmojisFeature";
 import { EquationsFeature } from "./features/equations/EquationsFeature";
 import { ComponentPickerOption } from "./fields/LexicalRichText/plugins/ComponentPickerPlugin";
 
 export type Feature = {
   plugins?: JSX.Element[];
+  subEditorPlugins?: JSX.Element[]; //Like image captions
   nodes?: Array<Klass<LexicalNode>>;
   tableCellNodes?: Array<Klass<LexicalNode>>;
   modals?: {
@@ -113,7 +115,7 @@ export type EditorConfig = {
 export const defaultEditorConfig: EditorConfig = {
   debug: true,
   simpleNodes: [],
-  features: [EquationsFeature({})],
+  features: [EquationsFeature({}), EmojisFeature({})],
   featuresold: {
     comments: {
       enabled: true,

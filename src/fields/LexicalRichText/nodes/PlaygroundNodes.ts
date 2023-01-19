@@ -22,7 +22,6 @@ import { CollapsibleContainerNode } from "../plugins/CollapsiblePlugin/Collapsib
 import { CollapsibleContentNode } from "../plugins/CollapsiblePlugin/CollapsibleContentNode";
 import { CollapsibleTitleNode } from "../plugins/CollapsiblePlugin/CollapsibleTitleNode";
 import { AutocompleteNode } from "./AutocompleteNode";
-import { EmojiNode } from "./EmojiNode";
 import { FigmaNode } from "./FigmaNode";
 import { ImageNode } from "./ImageNode";
 import { KeywordNode } from "./KeywordNode";
@@ -77,7 +76,6 @@ function PlaygroundNodes(
     AutoLinkNode,
     LinkNode,
     OverflowNode,
-    EmojiNode,
     AutocompleteNode,
     KeywordNode,
     MarkNode,
