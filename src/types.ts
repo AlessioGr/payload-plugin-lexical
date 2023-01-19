@@ -16,12 +16,15 @@ import { TreeViewFeature } from "./features/debug/treeview/TreeViewFeature";
 import { KeywordsFeature } from "./features/keywords/KeywordsFeature";
 import { AutoCompleteFeature } from "./features/autocomplete/AutoCompleteFeature";
 import { CollapsibleFeature } from "./features/collapsible/CollapsibleFeature";
+import { TypingPerfFeature } from "./features/debug/typingperf/TypingPerfFeature";
+import { PasteLogFeature } from "./features/debug/pastelog/PasteLogFeature";
+import { TestRecorderFeature } from "./features/debug/testrecorder/TestRecorderFeature";
 
 export type Feature = {
   plugins?: {
     // plugins are anything which is not directly part of the editor. Like, creating a command which creates a node, or opens a modal, or some other more "outside" functionality
     component: JSX.Element;
-    position?: "normal" | "bottom";
+    position?: "normal" | "bottom" | "outside"; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
   }[];
   subEditorPlugins?: JSX.Element[]; // Plugins which are embedded in other sub-editor, like image captions (which is basically an editor inside of an editor)
   tablePlugins?: JSX.Element[]; // Plugins which are put inside of the newtable plugin
@@ -113,6 +116,9 @@ export const defaultEditorConfig: EditorConfig = {
     KeywordsFeature({}),
     AutoCompleteFeature({}),
     CollapsibleFeature({}),
+    TypingPerfFeature({ enabled: false }),
+    PasteLogFeature({ enabled: false }),
+    TestRecorderFeature({ enabled: false }),
   ],
   featuresold: {
     comments: {

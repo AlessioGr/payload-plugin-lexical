@@ -20,7 +20,6 @@ import * as React from "react";
 import { useState } from "react";
 import { OnChangePlugin } from "./plugins/OnChangePlugin";
 import LinkPlugin from "./plugins/LinkPlugin";
-import { useSettings } from "./context/SettingsContext";
 import { useSharedHistoryContext } from "./context/SharedHistoryContext";
 import TableCellNodes from "./nodes/TableCellNodes";
 import ActionsPlugin from "./plugins/ActionsPlugin";
@@ -51,20 +50,21 @@ import UploadPlugin from "./plugins/UploadPlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
 import ModalPlugin from "./plugins/ModalPlugin";
 import CommentPlugin from "./plugins/CommentPlugin";
+import { Settings } from './settings/Settings';
 
 export const Editor: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments } = props;
 
   const { historyState } = useSharedHistoryContext();
+
   const {
-    settings: {
-      isMaxLength,
-      isCharLimit,
-      isCharLimitUtf8,
-      isRichText,
-      showTableOfContents,
-    },
-  } = useSettings();
+    isRichText,
+    isMaxLength,
+    isCharLimit,
+    isCharLimitUtf8,
+    showTableOfContents
+  } = Settings;
+
 
   const text = isRichText
     ? "Enter some rich text..."
@@ -217,7 +217,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               }
             })
           }
-        })}
+      })}
     </React.Fragment>
   );
 };

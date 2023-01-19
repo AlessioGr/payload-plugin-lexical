@@ -12,26 +12,18 @@ import * as React from "react";
 import { createContext, ReactNode, useContext, useMemo } from "react";
 import { EditorConfig } from '../../types';
 
-import { SettingsContext, useSettings } from "./context/SettingsContext";
 import { SharedAutocompleteContext } from "./context/SharedAutocompleteContext";
 import { SharedHistoryContext } from "./context/SharedHistoryContext";
 import { Editor } from "./LexicalRichText";
 import PlaygroundNodes from "./nodes/PlaygroundNodes";
 import { CommentsContext } from './plugins/CommentPlugin';
-import PasteLogPlugin from "./plugins/PasteLogPlugin";
 import { TableContext } from "./plugins/TablePlugin";
-import TestRecorderPlugin from "./plugins/TestRecorderPlugin";
-import TypingPerfPlugin from "./plugins/TypingPerfPlugin";
-import Settings from "./settings/Settings";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import { OnChangeProps } from "./types";
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments } = props;
 
-  const {
-    settings: { measureTypingPerf },
-  } = useSettings();
 
   const initialConfig = {
     editorState: initialJSON != null ? JSON.stringify(initialJSON) : undefined,
@@ -43,7 +35,6 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
     theme: PlaygroundEditorTheme,
   };
 
-  // TODO: When should {true ? <PasteLogPlugin /> : null} be enabled? Do we need it?
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <EditorConfigContext editorConfig={editorConfig}>
@@ -59,10 +50,15 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
                     initialComments={initialComments}
                   />
                 </div>
-                {editorConfig.debug && <Settings />}
-                {editorConfig.debug && <PasteLogPlugin />}
-                {editorConfig.debug && <TestRecorderPlugin />}
-                {measureTypingPerf && editorConfig.debug && <TypingPerfPlugin />}
+                {editorConfig.features.map(feature => {
+                  if (feature.plugins && feature.plugins.length > 0) {
+                    return feature.plugins.map(plugin => {
+                      if (plugin.position === "outside") {
+                        return plugin.component;
+                      }
+                    })
+                  }
+                })}
               </CommentsContext>
             </SharedAutocompleteContext>
           </TableContext>
@@ -76,14 +72,14 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments } = props;
 
   return (
-    <SettingsContext>
-      <LexicalEditor
-        onChange={onChange}
-        initialJSON={initialJSON}
-        editorConfig={editorConfig}
-        initialComments={initialComments}
-      />
-    </SettingsContext>
+    //<SettingsContext>
+    <LexicalEditor
+      onChange={onChange}
+      initialJSON={initialJSON}
+      editorConfig={editorConfig}
+      initialComments={initialComments}
+    />
+    //</SettingsContext>
   );
 };
 

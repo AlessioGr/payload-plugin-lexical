@@ -42,7 +42,6 @@ import * as React from 'react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import LinkPlugin from '../plugins/LinkPlugin';
 
-import { useSettings } from '../context/SettingsContext';
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
 import ContentEditable from '../ui/ContentEditable';
@@ -50,6 +49,7 @@ import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
 import { $isImageNode } from './ImageNode';
 import { useEditorConfigContext } from '../LexicalEditorComponent';
+import { Settings } from '../settings/Settings';
 
 const imageCache = new Set();
 
@@ -308,8 +308,8 @@ export default function ImageComponent({
 
   const { historyState } = useSharedHistoryContext();
   const {
-    settings: { showNestedEditorTreeView },
-  } = useSettings();
+    showNestedEditorTreeView,
+  } = Settings;
 
   const draggable = isSelected && $isNodeSelection(selection) && !isResizing;
   const isFocused = isSelected || isResizing;

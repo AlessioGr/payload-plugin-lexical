@@ -17,8 +17,8 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { IS_APPLE } from '../../shared/environment';
-import useLayoutEffect from '../../shared/useLayoutEffect';
+import { IS_APPLE } from '../../../../fields/LexicalRichText/shared/environment';
+import useLayoutEffect from '../../../../fields/LexicalRichText/shared/useLayoutEffect';
 
 const copy = (text: string | null) => {
   const textArea = document.createElement('textarea');
