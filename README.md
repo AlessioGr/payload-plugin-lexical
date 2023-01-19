@@ -71,23 +71,26 @@ const Lexical: CollectionConfig = {
 
                 // Optional: these are the default features. Feel free to customize them or remove the ones you do not like!
                 defaultEditorConfig.features = [
-                    EquationsFeature({}),
-                    EmojisFeature({}),
-                    EmojiPickerFeature({}),
-                    HorizontalRuleFeature({}),
-                    FigmaFeature({}),
-                    YouTubeFeature({}),
-                    TwitterFeature({}),
-                    SpeechToTextFeature({}),
-                    ClearEditorFeature({}),
-                    MentionsFeature({}),
-                    TreeViewFeature({enabled: defaultEditorConfig.debug}),
-                    KeywordsFeature({}),
-                    AutoCompleteFeature({}),
-                    CollapsibleFeature({}),
+                    EquationsFeature({}), // LaTex (well KaTeX) equations
+                    EmojisFeature({}), // Adds new Emoji nodes with new, different-looking emojis
+                    EmojiPickerFeature({}), // Use in combination with EmojisPlugin. When you start typing ":" it will show you different emojis you can use. They also look different!
+                    HorizontalRuleFeature({}), // Horizontal rule in the editor.
+                    FigmaFeature({}), // Figma Embed
+                    YouTubeFeature({}), // YouTube Embed
+                    TwitterFeature({}), // Twitter Embed
+                    SpeechToTextFeature({}), // Adds a Speech-to-text button in the Actions menu (bottom right of the editor). When you click on it and speak, it converts the speech into text
+                    ClearEditorFeature({}), // Adds a button in the action menu which clears the editor
+                    MentionsFeature({}), // Ability to mention someone when you type "@"
+                    TreeViewFeature({enabled: defaultEditorConfig.debug}), // If enabled, will show the node representation of the editor under the editor. Good for debugging
+                    KeywordsFeature({}), // Highlights certain words
+                    AutoCompleteFeature({}), // Autocompletes certain words while typing
+                    CollapsibleFeature({}), // Adds a "collapsible" node
+                    TypingPerfFeature({ enabled: defaultEditorConfig.debug }), // Some debug tool for performance testing
+                    PasteLogFeature({ enabled: defaultEditorConfig.debug }), // Another debug tool
+                    TestRecorderFeature({ enabled: defaultEditorConfig.debug }), // Another debug tool used for lexical core development, with which you can automatically generate tests
                 ],
                 
-                // A feature can consist of nodes, plugins, modals, toolbar elements and more!
+                // A feature can consist of nodes, plugins, modals, toolbar elements and more! YourOwnCustomFeature must be of type "Feature"
                 defaultEditorConfig.features.push(YourOwnCustomFeature({}))
 
 
