@@ -9,6 +9,7 @@ import { FigmaFeature } from "./features/embeds/figma/FigmaFeature";
 import { PlaygroundEmbedConfig } from "./fields/LexicalRichText/plugins/AutoEmbedPlugin";
 import { YouTubeFeature } from "./features/embeds/youtube/YouTubeFeature";
 import { TwitterFeature } from "./features/embeds/twitter/TwitterFeature";
+import { SpeechToTextFeature } from "./features/speechtotext/SpeechToTextFeature";
 
 export type Feature = {
   plugins?: JSX.Element[];
@@ -40,6 +41,7 @@ export type Feature = {
   };
   markdownTransformers?: Transformer[];
   embedConfigs?: PlaygroundEmbedConfig[];
+  actions?: JSX.Element[]; //Actions are added in the ActionsPlugin - it's the buttons you see on the bottom right of the editor
 };
 
 export type EditorConfig = {
@@ -98,6 +100,7 @@ export const defaultEditorConfig: EditorConfig = {
     FigmaFeature({}),
     YouTubeFeature({}),
     TwitterFeature({}),
+    SpeechToTextFeature({}),
   ],
   featuresold: {
     comments: {
