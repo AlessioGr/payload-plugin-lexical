@@ -44,13 +44,11 @@ import LinkPlugin from '../plugins/LinkPlugin';
 
 import { useSettings } from '../context/SettingsContext';
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
-import KeywordsPlugin from '../plugins/KeywordsPlugin';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
 import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
 import { $isImageNode } from './ImageNode';
-import { EditorConfig } from '../../../types';
 import { useEditorConfigContext } from '../LexicalEditorComponent';
 
 const imageCache = new Set();
@@ -347,7 +345,6 @@ export default function ImageComponent({
                 }
               })}
               <HashtagPlugin />
-              <KeywordsPlugin />
               <HistoryPlugin externalHistoryState={historyState} />
               <RichTextPlugin
                 contentEditable={

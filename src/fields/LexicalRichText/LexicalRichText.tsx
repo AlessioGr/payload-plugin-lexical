@@ -36,7 +36,6 @@ import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
 import FloatingLinkEditorPlugin from "./plugins/LinkEditorPlugin";
 import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
-import KeywordsPlugin from "./plugins/KeywordsPlugin";
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
 import { MaxLengthPlugin } from "./plugins/MaxLengthPlugin";
@@ -118,7 +117,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <ComponentPickerPlugin editorConfig={editorConfig} />
         <AutoEmbedPlugin editorConfig={editorConfig} />
         <HashtagPlugin />
-        <KeywordsPlugin />
         <AutoLinkPlugin />
         {editorConfig.featuresold.comments.enabled && <CommentPlugin />}
         {isRichText ? (

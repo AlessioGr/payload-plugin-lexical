@@ -13,6 +13,7 @@ import { SpeechToTextFeature } from "./features/actions/speechtotext/SpeechToTex
 import { ClearEditorFeature } from "./features/actions/cleareditor/ClearEditorFeature";
 import { MentionsFeature } from "./features/mentions/MentionsFeature";
 import { TreeViewFeature } from "./features/debug/treeview/TreeViewFeature";
+import { KeywordsFeature } from "./features/keywords/KeywordsFeature";
 
 export type Feature = {
   plugins?: {
@@ -107,6 +108,7 @@ export const defaultEditorConfig: EditorConfig = {
     ClearEditorFeature({}),
     MentionsFeature({}),
     TreeViewFeature({ enabled: false }),
+    KeywordsFeature({}),
   ],
   featuresold: {
     comments: {

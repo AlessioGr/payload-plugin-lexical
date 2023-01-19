@@ -16,7 +16,6 @@ import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
 import { AutocompleteNode } from "./AutocompleteNode";
 import { ImageNode } from "./ImageNode";
-import { KeywordNode } from "./KeywordNode";
 import { EditorConfig } from "../../../types";
 
 function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
@@ -32,7 +31,6 @@ function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
     LinkNode,
     ImageNode,
     AutocompleteNode,
-    KeywordNode,
   ];
 
   for (const feature of editorConfig.features) {

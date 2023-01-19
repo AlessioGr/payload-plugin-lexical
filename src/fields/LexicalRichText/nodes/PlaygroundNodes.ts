@@ -22,7 +22,6 @@ import { CollapsibleContentNode } from "../plugins/CollapsiblePlugin/Collapsible
 import { CollapsibleTitleNode } from "../plugins/CollapsiblePlugin/CollapsibleTitleNode";
 import { AutocompleteNode } from "./AutocompleteNode";
 import { ImageNode } from "./ImageNode";
-import { KeywordNode } from "./KeywordNode";
 import { TableNode as NewTableNode } from "./TableNode";
 import type { EditorConfig } from "../../../types";
 
@@ -50,7 +49,6 @@ function PlaygroundNodes(
     LinkNode,
     OverflowNode,
     AutocompleteNode,
-    KeywordNode,
     MarkNode,
     CollapsibleContainerNode,
     CollapsibleContentNode,
