@@ -39,7 +39,7 @@ export function EquationsFeature(props: {}): Feature {
         onSelect: () => {
             editor.dispatchCommand(OPEN_MODAL_COMMAND, "equation");
         }
-      })
+    })
 
 
     return {

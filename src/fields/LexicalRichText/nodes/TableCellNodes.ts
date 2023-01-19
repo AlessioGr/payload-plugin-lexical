@@ -14,7 +14,6 @@ import { ListItemNode, ListNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
-import { AutocompleteNode } from "./AutocompleteNode";
 import { ImageNode } from "./ImageNode";
 import { EditorConfig } from "../../../types";
 
@@ -30,7 +29,6 @@ function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
     AutoLinkNode,
     LinkNode,
     ImageNode,
-    AutocompleteNode,
   ];
 
   for (const feature of editorConfig.features) {

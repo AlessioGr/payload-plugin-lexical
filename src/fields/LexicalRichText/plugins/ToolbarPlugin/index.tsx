@@ -77,9 +77,7 @@ import { IS_APPLE } from "../../shared/environment";
 import ColorPicker from "../../ui/ColorPicker";
 import DropDown, { DropDownItem } from "../../ui/DropDown";
 import { getSelectedNode } from "../../utils/getSelectedNode";
-import { sanitizeUrl } from "../../utils/url";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
-import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
 import { EditorConfig } from "../../../../types";
 import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
 
@@ -882,22 +880,6 @@ export default function ToolbarPlugin(props: {
                   </DropDownItem>
                 ) //TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
             }
-
-            {editorConfig.featuresold.collapsible.enabled &&
-              editorConfig.featuresold.collapsible.display && (
-                <DropDownItem
-                  onClick={() => {
-                    editor.dispatchCommand(
-                      INSERT_COLLAPSIBLE_COMMAND,
-                      undefined
-                    );
-                  }}
-                  className="item"
-                >
-                  <i className="icon caret-right" />
-                  <span className="text">Collapsible container</span>
-                </DropDownItem>
-              )}
 
             {getEmbedConfigs(editorConfig).map((embedConfig) => (
               <DropDownItem

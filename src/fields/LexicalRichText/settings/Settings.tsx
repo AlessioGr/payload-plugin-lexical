@@ -21,8 +21,6 @@ export default function Settings(): JSX.Element {
       isMaxLength,
       isCharLimit,
       isCharLimitUtf8,
-      isAutocomplete,
-      showTreeView,
       showNestedEditorTreeView,
       disableBeforeInput,
       showTableOfContents,
@@ -46,11 +44,6 @@ export default function Settings(): JSX.Element {
             onClick={() => setOption('measureTypingPerf', !measureTypingPerf)}
             checked={measureTypingPerf}
             text="Measure Perf"
-          />
-          <Switch
-            onClick={() => setOption('showTreeView', !showTreeView)}
-            checked={showTreeView}
-            text="Debug View"
           />
           <Switch
             onClick={() => setOption('showNestedEditorTreeView', !showNestedEditorTreeView)}
@@ -78,11 +71,6 @@ export default function Settings(): JSX.Element {
             onClick={() => setOption('isMaxLength', !isMaxLength)}
             checked={isMaxLength}
             text="Max Length"
-          />
-          <Switch
-            onClick={() => setOption('isAutocomplete', !isAutocomplete)}
-            checked={isAutocomplete}
-            text="Autocomplete"
           />
           <Switch
             onClick={() => {

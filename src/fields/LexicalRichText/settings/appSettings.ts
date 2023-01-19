@@ -13,7 +13,6 @@ export type SettingName =
   | "isCharLimit"
   | "isMaxLength"
   | "isCharLimitUtf8"
-  | "isAutocomplete"
   | "showNestedEditorTreeView"
   | "showTableOfContents";
 
@@ -21,7 +20,6 @@ export type Settings = Record<SettingName, boolean>;
 
 export const DEFAULT_SETTINGS: Settings = {
   disableBeforeInput: false,
-  isAutocomplete: false,
   isCharLimit: false,
   isCharLimitUtf8: false,
   isMaxLength: false,

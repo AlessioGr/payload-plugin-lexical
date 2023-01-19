@@ -24,13 +24,11 @@ import { useSettings } from "./context/SettingsContext";
 import { useSharedHistoryContext } from "./context/SharedHistoryContext";
 import TableCellNodes from "./nodes/TableCellNodes";
 import ActionsPlugin from "./plugins/ActionsPlugin";
-import AutocompletePlugin from "./plugins/AutocompletePlugin";
 import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
 import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
 import ClickableLinkPlugin from "./plugins/ClickableLinkPlugin";
 import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
-import CollapsiblePlugin from "./plugins/CollapsiblePlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
@@ -60,7 +58,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
   const { historyState } = useSharedHistoryContext();
   const {
     settings: {
-      isAutocomplete,
       isMaxLength,
       isCharLimit,
       isCharLimitUtf8,
@@ -178,7 +175,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
             <TabFocusPlugin />
             <TabIndentationPlugin />
-            {editorConfig.featuresold.collapsible.enabled && <CollapsiblePlugin />}
             {floatingAnchorElem && (
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
@@ -210,7 +206,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             maxLength={5}
           />
         )}
-        {isAutocomplete && <AutocompletePlugin />}
         <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
         <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
       </div>

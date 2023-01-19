@@ -17,10 +17,6 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
-import { CollapsibleContainerNode } from "../plugins/CollapsiblePlugin/CollapsibleContainerNode";
-import { CollapsibleContentNode } from "../plugins/CollapsiblePlugin/CollapsibleContentNode";
-import { CollapsibleTitleNode } from "../plugins/CollapsiblePlugin/CollapsibleTitleNode";
-import { AutocompleteNode } from "./AutocompleteNode";
 import { ImageNode } from "./ImageNode";
 import { TableNode as NewTableNode } from "./TableNode";
 import type { EditorConfig } from "../../../types";
@@ -48,11 +44,7 @@ function PlaygroundNodes(
     AutoLinkNode,
     LinkNode,
     OverflowNode,
-    AutocompleteNode,
-    MarkNode,
-    CollapsibleContainerNode,
-    CollapsibleContentNode,
-    CollapsibleTitleNode
+    MarkNode
   );
 
   for (const feature of editorConfig.features) {

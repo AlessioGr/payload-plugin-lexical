@@ -35,7 +35,6 @@ import * as ReactDOM from "react-dom";
 
 import useModal from "../../hooks/useModal";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
-import { INSERT_COLLAPSIBLE_COMMAND } from "../CollapsiblePlugin";
 import { InsertTableDialog } from "../TablePlugin";
 import { EditorConfig } from "../../../../types";
 import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
@@ -322,20 +321,6 @@ export default function ComponentPickerMenuPlugin(props: {
           onSelect: () => {
             editor.dispatchCommand(OPEN_MODAL_COMMAND, "upload");
           },
-        })
-      );
-    }
-
-    if (
-      editorConfig.featuresold.collapsible.enabled &&
-      editorConfig.featuresold.collapsible.display
-    ) {
-      baseOptions.push(
-        new ComponentPickerOption("Collapsible", {
-          icon: <i className="icon caret-right" />,
-          keywords: ["collapse", "collapsible", "toggle"],
-          onSelect: () =>
-            editor.dispatchCommand(INSERT_COLLAPSIBLE_COMMAND, undefined),
         })
       );
     }

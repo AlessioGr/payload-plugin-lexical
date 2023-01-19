@@ -83,6 +83,8 @@ const Lexical: CollectionConfig = {
                     MentionsFeature({}),
                     TreeViewFeature({enabled: defaultEditorConfig.debug}),
                     KeywordsFeature({}),
+                    AutoCompleteFeature({}),
+                    CollapsibleFeature({}),
                 ],
                 
                 // A feature can consist of nodes, plugins, modals, toolbar elements and more!

@@ -14,6 +14,8 @@ import { ClearEditorFeature } from "./features/actions/cleareditor/ClearEditorFe
 import { MentionsFeature } from "./features/mentions/MentionsFeature";
 import { TreeViewFeature } from "./features/debug/treeview/TreeViewFeature";
 import { KeywordsFeature } from "./features/keywords/KeywordsFeature";
+import { AutoCompleteFeature } from "./features/autocomplete/AutoCompleteFeature";
+import { CollapsibleFeature } from "./features/collapsible/CollapsibleFeature";
 
 export type Feature = {
   plugins?: {
@@ -67,10 +69,6 @@ export type EditorConfig = {
       enabled: boolean;
       display: boolean;
     };
-    collapsible: {
-      enabled: boolean;
-      display: boolean;
-    };
     fontSize: {
       enabled: boolean;
       display: boolean;
@@ -109,6 +107,8 @@ export const defaultEditorConfig: EditorConfig = {
     MentionsFeature({}),
     TreeViewFeature({ enabled: false }),
     KeywordsFeature({}),
+    AutoCompleteFeature({}),
+    CollapsibleFeature({}),
   ],
   featuresold: {
     comments: {
@@ -119,10 +119,6 @@ export const defaultEditorConfig: EditorConfig = {
       display: false,
     },
     upload: {
-      enabled: true,
-      display: true,
-    },
-    collapsible: {
       enabled: true,
       display: true,
     },

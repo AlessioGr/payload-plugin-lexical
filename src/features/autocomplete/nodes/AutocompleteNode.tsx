@@ -16,8 +16,8 @@ import {
 } from 'lexical';
 import * as React from 'react';
 
-import { useSharedAutocompleteContext } from '../context/SharedAutocompleteContext';
-import { uuid as UUID } from '../plugins/AutocompletePlugin';
+import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
+import { uuid as UUID } from '../plugins';
 
 declare global {
   interface Navigator {
