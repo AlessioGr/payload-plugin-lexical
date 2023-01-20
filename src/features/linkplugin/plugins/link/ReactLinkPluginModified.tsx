@@ -16,12 +16,8 @@ import {
   PASTE_COMMAND,
 } from "lexical";
 import { useEffect } from "react";
-import {
-  LinkNode,
-  TOGGLE_LINK_COMMAND,
-  toggleLink,
-} from "./LinkNodeModified";
-import type { LinkAttributes } from "./LinkNodeModified";
+import { LinkAttributes, LinkNode, toggleLink, TOGGLE_LINK_COMMAND } from '../../nodes/LinkNodeModified';
+
 
 type Props = {
   validateUrl?: (url: string) => boolean;

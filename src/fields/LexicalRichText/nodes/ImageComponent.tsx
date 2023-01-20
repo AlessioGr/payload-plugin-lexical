@@ -40,7 +40,6 @@ import {
 } from 'lexical';
 import * as React from 'react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
-import LinkPlugin from '../plugins/LinkPlugin';
 
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
@@ -336,7 +335,6 @@ export default function ImageComponent({
         {showCaption && (
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
-              <LinkPlugin />
               {editorConfig.features.map(feature => {
                 if (feature.subEditorPlugins && feature.subEditorPlugins.length > 0) {
                   return feature.subEditorPlugins.map(subEditorPlugin => {

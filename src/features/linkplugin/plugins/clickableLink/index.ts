@@ -6,17 +6,17 @@
  *
  */
 
-import type { LexicalEditor } from 'lexical';
+import type { LexicalEditor } from "lexical";
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import {
   $getNearestNodeFromDOMNode,
   $getSelection,
   $isRangeSelection,
-} from 'lexical';
-import { useEffect } from 'react';
-import { $isLinkNode } from '../LinkPlugin/LinkNodeModified';
-import type { LinkNode } from '../LinkPlugin/LinkNodeModified';
+} from "lexical";
+import { useEffect } from "react";
+import { $isLinkNode } from "../../nodes/LinkNodeModified";
+import type { LinkNode } from "../../nodes/LinkNodeModified";
 
 type LinkFilter = (event: MouseEvent, linkNode: LinkNode) => boolean;
 
@@ -37,11 +37,11 @@ export default function ClickableLinkPlugin({
         return;
       }
 
-      const href = linkDomNode.getAttribute('href');
+      const href = linkDomNode.getAttribute("href");
 
       if (
-        linkDomNode.getAttribute('contenteditable') === 'false'
-        || href === undefined
+        linkDomNode.getAttribute("contenteditable") === "false" ||
+        href === undefined
       ) {
         return;
       }
@@ -62,20 +62,20 @@ export default function ClickableLinkPlugin({
       });
 
       if (
-        linkNode === null
-        || (filter !== undefined && !filter(event, linkNode))
+        linkNode === null ||
+        (filter !== undefined && !filter(event, linkNode))
       ) {
         return;
       }
 
       try {
         if (href !== null) {
-          const isMiddle = event.type === 'auxclick' && event.button === 1;
+          const isMiddle = event.type === "auxclick" && event.button === 1;
           window.open(
             href,
             newTab || event.metaKey || event.ctrlKey || isMiddle
-              ? '_blank'
-              : '_self',
+              ? "_blank"
+              : "_self"
           );
           event.preventDefault();
         }
@@ -87,28 +87,28 @@ export default function ClickableLinkPlugin({
     return editor.registerRootListener(
       (
         rootElement: null | HTMLElement,
-        prevRootElement: null | HTMLElement,
+        prevRootElement: null | HTMLElement
       ) => {
         if (prevRootElement !== null) {
-          prevRootElement.removeEventListener('auxclick', onClick);
+          prevRootElement.removeEventListener("auxclick", onClick);
         }
 
         if (rootElement !== null) {
-          rootElement.addEventListener('auxclick', onClick);
+          rootElement.addEventListener("auxclick", onClick);
         }
-      },
+      }
     );
   }, [editor, filter, newTab]);
   return null;
 }
 
 function isLinkDomNode(domNode: Node): boolean {
-  return domNode.nodeName.toLowerCase() === 'a';
+  return domNode.nodeName.toLowerCase() === "a";
 }
 
 function getLinkDomNode(
   event: MouseEvent | PointerEvent,
-  editor: LexicalEditor,
+  editor: LexicalEditor
 ): HTMLAnchorElement | null {
   return editor.getEditorState().read(() => {
     const domNode = event.target as Node;

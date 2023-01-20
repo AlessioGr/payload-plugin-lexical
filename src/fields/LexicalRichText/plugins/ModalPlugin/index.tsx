@@ -16,10 +16,9 @@ import { Modal, useModal } from "@faceless-ui/modal";
 import { useCallback, useState, ReactNode, useMemo, createContext, useContext } from "react";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
-import { v4 as uuidv4 } from 'uuid';
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
-  "upload" | "table" | "link" | string
+  "upload" | "table" | string
 > = createCommand("OPEN_MODAL_COMMAND");
 
 export default function ModalPlugin(props: {
@@ -39,10 +38,6 @@ export default function ModalPlugin(props: {
 
   const editDepth = useEditDepth();
 
-  const linkDrawerSlug = formatDrawerSlug({
-    slug: `rich-text-link-lexicalRichText`,
-    depth: editDepth,
-  });
 
   const addTableDrawerSlug = formatDrawerSlug({
     slug: `lexicalRichText-add-table`,
@@ -52,16 +47,14 @@ export default function ModalPlugin(props: {
   
  
   // Register commands:
-  editor.registerCommand<"upload" | "table" | "link" | string>(
+  editor.registerCommand<"upload" | "table" | string>(
     OPEN_MODAL_COMMAND,
-    (toOpen: "upload" | "table" | "link" | string) => {
+    (toOpen: "upload" | "table" | string) => {
       if (toOpen === "upload") {
         openDrawer();
       } else if (toOpen === "table") {
         toggleModal("lexicalRichText-add-table");
-      }else if (toOpen === "link") {
-        //openModal(linkDrawerSlug); //TODO
-      }else {
+      } else {
         for(const feature of editorConfig.features){
           if(feature.modals && feature.modals.length > 0){
             for(const featureModal of feature.modals){

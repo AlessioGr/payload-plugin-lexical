@@ -28,15 +28,7 @@ import { createPortal } from "react-dom";
 
 import { useModal } from "@faceless-ui/modal";
 import { useTranslation } from "react-i18next";
-import {
-  $isAutoLinkNode,
-  $isLinkNode,
-  LinkAttributes,
-  TOGGLE_LINK_COMMAND,
-} from "../LinkPlugin/LinkNodeModified";
-import LinkPreview from "../../ui/LinkPreview";
-import { getSelectedNode } from "../../utils/getSelectedNode";
-import { setFloatingElemPosition } from "../../utils/setFloatingElemPosition";
+
 import reduceFieldsToValues from "payload/dist/admin/components/forms/Form/reduceFieldsToValues";
 import { Fields } from "payload/dist/admin/components/forms/Form/types";
 import { Field } from "payload/dist/fields/config/types";
@@ -47,7 +39,12 @@ import { useAuth } from "payload/dist/admin/components/utilities/Auth";
 import { useLocale } from "payload/dist/admin/components/utilities/Locale";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
-import { LinkDrawer } from "./LinkDrawer";
+import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
+import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
+import { setFloatingElemPosition } from '../../../fields/LexicalRichText/utils/setFloatingElemPosition';
+import { LinkDrawer } from './LinkDrawer';
+import LinkPreview from '../../../fields/LexicalRichText/ui/LinkPreview';
+import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 
 function LinkEditor({
   editor,

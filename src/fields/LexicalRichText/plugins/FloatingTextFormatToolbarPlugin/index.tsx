@@ -23,7 +23,7 @@ import {
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
-import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../LinkPlugin/LinkNodeModified';
+import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../../../../features/linkplugin/nodes/LinkNodeModified';
 
 import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
 import { getSelectedNode } from '../../utils/getSelectedNode';

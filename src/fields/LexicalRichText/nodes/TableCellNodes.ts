@@ -12,7 +12,6 @@ import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { HashtagNode } from "@lexical/hashtag";
 import { ListItemNode, ListNode } from "@lexical/list";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
 import { ImageNode } from "./ImageNode";
 import { EditorConfig } from "../../../types";
@@ -26,8 +25,6 @@ function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
     CodeNode,
     HashtagNode,
     CodeHighlightNode,
-    AutoLinkNode,
-    LinkNode,
     ImageNode,
   ];
 

@@ -71,7 +71,7 @@ import {
   $isLinkNode,
   LinkAttributes,
   TOGGLE_LINK_COMMAND,
-} from "../LinkPlugin/LinkNodeModified";
+} from "../../../../features/linkplugin/nodes/LinkNodeModified";
 import { IS_APPLE } from "../../shared/environment";
 
 import ColorPicker from "../../ui/ColorPicker";

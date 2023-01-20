@@ -15,7 +15,6 @@ import { MarkNode } from "@lexical/mark";
 import { OverflowNode } from "@lexical/overflow";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
-import { AutoLinkNode, LinkNode } from "../plugins/LinkPlugin/LinkNodeModified";
 
 import { ImageNode } from "./ImageNode";
 import { TableNode as NewTableNode } from "./TableNode";
@@ -41,8 +40,6 @@ function PlaygroundNodes(
     CodeNode,
     HashtagNode,
     CodeHighlightNode,
-    AutoLinkNode,
-    LinkNode,
     OverflowNode,
     MarkNode
   );

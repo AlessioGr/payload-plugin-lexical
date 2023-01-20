@@ -88,6 +88,7 @@ const Lexical: CollectionConfig = {
                     TypingPerfFeature({ enabled: defaultEditorConfig.debug }), // Some debug tool for performance testing
                     PasteLogFeature({ enabled: defaultEditorConfig.debug }), // Another debug tool
                     TestRecorderFeature({ enabled: defaultEditorConfig.debug }), // Another debug tool used for lexical core development, with which you can automatically generate tests
+                    LinkFeature({})
                 ],
                 
                 // A feature can consist of nodes, plugins, modals, toolbar elements and more! YourOwnCustomFeature must be of type "Feature"

@@ -6,15 +6,10 @@
  *
  */
 
-import type {LinkAttributes} from '../LinkPlugin/LinkNodeModified';
+import {$isLinkNode, LinkAttributes} from '../../nodes/LinkNodeModified';
 import type {ElementNode, LexicalEditor, LexicalNode} from 'lexical';
 
-import {
-  $createAutoLinkNode,
-  $isAutoLinkNode,
-  $isLinkNode,
-  AutoLinkNode,
-} from '../LinkPlugin/LinkNodeModified';
+
 import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
 import {mergeRegister} from '@lexical/utils';
 import {
@@ -25,7 +20,8 @@ import {
   TextNode,
 } from 'lexical';
 import {useEffect} from 'react';
-import invariant from '../../shared/invariant';
+import invariant from '../../../../fields/LexicalRichText/shared/invariant';
+import { $createAutoLinkNode, $isAutoLinkNode, AutoLinkNode } from '../../nodes/AutoLinkNodeModified';
 
 type ChangeHandler = (url: string | null, prevUrl: string | null) => void;
 

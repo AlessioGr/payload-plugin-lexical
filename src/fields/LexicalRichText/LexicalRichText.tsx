@@ -19,23 +19,18 @@ import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
 import * as React from "react";
 import { useState } from "react";
 import { OnChangePlugin } from "./plugins/OnChangePlugin";
-import LinkPlugin from "./plugins/LinkPlugin";
 import { useSharedHistoryContext } from "./context/SharedHistoryContext";
 import TableCellNodes from "./nodes/TableCellNodes";
 import ActionsPlugin from "./plugins/ActionsPlugin";
 import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
-import AutoLinkPlugin from "./plugins/AutoLinkPlugin";
-import ClickableLinkPlugin from "./plugins/ClickableLinkPlugin";
 import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
 import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
 import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
 import DragDropPaste from "./plugins/DragDropPastePlugin";
 import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
-import FloatingLinkEditorPlugin from "./plugins/LinkEditorPlugin";
 import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
 import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
 import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
-import { MaxLengthPlugin } from "./plugins/MaxLengthPlugin";
 import TabFocusPlugin from "./plugins/TabFocusPlugin";
 import TableCellActionMenuPlugin from "./plugins/TableActionMenuPlugin";
 import TableCellResizer from "./plugins/TableCellResizer";
@@ -59,7 +54,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
   const {
     isRichText,
-    isMaxLength,
     isCharLimit,
     isCharLimitUtf8,
     showTableOfContents
@@ -99,22 +93,18 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         {editorConfig.features.map(feature => {
           if (feature.plugins && feature.plugins.length > 0) {
             return feature.plugins.map(plugin => {
-              if(!plugin.position || plugin.position === "normal"){
+              if (!plugin.position || plugin.position === "normal") {
                 return plugin.component;
               }
             })
           }
         })}
 
-
-        {isMaxLength && <MaxLengthPlugin maxLength={30} />}
-
         <DragDropPaste />
         <ClearEditorPlugin />
         <ComponentPickerPlugin editorConfig={editorConfig} />
         <AutoEmbedPlugin editorConfig={editorConfig} />
         <HashtagPlugin />
-        <AutoLinkPlugin />
         {editorConfig.featuresold.comments.enabled && <CommentPlugin />}
         {isRichText ? (
           <React.Fragment>
@@ -157,21 +147,17 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 </React.Fragment>
                 <HistoryPlugin />
                 <UploadPlugin captionsEnabled={false} />
-                <LinkPlugin />
-                <ClickableLinkPlugin />
                 <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
               </NewTablePlugin>
             )}
             {editorConfig.featuresold.upload.enabled && (
               <UploadPlugin captionsEnabled={false} />
             )}
-            <LinkPlugin />
             <OnChangePlugin
               onChange={(editorState, editor, commentStore) => {
                 onChange(editorState, editor, commentStore);
               }}
             />
-            <ClickableLinkPlugin />
 
             <TabFocusPlugin />
             <TabIndentationPlugin />
@@ -179,7 +165,13 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
-                <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} />
+                {editorConfig.features.map(feature => {
+                  if (feature.floatingAnchorElemPlugins && feature.floatingAnchorElemPlugins.length > 0) {
+                    return feature.floatingAnchorElemPlugins.map(plugin => {
+                      return plugin(floatingAnchorElem);
+                    })
+                  }
+                })}
                 {editorConfig.featuresold.tables.enabled && (
                   <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} />
                 )}
@@ -210,13 +202,13 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
       </div>
       {editorConfig.features.map(feature => {
-          if (feature.plugins && feature.plugins.length > 0) {
-            return feature.plugins.map(plugin => {
-              if(plugin.position === "bottom"){
-                return plugin.component;
-              }
-            })
-          }
+        if (feature.plugins && feature.plugins.length > 0) {
+          return feature.plugins.map(plugin => {
+            if (plugin.position === "bottom") {
+              return plugin.component;
+            }
+          })
+        }
       })}
     </React.Fragment>
   );

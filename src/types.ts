@@ -19,6 +19,8 @@ import { CollapsibleFeature } from "./features/collapsible/CollapsibleFeature";
 import { TypingPerfFeature } from "./features/debug/typingperf/TypingPerfFeature";
 import { PasteLogFeature } from "./features/debug/pastelog/PasteLogFeature";
 import { TestRecorderFeature } from "./features/debug/testrecorder/TestRecorderFeature";
+import { MaxLengthFeature } from "./features/maxlength/MaxLengthFeature";
+import { LinkFeature } from "./features/linkplugin/LinkFeature";
 
 export type Feature = {
   plugins?: {
@@ -26,6 +28,9 @@ export type Feature = {
     component: JSX.Element;
     position?: "normal" | "bottom" | "outside"; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
   }[];
+  floatingAnchorElemPlugins?: ((
+    floatingAnchorElem: HTMLDivElement
+  ) => JSX.Element)[]; // Plugins which are put in the floating anchor element (the thing which appears when you select text)
   subEditorPlugins?: JSX.Element[]; // Plugins which are embedded in other sub-editor, like image captions (which is basically an editor inside of an editor)
   tablePlugins?: JSX.Element[]; // Plugins which are put inside of the newtable plugin
   nodes?: Array<Klass<LexicalNode>>; //Nodes = Leaves and elements in Slate. Nodes are what's actually part of the editor JSON
@@ -119,6 +124,8 @@ export const defaultEditorConfig: EditorConfig = {
     TypingPerfFeature({ enabled: false }),
     PasteLogFeature({ enabled: false }),
     TestRecorderFeature({ enabled: false }),
+    MaxLengthFeature({ enabled: false, maxLength: 30 }),
+    LinkFeature({}),
   ],
   featuresold: {
     comments: {
