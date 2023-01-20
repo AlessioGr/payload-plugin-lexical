@@ -650,8 +650,8 @@ export default function ToolbarPlugin(props: {
         </React.Fragment>
       ) : (
         <React.Fragment>
-          {editorConfig.featuresold.font.enabled &&
-            editorConfig.featuresold.font.display && (
+          {editorConfig.toggles.font.enabled &&
+            editorConfig.toggles.font.display && (
               <FontDropDown
                 disabled={!isEditable}
                 styleText="font-family"
@@ -659,8 +659,8 @@ export default function ToolbarPlugin(props: {
                 editor={editor}
               />
             )}
-          {editorConfig.featuresold.fontSize.enabled &&
-            editorConfig.featuresold.fontSize.display && (
+          {editorConfig.toggles.fontSize.enabled &&
+            editorConfig.toggles.fontSize.display && (
               <FontDropDown
                 disabled={!isEditable}
                 styleText="font-size"
@@ -735,8 +735,8 @@ export default function ToolbarPlugin(props: {
                 });
               }
           })}
-          {editorConfig.featuresold.textColor.enabled &&
-            editorConfig.featuresold.textColor.display && (
+          {editorConfig.toggles.textColor.enabled &&
+            editorConfig.toggles.textColor.display && (
               <ColorPicker
                 disabled={!isEditable}
                 buttonClassName="toolbar-item color-picker"
@@ -747,8 +747,8 @@ export default function ToolbarPlugin(props: {
                 title="text color"
               />
             )}
-          {editorConfig.featuresold.textBackground.enabled &&
-            editorConfig.featuresold.textBackground.display && (
+          {editorConfig.toggles.textBackground.enabled &&
+            editorConfig.toggles.textBackground.display && (
               <ColorPicker
                 disabled={!isEditable}
                 buttonClassName="toolbar-item color-picker"
@@ -823,8 +823,8 @@ export default function ToolbarPlugin(props: {
             buttonAriaLabel="Insert specialized editor node"
             buttonIconClassName="icon plus"
           >
-            {editorConfig.featuresold.upload.enabled &&
-              editorConfig.featuresold.upload.display && (
+            {editorConfig.toggles.upload.enabled &&
+              editorConfig.toggles.upload.display && (
                 <DropDownItem
                   onClick={() => {
                     editor.dispatchCommand(OPEN_MODAL_COMMAND, "upload");
@@ -836,8 +836,8 @@ export default function ToolbarPlugin(props: {
                 </DropDownItem>
               )}
             {
-              editorConfig.featuresold.tables.enabled &&
-                editorConfig.featuresold.tables.display && (
+              editorConfig.toggles.tables.enabled &&
+                editorConfig.toggles.tables.display && (
                   <DropDownItem
                     onClick={() => {
                       editor.dispatchCommand(OPEN_MODAL_COMMAND, "table");
@@ -879,8 +879,8 @@ export default function ToolbarPlugin(props: {
         </React.Fragment>
       )}
       <Divider />
-      {editorConfig.featuresold.align.enabled &&
-        editorConfig.featuresold.align.display && (
+      {editorConfig.toggles.align.enabled &&
+        editorConfig.toggles.align.display && (
           <DropDown
             disabled={!isEditable}
             buttonLabel="Align"

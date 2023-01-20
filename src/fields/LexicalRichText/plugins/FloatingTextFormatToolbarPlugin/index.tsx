@@ -228,7 +228,7 @@ function TextFormatFloatingToolbar({
                 });
               }
           })}
-          {editorConfig.featuresold.comments.enabled && (
+          {editorConfig.toggles.comments.enabled && (
               <button
                 onClick={insertComment}
                 className={'popup-item spaced insert-comment'}

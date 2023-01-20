@@ -63,11 +63,11 @@ const Lexical: CollectionConfig = {
             localized: true,
             editorConfigModifier: defaultEditorConfig => {
                 defaultEditorConfig.debug = false;
-                defaultEditorConfig.featuresold.textColor.enabled = false;
-                defaultEditorConfig.featuresold.textBackground.enabled = false;
-                defaultEditorConfig.featuresold.fontSize.enabled = false;
-                defaultEditorConfig.featuresold.font.enabled = false;
-                defaultEditorConfig.featuresold.align.enabled = false;
+                defaultEditorConfig.toggles.textColor.enabled = false;
+                defaultEditorConfig.toggles.textBackground.enabled = false;
+                defaultEditorConfig.toggles.fontSize.enabled = false;
+                defaultEditorConfig.toggles.font.enabled = false;
+                defaultEditorConfig.toggles.align.enabled = false;
 
                 // Optional: these are the default features. Feel free to customize them or remove the ones you do not like!
                 defaultEditorConfig.features = [

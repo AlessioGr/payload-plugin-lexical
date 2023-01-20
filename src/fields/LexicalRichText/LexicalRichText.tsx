@@ -105,7 +105,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         <ComponentPickerPlugin editorConfig={editorConfig} />
         <AutoEmbedPlugin editorConfig={editorConfig} />
         <HashtagPlugin />
-        {editorConfig.featuresold.comments.enabled && <CommentPlugin />}
+        {editorConfig.toggles.comments.enabled && <CommentPlugin />}
         {isRichText ? (
           <React.Fragment>
             <HistoryPlugin externalHistoryState={historyState} />
@@ -125,9 +125,9 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             <ListPlugin />
             <CheckListPlugin />
             <ListMaxIndentLevelPlugin maxDepth={7} />
-            {editorConfig.featuresold.tables.enabled && <TablePlugin />}
-            {editorConfig.featuresold.tables.enabled && <TableCellResizer />}
-            {editorConfig.featuresold.tables.enabled && (
+            {editorConfig.toggles.tables.enabled && <TablePlugin />}
+            {editorConfig.toggles.tables.enabled && <TableCellResizer />}
+            {editorConfig.toggles.tables.enabled && (
               <NewTablePlugin cellEditorConfig={cellEditorConfig}>
                 <RichTextPlugin
                   contentEditable={
@@ -150,7 +150,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
               </NewTablePlugin>
             )}
-            {editorConfig.featuresold.upload.enabled && (
+            {editorConfig.toggles.upload.enabled && (
               <UploadPlugin captionsEnabled={false} />
             )}
             <OnChangePlugin
@@ -172,7 +172,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                     })
                   }
                 })}
-                {editorConfig.featuresold.tables.enabled && (
+                {editorConfig.toggles.tables.enabled && (
                   <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} />
                 )}
                 <FloatingTextFormatToolbarPlugin

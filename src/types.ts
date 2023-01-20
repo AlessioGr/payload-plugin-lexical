@@ -81,7 +81,7 @@ export type Feature = {
 export type EditorConfig = {
   debug: boolean;
   features: Feature[];
-  featuresold: {
+  toggles: {
     comments: {
       enabled: boolean;
     };
@@ -139,7 +139,7 @@ export const defaultEditorConfig: EditorConfig = {
     MaxLengthFeature({ enabled: false, maxLength: 30 }),
     LinkFeature({}),
   ],
-  featuresold: {
+  toggles: {
     comments: {
       enabled: true,
     },

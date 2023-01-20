@@ -24,11 +24,11 @@ function PlaygroundNodes(
   editorConfig: EditorConfig
 ): Array<Klass<LexicalNode>> {
   const nodes: Array<Klass<LexicalNode>> = [];
-  if (editorConfig.featuresold.tables.enabled) {
+  if (editorConfig.toggles.tables.enabled) {
     nodes.push(NewTableNode, TableNode, TableCellNode, TableRowNode);
   }
 
-  if (editorConfig.featuresold.upload.enabled) {
+  if (editorConfig.toggles.upload.enabled) {
     nodes.push(ImageNode);
   }
 

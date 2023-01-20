@@ -128,8 +128,8 @@ export default function ComponentPickerMenuPlugin(props: {
       return options;
     }
     if (
-      !editorConfig.featuresold.tables.enabled ||
-      !editorConfig.featuresold.tables.display
+      !editorConfig.toggles.tables.enabled ||
+      !editorConfig.toggles.tables.display
     ) {
       return options;
     }
@@ -215,8 +215,8 @@ export default function ComponentPickerMenuPlugin(props: {
     );
 
     if (
-      editorConfig.featuresold.tables.enabled &&
-      editorConfig.featuresold.tables.display
+      editorConfig.toggles.tables.enabled &&
+      editorConfig.toggles.tables.display
     ) {
       baseOptions.push(
         new ComponentPickerOption("Table", {
@@ -307,8 +307,8 @@ export default function ComponentPickerMenuPlugin(props: {
 
 
     if (
-      editorConfig.featuresold.upload.enabled &&
-      editorConfig.featuresold.upload.display
+      editorConfig.toggles.upload.enabled &&
+      editorConfig.toggles.upload.display
     ) {
       baseOptions.push(
         new ComponentPickerOption("Upload", {
@@ -322,8 +322,8 @@ export default function ComponentPickerMenuPlugin(props: {
     }
 
     if (
-      editorConfig.featuresold.align.enabled &&
-      editorConfig.featuresold.align.display
+      editorConfig.toggles.align.enabled &&
+      editorConfig.toggles.align.display
     ) {
       baseOptions.push(
         ...["left", "center", "right", "justify"].map(
