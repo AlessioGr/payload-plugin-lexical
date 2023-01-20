@@ -67,11 +67,7 @@ import {
 } from "lexical";
 import { useCallback, useEffect, useState } from "react";
 import * as React from "react";
-import {
-  $isLinkNode,
-  LinkAttributes,
-  TOGGLE_LINK_COMMAND,
-} from "../../../../features/linkplugin/nodes/LinkNodeModified";
+
 import { IS_APPLE } from "../../shared/environment";
 
 import ColorPicker from "../../ui/ColorPicker";
@@ -397,7 +393,6 @@ export default function ToolbarPlugin(props: {
   const [fontColor, setFontColor] = useState<string>("#000");
   const [bgColor, setBgColor] = useState<string>("#fff");
   const [fontFamily, setFontFamily] = useState<string>("Arial");
-  const [isLink, setIsLink] = useState(false);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
@@ -413,6 +408,7 @@ export default function ToolbarPlugin(props: {
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
+
     if ($isRangeSelection(selection)) {
       const anchorNode = selection.anchor.getNode();
       let element =
@@ -439,15 +435,6 @@ export default function ToolbarPlugin(props: {
       setIsSuperscript(selection.hasFormat("superscript"));
       setIsCode(selection.hasFormat("code"));
       setIsRTL($isParentElementRTL(selection));
-
-      // Update links
-      const node = getSelectedNode(selection);
-      const parent = node.getParent();
-      if ($isLinkNode(parent) || $isLinkNode(node)) {
-        setIsLink(true);
-      } else {
-        setIsLink(false);
-      }
 
       if (elementDOM !== null) {
         setSelectedElementKey(elementKey);
@@ -583,17 +570,6 @@ export default function ToolbarPlugin(props: {
     [applyStyleText]
   );
 
-  const insertLink = useCallback(() => {
-    if (!isLink) {
-      const linkAttributes: LinkAttributes = {
-        linkType: "custom",
-        url: "https://",
-      }
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
-    } else {
-      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
-    }
-  }, [editor, isLink]);
 
   const onCodeLanguageSelect = useCallback(
     (value: string) => {
@@ -752,20 +728,13 @@ export default function ToolbarPlugin(props: {
           >
             <i className="format code" />
           </button>
-          <button
-            type="button"
-            disabled={!isEditable}
-            onClick={(event) => {
-              event.preventDefault();
-              insertLink();
-              activeEditor.dispatchCommand(OPEN_MODAL_COMMAND, "link");
-            }}
-            className={`toolbar-item spaced ${isLink ? "active" : ""}`}
-            aria-label="Insert link"
-            title="Insert link"
-          >
-            <i className="format link" />
-          </button>
+          {editorConfig.features.map((feature) => {
+              if(feature.toolbar && feature.toolbar.normal) {
+                return feature.toolbar?.normal?.map((normalToolbarItem) => {
+                  return normalToolbarItem(editor, editorConfig, isEditable);
+                });
+              }
+          })}
           {editorConfig.featuresold.textColor.enabled &&
             editorConfig.featuresold.textColor.display && (
               <ColorPicker

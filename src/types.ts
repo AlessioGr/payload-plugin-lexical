@@ -49,7 +49,19 @@ export type Feature = {
   toolbar?: {
     // You can customize the items displayed in the toolbar here
     // TODO: Revamp toolbar completely
-    insert: ((
+    insert?: ((
+      editor: LexicalEditor,
+      editorConfig: EditorConfig
+    ) => JSX.Element)[];
+    normal?: ((
+      editor: LexicalEditor,
+      editorConfig: EditorConfig,
+      isEditable: boolean
+    ) => JSX.Element)[];
+  };
+  floatingTextFormatToolbar?: {
+    // The floating toolbar which appears when you select text
+    components?: ((
       editor: LexicalEditor,
       editorConfig: EditorConfig
     ) => JSX.Element)[];

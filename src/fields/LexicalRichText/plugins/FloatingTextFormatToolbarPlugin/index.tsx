@@ -221,16 +221,13 @@ function TextFormatFloatingToolbar({
           >
             <i className="format code" />
           </button>
-          <button
-            onClick={(event) => {
-              event.preventDefault();
-              insertLink();
-            }}
-            className={`popup-item spaced ${isLink ? 'active' : ''}`}
-            aria-label="Insert link"
-          >
-            <i className="format link" />
-          </button>
+          {editorConfig.features.map((feature) => {
+              if(feature.floatingTextFormatToolbar && feature.floatingTextFormatToolbar.components) {
+                return feature.floatingTextFormatToolbar?.components?.map((floatingToolbarItem) => {
+                  return floatingToolbarItem(editor, editorConfig);
+                });
+              }
+          })}
           {editorConfig.featuresold.comments.enabled && (
               <button
                 onClick={insertComment}
