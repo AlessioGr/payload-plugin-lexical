@@ -1,12 +1,13 @@
-import { Feature } from '../../../types';
+import { EditorConfig, Feature } from '../../../types';
 
 import * as React from "react";
 
-import { PlaygroundEmbedConfig } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
+import { AutoEmbedDrawer, PlaygroundEmbedConfig } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
 import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { LexicalEditor } from 'lexical';
 import YouTubePlugin, { INSERT_YOUTUBE_COMMAND } from './plugins';
 import { YouTubeNode } from './nodes/YouTubeNode';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
 
 export function YouTubeFeature(props: {}): Feature {
@@ -53,6 +54,27 @@ export function YouTubeFeature(props: {}): Feature {
         nodes: [
             YouTubeNode
         ],
-        embedConfigs: [YoutubeEmbedConfig]
+        embedConfigs: [YoutubeEmbedConfig],
+        modals: [
+          {
+            modal: (props: {
+              activeEditor: LexicalEditor;
+              editorConfig: EditorConfig;
+            }) => AutoEmbedDrawer({ embedConfig: YoutubeEmbedConfig }),
+            openModalCommand: {
+              type: "autoembed-"+YoutubeEmbedConfig.type,
+              command: (toggleModal, editDepth) => {
+    
+                const autoEmbedDrawerSlug = formatDrawerSlug({
+                  slug: `lexicalRichText-autoembed-`+YoutubeEmbedConfig.type,
+                  depth: editDepth,
+                });
+    
+    
+                toggleModal(autoEmbedDrawerSlug);
+              }
+            }
+          }
+        ],
     }
 }

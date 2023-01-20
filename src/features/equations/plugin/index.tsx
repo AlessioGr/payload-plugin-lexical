@@ -55,7 +55,7 @@ export function InsertEquationDrawer(props: {
   const editDepth = useEditDepth();
 
   const equationDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-equation`, // TODO: Add uuid for the slug?
+    slug: `lexicalRichText-add-equation`,
     depth: editDepth,
   });
 

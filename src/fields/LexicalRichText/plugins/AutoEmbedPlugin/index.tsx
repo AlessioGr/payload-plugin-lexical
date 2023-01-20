@@ -18,10 +18,16 @@ import {useMemo, useState} from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import useModal from '../../hooks/useModal';
 import Button from 'payload/dist/admin/components/elements/Button';
 import { DialogActions } from '../../ui/Dialog';
 import {EditorConfig} from "../../../../types";
+import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { useEditDepth } from 'payload/components/utilities';
+import { useModal } from '@faceless-ui/modal';
+import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+import X from 'payload/dist/admin/components/icons/X';
+import './modal.scss';
 
 export interface PlaygroundEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
@@ -126,12 +132,12 @@ const debounce = (callback: (text: string) => void, delay: number) => {
   };
 };
 
-export function AutoEmbedDialog({
+
+const baseClass = "rich-text-autoembed";
+export function AutoEmbedDrawer({
   embedConfig,
-  onClose,
 }: {
   embedConfig: PlaygroundEmbedConfig;
-  onClose: () => void;
 }): JSX.Element {
   const [text, setText] = useState('');
   const [editor] = useLexicalComposerContext();
@@ -158,13 +164,38 @@ export function AutoEmbedDialog({
   const onClick = () => {
     if (embedResult != null) {
       embedConfig.insertNode(editor, embedResult);
-      onClose();
+      toggleModal(autoEmbedDrawerSlug);
     }
   };
+  const editDepth = useEditDepth();
 
+  const autoEmbedDrawerSlug = formatDrawerSlug({
+    slug: `lexicalRichText-autoembed-${embedConfig.type}`,
+    depth: editDepth,
+  });
+
+  const {
+    toggleModal,
+  } = useModal();
+  
   return (
-    <div style={{ width: '600px' }}>
-      <div className="Input__wrapper">
+    <Drawer slug={autoEmbedDrawerSlug} key={autoEmbedDrawerSlug} formatSlug={false} className={baseClass}>
+      <Gutter className={`${baseClass}__template`}>
+        <header className={`${baseClass}__header`}>
+          <h2 className={`${baseClass}__header-text`}>Add Embed</h2>
+          <Button
+            className={`${baseClass}__header-close`}
+            buttonStyle="none"
+            onClick={() => {
+              toggleModal(autoEmbedDrawerSlug);
+            }}
+          >
+            <X />
+          </Button>
+        </header>
+        
+
+        <div className="Input__wrapper">
         <input
           type="text"
           className="Input__input"
@@ -188,21 +219,20 @@ export function AutoEmbedDialog({
           Embed
         </Button>
       </DialogActions>
-    </div>
+
+
+      </Gutter>
+    </Drawer>
   );
 }
 
 export default function AutoEmbedPlugin(props: {editorConfig: EditorConfig}): JSX.Element {
   const editorConfig = props.editorConfig;
-  const [modal, showModal] = useModal();
+
+  const [editor] = useLexicalComposerContext();
 
   const openEmbedModal = (embedConfig: PlaygroundEmbedConfig) => {
-    showModal(`Embed ${embedConfig.contentName}`, (onClose) => (
-      <AutoEmbedDialog
-        embedConfig={embedConfig}
-        onClose={onClose}
-      />
-    ));
+    editor.dispatchCommand(OPEN_MODAL_COMMAND, "autoembed-"+embedConfig.type);
   };
 
   const getMenuOptions = (
@@ -222,7 +252,6 @@ export default function AutoEmbedPlugin(props: {editorConfig: EditorConfig}): JS
 
   return (
     <React.Fragment>
-      {modal}
       <LexicalAutoEmbedPlugin<PlaygroundEmbedConfig>
         embedConfigs={getEmbedConfigs(editorConfig)}
         onOpenEmbedModalForConfig={openEmbedModal}
