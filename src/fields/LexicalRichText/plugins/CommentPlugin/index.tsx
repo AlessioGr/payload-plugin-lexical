@@ -15,6 +15,7 @@ import type {
 } from "lexical";
 
 import "./index.scss";
+import "./modal.scss";
 
 import {
   $createMarkNode,
@@ -58,12 +59,15 @@ import {
   Thread,
   useCommentStore,
 } from "../../commenting";
-import useModal from "../../hooks/useModal";
 import CommentEditorTheme from "../../themes/CommentEditorTheme";
 import Button from "payload/dist/admin/components/elements/Button";
 import ContentEditable from "../../ui/ContentEditable";
 import Placeholder from "../../ui/Placeholder";
 import { useAuth } from "payload/dist/admin/components/utilities/Auth";
+import { useModal } from "@faceless-ui/modal";
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
+import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+import X from 'payload/dist/admin/components/icons/X';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand(
   "INSERT_INLINE_COMMAND"
@@ -411,12 +415,14 @@ function CommentsComposer({
   );
 }
 
-function ShowDeleteCommentOrThreadDialog({
+const baseClass = "lexicalRichText-comments-modal";
+function ShowDeleteCommentOrThreadDrawer({
+  modalSlug,
   commentOrThread,
   deleteCommentOrThread,
-  onClose,
   thread = undefined,
 }: {
+  modalSlug: string;
   commentOrThread: Comment | Thread;
 
   deleteCommentOrThread: (
@@ -424,30 +430,46 @@ function ShowDeleteCommentOrThreadDialog({
     // eslint-disable-next-line no-shadow
     thread?: Thread
   ) => void;
-  onClose: () => void;
   thread?: Thread;
 }): JSX.Element {
+
+  const {
+    closeModal
+  } = useModal();
+
+
   return (
-    <>
-      Are you sure you want to delete this {commentOrThread.type}?
-      <div className="Modal__content">
+    <Drawer slug={modalSlug} key={modalSlug} formatSlug={false} className={baseClass}>
+      <Gutter className={`${baseClass}__template`}>
+        <header className={`${baseClass}__header`}>
+          <h2 className={`${baseClass}__header-text`}>Are you sure you want to delete this {commentOrThread.type}?</h2>
+          <Button
+            className={`${baseClass}__header-close`}
+            buttonStyle="none"
+            onClick={() => {
+              closeModal(modalSlug);
+            }}
+          >
+            <X />
+          </Button>
+        </header>
         <Button
           onClick={() => {
             deleteCommentOrThread(commentOrThread, thread);
-            onClose();
+            closeModal(modalSlug)
           }}
         >
           Delete
         </Button>{" "}
         <Button
           onClick={() => {
-            onClose();
+            closeModal(modalSlug)
           }}
         >
           Cancel
         </Button>
-      </div>
-    </>
+      </Gutter>
+    </Drawer>
   );
 }
 
@@ -468,7 +490,10 @@ function CommentsPanelListComment({
 }): JSX.Element {
   const seconds = Math.round((comment.timeStamp - performance.now()) / 1000);
   const minutes = Math.round(seconds / 60);
-  const [modal, showModal] = useModal();
+  const {
+    openModal,
+    isModalOpen = () => false,
+  } = useModal();
 
   return (
     <li className="CommentPlugin_CommentsPanel_List_Comment">
@@ -491,20 +516,20 @@ function CommentsPanelListComment({
         <>
           <Button
             onClick={() => {
-              showModal("Delete Comment", (onClose) => (
-                <ShowDeleteCommentOrThreadDialog
-                  commentOrThread={comment}
-                  deleteCommentOrThread={deleteComment}
-                  thread={thread}
-                  onClose={onClose}
-                />
-              ));
+              openModal("lexicalRichText-comments-delete");
             }}
             className="CommentPlugin_CommentsPanel_List_DeleteButton"
           >
             <i className="delete" />
           </Button>
-          {modal}
+          {isModalOpen("lexicalRichText-comments-delete") && (
+            <ShowDeleteCommentOrThreadDrawer
+            modalSlug="lexicalRichText-comments-delete"
+            commentOrThread={comment}
+            deleteCommentOrThread={deleteComment}
+            thread={thread}
+          />
+          )}
         </>
       )}
     </li>
@@ -535,7 +560,12 @@ function CommentsPanelList({
 }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [counter, setCounter] = useState(0);
-  const [modal, showModal] = useModal();
+
+  const {
+    openModal,
+    isModalOpen = () => false,
+  } = useModal();
+
   const rtf = useMemo(
     () =>
       new Intl.RelativeTimeFormat("en", {
@@ -596,9 +626,8 @@ function CommentsPanelList({
             <li
               key={id}
               onClick={handleClickThread}
-              className={`CommentPlugin_CommentsPanel_List_Thread ${
-                markNodeMap.has(id) ? "interactive" : ""
-              } ${activeIDs.indexOf(id) === -1 ? "" : "active"}`}
+              className={`CommentPlugin_CommentsPanel_List_Thread ${markNodeMap.has(id) ? "interactive" : ""
+                } ${activeIDs.indexOf(id) === -1 ? "" : "active"}`}
             >
               <div className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox">
                 <blockquote className="CommentPlugin_CommentsPanel_List_Thread_Quote">
@@ -608,19 +637,19 @@ function CommentsPanelList({
                 {/* INTRODUCE DELETE THREAD HERE*/}
                 <Button
                   onClick={() => {
-                    showModal("Delete Thread", (onClose) => (
-                      <ShowDeleteCommentOrThreadDialog
-                        commentOrThread={commentOrThread}
-                        deleteCommentOrThread={deleteCommentOrThread}
-                        onClose={onClose}
-                      />
-                    ));
+                    openModal("lexicalRichText-thread-delete");
                   }}
                   className="CommentPlugin_CommentsPanel_List_DeleteButton"
                 >
                   <i className="delete" />
                 </Button>
-                {modal}
+                {isModalOpen("lexicalRichText-thread-delete") && (
+                  <ShowDeleteCommentOrThreadDrawer
+                  modalSlug="lexicalRichText-thread-delete"
+                  commentOrThread={commentOrThread}
+                  deleteCommentOrThread={deleteCommentOrThread}
+                />
+                )}
               </div>
               <ul className="CommentPlugin_CommentsPanel_List_Thread_Comments">
                 {commentOrThread.comments.map((comment) => (
@@ -703,7 +732,7 @@ function useCollabAuthorName(): string {
   return user?.email ? user.email : "Payload User"; //TODO Ability to set a display name instead of email
 }
 
-export default function CommentPlugin({}: {}): JSX.Element {
+export default function CommentPlugin({ }: {}): JSX.Element {
   //const collabContext = useCollaborationContext();
   const [editor] = useLexicalComposerContext();
   const { commentStore } = useCommentsContext();
@@ -964,9 +993,8 @@ export default function CommentPlugin({}: {}): JSX.Element {
         )}
       {
         <Button
-          className={`CommentPlugin_ShowCommentsButton ${
-            showComments ? "active" : ""
-          }`}
+          className={`CommentPlugin_ShowCommentsButton ${showComments ? "active" : ""
+            }`}
           onClick={() => setShowComments(!showComments)}
           tooltip={showComments ? "Hide Comments" : "Show Comments"}
         >

@@ -33,9 +33,7 @@ import { useCallback, useMemo, useState } from "react";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 
-import useModal from "../../hooks/useModal";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
-import { InsertTableDialog } from "../TablePlugin";
 import { EditorConfig } from "../../../../types";
 import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
 
@@ -116,7 +114,7 @@ export default function ComponentPickerMenuPlugin(props: {
 }): JSX.Element {
   const editorConfig = props.editorConfig;
   const [editor] = useLexicalComposerContext();
-  const [modal, showModal] = useModal();
+
   const [queryString, setQueryString] = useState<string | null>(null);
 
   const checkForTriggerMatch = useBasicTypeaheadTriggerMatch("/", {
@@ -225,9 +223,7 @@ export default function ComponentPickerMenuPlugin(props: {
           icon: <i className="icon table" />,
           keywords: ["table", "grid", "spreadsheet", "rows", "columns"],
           onSelect: () =>
-            showModal("Insert Table", (onClose) => (
-              <InsertTableDialog activeEditor={editor} onClose={onClose} />
-            )),
+            editor.dispatchCommand(OPEN_MODAL_COMMAND, "table")
         })
       );
     }
@@ -366,7 +362,7 @@ export default function ComponentPickerMenuPlugin(props: {
           }),
         ]
       : baseOptions;
-  }, [editor, getDynamicOptions, queryString, showModal]);
+  }, [editor, getDynamicOptions, queryString]);
 
   const onSelectOption = useCallback(
     (
@@ -388,7 +384,6 @@ export default function ComponentPickerMenuPlugin(props: {
 
   return (
     <React.Fragment>
-      {modal}
       <LexicalTypeaheadMenuPlugin<ComponentPickerOption>
         onQueryChange={setQueryString}
         onSelectOption={onSelectOption}
