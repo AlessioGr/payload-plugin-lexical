@@ -27,6 +27,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       path,
       required,
       validate = lexicalValidate,
+      defaultValue: defaultValueFromProps, // TODO: Accept different defaultValue
       name,
       label,
       admin,

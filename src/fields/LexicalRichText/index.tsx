@@ -2,14 +2,14 @@ import React, { Suspense, lazy } from "react";
 
 import { Props } from "./types";
 import "./index.scss";
-import Loading from "payload/dist/admin/components/elements/Loading";
+import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEffect';
 
 
 const LexicalRichTextFieldComponent2 = lazy(() => import('./PayloadLexicalRichTextFieldComponent'));
 
 export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<ShimmerEffect height="35vh" />}>
       <LexicalRichTextFieldComponent2 {...props} />
     </Suspense>
   );

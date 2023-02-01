@@ -6,7 +6,7 @@ A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a 
 ![203127640-caa1f279-1555-48e6-9465-8c441ea65149](https://user-images.githubusercontent.com/70709113/204068104-8dcf337a-b18e-47b8-8ba3-3e777a1f834c.png)
 
 
-MINIMUM REQUIRED PAYLOAD VERSION: 1.4.0
+MINIMUM REQUIRED PAYLOAD VERSION: 1.6.2
 
 Important: I currently do not shy away from breaking things in this plugin at this stage. So, please be careful when you update this plugin.
 
