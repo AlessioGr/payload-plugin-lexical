@@ -32,7 +32,7 @@ export function ClearEditorDrawer(props: {
 
 
     return (
-        <Drawer slug={equationDrawerSlug} key={equationDrawerSlug} formatSlug={false} className={baseClass}>
+        <Drawer slug={equationDrawerSlug} key={equationDrawerSlug} className={baseClass}>
             <Gutter className={`${baseClass}__template`}>
                 <header className={`${baseClass}__header`}>
                     <h2 className={`${baseClass}__header-text`}>Are you sure you want to clear the editor?</h2>

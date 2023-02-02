@@ -179,7 +179,7 @@ export function AutoEmbedDrawer({
   } = useModal();
   
   return (
-    <Drawer slug={autoEmbedDrawerSlug} key={autoEmbedDrawerSlug} formatSlug={false} className={baseClass}>
+    <Drawer slug={autoEmbedDrawerSlug} key={autoEmbedDrawerSlug} className={baseClass}>
       <Gutter className={`${baseClass}__template`}>
         <header className={`${baseClass}__header`}>
           <h2 className={`${baseClass}__header-text`}>Add Embed</h2>

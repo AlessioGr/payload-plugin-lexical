@@ -24,7 +24,7 @@ export const LinkDrawer: React.FC<Props> = ({
   const { t } = useTranslation("fields");
 
   return (
-    <Drawer slug={drawerSlug} formatSlug={false} className={baseClass}>
+    <Drawer slug={drawerSlug} className={baseClass}>
       <Gutter className={`${baseClass}__template`}>
         <header className={`${baseClass}__header`}>
           <h2 className={`${baseClass}__header-text`}>{t("editLink")}</h2>

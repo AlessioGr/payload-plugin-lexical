@@ -439,7 +439,7 @@ function ShowDeleteCommentOrThreadDrawer({
 
 
   return (
-    <Drawer slug={modalSlug} key={modalSlug} formatSlug={false} className={baseClass}>
+    <Drawer slug={modalSlug} key={modalSlug} className={baseClass}>
       <Gutter className={`${baseClass}__template`}>
         <header className={`${baseClass}__header`}>
           <h2 className={`${baseClass}__header-text`}>Are you sure you want to delete this {commentOrThread.type}?</h2>
