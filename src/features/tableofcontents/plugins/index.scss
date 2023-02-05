@@ -43,6 +43,7 @@
   justify-content: flex-start;
   z-index: 1;
   height: 300px;
+  font-family: var(--font-body);
 }
 
 .first-heading {
@@ -84,4 +85,19 @@
 .normal-heading-wrapper {
   margin-left: 32px;
   position: relative;
+}
+
+
+html[data-theme=dark] {
+  .first-heading {
+    color: white;
+  }
+
+  .selected-heading {
+    color: #76a8f9;
+  }
+
+  .table-of-contents {
+    color: #c2c5cd;
+  }
 }

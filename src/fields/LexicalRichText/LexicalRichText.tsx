@@ -34,7 +34,6 @@ import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
 import TabFocusPlugin from "./plugins/TabFocusPlugin";
 import TableCellActionMenuPlugin from "./plugins/TableActionMenuPlugin";
 import TableCellResizer from "./plugins/TableCellResizer";
-import TableOfContentsPlugin from "./plugins/TableOfContentsPlugin";
 import { TablePlugin as NewTablePlugin } from "./plugins/TablePlugin";
 import ToolbarPlugin from "./plugins/ToolbarPlugin";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
@@ -56,7 +55,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
     isRichText,
     isCharLimit,
     isCharLimitUtf8,
-    showTableOfContents
   } = Settings;
 
 
@@ -198,7 +196,15 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             maxLength={5}
           />
         )}
-        <div>{showTableOfContents && <TableOfContentsPlugin />}</div>
+        {editorConfig.features.map(feature => {
+        if (feature.plugins && feature.plugins.length > 0) {
+          return feature.plugins.map(plugin => {
+            if (plugin.position === "bottomInContainer") {
+              return plugin.component;
+            }
+          })
+        }
+      })}
         <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
       </div>
       {editorConfig.features.map(feature => {

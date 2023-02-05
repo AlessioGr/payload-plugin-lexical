@@ -21,12 +21,13 @@ import { PasteLogFeature } from "./features/debug/pastelog/PasteLogFeature";
 import { TestRecorderFeature } from "./features/debug/testrecorder/TestRecorderFeature";
 import { MaxLengthFeature } from "./features/maxlength/MaxLengthFeature";
 import { LinkFeature } from "./features/linkplugin/LinkFeature";
+import { TableOfContentsFeature } from './features/tableofcontents/TableOfContentsFeature';
 
 export type Feature = {
   plugins?: {
     // plugins are anything which is not directly part of the editor. Like, creating a command which creates a node, or opens a modal, or some other more "outside" functionality
     component: JSX.Element;
-    position?: "normal" | "bottom" | "outside"; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
+    position?: "normal" | "bottom" | "outside" | "bottomInContainer"; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
   }[];
   floatingAnchorElemPlugins?: ((
     floatingAnchorElem: HTMLDivElement
@@ -138,6 +139,7 @@ export const defaultEditorConfig: EditorConfig = {
     TestRecorderFeature({ enabled: false }),
     MaxLengthFeature({ enabled: false, maxLength: 30 }),
     LinkFeature({}),
+    TableOfContentsFeature({ enabled: false })
   ],
   toggles: {
     comments: {

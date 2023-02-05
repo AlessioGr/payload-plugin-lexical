@@ -3,6 +3,5 @@ export const Settings = {
   isRichText: true,
   isCharLimit: false,
   isCharLimitUtf8: false,
-  showTableOfContents: false,
   showNestedEditorTreeView: false,
 };

@@ -1,7 +1,7 @@
 import { CollectionConfig } from 'payload/types';
 
 const RichText: CollectionConfig = {
-    slug: 'richText',
+    slug: 'slateRichText',
     admin: {
         useAsTitle: 'title',
     },

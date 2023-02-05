@@ -8,6 +8,7 @@ const Media: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'filename',
+    group: 'Other',
   },
   upload: {
     staticDir: path.resolve(__dirname, '../../uploads'),
