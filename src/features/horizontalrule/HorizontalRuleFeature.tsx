@@ -1,11 +1,12 @@
 import { EditorConfig, Feature } from '../../types';
 import * as React from "react";
-import HorizontalRulePlugin from './plugins';
+import {HorizontalRulePlugin} from '@lexical/react/LexicalHorizontalRulePlugin';
 import { $createHorizontalRuleNode, $isHorizontalRuleNode, HorizontalRuleNode, INSERT_HORIZONTAL_RULE_COMMAND } from "@lexical/react/LexicalHorizontalRuleNode";
 import { LexicalEditor, LexicalNode } from 'lexical';
 import { ComponentPickerOption } from '../../fields/LexicalRichText/plugins/ComponentPickerPlugin';
 import { DropDownItem } from '../../fields/LexicalRichText/ui/DropDown';
 import { ElementTransformer } from '@lexical/markdown';
+import "./index.scss";
 
 
 export function HorizontalRuleFeature(props: {}): Feature {

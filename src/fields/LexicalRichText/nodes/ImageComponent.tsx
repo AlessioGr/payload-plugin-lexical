@@ -199,9 +199,12 @@ export default function ImageComponent({
   );
 
   useEffect(() => {
-    return mergeRegister(
+    let isMounted = true;
+    const unregister = mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
-        setSelection(editorState.read(() => $getSelection()));
+        if (isMounted) {
+          setSelection(editorState.read(() => $getSelection()));
+        }
       }),
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
@@ -263,6 +266,10 @@ export default function ImageComponent({
         COMMAND_PRIORITY_LOW,
       ),
     );
+    return () => {
+      isMounted = false;
+      unregister();
+    };
   }, [
     clearSelection,
     editor,

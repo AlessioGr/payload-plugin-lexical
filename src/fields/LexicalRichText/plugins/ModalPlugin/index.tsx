@@ -3,7 +3,7 @@ import * as React from "react";
 import {
   useListDrawer,
 } from "payload/dist/admin/components/elements/ListDrawer";
-import { InsertTableDialog } from "../TablePlugin";
+import { InsertTableDialog, InsertNewTableDialog } from "../TablePlugin";
 import { ImagePayload } from "../../nodes/ImageNode";
 import { INSERT_IMAGE_COMMAND } from "../UploadPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -54,6 +54,8 @@ export default function ModalPlugin(props: {
         openDrawer();
       } else if (toOpen === "table") {
         toggleModal("lexicalRichText-add-table");
+      } else if (toOpen === "newtable") {
+        toggleModal("lexicalRichText-add-newtable");
       } else {
         for(const feature of editorConfig.features){
           if(feature.modals && feature.modals.length > 0){
@@ -122,6 +124,15 @@ export default function ModalPlugin(props: {
           slug="lexicalRichText-add-table"
         >
           <InsertTableDialog activeEditor={activeEditor} onClose={() => {}} />
+        </Modal>
+      )}
+
+      {isModalOpen("lexicalRichText-add-newtable") && (
+        <Modal
+          className="rich-text-newtable-modal"
+          slug="lexicalRichText-add-newtable"
+        >
+          <InsertNewTableDialog activeEditor={activeEditor} onClose={() => {}} />
         </Modal>
       )}
 

@@ -226,6 +226,15 @@ export default function ComponentPickerMenuPlugin(props: {
             editor.dispatchCommand(OPEN_MODAL_COMMAND, "table")
         })
       );
+
+      baseOptions.push(
+        new ComponentPickerOption('Table (Experimental)', {
+          icon: <i className="icon table" />,
+          keywords: ['table', 'grid', 'spreadsheet', 'rows', 'columns'],
+          onSelect: () =>
+            editor.dispatchCommand(OPEN_MODAL_COMMAND, "newtable")
+        }),
+      );
     }
 
     baseOptions.push(

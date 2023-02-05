@@ -10,22 +10,28 @@ app.get('/', (_, res) => {
   res.redirect('/admin');
 });
 
-// Initialize Payload
+// Initialize Payload asynchronously
 const start = async () => {
-  await payload.initAsync({
+  await payload.init({
     secret: process.env.PAYLOAD_SECRET,
     mongoURL: process.env.MONGODB_URI,
     express: app,
     onInit: () => {
-      payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`)
+      payload.logger.info(`Payload Admin URL: ${payload.getAdminURL()}`);
     },
-  })
+  });
 
   if (process.env.PAYLOAD_SEED === 'true') {
     await seed(payload);
   }
 
-  app.listen(3000);
-}
+  // Add your own express routes here
+
+  app.listen(3000, async () => {
+    console.log(
+      "Express is now listening for incoming connections on port 3000."
+    );
+  });
+};
 
 start();
