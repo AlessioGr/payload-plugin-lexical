@@ -17,3 +17,9 @@
   min-height: calc(100% - 16px);
   border-left: 1px solid var(--theme-elevation-100);
 }
+
+@media (max-width: 1025px) {
+  .ContentEditable__root {
+    padding: 8px;
+  }
+}

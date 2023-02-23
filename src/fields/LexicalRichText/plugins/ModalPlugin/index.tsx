@@ -16,6 +16,8 @@ import { Modal, useModal } from "@faceless-ui/modal";
 import { useCallback, useState, ReactNode, useMemo, createContext, useContext } from "react";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
+import { SanitizedCollectionConfig } from 'payload/types';
+import { useConfig } from 'payload/components/utilities';
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
   "upload" | "table" | string
@@ -74,14 +76,41 @@ export default function ModalPlugin(props: {
     COMMAND_PRIORITY_NORMAL
   );
 
+
+
+
+
   //For upload
+  type options = { uploads: boolean };
+
+  type FilteredCollectionsT = (collections: SanitizedCollectionConfig[], options?: options) => SanitizedCollectionConfig[];
+  const filterRichTextCollections: FilteredCollectionsT = (collections, options) => {
+    return collections.filter(({ admin: { enableRichTextRelationship }, upload }) => {
+      if (options?.uploads) {
+        return enableRichTextRelationship && Boolean(upload) === true;
+      }
+
+      return upload ? false : enableRichTextRelationship;
+    });
+  };
+
+  const uploads = true; // TODO: what does it do?
+  const { collections } = useConfig();
+  const [enabledCollectionSlugs] = React.useState(() => filterRichTextCollections(collections, { uploads }).map(({ slug }) => slug));
+
   const [
     ListDrawer,
     ListDrawerToggler,
     { closeDrawer, openDrawer, toggleDrawer },
   ] = useListDrawer({
     uploads: true,
+    collectionSlugs: enabledCollectionSlugs,
   });
+
+
+
+
+
   const onUploadSelect = useCallback(
     ({ docID, collectionConfig }) => {
       insertUpload({

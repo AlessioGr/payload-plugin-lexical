@@ -17,7 +17,8 @@ import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
 import * as React from "react";
-import { useState } from "react";
+import {useEffect, useState} from 'react';
+import {CAN_USE_DOM} from './shared/canUseDOM';
 import { OnChangePlugin } from "./plugins/OnChangePlugin";
 import { useSharedHistoryContext } from "./context/SharedHistoryContext";
 import TableCellNodes from "./nodes/TableCellNodes";
@@ -65,6 +66,9 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
   const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
 
+  const [isSmallWidthViewport, setIsSmallWidthViewport] =
+    useState<boolean>(false);
+
   const onRef = (_floatingAnchorElem: HTMLDivElement) => {
     if (_floatingAnchorElem !== null) {
       setFloatingAnchorElem(_floatingAnchorElem);
@@ -79,6 +83,23 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
     },
     theme: PlaygroundEditorTheme,
   };
+
+  useEffect(() => {
+    const updateViewPortWidth = () => {
+      const isNextSmallWidthViewport =
+        CAN_USE_DOM && window.matchMedia('(max-width: 1025px)').matches;
+
+      if (isNextSmallWidthViewport !== isSmallWidthViewport) {
+        setIsSmallWidthViewport(isNextSmallWidthViewport);
+      }
+    };
+
+    window.addEventListener('resize', updateViewPortWidth);
+
+    return () => {
+      window.removeEventListener('resize', updateViewPortWidth);
+    };
+  }, [isSmallWidthViewport]);
 
   return (
     <React.Fragment>
@@ -159,7 +180,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
             <TabFocusPlugin />
             <TabIndentationPlugin />
-            {floatingAnchorElem && (
+            {floatingAnchorElem && !isSmallWidthViewport && (
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />

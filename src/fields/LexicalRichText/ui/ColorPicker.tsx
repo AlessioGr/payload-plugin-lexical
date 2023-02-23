@@ -119,7 +119,6 @@ export default function ColorPicker({
     <DropDown
       {...rest}
       disabled={disabled}
-      stopCloseOnClickSelf
     >
       <div
         className="color-picker-wrapper"

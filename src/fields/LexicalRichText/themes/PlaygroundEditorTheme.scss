@@ -51,6 +51,9 @@
   margin-top: 1.4rem;
   margin-bottom: 1rem;
 }
+.PlaygroundEditorTheme__indent {
+  --lexical-indent-base-value: 20px;
+}
 .PlaygroundEditorTheme__textBold {
   font-weight: bold;
 }

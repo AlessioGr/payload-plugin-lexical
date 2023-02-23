@@ -221,6 +221,14 @@ function TextFormatFloatingToolbar({
           >
             <i className="format code" />
           </button>
+          <button
+            onClick={insertLink}
+            className={'popup-item spaced ' + (isLink ? 'active' : '')}
+            aria-label="Insert link"
+            title="Insert link"
+            type="button">
+              <i className="format link" />
+          </button>
           {editorConfig.features.map((feature) => {
               if(feature.floatingTextFormatToolbar && feature.floatingTextFormatToolbar.components) {
                 return feature.floatingTextFormatToolbar?.components?.map((floatingToolbarItem) => {
