@@ -192,7 +192,10 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                   }
                 })}
                 {editorConfig.toggles.tables.enabled && (
-                  <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} />
+                    <TableCellActionMenuPlugin
+                        anchorElem={floatingAnchorElem}
+                        cellMerge={true}
+                    />
                 )}
                 <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}

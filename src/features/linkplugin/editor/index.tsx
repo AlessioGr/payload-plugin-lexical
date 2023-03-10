@@ -15,14 +15,16 @@ import {
   $getSelection,
   $isRangeSelection,
   COMMAND_PRIORITY_CRITICAL,
+  COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
   GridSelection,
+  KEY_ESCAPE_COMMAND,
   LexicalEditor,
   NodeSelection,
   RangeSelection,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import { useCallback, useEffect, useRef, useState } from "react";
+import {Dispatch, useCallback, useEffect, useRef, useState} from 'react';
 import * as React from "react";
 import { createPortal } from "react-dom";
 
@@ -48,9 +50,13 @@ import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 
 function LinkEditor({
   editor,
+  isLink,
+  setIsLink,
   anchorElem,
 }: {
   editor: LexicalEditor;
+  isLink: boolean;
+  setIsLink: Dispatch<boolean>;
   anchorElem: HTMLElement;
 }): JSX.Element {
   const editorRef = useRef<HTMLDivElement | null>(null);
@@ -147,7 +153,7 @@ function LinkEditor({
           text: parent.getTextContent(),
           fields: undefined
         };
-       
+
         if (parent.getAttributes()?.linkType === "custom") {
           setLinkUrl(parent.getAttributes()?.url);
         } else {
@@ -164,7 +170,7 @@ function LinkEditor({
           text: node.getTextContent(),
           fields: undefined
         };
-      
+
         if (node.getAttributes()?.linkType === "custom") {
           setLinkUrl(node.getAttributes()?.url);
         } else {
@@ -273,9 +279,20 @@ function LinkEditor({
           return true;
         },
         COMMAND_PRIORITY_LOW
-      )
+      ),
+        editor.registerCommand(
+            KEY_ESCAPE_COMMAND,
+            () => {
+              if (isLink) {
+                setIsLink(false);
+                return true;
+              }
+              return false;
+            },
+            COMMAND_PRIORITY_HIGH,
+        ),
     );
-  }, [editor, updateLinkEditor]);
+  }, [editor, updateLinkEditor, setIsLink, isLink]);
 
   useEffect(() => {
     editor.getEditorState().read(() => {
@@ -285,7 +302,7 @@ function LinkEditor({
 
   return (
     <div ref={editorRef} className="link-editor">
-      {isEditMode && isModalOpen(drawerSlug) ? (
+      {!isLink ? null : (isEditMode && isModalOpen(drawerSlug)) ? (
         <LinkDrawer // TODO: Might aswell import from payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/index.tsx instead?
           drawerSlug={drawerSlug}
           fieldSchema={fieldSchema}
@@ -382,12 +399,10 @@ function useFloatingLinkEditorToolbar(
     );
   }, [editor, updateToolbar]);
 
-  return isLink
-    ? createPortal(
-        <LinkEditor editor={activeEditor} anchorElem={anchorElem} />,
+  return createPortal(
+        <LinkEditor editor={activeEditor} anchorElem={anchorElem} isLink={isLink} setIsLink={setIsLink} />,
         anchorElem
-      )
-    : null;
+      );
 }
 
 export default function FloatingLinkEditorPlugin({

@@ -43,6 +43,7 @@
   display: flex;
   position: relative;
   outline: 0;
+  z-index: 0;
   overflow: auto;
   resize: vertical;
 }
@@ -65,7 +66,7 @@
   padding: 10px;
   font-size: 12px;
   overflow: auto;
-  max-height: 180px;
+  max-height: 400px;
 }
 
 .tree-view-output {
@@ -75,7 +76,6 @@
   padding: 0;
   font-size: 12px;
   margin: 1px auto 10px auto;
-  max-height: 250px;
   position: relative;
   overflow: hidden;
   border-bottom-left-radius: 10px;
@@ -490,6 +490,12 @@ i.prettier-error {
   outline: 0;
   position: relative;
   font-family: inherit;
+}
+
+.link-editor .link-view a {
+  display: block;
+  word-break: break-word;
+  width: calc(100% - 33px);
 }
 
 .link-editor div.link-edit {
@@ -968,7 +974,7 @@ i.prettier-error {
 .actions {
   position: absolute;
   text-align: right;
-  padding: 10px;
+  margin: 10px;
   bottom: 0;
   right: 0;
 }
@@ -1304,6 +1310,15 @@ button.action-button:disabled {
 
 .spacer {
   letter-spacing: -2px;
+}
+
+.editor-equation {
+  cursor: default;
+  user-select: none;
+}
+
+.editor-equation.focused {
+  outline: 2px solid rgb(60, 132, 244);
 }
 
 .editor-shell button.item i {

@@ -41,13 +41,7 @@ export default function ModalPlugin(props: {
   const editDepth = useEditDepth();
 
 
-  const addTableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-table`,
-    depth: editDepth,
-  });
 
-  
- 
   // Register commands:
   editor.registerCommand<"upload" | "table" | string>(
     OPEN_MODAL_COMMAND,
@@ -55,9 +49,17 @@ export default function ModalPlugin(props: {
       if (toOpen === "upload") {
         openDrawer();
       } else if (toOpen === "table") {
-        toggleModal("lexicalRichText-add-table");
+        const addTableDrawerSlug = formatDrawerSlug({
+          slug: `lexicalRichText-add-table`,
+          depth: editDepth,
+        });
+        toggleModal(addTableDrawerSlug);
       } else if (toOpen === "newtable") {
-        toggleModal("lexicalRichText-add-newtable");
+        const addNewTableDrawerSlug = formatDrawerSlug({
+          slug: `lexicalRichText-add-newtable`,
+          depth: editDepth,
+        });
+        toggleModal(addNewTableDrawerSlug);
       } else {
         for(const feature of editorConfig.features){
           if(feature.modals && feature.modals.length > 0){
@@ -70,7 +72,7 @@ export default function ModalPlugin(props: {
           }
         }
       }
-      
+
       return true;
     },
     COMMAND_PRIORITY_NORMAL
@@ -140,30 +142,16 @@ export default function ModalPlugin(props: {
     // injectVoidElement(editor, upload);
   };
 
-  
+
 
 
   return (
     <>
       <ListDrawer onSelect={onUploadSelect} />
 
-      {isModalOpen("lexicalRichText-add-table") && (
-        <Modal
-          className="rich-text-table-modal"
-          slug="lexicalRichText-add-table"
-        >
-          <InsertTableDialog activeEditor={activeEditor} onClose={() => {}} />
-        </Modal>
-      )}
+      <InsertTableDialog activeEditor={activeEditor} />
+      <InsertNewTableDialog activeEditor={activeEditor} />
 
-      {isModalOpen("lexicalRichText-add-newtable") && (
-        <Modal
-          className="rich-text-newtable-modal"
-          slug="lexicalRichText-add-newtable"
-        >
-          <InsertNewTableDialog activeEditor={activeEditor} onClose={() => {}} />
-        </Modal>
-      )}
 
 
       {editorConfig.features.map((feature) => {

@@ -37,7 +37,7 @@ import {
   $isParentElementRTL,
   $patchStyleText,
   $selectAll,
-  $setBlocksType_experimental,
+  $setBlocksType,
 } from "@lexical/selection";
 import {
   $findMatchingParent,
@@ -146,18 +146,15 @@ function BlockFormatDropDown({
   editorConfig: EditorConfig;
 }): JSX.Element {
   const formatParagraph = () => {
-    if (blockType !== "paragraph") {
-      editor.update(() => {
-        const selection = $getSelection();
-
-        if (
+    editor.update(() => {
+      const selection = $getSelection();
+      if (
           $isRangeSelection(selection) ||
           DEPRECATED_$isGridSelection(selection)
-        ) {
-          $setBlocksType_experimental(selection, () => $createParagraphNode());
-        }
-      });
-    }
+      ) {
+        $setBlocksType(selection, () => $createParagraphNode());
+      }
+    });
   };
 
   const formatHeading = (headingSize: HeadingTagType) => {
@@ -169,9 +166,7 @@ function BlockFormatDropDown({
           $isRangeSelection(selection) ||
           DEPRECATED_$isGridSelection(selection)
         ) {
-          $setBlocksType_experimental(selection, () =>
-            $createHeadingNode(headingSize)
-          );
+          $setBlocksType(selection, () => $createHeadingNode(headingSize));
         }
       });
     }
@@ -210,7 +205,7 @@ function BlockFormatDropDown({
           $isRangeSelection(selection) ||
           DEPRECATED_$isGridSelection(selection)
         ) {
-          $setBlocksType_experimental(selection, () => $createQuoteNode());
+          $setBlocksType(selection, () => $createQuoteNode());
         }
       });
     }
@@ -226,7 +221,7 @@ function BlockFormatDropDown({
           DEPRECATED_$isGridSelection(selection)
         ) {
           if (selection.isCollapsed()) {
-            $setBlocksType_experimental(selection, () => $createCodeNode());
+            $setBlocksType(selection, () => $createCodeNode());
           } else {
             const textContent = selection.getTextContent();
             const codeNode = $createCodeNode();
@@ -311,7 +306,7 @@ function BlockFormatDropDown({
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
-    
+
     </DropDown>
   );
 }
@@ -849,6 +844,20 @@ export default function ToolbarPlugin(props: {
                   </DropDownItem>
                 ) //TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
             }
+            {
+                editorConfig.toggles.tables.enabled &&
+                editorConfig.toggles.tables.display && (
+                    <DropDownItem
+                        onClick={() => {
+                          editor.dispatchCommand(OPEN_MODAL_COMMAND, "newtable");
+                        }}
+                        className="item"
+                    >
+                      <i className="icon table" />
+                      <span className="text">Table (Experimental)</span>
+                    </DropDownItem>
+                )
+            }
 
             {getEmbedConfigs(editorConfig).map((embedConfig) => (
               <DropDownItem
@@ -873,7 +882,7 @@ export default function ToolbarPlugin(props: {
                   return insertToolbarItem(editor, editorConfig);
                 });
               }
-              
+
             })}
           </DropDown>
         </React.Fragment>

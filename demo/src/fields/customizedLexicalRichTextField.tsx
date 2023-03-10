@@ -34,6 +34,8 @@ function lexicalRichText(props?: { name?: string, label?: string, debug?: boolea
             defaultEditorConfig.toggles.fontSize.enabled = false;
             defaultEditorConfig.toggles.font.enabled = false;
             defaultEditorConfig.toggles.align.enabled = false;
+            defaultEditorConfig.toggles.tables.enabled = true;
+            defaultEditorConfig.toggles.tables.display = true;
 
             defaultEditorConfig.features = [
                 EquationsFeature({}),
@@ -58,7 +60,7 @@ function lexicalRichText(props?: { name?: string, label?: string, debug?: boolea
                 TableOfContentsFeature({ enabled: false })
             ];
 
-        
+
 
             return defaultEditorConfig;
         }
