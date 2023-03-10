@@ -42,14 +42,14 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
         hideGutter,
       } = {},
     } = props;
-  
+
     //const { value, setValue } = useField<Props>({ path });
 
     const memoizedValidate = useCallback((value, validationOptions) => {
 
       return lexicalValidate(value, { ...validationOptions, required }); //TODO use "validate" here so people can customize their validate. Sadly that breaks for some reason (it uses no validate rather than lexical as default one if that's done)
     }, [validate, required]);
-  
+
     const field = useField<{
       jsonContent: SerializedEditorState;
       preview: string;
@@ -59,9 +59,9 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     }>({
       path: path, // required
       validate: memoizedValidate,
-      
+
     });
-  
+
     // Here is what `useField` sends back
     const {
       showError, // whether the field should show as errored
@@ -72,8 +72,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       setValue, // method to set the field's value in form state
       initialValue, // the initial value that the field mounted with,
     } = field;
-  
-  
+
+
     const classes = [
       baseClass,
       "field-type",
@@ -84,7 +84,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     ]
       .filter(Boolean)
       .join(" ");
-  
+
     if (!value?.preview) {
       //Convert...
       setValue({
@@ -95,7 +95,16 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
         comments: undefined,
       });
     }
-  
+    if(!value?.jsonContent){
+      setValue({
+        jsonContent: defaultValue,
+        preview: "none",
+        characters: 0,
+        words: 0,
+        comments: undefined,
+      });
+    }
+
     return (
       <div
         className={classes}
@@ -111,7 +120,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
             label={label}
             required={required}
           />
-  
+
           <LexicalEditorComponent
             onChange={(
               editorState: EditorState,
@@ -121,7 +130,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
               const json = editorState.toJSON();
               const valueJsonContent = getJsonContentFromValue(value);
               if (
-                !readOnly && !deepEqual(json, valueJsonContent)
+                !readOnly && valueJsonContent && !deepEqual(json, valueJsonContent)
               ) {
                 const textContent = editor.getEditorState().read(() => {
                   return $getRoot().getTextContent();
@@ -130,7 +139,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
                   textContent?.length > 100
                     ? `${textContent.slice(0, 100)}\u2026`
                     : textContent;
-  
+
                 setValue({
                   jsonContent: json,
                   preview: preview,
@@ -163,7 +172,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       console.log("false")
       return t('validation:required');
     }
-  
+
     return true;
   };
 
@@ -172,10 +181,10 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     if (!value?.jsonContent) {
       return value;
     }
-  
     if (value?.jsonContent?.jsonContent) {
       return getJsonContentFromValue(value?.jsonContent);
     }
+
     return value?.jsonContent;
   }
 
