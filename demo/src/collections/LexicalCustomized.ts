@@ -2,7 +2,7 @@ import { CollectionConfig } from 'payload/types';
 import customizedLexicalRichText from "../fields/customizedLexicalRichTextField";
 
 const LexicalCustomized: CollectionConfig = {
-  slug: 'customLexicalRichText',
+  slug: 'blocksuite',
   admin: {
     useAsTitle: 'title',
   },

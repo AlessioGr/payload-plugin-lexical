@@ -17,7 +17,7 @@ Important: I currently do not shy away from breaking things in this plugin at th
 2. :
 ```ts
 import { CollectionConfig } from 'payload/types';
-import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
+import blocksuiteField from '../folder-where-you-copied-this-plugin-in/fields/blocksuiteField'
 
 const Lexical: CollectionConfig = {
     slug: 'lexicalRichText',
@@ -30,7 +30,7 @@ const Lexical: CollectionConfig = {
             type: 'text',
             required: true
         },
-        lexicalRichTextField({
+        blocksuiteField({
             name: 'lexicalRichTextEditor',
             label: 'Lexical Rich Text Editor',
         })
@@ -44,7 +44,7 @@ export default Lexical;
 ## Example: with more customization and own, custom node:
 ```ts
 import { CollectionConfig } from 'payload/types';
-import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
+import blocksuiteField from '../folder-where-you-copied-this-plugin-in/fields/blocksuiteField'
 
 const Lexical: CollectionConfig = {
     slug: 'lexicalRichText',
@@ -57,7 +57,7 @@ const Lexical: CollectionConfig = {
             type: 'text',
             required: true
         },
-        lexicalRichTextField({
+        blocksuiteField({
             name: 'lexicalRichTextEditor',
             label: 'cool richtext editor',
             localized: true,
