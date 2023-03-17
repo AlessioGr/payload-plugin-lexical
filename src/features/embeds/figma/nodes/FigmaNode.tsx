@@ -50,6 +50,7 @@ function FigmaComponent({
         src={`https://www.figma.com/embed?embed_host=lexical&url=\
         https://www.figma.com/file/${documentID}`}
         allowFullScreen
+        style={{maxWidth: '100%'}}
       />
     </BlockWithAlignableContents>
   );

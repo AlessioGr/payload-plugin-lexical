@@ -55,6 +55,7 @@ function YouTubeComponent({
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         title="YouTube video"
+        style={{maxWidth: '100%'}}
       />
     </BlockWithAlignableContents>
   );
