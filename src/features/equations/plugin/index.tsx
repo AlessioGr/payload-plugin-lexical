@@ -21,7 +21,7 @@ import {
   LexicalCommand,
   LexicalEditor,
 } from 'lexical';
-import { useCallback, useEffect } from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import * as React from 'react';
 
 import { useModal } from '@faceless-ui/modal';
@@ -33,6 +33,7 @@ import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import { $createEquationNode, EquationNode } from '../node/EquationNode';
 import { EditorConfig } from '../../../types';
 import KatexEquationAlterer from '../ui/KatexEquationAlterer';
+import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
 
 
 type CommandPayload = {
@@ -45,16 +46,17 @@ export const INSERT_EQUATION_COMMAND: LexicalCommand<CommandPayload> = createCom
 const baseClass = "rich-text-equation-modal";
 
 export function InsertEquationDrawer(props: {
-  activeEditor: LexicalEditor;
   editorConfig: EditorConfig;
 }): JSX.Element {
+  const { uuid} = useEditorConfigContext();
 
-  const {activeEditor, editorConfig} = props;
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
 
   const editDepth = useEditDepth();
 
   const equationDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-equation`,
+    slug: `lexicalRichText-add-equation`+uuid,
     depth: editDepth,
   });
 
@@ -64,8 +66,8 @@ export function InsertEquationDrawer(props: {
 
   const onEquationConfirm = useCallback(
     (equation: string, inline: boolean) => {
-      activeEditor.dispatchCommand(INSERT_EQUATION_COMMAND, { equation, inline });
       toggleModal(equationDrawerSlug);
+      activeEditor.dispatchCommand(INSERT_EQUATION_COMMAND, { equation, inline });
     },
     [activeEditor/* , onClose */],
   );
@@ -106,12 +108,13 @@ export default function EquationsPlugin(): JSX.Element | null {
       INSERT_EQUATION_COMMAND,
       (payload) => {
         const { equation, inline } = payload;
-        const equationNode = $createEquationNode(equation, inline);
-
-        $insertNodes([equationNode]);
-        if ($isRootOrShadowRoot(equationNode.getParentOrThrow())) {
-          $wrapNodeInElement(equationNode, $createParagraphNode).selectEnd();
-        }
+        editor.update(() => {
+          const equationNode = $createEquationNode(equation, inline);
+          $insertNodes([equationNode]);
+          if ($isRootOrShadowRoot(equationNode.getParentOrThrow())) {
+            $wrapNodeInElement(equationNode, $createParagraphNode).selectEnd();
+          }
+        })
 
         return true;
       },

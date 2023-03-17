@@ -55,10 +55,10 @@ export function ClearEditorFeature(props: {}): Feature {
                 modal: ClearEditorDrawer,
                 openModalCommand: {
                     type: "clear-editor",
-                    command: (toggleModal, editDepth) => {
+                    command: (toggleModal, editDepth,uuid) => {
 
                         const addEquationDrawerSlug = formatDrawerSlug({
-                            slug: `lexicalRichText-clear-editor`,
+                            slug: `lexicalRichText-clear-editor`+uuid,
                             depth: editDepth,
                         });
                         toggleModal(addEquationDrawerSlug);

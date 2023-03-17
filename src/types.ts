@@ -40,10 +40,9 @@ export type Feature = {
     // Modals / Drawers. They can be defined here in order to be able to open or close them with a simple lexical command. This also ensures the modals/drawers are "placed" at the correct position
     openModalCommand: {
       type: string;
-      command: (toggleModal: (slug: string) => void, editDepth: number) => void;
+      command: (toggleModal: (slug: string) => void, editDepth: number, uuid: string) => void;
     };
     modal: (props: {
-      activeEditor: LexicalEditor;
       editorConfig: EditorConfig;
     }) => JSX.Element;
   }[];

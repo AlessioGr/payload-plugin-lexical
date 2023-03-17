@@ -84,10 +84,10 @@ export function TwitterFeature(props: {}): Feature {
         }) => AutoEmbedDrawer({ embedConfig: TwitterEmbedConfig }),
         openModalCommand: {
           type: "autoembed-"+TwitterEmbedConfig.type,
-          command: (toggleModal, editDepth) => {
+          command: (toggleModal, editDepth,uuid) => {
 
             const autoEmbedDrawerSlug = formatDrawerSlug({
-              slug: `lexicalRichText-autoembed-`+TwitterEmbedConfig.type,
+              slug: `lexicalRichText-autoembed-`+TwitterEmbedConfig.type+uuid,
               depth: editDepth,
             });
 

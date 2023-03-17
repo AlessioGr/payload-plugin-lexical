@@ -87,6 +87,9 @@
   background-color: rgba(88, 144, 255, 0.15);
   border-bottom: 1px solid rgba(88, 144, 255, 0.3);
 }
+.ContentEditable__root .PlaygroundEditorTheme__link {
+  pointer-events: none;
+}
 .PlaygroundEditorTheme__link {
   color: rgb(33, 111, 219);
   text-decoration: none;

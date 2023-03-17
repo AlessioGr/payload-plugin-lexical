@@ -18,6 +18,7 @@ import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth"
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 import { SanitizedCollectionConfig } from 'payload/types';
 import { useConfig } from 'payload/components/utilities';
+import {useEditorConfigContext} from "../../LexicalEditorComponent";
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
   "upload" | "table" | string
@@ -29,6 +30,8 @@ export default function ModalPlugin(props: {
   const editorConfig = props.editorConfig;
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
+
+  const { uuid} = useEditorConfigContext();
   const {
     toggleModal = () => {
       console.log("Error: useModal() from FacelessUI did not work correctly");
@@ -50,13 +53,13 @@ export default function ModalPlugin(props: {
         openDrawer();
       } else if (toOpen === "table") {
         const addTableDrawerSlug = formatDrawerSlug({
-          slug: `lexicalRichText-add-table`,
+          slug: `lexicalRichText-add-table`+uuid,
           depth: editDepth,
         });
         toggleModal(addTableDrawerSlug);
       } else if (toOpen === "newtable") {
         const addNewTableDrawerSlug = formatDrawerSlug({
-          slug: `lexicalRichText-add-newtable`,
+          slug: `lexicalRichText-add-newtable`+uuid,
           depth: editDepth,
         });
         toggleModal(addNewTableDrawerSlug);
@@ -65,7 +68,7 @@ export default function ModalPlugin(props: {
           if(feature.modals && feature.modals.length > 0){
             for(const featureModal of feature.modals){
               if(toOpen === featureModal.openModalCommand.type){
-                featureModal.openModalCommand.command(toggleModal, editDepth);
+                featureModal.openModalCommand.command(toggleModal, editDepth, uuid);
                 return true;
               }
             }
@@ -149,15 +152,14 @@ export default function ModalPlugin(props: {
     <>
       <ListDrawer onSelect={onUploadSelect} />
 
-      <InsertTableDialog activeEditor={activeEditor} />
-      <InsertNewTableDialog activeEditor={activeEditor} />
-
-
+      <InsertTableDialog/>
+      <InsertNewTableDialog />
 
       {editorConfig.features.map((feature) => {
         if(feature.modals && feature.modals.length > 0) {
           return feature.modals.map((customModal) => {
-            return customModal.modal({activeEditor, editorConfig});
+
+            return customModal?.modal ? customModal.modal({editorConfig}) : null;
           });
         }
       })}

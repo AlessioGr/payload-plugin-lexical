@@ -168,8 +168,7 @@ export function $createEquationNode(
   equation = '',
   inline = false,
 ): EquationNode {
-  const equationNode = new EquationNode(equation, inline);
-  return $applyNodeReplacement(equationNode);
+  return $applyNodeReplacement(new EquationNode(equation, inline));
 }
 
 export function $isEquationNode(

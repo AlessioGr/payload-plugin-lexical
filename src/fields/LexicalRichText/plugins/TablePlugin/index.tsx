@@ -37,6 +37,7 @@ import {Drawer, formatDrawerSlug} from "payload/dist/admin/components/elements/D
 import {useModal} from "@faceless-ui/modal";
 import {Gutter} from "payload/dist/admin/components/elements/Gutter";
 import X from "payload/dist/admin/components/icons/X";
+import {useEditorConfigContext} from "../../LexicalEditorComponent";
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string;
@@ -101,14 +102,15 @@ export function TableContext({ children }: {children: JSX.Element}) {
 const baseClass = "rich-text-table-modal";
 
 export function InsertTableDialog({
-  activeEditor,
 }: {
-  activeEditor: LexicalEditor;
 }): JSX.Element {
-  const editDepth = useEditDepth();
+  const { uuid} = useEditorConfigContext();
 
+  const editDepth = useEditDepth();
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
   const tableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-table`,
+    slug: `lexicalRichText-add-table`+uuid,
     depth: editDepth,
   });
   const {
@@ -166,14 +168,15 @@ export function InsertTableDialog({
 }
 
 export function InsertNewTableDialog({
-  activeEditor,
 }: {
-  activeEditor: LexicalEditor;
 }): JSX.Element {
-  const editDepth = useEditDepth();
+  const { uuid} = useEditorConfigContext();
 
+  const editDepth = useEditDepth();
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
   const newTableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-newtable`,
+    slug: `lexicalRichText-add-newtable`+uuid,
     depth: editDepth,
   });
   const {

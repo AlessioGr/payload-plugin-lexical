@@ -86,10 +86,14 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
 
 type ContextShape = {
   editorConfig?: EditorConfig;
+  uuid?: string;
 };
 
 const Context: React.Context<ContextShape> = createContext({});
-
+function generateQuickGuid() {
+  return Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15);
+}
 export const EditorConfigContext = ({
   children,
   editorConfig,
@@ -104,8 +108,9 @@ export const EditorConfigContext = ({
   if (!editorConfig) {
     throw new Error("editorConfig is required");
   } else {
+    let uuid =
     editorContextShape = useMemo(
-      () => ({ editorConfig: editorConfig }),
+      () => ({ editorConfig: editorConfig, uuid: ""+generateQuickGuid()  }),
       [editor]
     );
   }

@@ -56,15 +56,14 @@ export function FigmaFeature(props: {}): Feature {
     modals: [
       {
         modal: (props: {
-          activeEditor: LexicalEditor;
           editorConfig: EditorConfig;
         }) => AutoEmbedDrawer({ embedConfig: FigmaEmbedConfig }),
         openModalCommand: {
           type: "autoembed-"+FigmaEmbedConfig.type,
-          command: (toggleModal, editDepth) => {
+          command: (toggleModal, editDepth,uuid) => {
 
             const autoEmbedDrawerSlug = formatDrawerSlug({
-              slug: `lexicalRichText-autoembed-`+FigmaEmbedConfig.type,
+              slug: `lexicalRichText-autoembed-`+FigmaEmbedConfig.type+uuid,
               depth: editDepth,
             });
 

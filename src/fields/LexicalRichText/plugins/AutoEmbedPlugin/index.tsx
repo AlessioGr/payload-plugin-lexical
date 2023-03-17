@@ -28,6 +28,7 @@ import { useModal } from '@faceless-ui/modal';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 import './modal.scss';
+import {useEditorConfigContext} from "../../LexicalEditorComponent";
 
 export interface PlaygroundEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
@@ -139,6 +140,8 @@ export function AutoEmbedDrawer({
 }: {
   embedConfig: PlaygroundEmbedConfig;
 }): JSX.Element {
+  const { uuid} = useEditorConfigContext();
+
   const [text, setText] = useState('');
   const [editor] = useLexicalComposerContext();
 
@@ -170,14 +173,14 @@ export function AutoEmbedDrawer({
   const editDepth = useEditDepth();
 
   const autoEmbedDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-autoembed-${embedConfig.type}`,
+    slug: `lexicalRichText-autoembed-${embedConfig.type}`+uuid,
     depth: editDepth,
   });
 
   const {
     toggleModal,
   } = useModal();
-  
+
   return (
     <Drawer slug={autoEmbedDrawerSlug} key={autoEmbedDrawerSlug} className={baseClass}>
       <Gutter className={`${baseClass}__template`}>
@@ -193,7 +196,7 @@ export function AutoEmbedDrawer({
             <X />
           </Button>
         </header>
-        
+
 
         <div className="Input__wrapper">
         <input

@@ -8,21 +8,25 @@ import { useModal } from '@faceless-ui/modal';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 import { EditorConfig } from '../../../../types';
+import {useLexicalComposerContext} from "@lexical/react/LexicalComposerContext";
+import {useState} from "react";
+import {useEditorConfigContext} from "../../../../fields/LexicalRichText/LexicalEditorComponent";
 
 
 const baseClass = "rich-text-clear-editor-drawer";
 
 export function ClearEditorDrawer(props: {
-    activeEditor: LexicalEditor;
     editorConfig: EditorConfig;
 }): JSX.Element {
+    const { uuid} = useEditorConfigContext();
 
-    const { activeEditor, editorConfig } = props;
+    const [editor] = useLexicalComposerContext();
+    const [activeEditor, setActiveEditor] = useState(editor);
 
     const editDepth = useEditDepth();
 
     const equationDrawerSlug = formatDrawerSlug({
-        slug: `lexicalRichText-clear-editor`, // TODO: Add uuid for the slug?
+        slug: `lexicalRichText-clear-editor`+uuid,
         depth: editDepth,
     });
 

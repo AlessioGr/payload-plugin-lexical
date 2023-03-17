@@ -19,7 +19,7 @@ export function EquationsFeature(props: {}): Feature {
           if (!$isEquationNode(node)) {
             return null;
           }
-      
+
           return `$${node.getEquation()}$`;
         },
         importRegExp: /\$([^$]+?)\$/,
@@ -59,10 +59,10 @@ export function EquationsFeature(props: {}): Feature {
                 modal: InsertEquationDrawer,
                 openModalCommand: {
                     type: "equation",
-                    command: (toggleModal, editDepth) => {
+                    command: (toggleModal, editDepth, uuid: string) => {
 
                         const addEquationDrawerSlug = formatDrawerSlug({
-                            slug: `lexicalRichText-add-equation`,
+                            slug: `lexicalRichText-add-equation`+uuid,
                             depth: editDepth,
                         });
                         toggleModal(addEquationDrawerSlug);

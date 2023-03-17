@@ -47,6 +47,7 @@ import { setFloatingElemPosition } from '../../../fields/LexicalRichText/utils/s
 import { LinkDrawer } from './LinkDrawer';
 import LinkPreview from '../../../fields/LexicalRichText/ui/LinkPreview';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
+import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
 
 function LinkEditor({
   editor,
@@ -65,6 +66,7 @@ function LinkEditor({
   const [lastSelection, setLastSelection] = useState<
     RangeSelection | GridSelection | NodeSelection | null
   >(null);
+  const { uuid} = useEditorConfigContext();
 
   const customFieldSchema = false; /* fieldProps?.admin?.link?.fields */ // TODO: Field props
   const config = useConfig();
@@ -122,7 +124,7 @@ function LinkEditor({
   const editDepth = useEditDepth();
 
   const drawerSlug = formatDrawerSlug({
-    slug: `rich-text-link-lexicalRichText`, // TODO: Add uuid for the slug?
+    slug: `rich-text-link-lexicalRichText`+uuid,
     depth: editDepth,
   });
 
