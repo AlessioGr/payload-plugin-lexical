@@ -68,7 +68,7 @@ const Lexical: CollectionConfig = {
                 defaultEditorConfig.toggles.fontSize.enabled = false;
                 defaultEditorConfig.toggles.font.enabled = false;
                 defaultEditorConfig.toggles.align.enabled = false;
-                defaultEditorConfig.toggles.tables.enabled = false;
+                defaultEditorConfig.toggles.tables.enabled = true;
                 defaultEditorConfig.toggles.tables.display = false;
                 
                 // Optional: these are the default features. Feel free to customize them or remove the ones you do not like!
