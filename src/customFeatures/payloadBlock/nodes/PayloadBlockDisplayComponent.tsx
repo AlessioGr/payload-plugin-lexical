@@ -8,6 +8,8 @@ import Form from "payload/dist/admin/components/forms/Form";
 import FormSubmit from "payload/dist/admin/components/forms/Submit";
 import fieldTypes from "payload/dist/admin/components/forms/field-types";
 import RenderFields from "payload/dist/admin/components/forms/RenderFields";
+import buildStateFromSchema from "payload/dist/admin/components/forms/Form/buildStateFromSchema";
+import {useLocale} from "payload/components/utilities";
 
 export default function PayloadBlockDisplayComponent({
   block,
@@ -17,9 +19,12 @@ export default function PayloadBlockDisplayComponent({
   values: Data
 }): JSX.Element {
 
+    const locale = useLocale();
+
+
   console.log("Values", values)
   console.log("Fieldschema", block)
-  let fieldsSchema: Fields = values;
+  let fieldsSchema = values;
   // remove undefined fields
   Object.keys(fieldsSchema).forEach((key) => {
     if (fieldsSchema[key] === undefined) {
@@ -28,11 +33,23 @@ export default function PayloadBlockDisplayComponent({
   });
   console.log("Fieldschema2", fieldsSchema)
 
+  const [state, setState] = useState<Fields>(null);
 
-  return (
+    useEffect(() => {
+        const buildState = async () => {
+            const newState = await buildStateFromSchema({ fieldSchema: block.fields, data: fieldsSchema || {}, operation: 'update', locale: locale, t: null });
+            setState(newState);
+        };
+        buildState();
+    });
+
+
+
+
+    return (
     <Suspense fallback={<span>Loading block...</span>}>
         <div style={{ border: "1px solid black", padding: "10px" }}>
-            <Form onSubmit={() => {}} initialState={fieldsSchema}>
+            {state && <Form onSubmit={() => {}} initialState={state}>
                 <RenderFields
                     fieldTypes={fieldTypes}
                     readOnly={false}
@@ -40,7 +57,8 @@ export default function PayloadBlockDisplayComponent({
                     forceRender
                 />
                 <FormSubmit>Ignore</FormSubmit>
-            </Form>
+            </Form>}
+            {!state && <span>Loading...</span>}
         </div>
     </Suspense>
   );

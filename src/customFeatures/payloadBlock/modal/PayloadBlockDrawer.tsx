@@ -30,28 +30,31 @@ import { useTranslation } from "react-i18next";
 import X from "payload/dist/admin/components/icons/X";
 
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
-import {EditorConfig} from "../../../../plugin-lexical/types";
 import {PayloadBlockAttributes} from "../nodes/PayloadBlockNode";
 import {TOGGLE_PAYLOAD_BLOCK_COMMAND} from "../plugins/PayloadBlockPlugin";
+import {useLexicalComposerContext} from "@lexical/react/LexicalComposerContext";
+import {EditorConfig} from "../../../types";
+import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
 
 type Props = {};
 
 const baseClass = 'payloadBlock-modal';
 
 export function InsertPayloadBlockDialog(props: {
-  activeEditor: LexicalEditor;
   editorConfig: EditorConfig;
 }): JSX.Element {
-
+  const [editor] = useLexicalComposerContext();
+  const [activeEditor, setActiveEditor] = useState(editor);
   const {
     toggleModal,
     closeModal
   } = useModal();
+  const { uuid} = useEditorConfigContext();
 
   const editDepth = useEditDepth();
 
   const drawerSlug = formatDrawerSlug({
-      slug: `payloadBlock`, // TODO: Add uuid for the slug?
+      slug: `payloadBlock`+uuid,
       depth: editDepth,
   });
   const config = useConfig();
@@ -66,7 +69,7 @@ export function InsertPayloadBlockDialog(props: {
 
     async function loadBlock() {
       console.log("Importing block...")
-      const blockImport = await (await import(`../../../../../blocks/ImageAndTextBlock`)).default;
+      const blockImport = await (await import(`../../../../../blocks/InsertYourBlockHere`)).default;
 
       setBlock({
         block: blockImport,
@@ -94,7 +97,7 @@ export function InsertPayloadBlockDialog(props: {
     attrs.values = data;
 
 
-    props.activeEditor.dispatchCommand(TOGGLE_PAYLOAD_BLOCK_COMMAND, attrs);
+    activeEditor.dispatchCommand(TOGGLE_PAYLOAD_BLOCK_COMMAND, attrs);
     closeModal(drawerSlug);
   }
 

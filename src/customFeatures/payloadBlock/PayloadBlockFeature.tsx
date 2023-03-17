@@ -25,10 +25,10 @@ export function PayloadBlockFeature(props: {}): Feature {
                 modal: InsertPayloadBlockDialog,
                 openModalCommand: {
                     type: "payloadBlock",
-                    command: (toggleModal, editDepth) => {
+                    command: (toggleModal, editDepth,uuid) => {
 
                         const payloadBlockDrawerSlug = formatDrawerSlug({
-                            slug: `payloadBlock`,
+                            slug: `payloadBlock`+uuid,
                             depth: editDepth,
                         });
                         toggleModal(payloadBlockDrawerSlug);
