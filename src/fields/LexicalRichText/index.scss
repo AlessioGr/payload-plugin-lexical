@@ -550,7 +550,7 @@ i.prettier-error {
   box-sizing: border-box;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
   top: 16px;
-  z-index: 10;
+  z-index: 9;
   border-radius: 8px;
   border: 1px solid rgb(206, 208, 212);
   overflow: hidden;
@@ -1198,7 +1198,7 @@ button.action-button:disabled {
   position: sticky;
   top: 100px;
   background-color: var(--theme-bg);
-  z-index: 10;
+  z-index: 9;
 }
 
 
