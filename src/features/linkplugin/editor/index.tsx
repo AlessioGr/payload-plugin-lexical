@@ -43,7 +43,7 @@ import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth"
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
-import { setFloatingElemPosition } from '../../../fields/LexicalRichText/utils/setFloatingElemPosition';
+import { setFloatingElemPositionForLinks } from '../../../fields/LexicalRichText/utils/setFloatingElemPosition';
 import { LinkDrawer } from './LinkDrawer';
 import LinkPreview from '../../../fields/LexicalRichText/ui/LinkPreview';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
@@ -228,11 +228,17 @@ function LinkEditor({
         rect = domRange.getBoundingClientRect();
       }
 
-      setFloatingElemPosition(rect, editorElem, anchorElem);
+
+      const domRect: DOMRect = nativeSelection.focusNode?.parentElement?.getBoundingClientRect() ?? rect;
+      domRect.y += 40;
+
+      console.log("domRect", domRect)
+
+      setFloatingElemPositionForLinks(domRect, editorElem, anchorElem);
       setLastSelection(selection);
     } else if (!activeElement || activeElement.className !== "link-input") {
       if (rootElement !== null) {
-        setFloatingElemPosition(null, editorElem, anchorElem);
+        setFloatingElemPositionForLinks(null, editorElem, anchorElem);
       }
       setLastSelection(null);
       setEditMode(false);
