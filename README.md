@@ -1,9 +1,19 @@
 # Payload Lexical Plugin
 
-A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor.
+A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta. This plugin comes packed with a ton of features which the original editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
+
+## Here are some screenshots
 
 ![203127349-2be29de4-aff3-4e13-9ebe-56be5fc3fc97 (1)](https://user-images.githubusercontent.com/70709113/204068103-a09f39e1-14e4-45fc-868a-68558380b74e.png)
 ![203127640-caa1f279-1555-48e6-9465-8c441ea65149](https://user-images.githubusercontent.com/70709113/204068104-8dcf337a-b18e-47b8-8ba3-3e777a1f834c.png)
+
+## How I'm using it in production - customized & with some features turned on or off:
+![Arc 2023-03-20 at 01 34 05@2x](https://user-images.githubusercontent.com/70709113/226221050-f411c82c-6a66-49d0-94ef-1a7e9c1fdd22.jpg)
+
+
+https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-9ad2-8ff5cddbc843.mp4
+
+
 
 
 MINIMUM REQUIRED PAYLOAD VERSION: 1.6.15
@@ -12,7 +22,7 @@ Important: I currently do not shy away from breaking things in this plugin at th
 
 ## How to use - example collection
 
-1. Add the files inside of the src folder of this repo manually into your payload project. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+1. Add the files inside of the src folder of this repo manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
 
 2. :
 ```ts
