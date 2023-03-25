@@ -22,7 +22,7 @@ Important: I currently do not shy away from breaking things in this plugin at th
 
 ## How to use - example collection
 
-1. Add the files inside of the src folder of this repo manually into your payload project. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+1. Add the files inside of the src folder of this repo manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
 
 2. :
 ```ts
