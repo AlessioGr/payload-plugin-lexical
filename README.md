@@ -15,14 +15,11 @@ https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-
 
 
 
-
 MINIMUM REQUIRED PAYLOAD VERSION: 1.6.15
-
-Important: I currently do not shy away from breaking things in this plugin at this stage. So, please be careful when you update this plugin.
 
 ## How to use - example collection
 
-1. Add the files inside of the src folder of this repo manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+1. Add the files **inside of the src folder of this repo* manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
 
 2. :
 ```ts
