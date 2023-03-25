@@ -131,7 +131,7 @@ This currently serialized the most important stuff, but not everything. Feel fre
 - [x] Upload plugin/node captions
 - [ ] Ability to add custom fields to uploads like captions
 - [ ] (relationship node?)
-- [ ] Fix internal collection search for internal link editor (not sure if this is still a bug - I don't think so)
+- [X] Fix internal collection search for internal link editor
 - [ ] Edit Upload Button
 - [ ] Improve design & UX of links. For example, clicking on the link button should open the link drawer immediately
 - [ ] (maybe?) lazy loading lexical editor to reduce load times. or maybe just the images?
