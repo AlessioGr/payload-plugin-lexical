@@ -20,11 +20,9 @@
 
 .editor-shell .editor-container {
   position: relative;
-  cursor: text;
   display: block;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
-  padding-bottom: 4em; // So the action buttons don't potentially overlap the last line of text
 }
 
 .editor-shell .editor-container.tree-view {
@@ -39,8 +37,6 @@
 .editor-scroller {
   min-height: 150px;
   border: 0;
-  resize: none;
-  cursor: text;
   display: flex;
   position: relative;
   outline: 0;
@@ -53,6 +49,8 @@
   flex: auto;
   position: relative;
   max-width: 100%;
+  resize: vertical;
+  z-index: -1;
 }
 
 .test-recorder-output {

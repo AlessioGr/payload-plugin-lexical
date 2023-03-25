@@ -125,6 +125,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
             onChange={(
               editorState: EditorState,
               editor: LexicalEditor,
+              tags: Set<string>,
               commentStore: CommentStore
             ) => {
               const json = editorState.toJSON();

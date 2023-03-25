@@ -173,8 +173,8 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               <UploadPlugin captionsEnabled={false} />
             )}
             <OnChangePlugin
-              onChange={(editorState, editor, commentStore) => {
-                onChange(editorState, editor, commentStore);
+              onChange={(editorState, editor, tags, commentStore) => {
+                onChange(editorState, editor, tags, commentStore);
               }}
             />
 

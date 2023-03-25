@@ -1,6 +1,6 @@
 import { Feature } from '../../types';
 import * as React from "react";
-import FloatingLinkEditorPlugin from './editor';
+import FloatingLinkEditorPlugin from './floatingLinkEditor';
 import LinkPlugin from './plugins/link';
 import { $isLinkNode, LinkAttributes, LinkNode, TOGGLE_LINK_COMMAND } from './nodes/LinkNodeModified';
 import { AutoLinkNode } from './nodes/AutoLinkNodeModified';

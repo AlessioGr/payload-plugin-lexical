@@ -1,8 +1,7 @@
-import { buildConfig } from 'payload/config';
+import {buildConfig} from 'payload/config';
 import path from 'path';
 //import LexicalPlugin from '../../src/index'
 //import LexicalPlugin from '../../dist/index'
-
 import Users from './collections/Users';
 import Media from './collections/Media';
 import RichText from './collections/RichText';
@@ -11,11 +10,11 @@ import LexicalCustomized from './collections/LexicalCustomized';
 import LexicalDebug from './collections/LexicalDebug';
 
 export default buildConfig({
-  serverURL: 'http://localhost:3000',
+  serverURL: 'http://localhost:3001',
   admin: {
     user: Users.slug,
     webpack: (config) => {
-      const newConfig = {
+      return {
         ...config,
         resolve: {
           ...config.resolve,
@@ -28,8 +27,6 @@ export default buildConfig({
           },
         },
       };
-
-      return newConfig;
     },
   },
   collections: [

@@ -15,7 +15,7 @@ export function EquationsFeature(props: {}): Feature {
 
     const equationMarkdownTextMatchTransformer: TextMatchTransformer = {
         dependencies: [EquationNode],
-        export: (node, exportChildren, exportFormat) => {
+        export: (node) => {
           if (!$isEquationNode(node)) {
             return null;
           }

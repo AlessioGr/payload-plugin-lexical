@@ -10,7 +10,7 @@ export type Props = Omit<RichTextField, 'type'> & {
 }
 
 export type OnChangeProps = {
-  onChange: (editorState: EditorState, editor: LexicalEditor, commentStore: CommentStore) => void;
+  onChange: (editorState: EditorState, editor: LexicalEditor, tags: Set<string>, commentStore: CommentStore) => void;
   initialJSON: any;
   editorConfig: EditorConfig,
   initialComments: Comments,

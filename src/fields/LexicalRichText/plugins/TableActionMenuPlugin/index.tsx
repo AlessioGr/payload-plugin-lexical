@@ -9,17 +9,16 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {
-  $deleteTableColumn,
-  $getElementGridForTableNode,
+  $deleteTableColumn__EXPERIMENTAL,
+  $deleteTableRow__EXPERIMENTAL,
   $getTableCellNodeFromLexicalNode,
   $getTableColumnIndexFromTableCellNode,
   $getTableNodeFromLexicalNodeOrThrow,
   $getTableRowIndexFromTableCellNode,
-  $insertTableColumn,
-  $insertTableRow,
+  $insertTableColumn__EXPERIMENTAL,
+  $insertTableRow__EXPERIMENTAL,
   $isTableCellNode,
   $isTableRowNode,
-  $removeTableRowAtIndex,
   getTableSelectionFromTableElement,
   HTMLTableElementWithWithTableSelectionState,
   TableCellHeaderStates,
@@ -212,8 +211,13 @@ function TableActionMenu({
           if (DEPRECATED_$isGridCellNode(node)) {
             if (isFirstCell) {
               node.setColSpan(columns).setRowSpan(rows);
-              selection.anchor.set(node.getKey(), 0, 'element');
-              selection.focus.set(node.getKey(), 0, 'element');
+              // TODO copy other editors' cell selection behavior
+              const lastDescendant = node.getLastDescendant();
+              invariant(
+                  lastDescendant !== null,
+                  'Unexpected empty lastDescendant on the resulting merged cell',
+              );
+              lastDescendant.select();
               isFirstCell = false;
             } else {
               nodes[i].remove();
@@ -228,92 +232,31 @@ function TableActionMenu({
   const insertTableRowAtSelection = useCallback(
     (shouldInsertAfter: boolean) => {
       editor.update(() => {
-        const selection = $getSelection();
-
-        const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-
-        let tableRowIndex;
-
-        if (DEPRECATED_$isGridSelection(selection)) {
-          const selectionShape = selection.getShape();
-          tableRowIndex = shouldInsertAfter
-            ? selectionShape.toY
-            : selectionShape.fromY;
-        } else {
-          tableRowIndex = $getTableRowIndexFromTableCellNode(tableCellNode);
-        }
-
-        const grid = $getElementGridForTableNode(editor, tableNode);
-
-        $insertTableRow(
-          tableNode,
-          tableRowIndex,
-          shouldInsertAfter,
-          selectionCounts.rows,
-          grid,
-        );
-
-        clearTableSelection();
+        $insertTableRow__EXPERIMENTAL(shouldInsertAfter);
 
         onClose();
       });
     },
-    [editor, tableCellNode, selectionCounts.rows, clearTableSelection, onClose],
+      [editor, onClose],
   );
 
   const insertTableColumnAtSelection = useCallback(
     (shouldInsertAfter: boolean) => {
       editor.update(() => {
-        const selection = $getSelection();
-
-        const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-
-        let tableColumnIndex;
-
-        if (DEPRECATED_$isGridSelection(selection)) {
-          const selectionShape = selection.getShape();
-          tableColumnIndex = shouldInsertAfter
-            ? selectionShape.toX
-            : selectionShape.fromX;
-        } else {
-          tableColumnIndex = $getTableColumnIndexFromTableCellNode(tableCellNode);
-        }
-
-        const grid = $getElementGridForTableNode(editor, tableNode);
-
-        $insertTableColumn(
-          tableNode,
-          tableColumnIndex,
-          shouldInsertAfter,
-          selectionCounts.columns,
-          grid,
-        );
-
-        clearTableSelection();
+        $insertTableColumn__EXPERIMENTAL(shouldInsertAfter);
 
         onClose();
       });
     },
-    [
-      editor,
-      tableCellNode,
-      selectionCounts.columns,
-      clearTableSelection,
-      onClose,
-    ],
+      [editor, onClose],
   );
 
   const deleteTableRowAtSelection = useCallback(() => {
     editor.update(() => {
-      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-      const tableRowIndex = $getTableRowIndexFromTableCellNode(tableCellNode);
-
-      $removeTableRowAtIndex(tableNode, tableRowIndex);
-
-      clearTableSelection();
+      $deleteTableRow__EXPERIMENTAL();
       onClose();
     });
-  }, [editor, tableCellNode, clearTableSelection, onClose]);
+  }, [editor, onClose]);
 
   const deleteTableAtSelection = useCallback(() => {
     editor.update(() => {
@@ -327,16 +270,10 @@ function TableActionMenu({
 
   const deleteTableColumnAtSelection = useCallback(() => {
     editor.update(() => {
-      const tableNode = $getTableNodeFromLexicalNodeOrThrow(tableCellNode);
-
-      const tableColumnIndex = $getTableColumnIndexFromTableCellNode(tableCellNode);
-
-      $deleteTableColumn(tableNode, tableColumnIndex);
-
-      clearTableSelection();
+      $deleteTableColumn__EXPERIMENTAL();
       onClose();
     });
-  }, [editor, tableCellNode, clearTableSelection, onClose]);
+  }, [editor, onClose]);
 
   const toggleTableRowIsHeader = useCallback(() => {
     editor.update(() => {
@@ -419,8 +356,9 @@ function TableActionMenu({
             <>
               <button
                   className="item"
-                  onClick={() => mergeTableColumnsAtSelection()}>
-                Merge cells
+                  onClick={() => mergeTableColumnsAtSelection()}
+                  data-test-id="table-merge-cells">
+                  Merge cells
               </button>
               <hr />
             </>
@@ -428,7 +366,7 @@ function TableActionMenu({
       <button
         className="item"
         onClick={() => insertTableRowAtSelection(false)}
-      >
+        data-test-id="table-insert-row-above">
         <span className="text">
           Insert
           {' '}
@@ -440,6 +378,7 @@ function TableActionMenu({
       <button
         className="item"
         onClick={() => insertTableRowAtSelection(true)}
+        data-test-id="table-insert-row-below"
       >
         <span className="text">
           Insert
@@ -453,6 +392,7 @@ function TableActionMenu({
       <button
         className="item"
         onClick={() => insertTableColumnAtSelection(false)}
+        data-test-id="table-insert-column-before"
       >
         <span className="text">
           Insert
@@ -467,6 +407,7 @@ function TableActionMenu({
       <button
         className="item"
         onClick={() => insertTableColumnAtSelection(true)}
+        data-test-id="table-insert-column-after"
       >
         <span className="text">
           Insert
@@ -482,18 +423,21 @@ function TableActionMenu({
       <button
         className="item"
         onClick={() => deleteTableColumnAtSelection()}
+        data-test-id="table-delete-columns"
       >
         <span className="text">Delete column</span>
       </button>
       <button
         className="item"
         onClick={() => deleteTableRowAtSelection()}
+        data-test-id="table-delete-rows"
       >
         <span className="text">Delete row</span>
       </button>
       <button
         className="item"
         onClick={() => deleteTableAtSelection()}
+        data-test-id="table-delete"
       >
         <span className="text">Delete table</span>
       </button>

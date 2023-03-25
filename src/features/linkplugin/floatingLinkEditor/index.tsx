@@ -43,11 +43,12 @@ import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth"
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
-import { setFloatingElemPositionForLinks } from '../../../fields/LexicalRichText/utils/setFloatingElemPosition';
 import { LinkDrawer } from './LinkDrawer';
-import LinkPreview from '../../../fields/LexicalRichText/ui/LinkPreview';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
+import {
+  setFloatingElemPositionForLinkEditor
+} from "../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor";
 
 function LinkEditor({
   editor,
@@ -216,33 +217,20 @@ function LinkEditor({
       rootElement.contains(nativeSelection.anchorNode) &&
       editor.isEditable()
     ) {
-      const domRange = nativeSelection.getRangeAt(0);
-      let rect;
-      if (nativeSelection.anchorNode === rootElement) {
-        let inner = rootElement;
-        while (inner.firstElementChild != null) {
-          inner = inner.firstElementChild as HTMLElement;
-        }
-        rect = inner.getBoundingClientRect();
-      } else {
-        rect = domRange.getBoundingClientRect();
+      const domRect: DOMRect | undefined =
+          nativeSelection.focusNode?.parentElement?.getBoundingClientRect();
+      if (domRect) {
+        domRect.y += 40;
+        setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
-
-
-      const domRect: DOMRect = nativeSelection.focusNode?.parentElement?.getBoundingClientRect() ?? rect;
-      domRect.y += 40;
-
-      console.log("domRect", domRect)
-
-      setFloatingElemPositionForLinks(domRect, editorElem, anchorElem);
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== "link-input") {
+    } else if (!activeElement || activeElement.className !== 'link-input') {
       if (rootElement !== null) {
-        setFloatingElemPositionForLinks(null, editorElem, anchorElem);
+        setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
       setLastSelection(null);
       setEditMode(false);
-      setLinkUrl("");
+      setLinkUrl('');
     }
 
     return true;
@@ -344,24 +332,21 @@ function LinkEditor({
           }}
         />
       ) : (
-        <React.Fragment>
           <div className="link-input">
             <a href={linkUrl} target="_blank" rel="noopener noreferrer">
               {linkUrl}
             </a>
             <div
-              className="link-edit"
-              role="button"
-              tabIndex={0}
-              onMouseDown={(event) => event.preventDefault()}
-              onClick={() => {
-                setEditMode(true);
-                toggleModal(drawerSlug);
-              }}
+                className="link-edit"
+                role="button"
+                tabIndex={0}
+                onMouseDown={(event) => event.preventDefault()}
+                onClick={() => {
+                  setEditMode(true);
+                  toggleModal(drawerSlug);
+                }}
             />
           </div>
-          <LinkPreview url={linkUrl} />
-        </React.Fragment>
       )}
     </div>
   );

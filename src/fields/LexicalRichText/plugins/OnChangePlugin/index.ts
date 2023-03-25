@@ -20,7 +20,7 @@ export function OnChangePlugin({
 }: {
   ignoreHistoryMergeTagChange?: boolean;
   ignoreSelectionChange?: boolean;
-  onChange: (editorState: EditorState, editor: LexicalEditor, commentStore: CommentStore) => void;
+  onChange: (editorState: EditorState, editor: LexicalEditor, tags: Set<string>, commentStore: CommentStore) => void;
 }): null {
   const [editor] = useLexicalComposerContext();
   const commentsContext = useCommentsContext();
@@ -40,7 +40,7 @@ export function OnChangePlugin({
             return;
           }
 
-          onChange(editorState, editor, commentsContext.commentStore);
+          onChange(editorState, editor, tags, commentsContext.commentStore);
         },
       );
     }
