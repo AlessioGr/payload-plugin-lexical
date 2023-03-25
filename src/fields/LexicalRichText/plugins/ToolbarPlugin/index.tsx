@@ -14,7 +14,7 @@ import {
   CODE_LANGUAGE_FRIENDLY_NAME_MAP,
   CODE_LANGUAGE_MAP,
   getLanguageFriendlyName,
-} from "@lexical/code";
+} from '@lexical/code';
 import {
   $isListNode,
   INSERT_CHECK_LIST_COMMAND,
@@ -76,6 +76,7 @@ import { getSelectedNode } from "../../utils/getSelectedNode";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
 import { EditorConfig } from "../../../../types";
 import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
+import {$isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND} from "../../../../features/linkplugin/nodes/LinkNodeModified";
 
 const blockTypeToBlockName = {
   bullet: "Bulleted List",
@@ -95,11 +96,11 @@ const blockTypeToBlockName = {
 function getCodeLanguageOptions(): [string, string][] {
   const options: [string, string][] = [];
 
-  Object.entries(CODE_LANGUAGE_FRIENDLY_NAME_MAP).forEach(
-    ([lang, friendlyName]) => {
-      options.push([lang, friendlyName]);
-    }
-  );
+  for (const [lang, friendlyName] of Object.entries(
+      CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+  )) {
+    options.push([lang, friendlyName]);
+  }
 
   return options;
 }
@@ -212,13 +213,13 @@ function BlockFormatDropDown({
   };
 
   const formatCode = () => {
-    if (blockType !== "code") {
+    if (blockType !== 'code') {
       editor.update(() => {
         let selection = $getSelection();
 
         if (
-          $isRangeSelection(selection) ||
-          DEPRECATED_$isGridSelection(selection)
+            $isRangeSelection(selection) ||
+            DEPRECATED_$isGridSelection(selection)
         ) {
           if (selection.isCollapsed()) {
             $setBlocksType(selection, () => $createCodeNode());
@@ -400,11 +401,34 @@ export default function ToolbarPlugin(props: {
   const [isRTL, setIsRTL] = useState(false);
   const [codeLanguage, setCodeLanguage] = useState<string>("");
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
+  const [isLink, setIsLink] = useState(false);
+
+
+  const insertLink = useCallback(() => {
+    if (!isLink) {
+      const linkAttributes: LinkAttributes = {
+        linkType: "custom",
+        url: "https://",
+      }
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
+    } else {
+      editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+    }
+  }, [editor, isLink]);
 
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
 
     if ($isRangeSelection(selection)) {
+      // Update links
+      const node = getSelectedNode(selection);
+      const parent = node.getParent();
+      if ($isLinkNode(parent) || $isLinkNode(node)) {
+        setIsLink(true);
+      } else {
+        setIsLink(false);
+      }
+
       const anchorNode = selection.anchor.getNode();
       let element =
         anchorNode.getKey() === "root"
@@ -620,7 +644,7 @@ export default function ToolbarPlugin(props: {
           <Divider />
         </React.Fragment>
       )}
-      {blockType === "code" ? (
+      {blockType === "code" ? ( //ER1
         <React.Fragment>
           <DropDown
             disabled={!isEditable}
@@ -723,6 +747,8 @@ export default function ToolbarPlugin(props: {
           >
             <i className="format code" />
           </button>
+
+
           {editorConfig.features.map((feature) => {
               if(feature.toolbar && feature.toolbar.normal) {
                 return feature.toolbar?.normal?.map((normalToolbarItem) => {
@@ -730,6 +756,21 @@ export default function ToolbarPlugin(props: {
                 });
               }
           })}
+          <button
+              key="link"
+              type="button"
+              disabled={!isEditable}
+              onClick={(event) => {
+                event.preventDefault();
+                insertLink();
+                editor.dispatchCommand(OPEN_MODAL_COMMAND, "link");
+              }}
+              className={`toolbar-item spaced ${isLink ? "active" : ""}`}
+              aria-label="Insert link"
+              title="Insert link"
+          >
+            <i className="format link" />
+          </button>
           {editorConfig.toggles.textColor.enabled &&
             editorConfig.toggles.textColor.display && (
               <ColorPicker

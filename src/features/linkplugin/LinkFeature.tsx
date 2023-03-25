@@ -6,12 +6,11 @@ import { $isLinkNode, LinkAttributes, LinkNode, TOGGLE_LINK_COMMAND } from './no
 import { AutoLinkNode } from './nodes/AutoLinkNodeModified';
 import AutoLinkPlugin from './plugins/autoLink/';
 import ClickableLinkPlugin from './plugins/clickableLink';
-import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
+/*import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
 import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
 import { useState, useCallback, useEffect } from 'react';
-import { mergeRegister } from '@lexical/utils';
-
+*/
 export function LinkFeature(props: {}): Feature { //TODO: Modularize link modal, toolbarplugin and floatingtexttoolbarplugin
 
 
@@ -47,7 +46,8 @@ export function LinkFeature(props: {}): Feature { //TODO: Modularize link modal,
             AutoLinkNode
         ],
         floatingTextFormatToolbar: {}, // TODO: Exctracting this here is too much of a brainfuck - even worse than for toolbar. Some react expert should look at this!
-        toolbar: {
+        // TODO: For now, disabled & moved to toolbar.tsx (hardcoded & unmodularized), as this below approach broke the code block
+        /* toolbar: {
             normal: [
                 (editor, editorConfig, isEditable) => { //TODO: too much duplicated code copied over from toolbar. Some react expert should look at this!
                     const [isLink, setIsLink] = useState(false);
@@ -114,7 +114,7 @@ export function LinkFeature(props: {}): Feature { //TODO: Modularize link modal,
                     );
                 }
             ]
-        }
+        }*/
 
     }
 }
