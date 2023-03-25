@@ -19,7 +19,7 @@ MINIMUM REQUIRED PAYLOAD VERSION: 1.6.15
 
 ## How to use - example collection
 
-1. Add the files **inside of the src folder of this repo* manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+1. Add the files **inside of the src folder of this repo** manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
 
 2. :
 ```ts
