@@ -2,7 +2,7 @@
   "name": "payload-plugin-lexical",
   "version": "0.0.18",
   "description": "Lexical plugin for Payload CMS",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
