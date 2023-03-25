@@ -63,6 +63,7 @@ function LinkEditor({
 }): JSX.Element {
   const editorRef = useRef<HTMLDivElement | null>(null);
   const [linkUrl, setLinkUrl] = useState("");
+  const [linkLabel, setLinkLabel] = useState("");
   const [isEditMode, setEditMode] = useState(false);
   const [lastSelection, setLastSelection] = useState<
     RangeSelection | GridSelection | NodeSelection | null
@@ -159,9 +160,11 @@ function LinkEditor({
 
         if (parent.getAttributes()?.linkType === "custom") {
           setLinkUrl(parent.getAttributes()?.url);
+          setLinkLabel(null)
         } else {
           // internal
-          setLinkUrl(
+          setLinkUrl(`/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${parent.getAttributes()?.doc?.value}`)
+          setLinkLabel(
             `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
               parent.getAttributes()?.doc?.value
             }`
@@ -176,16 +179,19 @@ function LinkEditor({
 
         if (node.getAttributes()?.linkType === "custom") {
           setLinkUrl(node.getAttributes()?.url);
+          setLinkLabel(null)
         } else {
           // internal
-          setLinkUrl(
-            `relation to ${node.getAttributes()?.doc?.relationTo}: ${
-              node.getAttributes()?.doc?.value
-            }`
+          setLinkUrl(`/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${parent.getAttributes()?.doc?.value}`)
+          setLinkLabel(
+              `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
+                  parent.getAttributes()?.doc?.value
+           }`
           );
         }
       } else {
         setLinkUrl("");
+        setLinkLabel(null)
       }
 
       buildStateFromSchema({
@@ -231,6 +237,7 @@ function LinkEditor({
       setLastSelection(null);
       setEditMode(false);
       setLinkUrl('');
+      setLinkLabel(null)
     }
 
     return true;
@@ -308,8 +315,6 @@ function LinkEditor({
             closeModal(drawerSlug);
           }}
           handleModalSubmit={(fields: Fields) => {
-            // setLinkUrl(sanitizeUrl(fields.url.value));
-
             setEditMode(false);
             closeModal(drawerSlug);
 
@@ -334,7 +339,7 @@ function LinkEditor({
       ) : (
           <div className="link-input">
             <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-              {linkUrl}
+              {linkLabel ?? linkUrl}
             </a>
             <div
                 className="link-edit"
