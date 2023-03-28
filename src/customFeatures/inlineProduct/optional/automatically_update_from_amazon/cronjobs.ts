@@ -7,7 +7,7 @@ import {getUpdatedProductShops, Shop} from "./affiliates/controller";
 export function initCronJobs() {
     // Runs every 12 hours:
     cron.schedule(`0 */12 * * *`, async () => {
-        console.log('running your task...');
+        console.log('running the update product task...');
         updateAllProducts();
     });
 
@@ -29,7 +29,6 @@ export async function updateAllProducts() {
                 if (!updatedProducts) {
                     return;
                 }
-
                 if(productCollection.product.shops.length !== updatedProducts.length){
                     return;
                 }
@@ -38,15 +37,6 @@ export async function updateAllProducts() {
                 }
 
                 if(productCollection?.product?.product_images && productCollection?.product?.product_images.length >= 1){
-                    let counter = 0;
-                    for(const image of productCollection?.product?.product_images){
-                        counter++;
-                        if(image?.product_images?.id){
-                            productCollection.product.product_images[0].product_images = image?.product_images?.id;
-                        }
-                    }
-                }
-                if(productCollection?.comments && productCollection?.comments.length >= 1){
                     let counter = 0;
                     for(const image of productCollection?.product?.product_images){
                         counter++;
@@ -66,12 +56,6 @@ export async function updateAllProducts() {
                             ...productCollection.product,
                             shops: updatedProducts
                         },
-                        product_review: {
-                            ...productCollection.product_review,
-                        },
-                        comments: {
-                            ...productCollection?.comments,
-                        }
                     }
                 });
             }
