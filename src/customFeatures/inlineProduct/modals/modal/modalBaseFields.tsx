@@ -27,10 +27,6 @@ export const getBaseFields = (config: Config): Field[] => [
         value: 'name',
       },
       {
-        label: 'Review - Points',
-        value: 'review_points',
-      },
-      {
         label: 'Price',
         value: 'price_best_shop',
       },

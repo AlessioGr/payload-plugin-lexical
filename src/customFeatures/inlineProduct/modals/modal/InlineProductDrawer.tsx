@@ -16,7 +16,6 @@ import {useModal} from '@faceless-ui/modal';
 import Button from 'payload/dist/admin/components/elements/Button';
 import reduceFieldsToValues from "payload/dist/admin/components/forms/Form/reduceFieldsToValues";
 import {Fields} from "payload/dist/admin/components/forms/Form/types";
-import {Field} from "payload/dist/fields/config/types";
 import {getBaseFields} from './modalBaseFields';
 import {useConfig} from "payload/dist/admin/components/utilities/Config";
 import Form from "payload/dist/admin/components/forms/Form";

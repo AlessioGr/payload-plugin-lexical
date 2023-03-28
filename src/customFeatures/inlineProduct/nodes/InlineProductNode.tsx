@@ -31,7 +31,7 @@ import { DecoratorNode } from 'lexical';
 import * as React from 'react';
 const ProductDisplayComponent = React.lazy(() => import("./ProductDisplayComponent"));
 
-export type Display = "name"|"review_points"|"price_best_shop"|"price_range_all_shops"|"name_price_best_shop_brackets"|"name_price_range_all_shops_brackets"|"affiliate_link_best_shop_label_name"|"affiliate_link_best_shop_label_name_and_price";
+export type Display = "name"|"price_best_shop"|"price_range_all_shops"|"name_price_best_shop_brackets"|"name_price_range_all_shops_brackets"|"affiliate_link_best_shop_label_name"|"affiliate_link_best_shop_label_name_and_price";
 
 
 export type InlineProductAttributes = {

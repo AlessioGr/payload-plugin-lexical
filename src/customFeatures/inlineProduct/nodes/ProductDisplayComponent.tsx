@@ -50,19 +50,13 @@ export default function ProductDisplayComponent({
       const shops = json?.product?.shops;
       const best_shop_price = shops[0].price ?? "??";
       const best_shop_price_currency = shops[0].currency ?? "??";
-      const review_points = json?.product_review?.rating ?? "??";
 
       if(display === "name") {
         setProductData({
           href: undefined,
           label: json?.title
         });
-      }else if(display === "review_points") {
-        setProductData({
-          href: undefined,
-          label: review_points
-        });
-      }else if(display === "price_best_shop") {
+      } else if(display === "price_best_shop") {
         if(shops.length > 0){
           setProductData({
             href: undefined,
