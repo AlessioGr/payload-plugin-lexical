@@ -8,6 +8,7 @@ import RichText from './collections/RichText';
 import Lexical from './collections/Lexical';
 import LexicalCustomized from './collections/LexicalCustomized';
 import LexicalDebug from './collections/LexicalDebug';
+import Products from "./collections/Products";
 
 export default buildConfig({
   serverURL: 'http://localhost:3001',
@@ -36,6 +37,7 @@ export default buildConfig({
     RichText,
     Users,
     Media,
+    Products,
   ],
   localization: {
     locales: [

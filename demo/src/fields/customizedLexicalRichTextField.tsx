@@ -19,6 +19,7 @@ import { TestRecorderFeature } from '../../../src//features/debug/testrecorder/T
 import { MaxLengthFeature } from '../../../src//features/maxlength/MaxLengthFeature';
 import { LinkFeature } from '../../../src//features/linkplugin/LinkFeature';
 import { TableOfContentsFeature } from '../../../src//features/tableofcontents/TableOfContentsFeature';
+import {InlineProductFeature} from "../../../src/customFeatures/inlineProduct/InlineProductFeature";
 
 
 
@@ -59,6 +60,8 @@ function lexicalRichText(props?: { name?: string, label?: string, debug?: boolea
                 LinkFeature({}),
                 TableOfContentsFeature({ enabled: false })
             ];
+
+            defaultEditorConfig.features.push(InlineProductFeature({}));
 
 
 
