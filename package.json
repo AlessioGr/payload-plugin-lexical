@@ -53,7 +53,6 @@
     "@lexical/selection": "0.9.1",
     "@lexical/table": "0.9.1",
     "@lexical/utils": "0.9.1",
-    "@lexical/yjs": "0.9.1",
     "@types/react-dom": "18.0.11",
     "katex": "0.16.4",
     "lexical": "0.9.1",
