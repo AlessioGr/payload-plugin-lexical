@@ -105,7 +105,7 @@ export default function ModalPlugin(props: {
 
   const [
     ListDrawer,
-    ListDrawerToggler,
+    _,
     { closeDrawer, openDrawer, toggleDrawer },
   ] = useListDrawer({
     uploads: true,
