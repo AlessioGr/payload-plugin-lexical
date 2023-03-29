@@ -2,12 +2,13 @@
 import { LexicalEditor } from 'lexical';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import * as React from "react";
-import { OPEN_MODAL_COMMAND } from '../../../plugin-lexical/fields/LexicalRichText/plugins/ModalPlugin';
-import { DropDownItem } from '../../../plugin-lexical/fields/LexicalRichText/ui/DropDown';
-import { EditorConfig, Feature } from '../../../plugin-lexical/types';
+
 import {PayloadBlockPlugin} from "./plugins/PayloadBlockPlugin";
 import {PayloadBlockNode} from "./nodes/PayloadBlockNode";
 import {InsertPayloadBlockDialog} from "./modal/PayloadBlockDrawer";
+import {Feature, EditorConfig} from "../../../../src/types";
+import {DropDownItem} from "../../../../src/fields/LexicalRichText/ui/DropDown";
+import {OPEN_MODAL_COMMAND} from "../../../../src/fields/LexicalRichText/plugins/ModalPlugin";
 
 
 export function PayloadBlockFeature(props: {}): Feature {

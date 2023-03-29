@@ -19,7 +19,7 @@ import { TestRecorderFeature } from '../../../src//features/debug/testrecorder/T
 import { MaxLengthFeature } from '../../../src//features/maxlength/MaxLengthFeature';
 import { LinkFeature } from '../../../src//features/linkplugin/LinkFeature';
 import { TableOfContentsFeature } from '../../../src//features/tableofcontents/TableOfContentsFeature';
-import {InlineProductFeature} from "../../../src/customFeatures/inlineProduct/InlineProductFeature";
+import { InlineProductFeature } from '../customLexicalFeatures/inlineProduct/InlineProductFeature';
 
 
 

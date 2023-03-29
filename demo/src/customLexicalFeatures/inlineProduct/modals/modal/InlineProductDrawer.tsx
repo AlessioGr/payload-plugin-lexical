@@ -27,8 +27,9 @@ import X from "payload/dist/admin/components/icons/X";
 import {TOGGLE_INLINE_PRODUCT_COMMAND} from '../../plugins/InlineProductPlugin';
 import {useEditDepth} from 'payload/dist/admin/components/utilities/EditDepth';
 import {useLexicalComposerContext} from "@lexical/react/LexicalComposerContext";
-import {useEditorConfigContext} from "../../../../fields/LexicalRichText/LexicalEditorComponent";
-import {EditorConfig} from "../../../../types";
+import {useEditorConfigContext} from "../../../../../../src/fields/LexicalRichText/LexicalEditorComponent";
+import {EditorConfig} from "../../../../../../src/types";
+
 
 type Props = { };
 

@@ -4,10 +4,10 @@ import * as React from "react";
 import { InlineProductNode } from './nodes/InlineProductNode';
 import { InlineProductPlugin } from './plugins/InlineProductPlugin';
 import { InsertInlineProductDrawer } from './modals/modal/InlineProductDrawer';
-import {EditorConfig, Feature} from "../../types";
-import {OPEN_MODAL_COMMAND} from "../../fields/LexicalRichText/plugins/ModalPlugin";
-import {DropDownItem} from "../../fields/LexicalRichText/ui/DropDown";
 import {LexicalEditor} from "lexical";
+import {Feature, EditorConfig} from "../../../../src/types";
+import {DropDownItem} from "../../../../src/fields/LexicalRichText/ui/DropDown";
+import {OPEN_MODAL_COMMAND} from "../../../../src/fields/LexicalRichText/plugins/ModalPlugin";
 
 
 export function InlineProductFeature(props: {}): Feature {

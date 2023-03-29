@@ -23,6 +23,24 @@ const Products: CollectionConfig = {
                     label: "Product Information", // required
                     fields: [
                         {
+                            name: 'color', // required
+                            type: 'radio', // required
+                            options: [ // required
+                                {
+                                    label: 'Mint',
+                                    value: 'mint',
+                                },
+                                {
+                                    label: 'Dark Gray',
+                                    value: 'dark_gray',
+                                },
+                            ],
+                            defaultValue: 'mint', // The first value in options.
+                            admin: {
+                                layout: 'horizontal',
+                            }
+                        },
+                        {
                             name: "alternatives",
                             label: "Alternative Products (if this one not available)",
                             type: "relationship",

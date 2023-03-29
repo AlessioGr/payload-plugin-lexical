@@ -6,9 +6,7 @@
  *
  */
 
-import {
-  LexicalEditor,
-} from "lexical";
+
 import { useState, useEffect } from "react";
 import { Drawer, formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 import { Gutter } from "payload/dist/admin/components/elements/Gutter";
@@ -33,8 +31,9 @@ import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth'
 import {PayloadBlockAttributes} from "../nodes/PayloadBlockNode";
 import {TOGGLE_PAYLOAD_BLOCK_COMMAND} from "../plugins/PayloadBlockPlugin";
 import {useLexicalComposerContext} from "@lexical/react/LexicalComposerContext";
-import {EditorConfig} from "../../../types";
-import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
+import {useEditorConfigContext} from "../../../../../src/fields/LexicalRichText/LexicalEditorComponent";
+import type {EditorConfig} from "../../../../../src/types";
+
 
 type Props = {};
 
