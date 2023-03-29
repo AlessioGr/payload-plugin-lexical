@@ -1,8 +1,6 @@
 import { EditorConfig } from "../../../../types";
 import * as React from "react";
-import {
-  useListDrawer,
-} from "payload/dist/admin/components/elements/ListDrawer";
+
 import { InsertTableDialog, InsertNewTableDialog } from "../TablePlugin";
 import { ImagePayload } from "../../nodes/ImageNode";
 import { INSERT_IMAGE_COMMAND } from "../UploadPlugin";
@@ -12,13 +10,14 @@ import {
   createCommand,
   LexicalCommand,
 } from "lexical";
-import { Modal, useModal } from "@faceless-ui/modal";
+import { useModal } from "@faceless-ui/modal";
 import { useCallback, useState, ReactNode, useMemo, createContext, useContext } from "react";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 import { SanitizedCollectionConfig } from 'payload/types';
 import { useConfig } from 'payload/components/utilities';
 import {useEditorConfigContext} from "../../LexicalEditorComponent";
+import {useListDrawer} from "payload/dist/admin/components/elements/ListDrawer";
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
   "upload" | "table" | string
