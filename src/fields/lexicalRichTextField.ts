@@ -7,7 +7,7 @@ import { defaultEditorConfig, EditorConfig } from "../types";
 import { populateLexicalRelationships } from "./LexicalAfterReadHook";
 import { cloneDeep } from "lodash";
 
-function lexicalRichTextField(props: {
+export function lexicalRichTextField(props: {
   name?: string;
   label?: string;
   localized?: boolean;
@@ -44,5 +44,3 @@ function lexicalRichTextField(props: {
     },
   };
 }
-
-export default lexicalRichTextField;

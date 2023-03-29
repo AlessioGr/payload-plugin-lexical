@@ -1,5 +1,5 @@
 import { Field } from 'payload/types';
-import lexicalRichTextField from '../../../src/fields/lexicalRichTextField'
+import {lexicalRichTextField} from '../../../src/fields/lexicalRichTextField'
 import { ClearEditorFeature } from '../../../src/features/actions/cleareditor/ClearEditorFeature';
 import { SpeechToTextFeature } from '../../../src/features/actions/speechtotext/SpeechToTextFeature';
 import { TreeViewFeature } from '../../../src/features/debug/treeview/TreeViewFeature';
@@ -60,7 +60,7 @@ function lexicalRichText(props?: { name?: string, label?: string, debug?: boolea
                 TableOfContentsFeature({ enabled: true })
             ];
 
-        
+
 
             return defaultEditorConfig;
         }
