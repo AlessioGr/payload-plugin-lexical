@@ -34,7 +34,7 @@
     "payload-plugin"
   ],
   "peerDependencies": {
-    "payload": "1.6.15",
+    "payload": "^1.6.15",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "dependencies": {
