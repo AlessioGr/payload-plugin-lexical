@@ -10,3 +10,4 @@ export const lexicalPlugin =
 
 export { lexicalRichTextField } from "./fields/lexicalRichTextField";
 export * from "./features/index";
+export * from "./types";
