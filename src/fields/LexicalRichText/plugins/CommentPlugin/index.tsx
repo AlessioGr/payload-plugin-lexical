@@ -431,35 +431,24 @@ function ShowDeleteCommentOrThreadDrawer({
   const { closeModal } = useModal();
 
   return (
-    <Drawer slug={modalSlug} key={modalSlug} className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>
-            Are you sure you want to delete this {commentOrThread.type}?
-          </h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              closeModal(modalSlug);
-            }}>
-            <X />
-          </Button>
-        </header>
-        <Button
-          onClick={() => {
-            deleteCommentOrThread(commentOrThread, thread);
-            closeModal(modalSlug);
-          }}>
-          Delete
-        </Button>{' '}
-        <Button
-          onClick={() => {
-            closeModal(modalSlug);
-          }}>
-          Cancel
-        </Button>
-      </Gutter>
+    <Drawer
+      slug={modalSlug}
+      key={modalSlug}
+      className={baseClass}
+      title={`Are you sure you want to delete this ${commentOrThread.type}?`}>
+      <Button
+        onClick={() => {
+          deleteCommentOrThread(commentOrThread, thread);
+          closeModal(modalSlug);
+        }}>
+        Delete
+      </Button>{' '}
+      <Button
+        onClick={() => {
+          closeModal(modalSlug);
+        }}>
+        Cancel
+      </Button>
     </Drawer>
   );
 }

@@ -89,35 +89,22 @@ export function InsertInlineProductDrawer(props: {
     <Drawer
       key={inlineProductDrawerSlug}
       slug={inlineProductDrawerSlug}
-      className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>Add Inline Product</h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              closeModal(inlineProductDrawerSlug);
-            }}>
-            <X />
-          </Button>
-        </header>
-
-        <Form
-          onSubmit={(fields: Fields) => {
-            const data = reduceFieldsToValues(fields, true);
-            onProductConfirm(data);
-          }}
-          initialState={initialState}>
-          <RenderFields
-            fieldTypes={fieldTypes}
-            readOnly={false}
-            fieldSchema={fieldSchema}
-            forceRender
-          />
-          <FormSubmit>{t('general:submit')}</FormSubmit>
-        </Form>
-      </Gutter>
+      className={baseClass}
+      title="Add Inline Product">
+      <Form
+        onSubmit={(fields: Fields) => {
+          const data = reduceFieldsToValues(fields, true);
+          onProductConfirm(data);
+        }}
+        initialState={initialState}>
+        <RenderFields
+          fieldTypes={fieldTypes}
+          readOnly={false}
+          fieldSchema={fieldSchema}
+          forceRender
+        />
+        <FormSubmit>{t('general:submit')}</FormSubmit>
+      </Form>
     </Drawer>
   );
 }

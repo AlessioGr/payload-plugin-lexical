@@ -142,43 +142,34 @@ export function InsertTableDialog({}: {}): JSX.Element {
   };
 
   return (
-    <Drawer slug={tableDrawerSlug} key={tableDrawerSlug} className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>Add table</h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              closeModal(tableDrawerSlug);
-            }}>
-            <X />
+    <Drawer
+      slug={tableDrawerSlug}
+      key={tableDrawerSlug}
+      className={baseClass}
+      title="Add table">
+      <React.Fragment>
+        <TextInput
+          placeholder={'# of rows (1-500)'}
+          label="Rows"
+          onChange={setRows}
+          value={rows}
+          data-test-id="table-modal-rows"
+          numberOnly={true}
+        />
+        <TextInput
+          placeholder={'# of columns (1-50)'}
+          label="Columns"
+          onChange={setColumns}
+          value={columns}
+          data-test-id="table-modal-columns"
+          numberOnly={true}
+        />
+        <DialogActions data-test-id="table-model-confirm-insert">
+          <Button disabled={isDisabled} onClick={onClick}>
+            Confirm
           </Button>
-        </header>
-        <React.Fragment>
-          <TextInput
-            placeholder={'# of rows (1-500)'}
-            label="Rows"
-            onChange={setRows}
-            value={rows}
-            data-test-id="table-modal-rows"
-            numberOnly={true}
-          />
-          <TextInput
-            placeholder={'# of columns (1-50)'}
-            label="Columns"
-            onChange={setColumns}
-            value={columns}
-            data-test-id="table-modal-columns"
-            numberOnly={true}
-          />
-          <DialogActions data-test-id="table-model-confirm-insert">
-            <Button disabled={isDisabled} onClick={onClick}>
-              Confirm
-            </Button>
-          </DialogActions>
-        </React.Fragment>
-      </Gutter>
+        </DialogActions>
+      </React.Fragment>
     </Drawer>
   );
 }
@@ -218,45 +209,31 @@ export function InsertNewTableDialog({}: {}): JSX.Element {
     <Drawer
       slug={newTableDrawerSlug}
       key={newTableDrawerSlug}
-      className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>
-            Add new table (Experimental)
-          </h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              closeModal(newTableDrawerSlug);
-            }}>
-            <X />
+      className={baseClass}
+      title="Add new table (Experimental)">
+      <React.Fragment>
+        <TextInput
+          placeholder={'# of rows (1-500)'}
+          label="Rows"
+          onChange={setRows}
+          value={rows}
+          data-test-id="table-modal-rows"
+          numberOnly={true}
+        />
+        <TextInput
+          placeholder={'# of columns (1-50)'}
+          label="Columns"
+          onChange={setColumns}
+          value={columns}
+          data-test-id="table-modal-columns"
+          numberOnly={true}
+        />
+        <DialogActions data-test-id="table-modal-confirm-insert">
+          <Button disabled={isDisabled} onClick={onClick}>
+            Confirm
           </Button>
-        </header>
-        <React.Fragment>
-          <TextInput
-            placeholder={'# of rows (1-500)'}
-            label="Rows"
-            onChange={setRows}
-            value={rows}
-            data-test-id="table-modal-rows"
-            numberOnly={true}
-          />
-          <TextInput
-            placeholder={'# of columns (1-50)'}
-            label="Columns"
-            onChange={setColumns}
-            value={columns}
-            data-test-id="table-modal-columns"
-            numberOnly={true}
-          />
-          <DialogActions data-test-id="table-modal-confirm-insert">
-            <Button disabled={isDisabled} onClick={onClick}>
-              Confirm
-            </Button>
-          </DialogActions>
-        </React.Fragment>
-      </Gutter>
+        </DialogActions>
+      </React.Fragment>
     </Drawer>
   );
 }

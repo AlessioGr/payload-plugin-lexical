@@ -38,39 +38,25 @@ export function ClearEditorDrawer(props: {
     <Drawer
       slug={equationDrawerSlug}
       key={equationDrawerSlug}
-      className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>
-            Are you sure you want to clear the editor?
-          </h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              toggleModal(equationDrawerSlug);
-            }}>
-            <X />
-          </Button>
-        </header>
-        <div className="Modal__content">
-          <Button
-            onClick={() => {
-              activeEditor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
-              toggleModal(equationDrawerSlug);
-              activeEditor.focus();
-            }}>
-            Clear
-          </Button>{' '}
-          <Button
-            onClick={() => {
-              toggleModal(equationDrawerSlug);
-              activeEditor.focus();
-            }}>
-            Cancel
-          </Button>
-        </div>
-      </Gutter>
+      className={baseClass}
+      title="Are you sure you want to clear the editor?">
+      <div className="Modal__content">
+        <Button
+          onClick={() => {
+            activeEditor.dispatchCommand(CLEAR_EDITOR_COMMAND, undefined);
+            toggleModal(equationDrawerSlug);
+            activeEditor.focus();
+          }}>
+          Clear
+        </Button>{' '}
+        <Button
+          onClick={() => {
+            toggleModal(equationDrawerSlug);
+            activeEditor.focus();
+          }}>
+          Cancel
+        </Button>
+      </div>
     </Drawer>
   );
 }

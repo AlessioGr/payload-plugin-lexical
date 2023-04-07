@@ -80,21 +80,9 @@ export function InsertEquationDrawer(props: {
     <Drawer
       slug={equationDrawerSlug}
       key={equationDrawerSlug}
-      className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>Add equation</h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              toggleModal(equationDrawerSlug);
-            }}>
-            <X />
-          </Button>
-        </header>
-        <KatexEquationAlterer onConfirm={onEquationConfirm} />
-      </Gutter>
+      className={baseClass}
+      title="Add equation">
+      <KatexEquationAlterer onConfirm={onEquationConfirm} />
     </Drawer>
   );
 }

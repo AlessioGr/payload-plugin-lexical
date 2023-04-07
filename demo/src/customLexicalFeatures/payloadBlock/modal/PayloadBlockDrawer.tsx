@@ -94,42 +94,31 @@ export function InsertPayloadBlockDialog(props: {
   };
 
   return (
-    <Drawer key={drawerSlug} slug={drawerSlug} className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        {block ? (
-          <>
-            <header className={`${baseClass}__header`}>
-              <h2 className={`${baseClass}__header-text`}>
-                Add {block.block.slug} Block
-              </h2>
-              <Button
-                className={`${baseClass}__header-close`}
-                buttonStyle="none"
-                onClick={() => {
-                  closeModal(drawerSlug);
-                }}>
-                <X />
-              </Button>
-            </header>
-            <Form
-              onSubmit={(fields: Fields) => {
-                const data = reduceFieldsToValues(fields, true);
-                onProductConfirm(data);
-              }}
-              initialState={initialState}>
-              <RenderFields
-                fieldTypes={fieldTypes}
-                readOnly={false}
-                fieldSchema={block.fieldSchema}
-                forceRender
-              />
-              <FormSubmit>{t('general:submit')}</FormSubmit>
-            </Form>
-          </>
-        ) : (
-          <p>Loading...</p>
-        )}
-      </Gutter>
+    <Drawer
+      key={drawerSlug}
+      slug={drawerSlug}
+      className={baseClass}
+      title={`Add ${block.block.slug} Block`}>
+      {block ? (
+        <>
+          <Form
+            onSubmit={(fields: Fields) => {
+              const data = reduceFieldsToValues(fields, true);
+              onProductConfirm(data);
+            }}
+            initialState={initialState}>
+            <RenderFields
+              fieldTypes={fieldTypes}
+              readOnly={false}
+              fieldSchema={block.fieldSchema}
+              forceRender
+            />
+            <FormSubmit>{t('general:submit')}</FormSubmit>
+          </Form>
+        </>
+      ) : (
+        <p>Loading...</p>
+      )}
     </Drawer>
   );
 }

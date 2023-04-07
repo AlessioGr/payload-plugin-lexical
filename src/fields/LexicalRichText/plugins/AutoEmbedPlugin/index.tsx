@@ -182,44 +182,31 @@ export function AutoEmbedDrawer({
     <Drawer
       slug={autoEmbedDrawerSlug}
       key={autoEmbedDrawerSlug}
-      className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>Add Embed</h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={() => {
-              toggleModal(autoEmbedDrawerSlug);
-            }}>
-            <X />
-          </Button>
-        </header>
-
-        <div className="Input__wrapper">
-          <input
-            type="text"
-            className="Input__input"
-            placeholder={embedConfig.exampleUrl}
-            value={text}
-            data-test-id={`${embedConfig.type}-embed-modal-url`}
-            onChange={(e) => {
-              setText(e.target.value);
-              const { value } = e.target;
-              setText(value);
-              validateText(value);
-            }}
-          />
-        </div>
-        <DialogActions>
-          <Button
-            disabled={!embedResult}
-            onClick={onClick}
-            data-test-id={`${embedConfig.type}-embed-modal-submit-btn`}>
-            Embed
-          </Button>
-        </DialogActions>
-      </Gutter>
+      className={baseClass}
+      title="Add Embed">
+      <div className="Input__wrapper">
+        <input
+          type="text"
+          className="Input__input"
+          placeholder={embedConfig.exampleUrl}
+          value={text}
+          data-test-id={`${embedConfig.type}-embed-modal-url`}
+          onChange={(e) => {
+            setText(e.target.value);
+            const { value } = e.target;
+            setText(value);
+            validateText(value);
+          }}
+        />
+      </div>
+      <DialogActions>
+        <Button
+          disabled={!embedResult}
+          onClick={onClick}
+          data-test-id={`${embedConfig.type}-embed-modal-submit-btn`}>
+          Embed
+        </Button>
+      </DialogActions>
     </Drawer>
   );
 }
