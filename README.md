@@ -15,7 +15,7 @@ Install the plugin using `yarn add payload-plugin-lexical`. You can find example
 ![203127349-2be29de4-aff3-4e13-9ebe-56be5fc3fc97 (1)](https://user-images.githubusercontent.com/70709113/204068103-a09f39e1-14e4-45fc-868a-68558380b74e.png)
 ![203127640-caa1f279-1555-48e6-9465-8c441ea65149](https://user-images.githubusercontent.com/70709113/204068104-8dcf337a-b18e-47b8-8ba3-3e777a1f834c.png)
 
-## How I'm using it in production - customized & with some features turned on or off:
+### How I'm using it in production - customized & with some features turned on or off:
 ![Arc 2023-03-20 at 01 34 05@2x](https://user-images.githubusercontent.com/70709113/226221050-f411c82c-6a66-49d0-94ef-1a7e9c1fdd22.jpg)
 
 
@@ -25,11 +25,8 @@ https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-
 
 MINIMUM REQUIRED PAYLOAD VERSION: 1.6.32
 
-## Examples - How to use
+## Example - Basic
 
-1. Install the plugin using `yarn add payload-plugin-lexical`
-
-2. :
 ```ts
 import { CollectionConfig } from 'payload/types';
 import { lexicalRichTextField } from 'payload-plugin-lexical'
@@ -55,7 +52,7 @@ const Lexical: CollectionConfig = {
 export default Lexical;
 ```
 
-## Example: with more customization and own, custom node:
+## Example - more customization and own, custom node:
 ```ts
 import { CollectionConfig } from 'payload/types';
 import { lexicalRichTextField, EquationsFeature, EmojisFeature, EmojiPickerFeature, HorizontalRuleFeature, FigmaFeature, YouTubeFeature, TwitterFeature, SpeechToTextFeature, ClearEditorFeature, MentionsFeature, TreeViewFeature, KeywordsFeature, AutoCompleteFeature, CollapsibleFeature, TypingPerfFeature, PasteLogFeature, TestRecorderFeature, LinkFeature, TableOfContentsFeature } from 'payload-plugin-lexical';
