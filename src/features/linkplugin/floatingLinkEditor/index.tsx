@@ -24,7 +24,7 @@ import {
   RangeSelection,
   SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import {Dispatch, useCallback, useEffect, useRef, useState} from 'react';
+import { Dispatch, useCallback, useEffect, useRef, useState } from "react";
 import * as React from "react";
 import { createPortal } from "react-dom";
 
@@ -41,14 +41,16 @@ import { useAuth } from "payload/dist/admin/components/utilities/Auth";
 import { useLocale } from "payload/dist/admin/components/utilities/Locale";
 import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
 import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
-import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
-import { $isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
-import { LinkDrawer } from './LinkDrawer';
-import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
-import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
+import { getSelectedNode } from "../../../fields/LexicalRichText/utils/getSelectedNode";
 import {
-  setFloatingElemPositionForLinkEditor
-} from "../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor";
+  $isLinkNode,
+  LinkAttributes,
+  TOGGLE_LINK_COMMAND,
+} from "../nodes/LinkNodeModified";
+import { LinkDrawer } from "./LinkDrawer";
+import { $isAutoLinkNode } from "../nodes/AutoLinkNodeModified";
+import { useEditorConfigContext } from "../../../fields/LexicalRichText/LexicalEditorComponent";
+import { setFloatingElemPositionForLinkEditor } from "../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor";
 
 function LinkEditor({
   editor,
@@ -64,11 +66,10 @@ function LinkEditor({
   const editorRef = useRef<HTMLDivElement | null>(null);
   const [linkUrl, setLinkUrl] = useState("");
   const [linkLabel, setLinkLabel] = useState("");
-  const [isEditMode, setEditMode] = useState(false);
   const [lastSelection, setLastSelection] = useState<
     RangeSelection | GridSelection | NodeSelection | null
   >(null);
-  const { uuid} = useEditorConfigContext();
+  const { uuid } = useEditorConfigContext();
 
   const customFieldSchema = false; /* fieldProps?.admin?.link?.fields */ // TODO: Field props
   const config = useConfig();
@@ -98,23 +99,23 @@ function LinkEditor({
     }
 
     fields.push({
-      name: 'sponsored',
-      label: 'Sponsored',
-      type: 'checkbox',
+      name: "sponsored",
+      label: "Sponsored",
+      type: "checkbox",
       admin: {
         condition: ({ linkType }) => {
-          return linkType === 'custom';
+          return linkType === "custom";
         },
       },
     });
 
     fields.push({
-      name: 'nofollow',
-      label: 'Nofollow',
-      type: 'checkbox',
+      name: "nofollow",
+      label: "Nofollow",
+      type: "checkbox",
       admin: {
         condition: ({ linkType }) => {
-          return linkType === 'custom';
+          return linkType === "custom";
         },
       },
     });
@@ -126,7 +127,7 @@ function LinkEditor({
   const editDepth = useEditDepth();
 
   const drawerSlug = formatDrawerSlug({
-    slug: `rich-text-link-lexicalRichText`+uuid,
+    slug: `rich-text-link-lexicalRichText` + uuid,
     depth: editDepth,
   });
 
@@ -138,9 +139,8 @@ function LinkEditor({
 
       // Initial state thingy
 
-
       // Initial state:
-      let data: LinkAttributes & { text: string, fields: undefined } = {
+      let data: LinkAttributes & { text: string; fields: undefined } = {
         text: "",
         url: "",
         linkType: undefined,
@@ -155,15 +155,19 @@ function LinkEditor({
         data = {
           ...parent.getAttributes(),
           text: parent.getTextContent(),
-          fields: undefined
+          fields: undefined,
         };
 
         if (parent.getAttributes()?.linkType === "custom") {
           setLinkUrl(parent.getAttributes()?.url);
-          setLinkLabel(null)
+          setLinkLabel(null);
         } else {
           // internal
-          setLinkUrl(`/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${parent.getAttributes()?.doc?.value}`)
+          setLinkUrl(
+            `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
+              parent.getAttributes()?.doc?.value
+            }`
+          );
           setLinkLabel(
             `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
               parent.getAttributes()?.doc?.value
@@ -174,24 +178,28 @@ function LinkEditor({
         data = {
           ...node.getAttributes(),
           text: node.getTextContent(),
-          fields: undefined
+          fields: undefined,
         };
 
         if (node.getAttributes()?.linkType === "custom") {
           setLinkUrl(node.getAttributes()?.url);
-          setLinkLabel(null)
+          setLinkLabel(null);
         } else {
           // internal
-          setLinkUrl(`/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${parent.getAttributes()?.doc?.value}`)
+          setLinkUrl(
+            `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
+              parent.getAttributes()?.doc?.value
+            }`
+          );
           setLinkLabel(
-              `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
-                  parent.getAttributes()?.doc?.value
-           }`
+            `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
+              parent.getAttributes()?.doc?.value
+            }`
           );
         }
       } else {
         setLinkUrl("");
-        setLinkLabel(null)
+        setLinkLabel(null);
       }
 
       buildStateFromSchema({
@@ -224,20 +232,19 @@ function LinkEditor({
       editor.isEditable()
     ) {
       const domRect: DOMRect | undefined =
-          nativeSelection.focusNode?.parentElement?.getBoundingClientRect();
+        nativeSelection.focusNode?.parentElement?.getBoundingClientRect();
       if (domRect) {
         domRect.y += 40;
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== 'link-input') {
+    } else if (!activeElement || activeElement.className !== "link-input") {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
       setLastSelection(null);
-      setEditMode(false);
-      setLinkUrl('');
-      setLinkLabel(null)
+      setLinkUrl("");
+      setLinkLabel(null);
     }
 
     return true;
@@ -283,17 +290,17 @@ function LinkEditor({
         },
         COMMAND_PRIORITY_LOW
       ),
-        editor.registerCommand(
-            KEY_ESCAPE_COMMAND,
-            () => {
-              if (isLink) {
-                setIsLink(false);
-                return true;
-              }
-              return false;
-            },
-            COMMAND_PRIORITY_HIGH,
-        ),
+      editor.registerCommand(
+        KEY_ESCAPE_COMMAND,
+        () => {
+          if (isLink) {
+            setIsLink(false);
+            return true;
+          }
+          return false;
+        },
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [editor, updateLinkEditor, setIsLink, isLink]);
 
@@ -305,54 +312,50 @@ function LinkEditor({
 
   return (
     <div ref={editorRef} className="link-editor">
-      {!isLink ? null : (isEditMode && isModalOpen(drawerSlug)) ? (
-        <LinkDrawer // TODO: Might aswell import from payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/index.tsx instead?
-          drawerSlug={drawerSlug}
-          fieldSchema={fieldSchema}
-          initialState={initialState}
-          handleClose={() => {
-            setEditMode(false);
-            closeModal(drawerSlug);
-          }}
-          handleModalSubmit={(fields: Fields) => {
-            setEditMode(false);
-            closeModal(drawerSlug);
+      <LinkDrawer // TODO: Might aswell import from payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/index.tsx instead?
+        drawerSlug={drawerSlug}
+        fieldSchema={fieldSchema}
+        initialState={initialState}
+        handleClose={() => {
+          closeModal(drawerSlug);
+        }}
+        handleModalSubmit={(fields: Fields) => {
+          closeModal(drawerSlug);
 
-            const data = reduceFieldsToValues(fields, true);
+          const data = reduceFieldsToValues(fields, true);
 
-            const newNode: LinkAttributes & {text?: string} = {
-              newTab: data.newTab,
-              sponsored: data.sponsored,
-              nofollow: data.nofollow,
-              url: data.linkType === "custom" ? data.url : undefined,
-              linkType: data.linkType,
-              doc: data.linkType === "internal" ? data.doc : undefined,
-              text: data?.text
-            };
+          const newNode: LinkAttributes & { text?: string } = {
+            newTab: data.newTab,
+            sponsored: data.sponsored,
+            nofollow: data.nofollow,
+            url: data.linkType === "custom" ? data.url : undefined,
+            linkType: data.linkType,
+            doc: data.linkType === "internal" ? data.doc : undefined,
+            text: data?.text,
+          };
 
-            /*if (customFieldSchema) {
+          /*if (customFieldSchema) {
               newNode.fields += data.fields;
             }*/ //TODO
 
-            editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
-          }}
-        />
-      ) : (
-          <div className="link-input">
-            <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-              {linkLabel ?? linkUrl}
-            </a>
-            <div
-                className="link-edit"
-                role="button"
-                tabIndex={0}
-                onMouseDown={(event) => event.preventDefault()}
-                onClick={() => {
-                  setEditMode(true);
-                  toggleModal(drawerSlug);
-                }}
-            />
-          </div>
+          editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
+        }}
+      />
+      {isLink && !isModalOpen(drawerSlug) && (
+        <div className="link-input">
+          <a href={linkUrl} target="_blank" rel="noopener noreferrer">
+            {linkLabel ?? linkUrl}
+          </a>
+          <div
+            className="link-edit"
+            role="button"
+            tabIndex={0}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              toggleModal(drawerSlug);
+            }}
+          />
+        </div>
       )}
     </div>
   );
@@ -381,7 +384,7 @@ function useFloatingLinkEditorToolbar(
 
   useEffect(() => {
     return mergeRegister(
-      editor.registerUpdateListener(({editorState}) => {
+      editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
           updateToolbar();
         });
@@ -393,15 +396,20 @@ function useFloatingLinkEditorToolbar(
           setActiveEditor(newEditor);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
+        COMMAND_PRIORITY_CRITICAL
+      )
     );
   }, [editor, updateToolbar]);
 
   return createPortal(
-        <LinkEditor editor={activeEditor} anchorElem={anchorElem} isLink={isLink} setIsLink={setIsLink} />,
-        anchorElem
-      );
+    <LinkEditor
+      editor={activeEditor}
+      anchorElem={anchorElem}
+      isLink={isLink}
+      setIsLink={setIsLink}
+    />,
+    anchorElem
+  );
 }
 
 export default function FloatingLinkEditorPlugin({

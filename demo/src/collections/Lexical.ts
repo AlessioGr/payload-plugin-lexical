@@ -7,6 +7,11 @@ const Lexical: CollectionConfig = {
   admin: {
     useAsTitle: "title",
   },
+  versions: {
+    drafts: {
+      autosave: true,
+    },
+  },
   fields: [
     {
       name: "title",

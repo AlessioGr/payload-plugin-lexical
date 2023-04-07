@@ -6,12 +6,12 @@
  *
  */
 
-import 'katex/dist/katex.css';
-import './modal.scss';
-import './index.scss';
+import "katex/dist/katex.css";
+import "./modal.scss";
+import "./index.scss";
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $wrapNodeInElement } from '@lexical/utils';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { $wrapNodeInElement } from "@lexical/utils";
 import {
   $createParagraphNode,
   $insertNodes,
@@ -20,35 +20,38 @@ import {
   createCommand,
   LexicalCommand,
   LexicalEditor,
-} from 'lexical';
-import {useCallback, useEffect, useState} from 'react';
-import * as React from 'react';
+} from "lexical";
+import { useCallback, useEffect, useState } from "react";
+import * as React from "react";
 
-import { useModal } from '@faceless-ui/modal';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
-import { Drawer, formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
+import { useModal } from "@faceless-ui/modal";
+import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
+import {
+  Drawer,
+  formatDrawerSlug,
+} from "payload/dist/admin/components/elements/Drawer";
 import Button from "payload/dist/admin/components/elements/Button";
 import X from "payload/dist/admin/components/icons/X";
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
-import { $createEquationNode, EquationNode } from '../node/EquationNode';
-import { EditorConfig } from '../../../types';
-import KatexEquationAlterer from '../ui/KatexEquationAlterer';
-import {useEditorConfigContext} from "../../../fields/LexicalRichText/LexicalEditorComponent";
-
+import { Gutter } from "payload/dist/admin/components/elements/Gutter";
+import { $createEquationNode, EquationNode } from "../node/EquationNode";
+import { EditorConfig } from "../../../types";
+import KatexEquationAlterer from "../ui/KatexEquationAlterer";
+import { useEditorConfigContext } from "../../../fields/LexicalRichText/LexicalEditorComponent";
 
 type CommandPayload = {
   equation: string;
   inline: boolean;
 };
 
-export const INSERT_EQUATION_COMMAND: LexicalCommand<CommandPayload> = createCommand('INSERT_EQUATION_COMMAND');
+export const INSERT_EQUATION_COMMAND: LexicalCommand<CommandPayload> =
+  createCommand("INSERT_EQUATION_COMMAND");
 
 const baseClass = "rich-text-equation-modal";
 
 export function InsertEquationDrawer(props: {
   editorConfig: EditorConfig;
 }): JSX.Element {
-  const { uuid} = useEditorConfigContext();
+  const { uuid } = useEditorConfigContext();
 
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
@@ -56,24 +59,29 @@ export function InsertEquationDrawer(props: {
   const editDepth = useEditDepth();
 
   const equationDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-equation`+uuid,
+    slug: `lexicalRichText-add-equation` + uuid,
     depth: editDepth,
   });
 
-  const {
-    toggleModal,
-  } = useModal();
+  const { toggleModal } = useModal();
 
   const onEquationConfirm = useCallback(
     (equation: string, inline: boolean) => {
       toggleModal(equationDrawerSlug);
-      activeEditor.dispatchCommand(INSERT_EQUATION_COMMAND, { equation, inline });
+      activeEditor.dispatchCommand(INSERT_EQUATION_COMMAND, {
+        equation,
+        inline,
+      });
     },
-    [activeEditor/* , onClose */],
+    [activeEditor /* , onClose */]
   );
 
   return (
-    <Drawer slug={equationDrawerSlug} key={equationDrawerSlug} className={baseClass}>
+    <Drawer
+      slug={equationDrawerSlug}
+      key={equationDrawerSlug}
+      className={baseClass}
+    >
       <Gutter className={`${baseClass}__template`}>
         <header className={`${baseClass}__header`}>
           <h2 className={`${baseClass}__header-text`}>Add equation</h2>
@@ -91,7 +99,6 @@ export function InsertEquationDrawer(props: {
       </Gutter>
     </Drawer>
   );
-
 }
 
 export default function EquationsPlugin(): JSX.Element | null {
@@ -100,7 +107,7 @@ export default function EquationsPlugin(): JSX.Element | null {
   useEffect(() => {
     if (!editor.hasNodes([EquationNode])) {
       throw new Error(
-        'EquationsPlugins: EquationsNode not registered on editor',
+        "EquationsPlugins: EquationsNode not registered on editor"
       );
     }
 
@@ -114,11 +121,11 @@ export default function EquationsPlugin(): JSX.Element | null {
           if ($isRootOrShadowRoot(equationNode.getParentOrThrow())) {
             $wrapNodeInElement(equationNode, $createParagraphNode).selectEnd();
           }
-        })
+        });
 
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor]);
 

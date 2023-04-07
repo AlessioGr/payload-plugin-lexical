@@ -1,53 +1,54 @@
-import { Feature } from '../../types';
+import { Feature } from "../../types";
 import * as React from "react";
-import FloatingLinkEditorPlugin from './floatingLinkEditor';
-import LinkPlugin from './plugins/link';
-import { $isLinkNode, LinkAttributes, LinkNode, TOGGLE_LINK_COMMAND } from './nodes/LinkNodeModified';
-import { AutoLinkNode } from './nodes/AutoLinkNodeModified';
-import AutoLinkPlugin from './plugins/autoLink/';
-import ClickableLinkPlugin from './plugins/clickableLink';
+import FloatingLinkEditorPlugin from "./floatingLinkEditor";
+import LinkPlugin from "./plugins/link";
+import {
+  $isLinkNode,
+  LinkAttributes,
+  LinkNode,
+  TOGGLE_LINK_COMMAND,
+} from "./nodes/LinkNodeModified";
+import { AutoLinkNode } from "./nodes/AutoLinkNodeModified";
+import AutoLinkPlugin from "./plugins/autoLink/";
+import ClickableLinkPlugin from "./plugins/clickableLink";
 /*import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
 import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
 import { useState, useCallback, useEffect } from 'react';
 */
-export function LinkFeature(props: {}): Feature { //TODO: Modularize link modal, toolbarplugin and floatingtexttoolbarplugin
+export function LinkFeature(props: {}): Feature {
+  //TODO: Modularize link modal, toolbarplugin and floatingtexttoolbarplugin
 
-
-
-    return {
-        floatingAnchorElemPlugins: [
-            (floatingAnchorElem) => <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} key="floatinglinkeditor" />,
-        ],
-        tablePlugins: [
-            <LinkPlugin key="linkplugin" />,
-            <ClickableLinkPlugin key="clickablelinkplugin" />,
-        ],
-        subEditorPlugins: [
-            <LinkPlugin key="linkplugin" />,
-        ],
-        plugins: [
-            {
-                component: <LinkPlugin key="linkplugin" />,
-            },
-            {
-                component: <ClickableLinkPlugin key="clickablelinkplugin" />,
-            },
-            {
-                component: <AutoLinkPlugin key="autolinkplugin" />,
-            }
-        ],
-        nodes: [
-            LinkNode,
-            AutoLinkNode
-        ],
-        tableCellNodes: [
-            LinkNode,
-            AutoLinkNode
-        ],
-        floatingTextFormatToolbar: {}, // TODO: Exctracting this here is too much of a brainfuck - even worse than for toolbar. Some react expert should look at this!
-        // TODO: For now, disabled & moved to toolbar.tsx (hardcoded & unmodularized), as this below approach broke the code block
-        /* toolbar: {
+  return {
+    floatingAnchorElemPlugins: [
+      (floatingAnchorElem) => (
+        <FloatingLinkEditorPlugin
+          anchorElem={floatingAnchorElem}
+          key="floatinglinkeditor"
+        />
+      ),
+    ],
+    tablePlugins: [
+      <LinkPlugin key="linkplugin" />,
+      <ClickableLinkPlugin key="clickablelinkplugin" />,
+    ],
+    subEditorPlugins: [<LinkPlugin key="linkplugin" />],
+    plugins: [
+      {
+        component: <LinkPlugin key="linkplugin" />,
+      },
+      {
+        component: <ClickableLinkPlugin key="clickablelinkplugin" />,
+      },
+      {
+        component: <AutoLinkPlugin key="autolinkplugin" />,
+      },
+    ],
+    nodes: [LinkNode, AutoLinkNode],
+    tableCellNodes: [LinkNode, AutoLinkNode],
+    floatingTextFormatToolbar: {}, // TODO: Exctracting this here is too much of a brainfuck - even worse than for toolbar. Some react expert should look at this!
+    // TODO: For now, disabled & moved to toolbar.tsx (hardcoded & unmodularized), as this below approach broke the code block
+    /* toolbar: {
             normal: [
                 (editor, editorConfig, isEditable) => { //TODO: too much duplicated code copied over from toolbar. Some react expert should look at this!
                     const [isLink, setIsLink] = useState(false);
@@ -115,6 +116,5 @@ export function LinkFeature(props: {}): Feature { //TODO: Modularize link modal,
                 }
             ]
         }*/
-
-    }
+  };
 }

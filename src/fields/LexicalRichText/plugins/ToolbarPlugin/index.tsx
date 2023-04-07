@@ -14,7 +14,7 @@ import {
   CODE_LANGUAGE_FRIENDLY_NAME_MAP,
   CODE_LANGUAGE_MAP,
   getLanguageFriendlyName,
-} from '@lexical/code';
+} from "@lexical/code";
 import {
   $isListNode,
   INSERT_CHECK_LIST_COMMAND,
@@ -76,7 +76,15 @@ import { getSelectedNode } from "../../utils/getSelectedNode";
 import { getEmbedConfigs } from "../AutoEmbedPlugin";
 import { EditorConfig } from "../../../../types";
 import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
-import {$isLinkNode, LinkAttributes, TOGGLE_LINK_COMMAND} from "../../../../features/linkplugin/nodes/LinkNodeModified";
+import {
+  $isLinkNode,
+  LinkAttributes,
+  TOGGLE_LINK_COMMAND,
+} from "../../../../features/linkplugin/nodes/LinkNodeModified";
+import { useEditorConfigContext } from "../../LexicalEditorComponent";
+import { useModal } from "@faceless-ui/modal";
+import { useEditDepth } from "payload/components/utilities";
+import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
 
 const blockTypeToBlockName = {
   bullet: "Bulleted List",
@@ -97,7 +105,7 @@ function getCodeLanguageOptions(): [string, string][] {
   const options: [string, string][] = [];
 
   for (const [lang, friendlyName] of Object.entries(
-      CODE_LANGUAGE_FRIENDLY_NAME_MAP,
+    CODE_LANGUAGE_FRIENDLY_NAME_MAP
   )) {
     options.push([lang, friendlyName]);
   }
@@ -150,8 +158,8 @@ function BlockFormatDropDown({
     editor.update(() => {
       const selection = $getSelection();
       if (
-          $isRangeSelection(selection) ||
-          DEPRECATED_$isGridSelection(selection)
+        $isRangeSelection(selection) ||
+        DEPRECATED_$isGridSelection(selection)
       ) {
         $setBlocksType(selection, () => $createParagraphNode());
       }
@@ -213,13 +221,13 @@ function BlockFormatDropDown({
   };
 
   const formatCode = () => {
-    if (blockType !== 'code') {
+    if (blockType !== "code") {
       editor.update(() => {
         let selection = $getSelection();
 
         if (
-            $isRangeSelection(selection) ||
-            DEPRECATED_$isGridSelection(selection)
+          $isRangeSelection(selection) ||
+          DEPRECATED_$isGridSelection(selection)
         ) {
           if (selection.isCollapsed()) {
             $setBlocksType(selection, () => $createCodeNode());
@@ -307,7 +315,6 @@ function BlockFormatDropDown({
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
-
     </DropDown>
   );
 }
@@ -403,14 +410,22 @@ export default function ToolbarPlugin(props: {
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const [isLink, setIsLink] = useState(false);
 
+  const { uuid } = useEditorConfigContext();
+  const { openModal } = useModal();
+  const editDepth = useEditDepth();
+  const linkDrawerSlug = formatDrawerSlug({
+    slug: `rich-text-link-lexicalRichText` + uuid,
+    depth: editDepth,
+  });
 
   const insertLink = useCallback(() => {
     if (!isLink) {
       const linkAttributes: LinkAttributes = {
         linkType: "custom",
         url: "https://",
-      }
+      };
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
+      openModal(linkDrawerSlug);
     } else {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
     }
@@ -589,7 +604,6 @@ export default function ToolbarPlugin(props: {
     [applyStyleText]
   );
 
-
   const onCodeLanguageSelect = useCallback(
     (value: string) => {
       activeEditor.update(() => {
@@ -748,26 +762,25 @@ export default function ToolbarPlugin(props: {
             <i className="format code" />
           </button>
 
-
           {editorConfig.features.map((feature) => {
-              if(feature.toolbar && feature.toolbar.normal) {
-                return feature.toolbar?.normal?.map((normalToolbarItem) => {
-                  return normalToolbarItem(editor, editorConfig, isEditable);
-                });
-              }
+            if (feature.toolbar && feature.toolbar.normal) {
+              return feature.toolbar?.normal?.map((normalToolbarItem) => {
+                return normalToolbarItem(editor, editorConfig, isEditable);
+              });
+            }
           })}
           <button
-              key="link"
-              type="button"
-              disabled={!isEditable}
-              onClick={(event) => {
-                event.preventDefault();
-                insertLink();
-                editor.dispatchCommand(OPEN_MODAL_COMMAND, "link");
-              }}
-              className={`toolbar-item spaced ${isLink ? "active" : ""}`}
-              aria-label="Insert link"
-              title="Insert link"
+            key="link"
+            type="button"
+            disabled={!isEditable}
+            onClick={(event) => {
+              event.preventDefault();
+              insertLink();
+              editor.dispatchCommand(OPEN_MODAL_COMMAND, "link");
+            }}
+            className={`toolbar-item spaced ${isLink ? "active" : ""}`}
+            aria-label="Insert link"
+            title="Insert link"
           >
             <i className="format link" />
           </button>
@@ -885,20 +898,18 @@ export default function ToolbarPlugin(props: {
                   </DropDownItem>
                 ) //TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
             }
-            {
-                editorConfig.toggles.tables.enabled &&
-                editorConfig.toggles.tables.display && (
-                    <DropDownItem
-                        onClick={() => {
-                          editor.dispatchCommand(OPEN_MODAL_COMMAND, "newtable");
-                        }}
-                        className="item"
-                    >
-                      <i className="icon table" />
-                      <span className="text">Table (Experimental)</span>
-                    </DropDownItem>
-                )
-            }
+            {editorConfig.toggles.tables.enabled &&
+              editorConfig.toggles.tables.display && (
+                <DropDownItem
+                  onClick={() => {
+                    editor.dispatchCommand(OPEN_MODAL_COMMAND, "newtable");
+                  }}
+                  className="item"
+                >
+                  <i className="icon table" />
+                  <span className="text">Table (Experimental)</span>
+                </DropDownItem>
+              )}
 
             {getEmbedConfigs(editorConfig).map((embedConfig) => (
               <DropDownItem
@@ -916,14 +927,12 @@ export default function ToolbarPlugin(props: {
               </DropDownItem>
             ))}
 
-
             {editorConfig.features.map((feature) => {
-              if(feature.toolbar && feature.toolbar.insert) {
+              if (feature.toolbar && feature.toolbar.insert) {
                 return feature.toolbar?.insert?.map((insertToolbarItem) => {
                   return insertToolbarItem(editor, editorConfig);
                 });
               }
-
             })}
           </DropDown>
         </React.Fragment>
