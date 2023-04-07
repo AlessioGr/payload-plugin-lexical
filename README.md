@@ -1,8 +1,14 @@
 # Payload Lexical Plugin
 
+[![npm version](https://badge.fury.io/js/payload-plugin-lexical.svg)](https://badge.fury.io/js/payload-plugin-lexical)
+
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta. This plugin comes packed with a ton of features which the original editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
 
-## Here are some screenshots
+## Installation / How to use
+
+Install the plugin using `yarn add payload-plugin-lexical`. You can find examples of how to use it below.
+
+## Screenshots
 
 ![203127349-2be29de4-aff3-4e13-9ebe-56be5fc3fc97 (1)](https://user-images.githubusercontent.com/70709113/204068103-a09f39e1-14e4-45fc-868a-68558380b74e.png)
 ![203127640-caa1f279-1555-48e6-9465-8c441ea65149](https://user-images.githubusercontent.com/70709113/204068104-8dcf337a-b18e-47b8-8ba3-3e777a1f834c.png)
@@ -17,7 +23,7 @@ https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-
 
 MINIMUM REQUIRED PAYLOAD VERSION: 1.6.32
 
-## Installation / How to use
+## Examples - How to use
 
 1. Install the plugin using `yarn add payload-plugin-lexical`
 
