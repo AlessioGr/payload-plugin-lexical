@@ -15,7 +15,7 @@ https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-
 
 
 
-MINIMUM REQUIRED PAYLOAD VERSION: 1.6.15
+MINIMUM REQUIRED PAYLOAD VERSION: 1.6.32
 
 ## How to use - example collection
 

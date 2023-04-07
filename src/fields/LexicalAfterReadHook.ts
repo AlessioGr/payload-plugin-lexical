@@ -1,54 +1,58 @@
-import { getJsonContentFromValue } from './LexicalRichText/PayloadLexicalRichTextFieldComponent';
+import { getJsonContentFromValue } from "./LexicalRichText/PayloadLexicalRichTextFieldComponent";
 import payload from "payload";
 import { FieldHook } from "payload/types";
-import { RawImagePayload } from './LexicalRichText/nodes/ImageNode';
-import {
-    SerializedEditorState,
-    SerializedLexicalNode,
-  } from "lexical";
+import { RawImagePayload } from "./LexicalRichText/nodes/ImageNode";
+import { SerializedEditorState, SerializedLexicalNode } from "lexical";
 
+type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
+  any,
+  {
+    jsonContent: SerializedEditorState;
+    preview: string;
+    characters: number;
+    words: number;
+  },
+  any
+>;
 
-
-type LexicalRichTextFieldAfterReadFieldHook = FieldHook<any, {jsonContent: SerializedEditorState, preview: string, characters: number, words: number}, any>;
-
-export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({value, req}): Promise<{jsonContent: SerializedEditorState, preview: string, characters: number, words: number}> =>  {
-    if(!value) {
-        return value;
+export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook =
+  async ({
+    value,
+    req,
+  }): Promise<{
+    jsonContent: SerializedEditorState;
+    preview: string;
+    characters: number;
+    words: number;
+  }> => {
+    if (!value) {
+      return value;
     }
     const jsonContent = getJsonContentFromValue(value);
-    if(jsonContent && jsonContent.root && jsonContent.root.children){
-        const newChildren = [];
-        for(let childNode of jsonContent.root.children){
-            newChildren.push(await traverseLexicalField(childNode, ""));
-        }
-        jsonContent.root.children = newChildren;
-     }
-     value.jsonContent = {...jsonContent};
+    if (jsonContent && jsonContent.root && jsonContent.root.children) {
+      const newChildren = [];
+      for (let childNode of jsonContent.root.children) {
+        newChildren.push(await traverseLexicalField(childNode, ""));
+      }
+      jsonContent.root.children = newChildren;
+    }
+    value.jsonContent = { ...jsonContent };
 
     return value;
-};
-
-
-
-
-
-
-
-
-
+  };
 
 async function loadUploadData(
   rawImagePayload: RawImagePayload,
   locale: string
 ) {
-  const foundUpload = await payload.findByID({
+  // console.log("Trying to find upload data for: ", rawImagePayload.value.id, " in ", rawImagePayload.relationTo, " with locale: ", locale, " and depth: 2")
+  console.log("Payload", payload);
+  return await payload.findByID({
     collection: rawImagePayload.relationTo, // required
     id: rawImagePayload.value.id, // required
     depth: 2,
     locale: locale,
   });
-
-  return foundUpload;
 }
 
 async function loadInternalLinkDocData(

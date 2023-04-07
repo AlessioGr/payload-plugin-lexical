@@ -17,10 +17,11 @@ import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer"
 import { SanitizedCollectionConfig } from 'payload/types';
 import { useConfig } from 'payload/components/utilities';
 import {useEditorConfigContext} from "../../LexicalEditorComponent";
-import {useListDrawer} from "payload/dist/admin/components/elements/ListDrawer";
+import {formatListDrawerSlug} from "payload/dist/admin/components/elements/ListDrawer";
+import {ListDrawer} from "../UploadPlugin/modal";
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<
-  "upload" | "table" | string
+    "upload" | "table" | string
 > = createCommand("OPEN_MODAL_COMMAND");
 
 export default function ModalPlugin(props: {
@@ -36,48 +37,52 @@ export default function ModalPlugin(props: {
       console.log("Error: useModal() from FacelessUI did not work correctly");
     },
     openModal,
+    closeModal,
     isModalOpen = () => false,
   } = useModal();
 
 
   const editDepth = useEditDepth();
 
-
+  const addUploadDrawerSlug = formatListDrawerSlug({
+    uuid: uuid,
+    depth: editDepth,
+  });
 
   // Register commands:
   editor.registerCommand<"upload" | "table" | string>(
-    OPEN_MODAL_COMMAND,
-    (toOpen: "upload" | "table" | string) => {
-      if (toOpen === "upload") {
-        openDrawer();
-      } else if (toOpen === "table") {
-        const addTableDrawerSlug = formatDrawerSlug({
-          slug: `lexicalRichText-add-table`+uuid,
-          depth: editDepth,
-        });
-        toggleModal(addTableDrawerSlug);
-      } else if (toOpen === "newtable") {
-        const addNewTableDrawerSlug = formatDrawerSlug({
-          slug: `lexicalRichText-add-newtable`+uuid,
-          depth: editDepth,
-        });
-        toggleModal(addNewTableDrawerSlug);
-      } else {
-        for(const feature of editorConfig.features){
-          if(feature.modals && feature.modals.length > 0){
-            for(const featureModal of feature.modals){
-              if(toOpen === featureModal.openModalCommand.type){
-                featureModal.openModalCommand.command(toggleModal, editDepth, uuid);
-                return true;
+      OPEN_MODAL_COMMAND,
+      (toOpen: "upload" | "table" | string) => {
+        if (toOpen === "upload") {
+          toggleModal(addUploadDrawerSlug);
+        } else if (toOpen === "table") {
+          const addTableDrawerSlug = formatDrawerSlug({
+            slug: `lexicalRichText-add-table`+uuid,
+            depth: editDepth,
+          });
+          toggleModal(addTableDrawerSlug);
+        } else if (toOpen === "newtable") {
+          const addNewTableDrawerSlug = formatDrawerSlug({
+            slug: `lexicalRichText-add-newtable`+uuid,
+            depth: editDepth,
+          });
+          toggleModal(addNewTableDrawerSlug);
+        } else {
+          for(const feature of editorConfig.features){
+            if(feature.modals && feature.modals.length > 0){
+              for(const featureModal of feature.modals){
+                if(toOpen === featureModal.openModalCommand.type){
+                  featureModal.openModalCommand.command(toggleModal, editDepth, uuid);
+                  return true;
+                }
               }
             }
           }
         }
-      }
 
-      return true;
-    },
-    COMMAND_PRIORITY_NORMAL
+        return true;
+      },
+      COMMAND_PRIORITY_NORMAL
   );
 
 
@@ -102,31 +107,31 @@ export default function ModalPlugin(props: {
   const { collections } = useConfig();
   const [enabledCollectionSlugs] = React.useState(() => filterRichTextCollections(collections, { uploads }).map(({ slug }) => slug));
 
-  const [
+  /*const [
     ListDrawer,
     _,
     { closeDrawer, openDrawer, toggleDrawer },
   ] = useListDrawer({
     uploads: true,
     collectionSlugs: enabledCollectionSlugs,
-  });
+  });*/
 
 
 
 
 
   const onUploadSelect = useCallback(
-    ({ docID, collectionConfig }) => {
-      insertUpload({
-        value: {
-          id: docID,
-        },
-        relationTo: collectionConfig.slug,
-        activeEditor,
-      });
-      closeDrawer();
-    },
-    [editor, closeDrawer]
+      ({ docID, collectionConfig }) => {
+        insertUpload({
+          value: {
+            id: docID,
+          },
+          relationTo: collectionConfig.slug,
+          activeEditor,
+        });
+        closeModal(addUploadDrawerSlug);
+      },
+      [editor, closeModal]
   );
   const insertUpload = ({ value, relationTo, activeEditor }) => {
     console.log("insertUpload value:", value, "relationTo:", relationTo);
@@ -148,20 +153,20 @@ export default function ModalPlugin(props: {
 
 
   return (
-    <>
-      <ListDrawer onSelect={onUploadSelect} />
+      <>
+        <ListDrawer onSelect={onUploadSelect} drawerSlug={addUploadDrawerSlug} collectionSlugs={enabledCollectionSlugs}/>
 
-      <InsertTableDialog/>
-      <InsertNewTableDialog />
+        <InsertTableDialog/>
+        <InsertNewTableDialog />
 
-      {editorConfig.features.map((feature) => {
-        if(feature.modals && feature.modals.length > 0) {
-          return feature.modals.map((customModal) => {
+        {editorConfig.features.map((feature) => {
+          if(feature.modals && feature.modals.length > 0) {
+            return feature.modals.map((customModal) => {
 
-            return customModal?.modal ? customModal.modal({editorConfig}) : null;
-          });
-        }
-      })}
-    </>
+              return customModal?.modal ? customModal.modal({editorConfig}) : null;
+            });
+          }
+        })}
+      </>
   );
 }
