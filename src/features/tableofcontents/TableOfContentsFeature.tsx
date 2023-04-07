@@ -10,7 +10,7 @@ export function TableOfContentsFeature(props: {enabled: boolean}): Feature {
     return {
         plugins: [
             {
-                component: enabled &&  (<div><TableOfContentsPlugin /></div>),
+                component: enabled &&  (<div key="tableofcontents"><TableOfContentsPlugin /></div>),
                 position: "bottomInContainer"
             }
         ],
