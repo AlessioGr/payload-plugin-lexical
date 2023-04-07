@@ -13,3 +13,4 @@ export * from "./features/index";
 export * from "./types";
 export { OPEN_MODAL_COMMAND } from "./fields/LexicalRichText/plugins/ModalPlugin/index";
 export * from "./fields/LexicalRichText/ui/DropDown";
+export * from "./fields/LexicalRichText/LexicalEditorComponent";
