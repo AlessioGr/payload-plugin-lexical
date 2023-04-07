@@ -76,9 +76,9 @@ function $search(
 function useQuery(): (searchText: string) => SearchPromise {
   return useCallback((searchText: string) => {
     const server = new AutocompleteServer();
-    console.time('query');
+    console.time('Lexical AutoComplete query');
     const response = server.query(searchText);
-    console.timeEnd('query');
+    console.timeEnd('Lexical AutoComplete query');
     return response;
   }, []);
 }
