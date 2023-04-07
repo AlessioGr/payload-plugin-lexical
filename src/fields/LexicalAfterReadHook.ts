@@ -45,8 +45,6 @@ async function loadUploadData(
   rawImagePayload: RawImagePayload,
   locale: string
 ) {
-  // console.log("Trying to find upload data for: ", rawImagePayload.value.id, " in ", rawImagePayload.relationTo, " with locale: ", locale, " and depth: 2")
-  console.log("Payload", payload);
   return await payload.findByID({
     collection: rawImagePayload.relationTo, // required
     id: rawImagePayload.value.id, // required
