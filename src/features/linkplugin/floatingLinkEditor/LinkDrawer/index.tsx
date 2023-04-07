@@ -24,27 +24,16 @@ export const LinkDrawer: React.FC<Props> = ({
   const { t } = useTranslation('fields');
 
   return (
-    <Drawer slug={drawerSlug} className={baseClass}>
-      <Gutter className={`${baseClass}__template`}>
-        <header className={`${baseClass}__header`}>
-          <h2 className={`${baseClass}__header-text`}>{t('editLink')}</h2>
-          <Button
-            className={`${baseClass}__header-close`}
-            buttonStyle="none"
-            onClick={handleClose}>
-            <X />
-          </Button>
-        </header>
-        <Form onSubmit={handleModalSubmit} initialState={initialState}>
-          <RenderFields
-            fieldTypes={fieldTypes}
-            readOnly={false}
-            fieldSchema={fieldSchema}
-            forceRender
-          />
-          <FormSubmit>{t('general:submit')}</FormSubmit>
-        </Form>
-      </Gutter>
+    <Drawer slug={drawerSlug} className={baseClass} title={t('editLink')}>
+      <Form onSubmit={handleModalSubmit} initialState={initialState}>
+        <RenderFields
+          fieldTypes={fieldTypes}
+          readOnly={false}
+          fieldSchema={fieldSchema}
+          forceRender
+        />
+        <FormSubmit>{t('general:submit')}</FormSubmit>
+      </Form>
     </Drawer>
   );
 };
