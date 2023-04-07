@@ -17,7 +17,7 @@ https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-
 
 MINIMUM REQUIRED PAYLOAD VERSION: 1.6.32
 
-## How to use - example collection
+## Installation / How to use
 
 1. Install the plugin using `yarn add payload-plugin-lexical`
 
@@ -45,7 +45,6 @@ const Lexical: CollectionConfig = {
 }
 
 export default Lexical;
-
 ```
 
 ## Example: with more customization and own, custom node:
