@@ -18,6 +18,7 @@ import { Props } from './types';
 import { Validate } from 'payload/types';
 import defaultValue from './settings/defaultValue';
 import { deepEqual } from '../../tools/deepEqual';
+import './payload.scss';
 
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   const {

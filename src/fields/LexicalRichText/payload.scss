@@ -1,0 +1,33 @@
+@import 'node_modules/payload/dist/admin/scss/styles.scss';
+
+.lexicalRichTextEditor {
+  margin-bottom: base(2);
+  display: flex;
+  isolation: isolate;
+
+  &--gutter {
+    .rich-text__editor {
+      padding-left: $baseline;
+      border-left: 1px solid var(--theme-elevation-100);
+    }
+  }
+
+  &__wrap {
+    width: 100%;
+    position: relative;
+  }
+
+  &--read-only {
+    .editor-shell::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--theme-elevation-100);
+      opacity: 0.5;
+      z-index: 9;
+    }
+  }
+}

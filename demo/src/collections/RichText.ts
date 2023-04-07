@@ -14,6 +14,7 @@ const RichText: CollectionConfig = {
     {
       name: 'richText',
       type: 'richText',
+      required: true,
     },
   ],
 };

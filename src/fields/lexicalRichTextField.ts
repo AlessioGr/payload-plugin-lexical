@@ -12,9 +12,11 @@ export function lexicalRichTextField(props: {
   label?: string;
   localized?: boolean;
   required?: boolean;
+  readOnly?: boolean;
   editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig;
 }): Field {
-  const { name, label, localized, required, editorConfigModifier } = props;
+  const { name, label, localized, required, readOnly, editorConfigModifier } =
+    props;
 
   const defaultEditorConfigCloned = cloneDeep(defaultEditorConfig);
 
@@ -32,6 +34,7 @@ export function lexicalRichTextField(props: {
       afterRead: [populateLexicalRelationships],
     },
     admin: {
+      readOnly: readOnly,
       components: {
         Field: (args) =>
           LexicalRichTextFieldComponent({
