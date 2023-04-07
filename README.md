@@ -1,6 +1,8 @@
-# Payload Lexical Plugin
+# Payload Lexical Plugin ![GitHub Repo stars](https://img.shields.io/github/stars/AlessioGr/payload-plugin-lexical?label=Star%20this%20plugin%20%3C3&style=social)
 
-[![npm version](https://badge.fury.io/js/payload-plugin-lexical.svg)](https://badge.fury.io/js/payload-plugin-lexical)
+![npm](https://img.shields.io/npm/v/payload-plugin-lexical?style=flat)
+![npm](https://img.shields.io/npm/dt/payload-plugin-lexical?style=flat)
+![NPM](https://img.shields.io/npm/l/payload-plugin-lexical)
 
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta.
 
