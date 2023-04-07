@@ -2,7 +2,9 @@
 
 [![npm version](https://badge.fury.io/js/payload-plugin-lexical.svg)](https://badge.fury.io/js/payload-plugin-lexical)
 
-A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta. This plugin comes packed with a ton of features which the original editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
+A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta.
+
+This plugin already comes packed with a ton of features which the original editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
 
 ## Installation / How to use
 
