@@ -19,12 +19,12 @@ MINIMUM REQUIRED PAYLOAD VERSION: 1.6.32
 
 ## How to use - example collection
 
-1. Add the files **inside of the src folder of this repo** manually into your payload project. Next, install all dependencies which the lexical project here uses in your project as well. NPM building is currently broken, feel free to help fix it! Until then, just copy the plugin into your payload folder instead of installing it via npm.
+1. Install the plugin using `yarn add payload-plugin-lexical`
 
 2. :
 ```ts
 import { CollectionConfig } from 'payload/types';
-import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
+import { lexicalRichTextField } from 'payload-plugin-lexical'
 
 const Lexical: CollectionConfig = {
     slug: 'lexicalRichText',
@@ -51,7 +51,7 @@ export default Lexical;
 ## Example: with more customization and own, custom node:
 ```ts
 import { CollectionConfig } from 'payload/types';
-import lexicalRichTextField from '../folder-where-you-copied-this-plugin-in/fields/lexicalRichTextField'
+import { lexicalRichTextField, EquationsFeature, EmojisFeature, EmojiPickerFeature, HorizontalRuleFeature, FigmaFeature, YouTubeFeature, TwitterFeature, SpeechToTextFeature, ClearEditorFeature, MentionsFeature, TreeViewFeature, KeywordsFeature, AutoCompleteFeature, CollapsibleFeature, TypingPerfFeature, PasteLogFeature, TestRecorderFeature, LinkFeature, TableOfContentsFeature } from 'payload-plugin-lexical';
 
 const Lexical: CollectionConfig = {
     slug: 'lexicalRichText',
