@@ -10,6 +10,8 @@ This plugin already comes packed with a ton of features which the original edito
 
 Install the plugin using `yarn add payload-plugin-lexical`. You can find examples of how to use it below.
 
+**Minimum required payload version: 1.6.32**
+
 ## Screenshots
 
 ![203127349-2be29de4-aff3-4e13-9ebe-56be5fc3fc97 (1)](https://user-images.githubusercontent.com/70709113/204068103-a09f39e1-14e4-45fc-868a-68558380b74e.png)
@@ -21,9 +23,6 @@ Install the plugin using `yarn add payload-plugin-lexical`. You can find example
 
 https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-9ad2-8ff5cddbc843.mp4
 
-
-
-MINIMUM REQUIRED PAYLOAD VERSION: 1.6.32
 
 ## Example - Basic
 
