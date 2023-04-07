@@ -1,9 +1,12 @@
-import { Config } from 'payload/config';
+import { Config } from "payload/config";
 
-export const lexicalPlugin = () => (config: Config): Config => {
-  return ({
-    ...config,
-  })
-};
+export const lexicalPlugin =
+  () =>
+  (config: Config): Config => {
+    return {
+      ...config,
+    };
+  };
 
-export { lexicalRichTextField } from './fields/lexicalRichTextField'
+export { lexicalRichTextField } from "./fields/lexicalRichTextField";
+export * from "./features/index";
