@@ -320,13 +320,14 @@ function LinkEditor({
 
             const data = reduceFieldsToValues(fields, true);
 
-            const newNode: LinkAttributes = {
+            const newNode: LinkAttributes & {text?: string} = {
               newTab: data.newTab,
               sponsored: data.sponsored,
               nofollow: data.nofollow,
               url: data.linkType === "custom" ? data.url : undefined,
               linkType: data.linkType,
               doc: data.linkType === "internal" ? data.doc : undefined,
+              text: data?.text
             };
 
             /*if (customFieldSchema) {

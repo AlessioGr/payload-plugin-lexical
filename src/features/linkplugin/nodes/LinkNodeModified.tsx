@@ -7,7 +7,8 @@
  *
  */
 
-import type {
+import {
+  $createTextNode,
   DOMConversionMap,
   DOMConversionOutput,
   EditorConfig,
@@ -291,7 +292,7 @@ export function $isLinkNode(
 export const TOGGLE_LINK_COMMAND: LexicalCommand<LinkAttributes | null
 > = createCommand("TOGGLE_LINK_COMMAND");
 
-export function toggleLink(linkAttributes: LinkAttributes): void {
+export function toggleLink(linkAttributes: LinkAttributes & {text?: string}): void {
 
   const selection = $getSelection();
 
@@ -321,11 +322,22 @@ export function toggleLink(linkAttributes: LinkAttributes): void {
       const firstNode = nodes[0];
       // if the first node is a LinkNode or if its
       // parent is a LinkNode, we update the URL, target and rel.
-      const linkNode = $isLinkNode(firstNode)
+      const linkNode: LinkNode = $isLinkNode(firstNode)
         ? firstNode
         : $getLinkAncestor(firstNode);
       if (linkNode !== null) {     
         linkNode.setAttributes(linkAttributes);
+
+        if(linkAttributes.text && linkAttributes.text !== linkNode.getTextContent()){
+          // remove all children and add child with new textcontent:
+          linkNode.append($createTextNode(linkAttributes.text))
+          linkNode.getChildren().forEach((child) => {
+            if(child !== linkNode.getLastChild()){
+              child.remove()
+            }
+          })
+        }
+
 
         return;
       }
@@ -348,7 +360,15 @@ export function toggleLink(linkAttributes: LinkAttributes): void {
       if ($isLinkNode(parent)) {
         linkNode = parent;
         parent.setAttributes(linkAttributes)
-
+        if(linkAttributes.text && linkAttributes.text !== parent.getTextContent()){
+          // remove all children and add child with new textcontent:
+          parent.append($createTextNode(linkAttributes.text))
+          parent.getChildren().forEach((child) => {
+            if(child !== parent.getLastChild()){
+              child.remove()
+            }
+          })
+        }
         return;
       }
 
@@ -390,8 +410,8 @@ export function toggleLink(linkAttributes: LinkAttributes): void {
   }
 }
 
-function $getLinkAncestor(node: LexicalNode): null | LexicalNode {
-  return $getAncestor(node, (ancestor) => $isLinkNode(ancestor));
+function $getLinkAncestor(node: LexicalNode): null | LinkNode {
+  return $getAncestor(node, (ancestor) => $isLinkNode(ancestor)) as LinkNode;
 }
 
 function $getAncestor(

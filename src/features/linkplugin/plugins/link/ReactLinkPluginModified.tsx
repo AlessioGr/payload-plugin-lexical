@@ -33,9 +33,9 @@ export function LinkPlugin({ validateUrl }: Props): null {
     return mergeRegister(
       editor.registerCommand(
         TOGGLE_LINK_COMMAND,
-        (payload: LinkAttributes) => {
+        (payload: LinkAttributes & {text?: string}) => {
           console.log("Payload received:", payload);
-          let linkAttributes: LinkAttributes = payload;
+          let linkAttributes = payload;
           
           //validate
           if (linkAttributes?.linkType === "custom") {
