@@ -6,12 +6,11 @@
  *
  */
 
-import {$isLinkNode, LinkAttributes} from '../../nodes/LinkNodeModified';
-import type {ElementNode, LexicalEditor, LexicalNode} from 'lexical';
+import { $isLinkNode, LinkAttributes } from '../../nodes/LinkNodeModified';
+import type { ElementNode, LexicalEditor, LexicalNode } from 'lexical';
 
-
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {mergeRegister} from '@lexical/utils';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { mergeRegister } from '@lexical/utils';
 import {
   $createTextNode,
   $isElementNode,
@@ -19,9 +18,13 @@ import {
   $isTextNode,
   TextNode,
 } from 'lexical';
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 import invariant from '../../../../fields/LexicalRichText/shared/invariant';
-import { $createAutoLinkNode, $isAutoLinkNode, AutoLinkNode } from '../../nodes/AutoLinkNodeModified';
+import {
+  $createAutoLinkNode,
+  $isAutoLinkNode,
+  AutoLinkNode,
+} from '../../nodes/AutoLinkNodeModified';
 
 type ChangeHandler = (url: string | null, prevUrl: string | null) => void;
 
@@ -36,8 +39,8 @@ type LinkMatcherResult = {
 export type LinkMatcher = (text: string) => LinkMatcherResult | null;
 
 export function createLinkMatcherWithRegExp(
-    regExp: RegExp,
-    urlTransformer: (text: string) => string = (text) => text,
+  regExp: RegExp,
+  urlTransformer: (text: string) => string = (text) => text,
 ) {
   return (text: string) => {
     const match = regExp.exec(text);
@@ -162,11 +165,11 @@ function handleLinkCreation(
       }
       const attributes: LinkAttributes = {
         url: match.url,
-        linkType: "custom",
-        ...match.attributes
-      }
+        linkType: 'custom',
+        ...match.attributes,
+      };
 
-      const linkNode = $createAutoLinkNode({attributes: attributes});
+      const linkNode = $createAutoLinkNode({ attributes: attributes });
       const textNode = $createTextNode(match.text);
       textNode.setFormat(linkTextNode.getFormat());
       textNode.setDetail(linkTextNode.getDetail());

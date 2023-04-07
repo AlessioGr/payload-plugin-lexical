@@ -34,8 +34,8 @@ export default function ImageResizer({
   captionsEnabled,
 }: {
   editor: LexicalEditor;
-  buttonRef: {current: null | HTMLButtonElement};
-  imageRef: {current: null | HTMLElement};
+  buttonRef: { current: null | HTMLButtonElement };
+  imageRef: { current: null | HTMLElement };
   maxWidth?: number;
   onResizeEnd: (width: undefined | number, height: undefined | number) => void;
   onResizeStart: () => void;
@@ -71,12 +71,15 @@ export default function ImageResizer({
   });
   const editorRootElement = editor.getRootElement();
   // Find max width, accounting for editor padding.
-  const maxWidthContainer = maxWidth || (editorRootElement !== null
-    ? editorRootElement.getBoundingClientRect().width - 20
-    : 100);
-  const maxHeightContainer = editorRootElement !== null
-    ? editorRootElement.getBoundingClientRect().height - 20
-    : 100;
+  const maxWidthContainer =
+    maxWidth ||
+    (editorRootElement !== null
+      ? editorRootElement.getBoundingClientRect().width - 20
+      : 100);
+  const maxHeightContainer =
+    editorRootElement !== null
+      ? editorRootElement.getBoundingClientRect().height - 20
+      : 100;
 
   const minWidth = 100;
   const minHeight = 100;
@@ -84,8 +87,9 @@ export default function ImageResizer({
   const setStartCursor = (direction: number) => {
     const ew = direction === Direction.east || direction === Direction.west;
     const ns = direction === Direction.north || direction === Direction.south;
-    const nwse = (direction & Direction.north && direction & Direction.west)
-      || (direction & Direction.south && direction & Direction.east);
+    const nwse =
+      (direction & Direction.north && direction & Direction.west) ||
+      (direction & Direction.south && direction & Direction.east);
 
     const cursorDir = ew ? 'ew' : ns ? 'ns' : nwse ? 'nwse' : 'nesw';
 
@@ -169,8 +173,10 @@ export default function ImageResizer({
     const image = imageRef.current;
     const positioning = positioningRef.current;
 
-    const isHorizontal = positioning.direction & (Direction.east | Direction.west);
-    const isVertical = positioning.direction & (Direction.south | Direction.north);
+    const isHorizontal =
+      positioning.direction & (Direction.east | Direction.west);
+    const isVertical =
+      positioning.direction & (Direction.south | Direction.north);
 
     if (image !== null && positioning.isResizing) {
       // Corner cursor
@@ -249,8 +255,7 @@ export default function ImageResizer({
           ref={buttonRef}
           onClick={() => {
             setShowCaption(!showCaption);
-          }}
-        >
+          }}>
           Add Caption
         </button>
       )}

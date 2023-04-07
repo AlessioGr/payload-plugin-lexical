@@ -56,7 +56,7 @@
   user-select: none;
 }
 
-html[data-theme=dark] {
+html[data-theme='dark'] {
   .Collapsible__container {
     background: var(--theme-elevation-50);
     border: 1px solid var(--theme-elevation-150);

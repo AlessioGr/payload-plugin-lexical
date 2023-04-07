@@ -1,5 +1,5 @@
 import { CollectionConfig } from 'payload/types';
-import debugLexicalRichText from "../fields/debugLexicalRichTextField";
+import debugLexicalRichText from '../fields/debugLexicalRichTextField';
 
 const LexicalDebug: CollectionConfig = {
   slug: 'debugLexicalRichText',
@@ -10,10 +10,10 @@ const LexicalDebug: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
-      required: true
+      required: true,
     },
-    debugLexicalRichText({debug: true}),
-  ]
-}
+    debugLexicalRichText({ debug: true }),
+  ],
+};
 
 export default LexicalDebug;

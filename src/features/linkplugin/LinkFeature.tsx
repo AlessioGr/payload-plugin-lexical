@@ -1,16 +1,16 @@
-import { Feature } from "../../types";
-import * as React from "react";
-import FloatingLinkEditorPlugin from "./floatingLinkEditor";
-import LinkPlugin from "./plugins/link";
+import { Feature } from '../../types';
+import * as React from 'react';
+import FloatingLinkEditorPlugin from './floatingLinkEditor';
+import LinkPlugin from './plugins/link';
 import {
   $isLinkNode,
   LinkAttributes,
   LinkNode,
   TOGGLE_LINK_COMMAND,
-} from "./nodes/LinkNodeModified";
-import { AutoLinkNode } from "./nodes/AutoLinkNodeModified";
-import AutoLinkPlugin from "./plugins/autoLink/";
-import ClickableLinkPlugin from "./plugins/clickableLink";
+} from './nodes/LinkNodeModified';
+import { AutoLinkNode } from './nodes/AutoLinkNodeModified';
+import AutoLinkPlugin from './plugins/autoLink/';
+import ClickableLinkPlugin from './plugins/clickableLink';
 /*import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
 import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';

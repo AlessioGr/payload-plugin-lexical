@@ -96,9 +96,9 @@ export default function EquationComponent({
       const isSelected = editorState.read(() => {
         const selection = $getSelection();
         return (
-          $isNodeSelection(selection)
-            && selection.has(nodeKey)
-            && selection.getNodes().length === 1
+          $isNodeSelection(selection) &&
+          selection.has(nodeKey) &&
+          selection.getNodes().length === 1
         );
       });
       if (isSelected) {

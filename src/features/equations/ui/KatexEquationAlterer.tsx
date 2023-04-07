@@ -39,11 +39,7 @@ export default function KatexEquationAlterer({
     <React.Fragment>
       <div className="KatexEquationAlterer_defaultRow">
         Inline
-        <input
-          type="checkbox"
-          checked={inline}
-          onChange={onCheckboxChange}
-        />
+        <input type="checkbox" checked={inline} onChange={onCheckboxChange} />
       </div>
       <div className="KatexEquationAlterer_defaultRow">Equation </div>
       <div className="KatexEquationAlterer_centerRow">

@@ -42,15 +42,14 @@ function FigmaComponent({
     <BlockWithAlignableContents
       className={className}
       format={format}
-      nodeKey={nodeKey}
-    >
+      nodeKey={nodeKey}>
       <iframe
         width="560"
         height="315"
         src={`https://www.figma.com/embed?embed_host=lexical&url=\
         https://www.figma.com/file/${documentID}`}
         allowFullScreen
-        style={{maxWidth: '100%'}}
+        style={{ maxWidth: '100%' }}
       />
     </BlockWithAlignableContents>
   );

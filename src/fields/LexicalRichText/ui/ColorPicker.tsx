@@ -121,18 +121,12 @@ export default function ColorPicker({
     <DropDown
       {...rest}
       disabled={disabled}
-      stopCloseOnClickSelf={stopCloseOnClickSelf}
-    >
+      stopCloseOnClickSelf={stopCloseOnClickSelf}>
       <div
         className="color-picker-wrapper"
         style={{ width: WIDTH }}
-        ref={innerDivRef}
-      >
-        <TextInput
-          label="Hex"
-          onChange={onSetHex}
-          value={inputColor}
-        />
+        ref={innerDivRef}>
+        <TextInput label="Hex" onChange={onSetHex} value={inputColor} />
         <div className="color-picker-basic-color">
           {basicColors.map((basicColor) => (
             <button
@@ -149,8 +143,7 @@ export default function ColorPicker({
         <MoveWrapper
           className="color-picker-saturation"
           style={{ backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)` }}
-          onChange={onMoveSaturation}
-        >
+          onChange={onMoveSaturation}>
           <div
             className="color-picker-saturation_cursor"
             style={{
@@ -160,10 +153,7 @@ export default function ColorPicker({
             }}
           />
         </MoveWrapper>
-        <MoveWrapper
-          className="color-picker-hue"
-          onChange={onMoveHue}
-        >
+        <MoveWrapper className="color-picker-hue" onChange={onMoveHue}>
           <div
             className="color-picker-hue_cursor"
             style={{
@@ -194,7 +184,12 @@ interface MoveWrapperProps {
   children: JSX.Element;
 }
 
-function MoveWrapper({ className, style, onChange, children }: MoveWrapperProps) {
+function MoveWrapper({
+  className,
+  style,
+  onChange,
+  children,
+}: MoveWrapperProps) {
   const divRef = useRef<HTMLDivElement>(null);
 
   const move = (e: React.MouseEvent | MouseEvent): void => {
@@ -234,8 +229,7 @@ function MoveWrapper({ className, style, onChange, children }: MoveWrapperProps)
       ref={divRef}
       className={className}
       style={style}
-      onMouseDown={onMouseDown}
-    >
+      onMouseDown={onMouseDown}>
       {children}
     </div>
   );
@@ -272,14 +266,16 @@ export function toHex(value: string): string {
     ctx.fillStyle = value;
 
     return ctx.fillStyle;
-  } if (value.length === 4 || value.length === 5) {
+  }
+  if (value.length === 4 || value.length === 5) {
     value = value
       .split('')
       .map((v, i) => (i ? v + v : '#'))
       .join('');
 
     return value;
-  } if (value.length === 7 || value.length === 9) {
+  }
+  if (value.length === 7 || value.length === 9) {
     return value;
   }
 
@@ -314,8 +310,8 @@ function rgb2hsv({ r, g, b }: RGB): HSV {
 
   const h = d
     ? (max === r
-      ? (g - b) / d + (g < b ? 6 : 0)
-      : max === g
+        ? (g - b) / d + (g < b ? 6 : 0)
+        : max === g
         ? 2 + (b - r) / d
         : 4 + (r - g) / d) * 60
     : 0;

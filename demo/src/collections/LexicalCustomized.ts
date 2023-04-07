@@ -1,5 +1,5 @@
 import { CollectionConfig } from 'payload/types';
-import customizedLexicalRichText from "../fields/customizedLexicalRichTextField";
+import customizedLexicalRichText from '../fields/customizedLexicalRichTextField';
 
 const LexicalCustomized: CollectionConfig = {
   slug: 'customLexicalRichText',
@@ -10,10 +10,10 @@ const LexicalCustomized: CollectionConfig = {
     {
       name: 'title',
       type: 'text',
-      required: true
+      required: true,
     },
     customizedLexicalRichText(),
-  ]
-}
+  ],
+};
 
 export default LexicalCustomized;

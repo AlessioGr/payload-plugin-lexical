@@ -70,7 +70,7 @@ export class CollapsibleContentNode extends ElementNode {
   exportDOM(): DOMExportOutput {
     const element = document.createElement('div');
     element.setAttribute('data-lexical-collapsible-content', 'true');
-    return {element};
+    return { element };
   }
 
   static importJSON(

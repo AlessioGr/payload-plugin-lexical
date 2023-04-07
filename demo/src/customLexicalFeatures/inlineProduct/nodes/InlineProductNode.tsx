@@ -18,21 +18,29 @@ import {
   NodeSelection,
   RangeSelection,
   SerializedLexicalNode,
-} from "lexical";
+} from 'lexical';
 
-import { $wrapNodeInElement, addClassNamesToElement } from "@lexical/utils";
+import { $wrapNodeInElement, addClassNamesToElement } from '@lexical/utils';
 import {
   $applyNodeReplacement,
   $getSelection,
   $isRangeSelection,
   Spread,
-} from "lexical";
+} from 'lexical';
 import { DecoratorNode } from 'lexical';
 import * as React from 'react';
-const ProductDisplayComponent = React.lazy(() => import("./ProductDisplayComponent"));
+const ProductDisplayComponent = React.lazy(
+  () => import('./ProductDisplayComponent'),
+);
 
-export type Display = "name"|"price_best_shop"|"price_range_all_shops"|"name_price_best_shop_brackets"|"name_price_range_all_shops_brackets"|"affiliate_link_best_shop_label_name"|"affiliate_link_best_shop_label_name_and_price";
-
+export type Display =
+  | 'name'
+  | 'price_best_shop'
+  | 'price_range_all_shops'
+  | 'name_price_best_shop_brackets'
+  | 'name_price_range_all_shops_brackets'
+  | 'affiliate_link_best_shop_label_name'
+  | 'affiliate_link_best_shop_label_name_and_price';
 
 export type InlineProductAttributes = {
   doc?: {
@@ -45,41 +53,46 @@ export type InlineProductAttributes = {
 
 export type SerializedInlineProductNode = Spread<
   {
-    type: "inlineProduct";
+    type: 'inlineProduct';
     version: 1;
-    attributes: InlineProductAttributes
+    attributes: InlineProductAttributes;
   },
   SerializedLexicalNode
 >;
 
 /** @noInheritDoc */
 export class InlineProductNode extends DecoratorNode<JSX.Element> {
-
   __attributes: InlineProductAttributes;
 
   static getType(): string {
-    return "inlineProduct";
+    return 'inlineProduct';
   }
 
   static clone(node: InlineProductNode): InlineProductNode {
-    return new InlineProductNode(
-      {
-        attributes: node.__attributes,
-        key: node.__key
-      }
-    );
+    return new InlineProductNode({
+      attributes: node.__attributes,
+      key: node.__key,
+    });
   }
 
-  constructor({attributes = {}, key}: {attributes: InlineProductAttributes, key?: NodeKey}) {
+  constructor({
+    attributes = {},
+    key,
+  }: {
+    attributes: InlineProductAttributes;
+    key?: NodeKey;
+  }) {
     super(key);
     this.__attributes = attributes;
   }
 
-
   createDOM(config: EditorConfig): HTMLSpanElement {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
 
-    addClassNamesToElement(element, /*config.theme.inlineProduct*/ 'PlaygroundEditorTheme__inlineProduct');
+    addClassNamesToElement(
+      element,
+      /*config.theme.inlineProduct*/ 'PlaygroundEditorTheme__inlineProduct',
+    );
     return element;
   }
 
@@ -88,25 +101,22 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
     return false;
   }
 
-
   static importJSON(
-    serializedNode: SerializedInlineProductNode
+    serializedNode: SerializedInlineProductNode,
   ): InlineProductNode {
     const node = $createInlineProductNode(serializedNode.attributes);
     return node;
   }
 
-
   exportJSON(): SerializedInlineProductNode {
     return {
-      type: "inlineProduct",
+      type: 'inlineProduct',
       version: 1,
-      attributes: this.getAttributes()
+      attributes: this.getAttributes(),
     };
   }
 
   decorate(): JSX.Element {
-
     return (
       <ProductDisplayComponent
         doc={this.__attributes?.doc}
@@ -116,9 +126,6 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
     );
   }
 
-
-
-
   getAttributes(): InlineProductAttributes {
     return this.getLatest().__attributes;
   }
@@ -126,9 +133,6 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
     const writable = this.getWritable();
     writable.__attributes = attributes;
   }
-
-
-
 
   canInsertTextBefore(): false {
     return false;
@@ -149,7 +153,7 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
   extractWithChild(
     child: LexicalNode,
     selection: RangeSelection | NodeSelection | GridSelection,
-    destination: "clone" | "html"
+    destination: 'clone' | 'html',
   ): boolean {
     if (!$isRangeSelection(selection)) {
       return false;
@@ -166,23 +170,23 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-
 export function $createInlineProductNode(
-  attributes?: InlineProductAttributes
+  attributes?: InlineProductAttributes,
 ): InlineProductNode {
-  return $applyNodeReplacement(new InlineProductNode({attributes: attributes}));
+  return $applyNodeReplacement(
+    new InlineProductNode({ attributes: attributes }),
+  );
 }
 
 export function $isInlineProductNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is InlineProductNode {
   return node instanceof InlineProductNode;
 }
 
-
-
-export function toggleInlineProduct(inlineProductData: InlineProductAttributes): void {
-
+export function toggleInlineProduct(
+  inlineProductData: InlineProductAttributes,
+): void {
   const selection = $getSelection();
 
   const inlineProductNode = $createInlineProductNode(inlineProductData);
@@ -191,7 +195,4 @@ export function toggleInlineProduct(inlineProductData: InlineProductAttributes):
   if ($isRootOrShadowRoot(inlineProductNode.getParentOrThrow())) {
     $wrapNodeInElement(inlineProductNode, $createParagraphNode).selectEnd();
   }
-
 }
-
-

@@ -4,7 +4,7 @@ import { Field } from 'payload/dist/fields/config/types';
 export const getBaseFields = (config: Config): Field[] => [
   {
     name: 'doc',
-    label: "Product",
+    label: 'Product',
     type: 'relationship',
     required: true,
     relationTo: /*config.collections.map(({ slug }) => slug),*/ 'products',
@@ -47,9 +47,10 @@ export const getBaseFields = (config: Config): Field[] => [
         value: 'affiliate_link_best_shop_label_name',
       },
       {
-        label: 'Affiliate Link best shop (Name as label with price in brackets)',
+        label:
+          'Affiliate Link best shop (Name as label with price in brackets)',
         value: 'affiliate_link_best_shop_label_name_and_price',
       },
     ],
-  }
+  },
 ];

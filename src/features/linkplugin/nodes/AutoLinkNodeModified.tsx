@@ -1,76 +1,85 @@
-import { $applyNodeReplacement, $isElementNode, ElementNode, LexicalNode, RangeSelection, Spread } from 'lexical';
-import { LinkAttributes, LinkNode, SerializedLinkNode } from './LinkNodeModified';
-
-
-
+import {
+  $applyNodeReplacement,
+  $isElementNode,
+  ElementNode,
+  LexicalNode,
+  RangeSelection,
+  Spread,
+} from 'lexical';
+import {
+  LinkAttributes,
+  LinkNode,
+  SerializedLinkNode,
+} from './LinkNodeModified';
 
 export type SerializedAutoLinkNode = Spread<
-{
-  type: "autolink";
-  version: 1;
-},
-SerializedLinkNode
+  {
+    type: 'autolink';
+    version: 1;
+  },
+  SerializedLinkNode
 >;
-
 
 // Custom node type to override `canInsertTextAfter` that will
 // allow typing within the link
 
 export class AutoLinkNode extends LinkNode {
-    static getType(): string {
-      return "autolink";
-    }
-  
-    static clone(node: AutoLinkNode): AutoLinkNode {
-      return new AutoLinkNode({attributes: node.__attributes, key: node.__key});
-    }
-  
-    static importJSON(serializedNode: SerializedAutoLinkNode): AutoLinkNode {
-      const node = $createAutoLinkNode({attributes: serializedNode.attributes});
-      
-      node.setFormat(serializedNode.format);
-      node.setIndent(serializedNode.indent);
-      node.setDirection(serializedNode.direction);
-      return node;
-    }
-  
-    static importDOM(): null {
-      // TODO: Should link node should handle the import over autolink?
-      return null;
-    }
-  
-    exportJSON(): SerializedAutoLinkNode {
-      return {
-        ...super.exportJSON(),
-        type: "autolink",
-        version: 1,
-      };
-    }
-  
-    insertNewAfter(
-      selection: RangeSelection,
-      restoreSelection = true
-    ): null | ElementNode {
-      const element = this.getParentOrThrow().insertNewAfter(
-        selection,
-        restoreSelection
-      );
-      if ($isElementNode(element)) {
-        const linkNode = $createAutoLinkNode({attributes: this.__attributes});
-        element.append(linkNode);
-        return linkNode;
-      }
-      return null;
-    }
+  static getType(): string {
+    return 'autolink';
   }
-  
-  export function $createAutoLinkNode(
-    {attributes}: {attributes?: LinkAttributes}
-  ): AutoLinkNode {
-    return $applyNodeReplacement(new AutoLinkNode({attributes: attributes}));
+
+  static clone(node: AutoLinkNode): AutoLinkNode {
+    return new AutoLinkNode({ attributes: node.__attributes, key: node.__key });
   }
-  export function $isAutoLinkNode(
-    node: LexicalNode | null | undefined
-  ): node is AutoLinkNode {
-    return node instanceof AutoLinkNode;
+
+  static importJSON(serializedNode: SerializedAutoLinkNode): AutoLinkNode {
+    const node = $createAutoLinkNode({ attributes: serializedNode.attributes });
+
+    node.setFormat(serializedNode.format);
+    node.setIndent(serializedNode.indent);
+    node.setDirection(serializedNode.direction);
+    return node;
   }
+
+  static importDOM(): null {
+    // TODO: Should link node should handle the import over autolink?
+    return null;
+  }
+
+  exportJSON(): SerializedAutoLinkNode {
+    return {
+      ...super.exportJSON(),
+      type: 'autolink',
+      version: 1,
+    };
+  }
+
+  insertNewAfter(
+    selection: RangeSelection,
+    restoreSelection = true,
+  ): null | ElementNode {
+    const element = this.getParentOrThrow().insertNewAfter(
+      selection,
+      restoreSelection,
+    );
+    if ($isElementNode(element)) {
+      const linkNode = $createAutoLinkNode({ attributes: this.__attributes });
+      element.append(linkNode);
+      return linkNode;
+    }
+    return null;
+  }
+}
+
+export function $createAutoLinkNode({
+  attributes,
+}: {
+  attributes?: LinkAttributes;
+}): AutoLinkNode {
+  return $applyNodeReplacement(new AutoLinkNode({ attributes: attributes }));
+}
+export function $isAutoLinkNode(
+  node: LexicalNode | null | undefined,
+): node is AutoLinkNode {
+  return node instanceof AutoLinkNode;
+}

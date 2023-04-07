@@ -17,12 +17,12 @@ import {
   LexicalEditor,
   SerializedEditor,
   createEditor,
-} from "lexical";
+} from 'lexical';
 
-import { $applyNodeReplacement, DecoratorNode } from "lexical";
-import * as React from "react";
+import { $applyNodeReplacement, DecoratorNode } from 'lexical';
+import * as React from 'react';
 
-const RawImageComponent = React.lazy(() => import("./RawImageComponent"));
+const RawImageComponent = React.lazy(() => import('./RawImageComponent'));
 
 /* export interface ImagePayload {
   altText: string;
@@ -69,7 +69,7 @@ export type SerializedImageNode = Spread<
   {
     rawImagePayload: RawImagePayload;
     extraAttributes: ExtraAttributes;
-    type: "upload";
+    type: 'upload';
     version: 1;
     caption: SerializedEditor;
     showCaption: boolean;
@@ -90,7 +90,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   __captionsEnabled: boolean;
 
   static getType(): string {
-    return "upload";
+    return 'upload';
   }
 
   static clone(node: ImageNode): ImageNode {
@@ -99,12 +99,12 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       node.__extraAttributes,
       node.__showCaption,
       node.__caption,
-      node.__captionsEnabled
+      node.__captionsEnabled,
     );
   }
 
   exportDOM(): DOMExportOutput {
-    const element = document.createElement("img");
+    const element = document.createElement('img');
     // element.setAttribute('src', this.__src);
     // element.setAttribute('alt', this.__altText); //TODO
     return { element };
@@ -124,7 +124,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     extraAttributes: ExtraAttributes,
     showCaption?: boolean,
     caption?: LexicalEditor,
-    captionsEnabled?: boolean
+    captionsEnabled?: boolean,
   ) {
     super(undefined); //TODO: Do I need a key?
     this.__rawImagePayload = rawImagePayload;
@@ -148,7 +148,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
       extraAttributes,
       showCaption,
       undefined,
-      undefined
+      undefined,
     );
 
     const nestedEditor = node.__caption;
@@ -168,7 +168,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   exportJSON(): SerializedImageNode {
     return {
-      type: "upload",
+      type: 'upload',
       version: 1,
       rawImagePayload: this.__rawImagePayload,
       extraAttributes: this.__extraAttributes,
@@ -179,7 +179,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   setWidthAndHeightOverride(
     width: undefined | number,
-    height: undefined | number
+    height: undefined | number,
   ): void {
     const writable = this.getWritable();
     if (!writable.__extraAttributes) {
@@ -202,7 +202,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
 
   // eslint-disable-next-line class-methods-use-this
   createDOM(config: EditorConfig): HTMLElement {
-    const span = document.createElement("span");
+    const span = document.createElement('span');
     const { theme } = config;
     const className = theme.image;
     if (className !== undefined) {
@@ -217,7 +217,6 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   }
 
   decorate(): JSX.Element {
-
     return (
       <RawImageComponent
         rawImagePayload={this.__rawImagePayload}
@@ -236,7 +235,7 @@ export function $createImageNode(
   extraAttributes: ExtraAttributes,
   showCaption,
   caption,
-  captionsEnabled
+  captionsEnabled,
 ): ImageNode {
   return $applyNodeReplacement(
     new ImageNode(
@@ -244,13 +243,13 @@ export function $createImageNode(
       extraAttributes,
       showCaption,
       caption,
-      captionsEnabled
-    )
+      captionsEnabled,
+    ),
   );
 }
 
 export function $isImageNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is ImageNode {
   return node instanceof ImageNode;
 }

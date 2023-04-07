@@ -1,29 +1,34 @@
-import {Shop} from "./controller";
-import {GetItemsRequest, Host, Item, PartnerType, Region,} from "paapi5-typescript-sdk";
+import { Shop } from './controller';
+import {
+  GetItemsRequest,
+  Host,
+  Item,
+  PartnerType,
+  Region,
+} from 'paapi5-typescript-sdk';
 
-const accessKey = "secret";
-const secretKey = "secret";
-const partnerTag = "secret";
-const partnerID = "secret";
-
+const accessKey = 'secret';
+const secretKey = 'secret';
+const partnerTag = 'secret';
+const partnerID = 'secret';
 
 export async function updateShop(shop: Shop) {
-  console.log("shop", shop);
+  console.log('shop', shop);
 
   let itemID = shop.link;
-  if(shop.link.includes("/dp/")) {
-    itemID = shop.link.split("/dp/")[1];
+  if (shop.link.includes('/dp/')) {
+    itemID = shop.link.split('/dp/')[1];
   }
-  if(itemID.includes("/")){
-    itemID = itemID.split("/")[0];
+  if (itemID.includes('/')) {
+    itemID = itemID.split('/')[0];
   }
 
-  let cleanLink = shop.link
-  if(shop.link.includes("/dp/")) {
-    cleanLink = shop.link.split("/dp/")[0];
+  let cleanLink = shop.link;
+  if (shop.link.includes('/dp/')) {
+    cleanLink = shop.link.split('/dp/')[0];
   }
-  cleanLink = cleanLink + "/dp/" + itemID;
-  const affiliateLink = cleanLink + "?tag=" + partnerTag;
+  cleanLink = cleanLink + '/dp/' + itemID;
+  const affiliateLink = cleanLink + '?tag=' + partnerTag;
 
   const amazonItem = await getAmazonItem(itemID);
 
@@ -40,14 +45,13 @@ export async function updateShop(shop: Shop) {
   shop.link = cleanLink;
   shop.available = !!priceAndCurrency?.price;
 
-  shop.product_image_links = [{link: images.primary.large}];
+  shop.product_image_links = [{ link: images.primary.large }];
   shop.features = [];
-  if(features && features.length > 0) {
+  if (features && features.length > 0) {
     for (const feature of features) {
-      shop.features.push({feature: feature});
+      shop.features.push({ feature: feature });
     }
   }
-
 
   return shop;
 }
@@ -57,22 +61,20 @@ export async function getAmazonItem(itemID: string): Promise<Item | null> {
     {
       ItemIds: [itemID],
       Resources: [
-        "ItemInfo.ProductInfo",
-        "Offers.Listings.Price",
-        "Offers.Listings.Availability.Type",
-        "Offers.Listings.Condition",
-        "Offers.Listings.SavingBasis",
-        "Offers.Listings.MerchantInfo",
-        "Offers.Listings.DeliveryInfo.IsAmazonFulfilled",
-        "Offers.Listings.DeliveryInfo.IsFreeShippingEligible",
-        "Offers.Listings.DeliveryInfo.IsPrimeEligible",
-        "Offers.Summaries.LowestPrice",
-        "Images.Primary.Large",
-        "ItemInfo.Features",
-        "ItemInfo.ProductInfo",
-        "ItemInfo.TechnicalInfo",
-
-
+        'ItemInfo.ProductInfo',
+        'Offers.Listings.Price',
+        'Offers.Listings.Availability.Type',
+        'Offers.Listings.Condition',
+        'Offers.Listings.SavingBasis',
+        'Offers.Listings.MerchantInfo',
+        'Offers.Listings.DeliveryInfo.IsAmazonFulfilled',
+        'Offers.Listings.DeliveryInfo.IsFreeShippingEligible',
+        'Offers.Listings.DeliveryInfo.IsPrimeEligible',
+        'Offers.Summaries.LowestPrice',
+        'Images.Primary.Large',
+        'ItemInfo.Features',
+        'ItemInfo.ProductInfo',
+        'ItemInfo.TechnicalInfo',
       ],
     },
     partnerTag,
@@ -80,12 +82,12 @@ export async function getAmazonItem(itemID: string): Promise<Item | null> {
     accessKey,
     secretKey,
     Host.GERMANY,
-    Region.GERMANY
+    Region.GERMANY,
   );
 
   const res = await request.send();
 
-  console.log("res.itemresult", res.ItemsResult);
+  console.log('res.itemresult', res.ItemsResult);
 
   if (
     !res?.ItemsResult?.Items ||
@@ -115,12 +117,11 @@ export async function getPriceAndCurrency(amazonItem: Item) {
 }
 
 export async function getImages(amazonItem: Item) {
-  const images = amazonItem.Images
+  const images = amazonItem.Images;
 
   return {
     primary: {
-      large: images.Primary.Large.URL
-    }
+      large: images.Primary.Large.URL,
+    },
   };
 }
-

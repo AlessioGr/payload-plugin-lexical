@@ -21,7 +21,12 @@ import {
   LexicalEditor,
 } from 'lexical';
 import * as React from 'react';
-import { DragEvent as ReactDragEvent, useEffect, useRef, useState } from 'react';
+import {
+  DragEvent as ReactDragEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { createPortal } from 'react-dom';
 
 import { isHTMLElement } from '../../utils/guard';
@@ -135,9 +140,10 @@ function setMenuPosition(
   const floatingElemRect = floatingElem.getBoundingClientRect();
   const anchorElementRect = anchorElem.getBoundingClientRect();
 
-  const top = targetRect.top
-    + (parseInt(targetStyle.lineHeight, 10) - floatingElemRect.height) / 2
-    - anchorElementRect.top;
+  const top =
+    targetRect.top +
+    (parseInt(targetStyle.lineHeight, 10) - floatingElemRect.height) / 2 -
+    anchorElementRect.top;
 
   const left = SPACE;
 
@@ -167,8 +173,10 @@ function setTargetLine(
   anchorElem: HTMLElement,
 ) {
   const targetStyle = window.getComputedStyle(targetBlockElem);
-  const { top: targetBlockElemTop, height: targetBlockElemHeight } = targetBlockElem.getBoundingClientRect();
-  const { top: anchorTop, width: anchorWidth } = anchorElem.getBoundingClientRect();
+  const { top: targetBlockElemTop, height: targetBlockElemHeight } =
+    targetBlockElem.getBoundingClientRect();
+  const { top: anchorTop, width: anchorWidth } =
+    anchorElem.getBoundingClientRect();
 
   let lineTop = targetBlockElemTop;
   // At the bottom of the target
@@ -205,7 +213,8 @@ function useDraggableBlockMenu(
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
   const isDraggingBlockRef = useRef<boolean>(false);
-  const [draggableBlockElem, setDraggableBlockElem] = useState<HTMLElement | null>(null);
+  const [draggableBlockElem, setDraggableBlockElem] =
+    useState<HTMLElement | null>(null);
 
   useEffect(() => {
     function onMouseMove(event: MouseEvent) {
@@ -354,14 +363,10 @@ function useDraggableBlockMenu(
         ref={menuRef}
         draggable
         onDragStart={onDragStart}
-        onDragEnd={onDragEnd}
-      >
+        onDragEnd={onDragEnd}>
         <div className={isEditable ? 'icon' : ''} />
       </div>
-      <div
-        className="draggable-block-target-line"
-        ref={targetLineRef}
-      />
+      <div className="draggable-block-target-line" ref={targetLineRef} />
     </React.Fragment>,
     anchorElem,
   );

@@ -6,10 +6,10 @@
  *
  */
 
-import type { LexicalEditor } from "lexical";
+import type { LexicalEditor } from 'lexical';
 
-import { useEffect, useState } from "react";
-import { $getRoot } from "lexical";
+import { useEffect, useState } from 'react';
+import { $getRoot } from 'lexical';
 
 export type Comment = {
   author: string;
@@ -17,14 +17,14 @@ export type Comment = {
   deleted: boolean;
   id: string;
   timeStamp: number;
-  type: "comment";
+  type: 'comment';
 };
 
 export type Thread = {
   comments: Array<Comment>;
   id: string;
   quote: string;
-  type: "thread";
+  type: 'thread';
 };
 
 export type Comments = Array<Thread | Comment>;
@@ -32,7 +32,7 @@ export type Comments = Array<Thread | Comment>;
 function createUID(): string {
   return Math.random()
     .toString(36)
-    .replace(/[^a-z]+/g, "")
+    .replace(/[^a-z]+/g, '')
     .substr(0, 5);
 }
 
@@ -41,7 +41,7 @@ export function createComment(
   author: string,
   id?: string,
   timeStamp?: number,
-  deleted?: boolean
+  deleted?: boolean,
 ): Comment {
   return {
     author,
@@ -49,20 +49,20 @@ export function createComment(
     deleted: deleted === undefined ? false : deleted,
     id: id === undefined ? createUID() : id,
     timeStamp: timeStamp === undefined ? performance.now() : timeStamp,
-    type: "comment",
+    type: 'comment',
   };
 }
 
 export function createThread(
   quote: string,
   comments: Array<Comment>,
-  id?: string
+  id?: string,
 ): Thread {
   return {
     comments,
     id: id === undefined ? createUID() : id,
     quote,
-    type: "thread",
+    type: 'thread',
   };
 }
 
@@ -71,18 +71,18 @@ function cloneThread(thread: Thread): Thread {
     comments: Array.from(thread.comments),
     id: thread.id,
     quote: thread.quote,
-    type: "thread",
+    type: 'thread',
   };
 }
 
 function markDeleted(comment: Comment): Comment {
   return {
     author: comment.author,
-    content: "[Deleted Comment]",
+    content: '[Deleted Comment]',
     deleted: true,
     id: comment.id,
     timeStamp: comment.timeStamp,
-    type: "comment",
+    type: 'comment',
   };
 }
 
@@ -113,16 +113,16 @@ export class CommentStore {
   addComment(
     commentOrThread: Comment | Thread,
     thread?: Thread,
-    offset?: number
+    offset?: number,
   ): void {
     const nextComments = Array.from(this._comments);
     // The YJS types explicitly use `any` as well.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-    if (thread !== undefined && commentOrThread.type === "comment") {
+    if (thread !== undefined && commentOrThread.type === 'comment') {
       for (let i = 0; i < nextComments.length; i++) {
         const comment = nextComments[i];
-        if (comment.type === "thread" && comment.id === thread.id) {
+        if (comment.type === 'thread' && comment.id === thread.id) {
           const newThread = cloneThread(comment);
           nextComments.splice(i, 1, newThread);
           const insertOffset =
@@ -143,7 +143,7 @@ export class CommentStore {
 
   deleteCommentOrThread(
     commentOrThread: Comment | Thread,
-    thread?: Thread
+    thread?: Thread,
   ): { markedComment: Comment; index: number } | null {
     const nextComments = Array.from(this._comments);
     // The YJS types explicitly use `any` as well.
@@ -153,7 +153,7 @@ export class CommentStore {
     if (thread !== undefined) {
       for (let i = 0; i < nextComments.length; i++) {
         const nextComment = nextComments[i];
-        if (nextComment.type === "thread" && nextComment.id === thread.id) {
+        if (nextComment.type === 'thread' && nextComment.id === thread.id) {
           const newThread = cloneThread(nextComment);
           nextComments.splice(i, 1, newThread);
           const threadComments = newThread.comments;
@@ -171,7 +171,7 @@ export class CommentStore {
     this._comments = nextComments;
     triggerOnChange(this);
 
-    if (commentOrThread.type === "comment") {
+    if (commentOrThread.type === 'comment') {
       return {
         index: commentIndex as number,
         markedComment: markDeleted(commentOrThread as Comment),
@@ -192,7 +192,7 @@ export class CommentStore {
 
 export function useCommentStore(commentStore: CommentStore): Comments {
   const [comments, setComments] = useState<Comments>(
-    commentStore.getComments()
+    commentStore.getComments(),
   );
 
   useEffect(() => {

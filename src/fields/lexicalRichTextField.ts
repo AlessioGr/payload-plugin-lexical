@@ -1,11 +1,11 @@
-import { Field } from "payload/types";
+import { Field } from 'payload/types';
 import {
   LexicalRichTextFieldComponent,
   LexicalRichTextCell,
-} from "./LexicalRichText";
-import { defaultEditorConfig, EditorConfig } from "../types";
-import { populateLexicalRelationships } from "./LexicalAfterReadHook";
-import { cloneDeep } from "lodash";
+} from './LexicalRichText';
+import { defaultEditorConfig, EditorConfig } from '../types';
+import { populateLexicalRelationships } from './LexicalAfterReadHook';
+import { cloneDeep } from 'lodash';
 
 export function lexicalRichTextField(props: {
   name?: string;
@@ -23,9 +23,9 @@ export function lexicalRichTextField(props: {
     : editorConfigModifier(defaultEditorConfigCloned);
 
   return {
-    name: name ? name : "richText",
-    type: "richText",
-    label: label ? label : "Rich Text",
+    name: name ? name : 'richText',
+    type: 'richText',
+    label: label ? label : 'Rich Text',
     localized: localized,
     required: required,
     hooks: {

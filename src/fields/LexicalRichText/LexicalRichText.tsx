@@ -6,45 +6,45 @@
  *
  */
 
-import { CharacterLimitPlugin } from "@lexical/react/LexicalCharacterLimitPlugin";
-import { CheckListPlugin } from "@lexical/react/LexicalCheckListPlugin";
-import { ClearEditorPlugin } from "@lexical/react/LexicalClearEditorPlugin";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { HashtagPlugin } from "@lexical/react/LexicalHashtagPlugin";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { ListPlugin } from "@lexical/react/LexicalListPlugin";
-import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { TablePlugin } from "@lexical/react/LexicalTablePlugin";
-import * as React from "react";
-import {useEffect, useState} from 'react';
-import {CAN_USE_DOM} from './shared/canUseDOM';
-import { OnChangePlugin } from "./plugins/OnChangePlugin";
-import { useSharedHistoryContext } from "./context/SharedHistoryContext";
-import TableCellNodes from "./nodes/TableCellNodes";
-import ActionsPlugin from "./plugins/ActionsPlugin";
-import AutoEmbedPlugin from "./plugins/AutoEmbedPlugin";
-import CodeActionMenuPlugin from "./plugins/CodeActionMenuPlugin";
-import CodeHighlightPlugin from "./plugins/CodeHighlightPlugin";
-import ComponentPickerPlugin from "./plugins/ComponentPickerPlugin";
-import DragDropPaste from "./plugins/DragDropPastePlugin";
-import DraggableBlockPlugin from "./plugins/DraggableBlockPlugin";
-import FloatingTextFormatToolbarPlugin from "./plugins/FloatingTextFormatToolbarPlugin";
-import ListMaxIndentLevelPlugin from "./plugins/ListMaxIndentLevelPlugin";
-import MarkdownShortcutPlugin from "./plugins/MarkdownShortcutPlugin";
-import TabFocusPlugin from "./plugins/TabFocusPlugin";
-import TableCellActionMenuPlugin from "./plugins/TableActionMenuPlugin";
-import TableCellResizer from "./plugins/TableCellResizer";
-import { TablePlugin as NewTablePlugin } from "./plugins/TablePlugin";
-import ToolbarPlugin from "./plugins/ToolbarPlugin";
-import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
-import ContentEditable from "./ui/ContentEditable";
-import Placeholder from "./ui/Placeholder";
-import { OnChangeProps } from "./types";
-import UploadPlugin from "./plugins/UploadPlugin";
-import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
-import ModalPlugin from "./plugins/ModalPlugin";
-import CommentPlugin from "./plugins/CommentPlugin";
+import { CharacterLimitPlugin } from '@lexical/react/LexicalCharacterLimitPlugin';
+import { CheckListPlugin } from '@lexical/react/LexicalCheckListPlugin';
+import { ClearEditorPlugin } from '@lexical/react/LexicalClearEditorPlugin';
+import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
+import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
+import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
+import * as React from 'react';
+import { useEffect, useState } from 'react';
+import { CAN_USE_DOM } from './shared/canUseDOM';
+import { OnChangePlugin } from './plugins/OnChangePlugin';
+import { useSharedHistoryContext } from './context/SharedHistoryContext';
+import TableCellNodes from './nodes/TableCellNodes';
+import ActionsPlugin from './plugins/ActionsPlugin';
+import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
+import CodeActionMenuPlugin from './plugins/CodeActionMenuPlugin';
+import CodeHighlightPlugin from './plugins/CodeHighlightPlugin';
+import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
+import DragDropPaste from './plugins/DragDropPastePlugin';
+import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
+import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
+import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
+import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
+import TabFocusPlugin from './plugins/TabFocusPlugin';
+import TableCellActionMenuPlugin from './plugins/TableActionMenuPlugin';
+import TableCellResizer from './plugins/TableCellResizer';
+import { TablePlugin as NewTablePlugin } from './plugins/TablePlugin';
+import ToolbarPlugin from './plugins/ToolbarPlugin';
+import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
+import ContentEditable from './ui/ContentEditable';
+import Placeholder from './ui/Placeholder';
+import { OnChangeProps } from './types';
+import UploadPlugin from './plugins/UploadPlugin';
+import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
+import ModalPlugin from './plugins/ModalPlugin';
+import CommentPlugin from './plugins/CommentPlugin';
 import { Settings } from './settings/Settings';
 
 export const Editor: React.FC<OnChangeProps> = (props) => {
@@ -52,16 +52,11 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
   const { historyState } = useSharedHistoryContext();
 
-  const {
-    isRichText,
-    isCharLimit,
-    isCharLimitUtf8,
-  } = Settings;
-
+  const { isRichText, isCharLimit, isCharLimitUtf8 } = Settings;
 
   const text = isRichText
-    ? "Enter some rich text..."
-    : "Enter some plain text...";
+    ? 'Enter some rich text...'
+    : 'Enter some plain text...';
   const placeholder = <Placeholder>{text}</Placeholder>;
   const [floatingAnchorElem, setFloatingAnchorElem] =
     useState<HTMLDivElement | null>(null);
@@ -76,7 +71,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
   };
 
   const cellEditorConfig = {
-    namespace: "Playground",
+    namespace: 'Playground',
     nodes: [...TableCellNodes(editorConfig)],
     onError: (error: Error) => {
       throw error;
@@ -106,16 +101,16 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
       <ModalPlugin editorConfig={editorConfig} />
       {isRichText && <ToolbarPlugin editorConfig={editorConfig} />}
       <div
-        className={`editor-container ${editorConfig.debug ? "tree-view" : ""} ${!isRichText ? "plain-text" : ""
-          }`}
-      >
-        {editorConfig.features.map(feature => {
+        className={`editor-container ${editorConfig.debug ? 'tree-view' : ''} ${
+          !isRichText ? 'plain-text' : ''
+        }`}>
+        {editorConfig.features.map((feature) => {
           if (feature.plugins && feature.plugins.length > 0) {
-            return feature.plugins.map(plugin => {
-              if (!plugin.position || plugin.position === "normal") {
+            return feature.plugins.map((plugin) => {
+              if (!plugin.position || plugin.position === 'normal') {
                 return plugin.component;
               }
-            })
+            });
           }
         })}
 
@@ -156,11 +151,14 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                   ErrorBoundary={LexicalErrorBoundary}
                 />
                 <React.Fragment>
-                  {editorConfig.features.map(feature => {
-                    if (feature.tablePlugins && feature.tablePlugins.length > 0) {
-                      return feature.tablePlugins.map(tablePlugin => {
+                  {editorConfig.features.map((feature) => {
+                    if (
+                      feature.tablePlugins &&
+                      feature.tablePlugins.length > 0
+                    ) {
+                      return feature.tablePlugins.map((tablePlugin) => {
                         return tablePlugin;
-                      })
+                      });
                     }
                   })}
                 </React.Fragment>
@@ -184,18 +182,21 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
-                {editorConfig.features.map(feature => {
-                  if (feature.floatingAnchorElemPlugins && feature.floatingAnchorElemPlugins.length > 0) {
-                    return feature.floatingAnchorElemPlugins.map(plugin => {
+                {editorConfig.features.map((feature) => {
+                  if (
+                    feature.floatingAnchorElemPlugins &&
+                    feature.floatingAnchorElemPlugins.length > 0
+                  ) {
+                    return feature.floatingAnchorElemPlugins.map((plugin) => {
                       return plugin(floatingAnchorElem);
-                    })
+                    });
                   }
                 })}
                 {editorConfig.toggles.tables.enabled && (
-                    <TableCellActionMenuPlugin
-                        anchorElem={floatingAnchorElem}
-                        cellMerge={true}
-                    />
+                  <TableCellActionMenuPlugin
+                    anchorElem={floatingAnchorElem}
+                    cellMerge={true}
+                  />
                 )}
                 <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}
@@ -220,24 +221,24 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             maxLength={5}
           />
         )}
-        {editorConfig.features.map(feature => {
-        if (feature.plugins && feature.plugins.length > 0) {
-          return feature.plugins.map(plugin => {
-            if (plugin.position === "bottomInContainer") {
-              return plugin.component;
-            }
-          })
-        }
-      })}
+        {editorConfig.features.map((feature) => {
+          if (feature.plugins && feature.plugins.length > 0) {
+            return feature.plugins.map((plugin) => {
+              if (plugin.position === 'bottomInContainer') {
+                return plugin.component;
+              }
+            });
+          }
+        })}
         <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
       </div>
-      {editorConfig.features.map(feature => {
+      {editorConfig.features.map((feature) => {
         if (feature.plugins && feature.plugins.length > 0) {
-          return feature.plugins.map(plugin => {
-            if (plugin.position === "bottom") {
+          return feature.plugins.map((plugin) => {
+            if (plugin.position === 'bottom') {
               return plugin.component;
             }
-          })
+          });
         }
       })}
     </React.Fragment>

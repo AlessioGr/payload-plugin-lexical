@@ -49,8 +49,8 @@ export default function TabFocusPlugin(): null {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
           if (
-            lastTabKeyDownTimestamp + TAB_TO_FOCUS_INTERVAL
-            > event.timeStamp
+            lastTabKeyDownTimestamp + TAB_TO_FOCUS_INTERVAL >
+            event.timeStamp
           ) {
             $setSelection(selection.clone());
           }

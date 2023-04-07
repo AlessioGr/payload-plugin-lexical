@@ -174,12 +174,12 @@ function useTestRecorder(
     const browserSelection = window.getSelection();
 
     if (
-      rootElement == null
-      || browserSelection == null
-      || browserSelection.anchorNode == null
-      || browserSelection.focusNode == null
-      || !rootElement.contains(browserSelection.anchorNode)
-      || !rootElement.contains(browserSelection.focusNode)
+      rootElement == null ||
+      browserSelection == null ||
+      browserSelection.anchorNode == null ||
+      browserSelection.focusNode == null ||
+      !rootElement.contains(browserSelection.anchorNode) ||
+      !rootElement.contains(browserSelection.focusNode)
     ) {
       return null;
     }
@@ -321,15 +321,15 @@ ${steps.map(formatStep).join('\n')}
         const skipNextSelectionChange = skipNextSelectionChangeRef.current;
         if (previousSelection !== currentSelection) {
           if (
-            dirtyLeaves.size === 0
-            && dirtyElements.size === 0
-            && !skipNextSelectionChange
+            dirtyLeaves.size === 0 &&
+            dirtyElements.size === 0 &&
+            !skipNextSelectionChange
           ) {
             const browserSelection = window.getSelection();
             if (
-              browserSelection
-              && (browserSelection.anchorNode == null
-                || browserSelection.focusNode == null)
+              browserSelection &&
+              (browserSelection.anchorNode == null ||
+                browserSelection.focusNode == null)
             ) {
               return;
             }
@@ -384,13 +384,14 @@ ${steps.map(formatStep).join('\n')}
     }
     const browserSelection = window.getSelection();
     if (
-      browserSelection === null
-      || browserSelection.anchorNode == null
-      || browserSelection.focusNode == null
+      browserSelection === null ||
+      browserSelection.anchorNode == null ||
+      browserSelection.focusNode == null
     ) {
       return;
     }
-    const { anchorNode, anchorOffset, focusNode, focusOffset } = sanitizeSelection(browserSelection);
+    const { anchorNode, anchorOffset, focusNode, focusOffset } =
+      sanitizeSelection(browserSelection);
     const rootElement = getCurrentEditor().getRootElement();
     let anchorPath;
     if (anchorNode !== null) {
@@ -460,10 +461,7 @@ ${steps.map(formatStep).join('\n')}
           }}
         />
       </div>
-      <pre
-        id="test-recorder"
-        ref={preRef}
-      >
+      <pre id="test-recorder" ref={preRef}>
         {templatedTest}
       </pre>
     </div>

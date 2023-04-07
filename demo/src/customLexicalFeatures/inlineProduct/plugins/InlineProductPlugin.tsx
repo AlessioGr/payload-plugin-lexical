@@ -6,29 +6,30 @@
  *
  */
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
-import {
-  COMMAND_PRIORITY_LOW, createCommand, LexicalCommand,
-} from "lexical";
-import { useEffect, } from "react";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { mergeRegister } from '@lexical/utils';
+import { COMMAND_PRIORITY_LOW, createCommand, LexicalCommand } from 'lexical';
+import { useEffect } from 'react';
 
 import {
   InlineProductAttributes,
   InlineProductNode,
   toggleInlineProduct,
-} from "../nodes/InlineProductNode";
+} from '../nodes/InlineProductNode';
 
-type Props = { };
+type Props = {};
 
-export const TOGGLE_INLINE_PRODUCT_COMMAND: LexicalCommand<InlineProductAttributes> = createCommand('TOGGLE_INLINE_PRODUCT_COMMAND');
+export const TOGGLE_INLINE_PRODUCT_COMMAND: LexicalCommand<InlineProductAttributes> =
+  createCommand('TOGGLE_INLINE_PRODUCT_COMMAND');
 
-export function InlineProductPlugin({ }: Props): null {
+export function InlineProductPlugin({}: Props): null {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     if (!editor.hasNodes([InlineProductNode])) {
-      throw new Error("InlineProductPlugin: InlineProductNode not registered on editor");
+      throw new Error(
+        'InlineProductPlugin: InlineProductNode not registered on editor',
+      );
     }
     return mergeRegister(
       editor.registerCommand(
@@ -41,7 +42,7 @@ export function InlineProductPlugin({ }: Props): null {
           };
 
           const receivedLinkData: InlineProductAttributes =
-              payload as InlineProductAttributes;
+            payload as InlineProductAttributes;
 
           inlineProductData.doc = receivedLinkData.doc;
           if (!inlineProductData.doc) {
@@ -55,7 +56,7 @@ export function InlineProductPlugin({ }: Props): null {
           toggleInlineProduct(inlineProductData);
           return true;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
     );
   }, [editor]);

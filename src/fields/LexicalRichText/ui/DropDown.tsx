@@ -56,8 +56,7 @@ export function DropDownItem({
       onClick={onClick}
       ref={ref}
       title={title}
-      type="button"
-    >
+      type="button">
       {children}
     </button>
   );
@@ -73,7 +72,8 @@ function DropDownItems({
   onClose: () => void;
 }) {
   const [items, setItems] = useState<React.RefObject<HTMLButtonElement>[]>();
-  const [highlightedItem, setHighlightedItem] = useState<React.RefObject<HTMLButtonElement>>();
+  const [highlightedItem, setHighlightedItem] =
+    useState<React.RefObject<HTMLButtonElement>>();
 
   const registerItem = useCallback(
     (itemRef: React.RefObject<HTMLButtonElement>) => {
@@ -126,11 +126,7 @@ function DropDownItems({
 
   return (
     <DropDownContext.Provider value={contextValue}>
-      <div
-        className="dropdown"
-        ref={dropDownRef}
-        onKeyDown={handleKeyDown}
-      >
+      <div className="dropdown" ref={dropDownRef} onKeyDown={handleKeyDown}>
         {children}
       </div>
     </DropDownContext.Provider>
@@ -187,9 +183,11 @@ export default function DropDown({
         const { target } = event;
         if (stopCloseOnClickSelf) {
           if (
-            dropDownRef.current
-            && dropDownRef.current.contains(target as Node)
-          ) { return; }
+            dropDownRef.current &&
+            dropDownRef.current.contains(target as Node)
+          ) {
+            return;
+          }
         }
         if (!button.contains(target as Node)) {
           setShowDropDown(false);
@@ -203,7 +201,6 @@ export default function DropDown({
     }
   }, [dropDownRef, buttonRef, showDropDown, stopCloseOnClickSelf]);
 
-
   return (
     <React.Fragment>
       <button
@@ -214,8 +211,7 @@ export default function DropDown({
           event.preventDefault();
           setShowDropDown(!showDropDown);
         }}
-        ref={buttonRef}
-      >
+        ref={buttonRef}>
         {buttonIconClassName && <span className={buttonIconClassName} />}
         {buttonLabel && (
           <span className="text dropdown-button-text">{buttonLabel}</span>
@@ -223,12 +219,9 @@ export default function DropDown({
         <i className="chevron-down" />
       </button>
 
-      {showDropDown
-        && createPortal(
-          <DropDownItems
-            dropDownRef={dropDownRef}
-            onClose={handleClose}
-          >
+      {showDropDown &&
+        createPortal(
+          <DropDownItems dropDownRef={dropDownRef} onClose={handleClose}>
             {children}
           </DropDownItems>,
           document.body,

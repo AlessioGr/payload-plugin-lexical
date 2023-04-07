@@ -16,10 +16,7 @@ import {
 } from '@lexical/markdown';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import {
-  $createTextNode,
-  $getRoot,
-} from 'lexical';
+import { $createTextNode, $getRoot } from 'lexical';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -89,10 +86,10 @@ export default function ActionsPlugin({
         // If we are in read only mode, send the editor state
         // to server and ask for validation if possible.
         if (
-          !isEditable
-          && dirtyElements.size > 0
-          && !tags.has('historic')
-          && !tags.has('collaboration')
+          !isEditable &&
+          dirtyElements.size > 0 &&
+          !tags.has('historic') &&
+          !tags.has('collaboration')
         ) {
           validateEditorState(editor);
         }
@@ -110,7 +107,9 @@ export default function ActionsPlugin({
           PLAYGROUND_TRANSFORMERS(editorConfig),
         );
       } else {
-        const markdown = $convertToMarkdownString(PLAYGROUND_TRANSFORMERS(editorConfig));
+        const markdown = $convertToMarkdownString(
+          PLAYGROUND_TRANSFORMERS(editorConfig),
+        );
         root
           .clear()
           .append(
@@ -123,9 +122,8 @@ export default function ActionsPlugin({
 
   return (
     <div className="actions">
-
       {editorConfig.features.map((feature) => {
-        if(feature?.actions && feature.actions.length > 0) {
+        if (feature?.actions && feature.actions.length > 0) {
           return feature.actions.map((action) => {
             return action;
           });
@@ -139,8 +137,7 @@ export default function ActionsPlugin({
           importFile(editor);
         }}
         title="Import"
-        aria-label="Import editor state from JSON"
-      >
+        aria-label="Import editor state from JSON">
         <i className="import" />
       </button>
       <button
@@ -153,8 +150,7 @@ export default function ActionsPlugin({
           });
         }}
         title="Export"
-        aria-label="Export editor state to JSON"
-      >
+        aria-label="Export editor state to JSON">
         <i className="export" />
       </button>
       <button
@@ -168,8 +164,7 @@ export default function ActionsPlugin({
           editor.setEditable(!editor.isEditable());
         }}
         title="Read-Only Mode"
-        aria-label={`${!isEditable ? 'Unlock' : 'Lock'} read-only mode`}
-      >
+        aria-label={`${!isEditable ? 'Unlock' : 'Lock'} read-only mode`}>
         <i className={!isEditable ? 'unlock' : 'lock'} />
       </button>
       <button
@@ -179,11 +174,9 @@ export default function ActionsPlugin({
           handleMarkdownToggle();
         }}
         title="Convert From Markdown"
-        aria-label="Convert from markdown"
-      >
+        aria-label="Convert from markdown">
         <i className="markdown" />
       </button>
     </div>
   );
 }
-

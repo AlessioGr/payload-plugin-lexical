@@ -9,7 +9,7 @@ export const seed = async (payload: Payload) => {
     data: {
       email: 'dev@payloadcms.com',
       password: 'test',
-    }
+    },
   });
 
   const { id: mountainPhotoID } = await payload.create({
@@ -20,7 +20,6 @@ export const seed = async (payload: Payload) => {
     },
   });
 
-
   await payload.create({
     collection: 'lexicalRichText',
     data: {
@@ -28,8 +27,8 @@ export const seed = async (payload: Payload) => {
       slug: 'hello-world',
       excerpt: 'This is a post',
       meta: {
-        image: mountainPhotoID
-      }
+        image: mountainPhotoID,
+      },
     },
-  })
-}
+  });
+};

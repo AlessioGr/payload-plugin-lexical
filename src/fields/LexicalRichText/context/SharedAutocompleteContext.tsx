@@ -25,13 +25,9 @@ type HookShape = [suggestion: Suggestion, setSuggestion: PublishFn];
 
 const Context: React.Context<ContextShape> = createContext([
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  (_cb) => () => {
-
-  },
+  (_cb) => () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-  (_newSuggestion: Suggestion) => {
-
-  },
+  (_newSuggestion: Suggestion) => {},
 ]);
 
 export const SharedAutocompleteContext = ({

@@ -5,15 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import type {TableOfContentsEntry} from '@lexical/react/LexicalTableOfContents';
-import type {HeadingTagType} from '@lexical/rich-text';
-import type {NodeKey} from 'lexical';
+import type { TableOfContentsEntry } from '@lexical/react/LexicalTableOfContents';
+import type { HeadingTagType } from '@lexical/rich-text';
+import type { NodeKey } from 'lexical';
 
 import './index.scss';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalTableOfContents from '@lexical/react/LexicalTableOfContents';
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 
 const MARGIN_ABOVE_EDITOR = 624;
@@ -188,7 +188,7 @@ function TableOfContentsList({
 
 export default function TableOfContentsPlugin() {
   return (
-      <LexicalTableOfContents>
+    <LexicalTableOfContents>
       {(tableOfContents) => {
         return <TableOfContentsList tableOfContents={tableOfContents} />;
       }}

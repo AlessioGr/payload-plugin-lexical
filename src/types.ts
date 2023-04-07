@@ -1,36 +1,36 @@
-import { LexicalEditor, LexicalNode, Klass } from "lexical";
-import { EmojiPickerFeature } from "./features/emojipicker/EmojiPickerFeature";
-import { EmojisFeature } from "./features/emojis/EmojisFeature";
-import { EquationsFeature } from "./features/equations/EquationsFeature";
-import { HorizontalRuleFeature } from "./features/horizontalrule/HorizontalRuleFeature";
-import { ComponentPickerOption } from "./fields/LexicalRichText/plugins/ComponentPickerPlugin";
-import { Transformer } from "@lexical/markdown";
-import { FigmaFeature } from "./features/embeds/figma/FigmaFeature";
-import { PlaygroundEmbedConfig } from "./fields/LexicalRichText/plugins/AutoEmbedPlugin";
-import { YouTubeFeature } from "./features/embeds/youtube/YouTubeFeature";
-import { TwitterFeature } from "./features/embeds/twitter/TwitterFeature";
-import { SpeechToTextFeature } from "./features/actions/speechtotext/SpeechToTextFeature";
-import { ClearEditorFeature } from "./features/actions/cleareditor/ClearEditorFeature";
-import { MentionsFeature } from "./features/mentions/MentionsFeature";
-import { TreeViewFeature } from "./features/debug/treeview/TreeViewFeature";
-import { KeywordsFeature } from "./features/keywords/KeywordsFeature";
-import { AutoCompleteFeature } from "./features/autocomplete/AutoCompleteFeature";
-import { CollapsibleFeature } from "./features/collapsible/CollapsibleFeature";
-import { TypingPerfFeature } from "./features/debug/typingperf/TypingPerfFeature";
-import { PasteLogFeature } from "./features/debug/pastelog/PasteLogFeature";
-import { TestRecorderFeature } from "./features/debug/testrecorder/TestRecorderFeature";
-import { MaxLengthFeature } from "./features/maxlength/MaxLengthFeature";
-import { LinkFeature } from "./features/linkplugin/LinkFeature";
+import { LexicalEditor, LexicalNode, Klass } from 'lexical';
+import { EmojiPickerFeature } from './features/emojipicker/EmojiPickerFeature';
+import { EmojisFeature } from './features/emojis/EmojisFeature';
+import { EquationsFeature } from './features/equations/EquationsFeature';
+import { HorizontalRuleFeature } from './features/horizontalrule/HorizontalRuleFeature';
+import { ComponentPickerOption } from './fields/LexicalRichText/plugins/ComponentPickerPlugin';
+import { Transformer } from '@lexical/markdown';
+import { FigmaFeature } from './features/embeds/figma/FigmaFeature';
+import { PlaygroundEmbedConfig } from './fields/LexicalRichText/plugins/AutoEmbedPlugin';
+import { YouTubeFeature } from './features/embeds/youtube/YouTubeFeature';
+import { TwitterFeature } from './features/embeds/twitter/TwitterFeature';
+import { SpeechToTextFeature } from './features/actions/speechtotext/SpeechToTextFeature';
+import { ClearEditorFeature } from './features/actions/cleareditor/ClearEditorFeature';
+import { MentionsFeature } from './features/mentions/MentionsFeature';
+import { TreeViewFeature } from './features/debug/treeview/TreeViewFeature';
+import { KeywordsFeature } from './features/keywords/KeywordsFeature';
+import { AutoCompleteFeature } from './features/autocomplete/AutoCompleteFeature';
+import { CollapsibleFeature } from './features/collapsible/CollapsibleFeature';
+import { TypingPerfFeature } from './features/debug/typingperf/TypingPerfFeature';
+import { PasteLogFeature } from './features/debug/pastelog/PasteLogFeature';
+import { TestRecorderFeature } from './features/debug/testrecorder/TestRecorderFeature';
+import { MaxLengthFeature } from './features/maxlength/MaxLengthFeature';
+import { LinkFeature } from './features/linkplugin/LinkFeature';
 import { TableOfContentsFeature } from './features/tableofcontents/TableOfContentsFeature';
 
 export type Feature = {
   plugins?: {
     // plugins are anything which is not directly part of the editor. Like, creating a command which creates a node, or opens a modal, or some other more "outside" functionality
     component: JSX.Element;
-    position?: "normal" | "bottom" | "outside" | "bottomInContainer"; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
+    position?: 'normal' | 'bottom' | 'outside' | 'bottomInContainer'; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
   }[];
   floatingAnchorElemPlugins?: ((
-    floatingAnchorElem: HTMLDivElement
+    floatingAnchorElem: HTMLDivElement,
   ) => JSX.Element)[]; // Plugins which are put in the floating anchor element (the thing which appears when you select text)
   subEditorPlugins?: JSX.Element[]; // Plugins which are embedded in other sub-editor, like image captions (which is basically an editor inside of an editor)
   tablePlugins?: JSX.Element[]; // Plugins which are put inside of the newtable plugin
@@ -40,37 +40,39 @@ export type Feature = {
     // Modals / Drawers. They can be defined here in order to be able to open or close them with a simple lexical command. This also ensures the modals/drawers are "placed" at the correct position
     openModalCommand: {
       type: string;
-      command: (toggleModal: (slug: string) => void, editDepth: number, uuid: string) => void;
+      command: (
+        toggleModal: (slug: string) => void,
+        editDepth: number,
+        uuid: string,
+      ) => void;
     };
-    modal: (props: {
-      editorConfig: EditorConfig;
-    }) => JSX.Element;
+    modal: (props: { editorConfig: EditorConfig }) => JSX.Element;
   }[];
   toolbar?: {
     // You can customize the items displayed in the toolbar here
     // TODO: Revamp toolbar completely
     insert?: ((
       editor: LexicalEditor,
-      editorConfig: EditorConfig
+      editorConfig: EditorConfig,
     ) => JSX.Element)[];
     normal?: ((
       editor: LexicalEditor,
       editorConfig: EditorConfig,
-      isEditable: boolean
+      isEditable: boolean,
     ) => JSX.Element)[];
   };
   floatingTextFormatToolbar?: {
     // The floating toolbar which appears when you select text
     components?: ((
       editor: LexicalEditor,
-      editorConfig: EditorConfig
+      editorConfig: EditorConfig,
     ) => JSX.Element)[];
   };
   componentPicker?: {
     // Component picker is the thing which pops up when you type "/". Basically slash commands.
     componentPickerOptions: ((
       editor: LexicalEditor,
-      editorConfig: EditorConfig
+      editorConfig: EditorConfig,
     ) => ComponentPickerOption)[];
   };
   markdownTransformers?: Transformer[]; // Not sure what this is exactly
@@ -138,7 +140,7 @@ export const defaultEditorConfig: EditorConfig = {
     TestRecorderFeature({ enabled: false }),
     MaxLengthFeature({ enabled: false, maxLength: 30 }),
     LinkFeature({}),
-    TableOfContentsFeature({ enabled: false })
+    TableOfContentsFeature({ enabled: false }),
   ],
   toggles: {
     comments: {

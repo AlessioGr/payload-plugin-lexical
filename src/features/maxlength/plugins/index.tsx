@@ -9,10 +9,15 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { trimTextContentFromAnchor } from '@lexical/selection';
 import { $restoreEditorState } from '@lexical/utils';
-import { $getSelection, $isRangeSelection, EditorState, RootNode } from 'lexical';
+import {
+  $getSelection,
+  $isRangeSelection,
+  EditorState,
+  RootNode,
+} from 'lexical';
 import { useEffect } from 'react';
 
-export function MaxLengthPlugin({ maxLength }: {maxLength: number}): null {
+export function MaxLengthPlugin({ maxLength }: { maxLength: number }): null {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
@@ -25,7 +30,7 @@ export function MaxLengthPlugin({ maxLength }: {maxLength: number}): null {
       }
       const prevEditorState = editor.getEditorState();
       const prevTextContentSize = prevEditorState.read(() =>
-          rootNode.getTextContentSize(),
+        rootNode.getTextContentSize(),
       );
       const textContentSize = rootNode.getTextContentSize();
       if (prevTextContentSize !== textContentSize) {
@@ -36,8 +41,8 @@ export function MaxLengthPlugin({ maxLength }: {maxLength: number}): null {
           // Restore the old editor state instead if the last
           // text content was already at the limit.
           if (
-              prevTextContentSize === maxLength
-            && lastRestoredEditorState !== prevEditorState
+            prevTextContentSize === maxLength &&
+            lastRestoredEditorState !== prevEditorState
           ) {
             lastRestoredEditorState = prevEditorState;
             $restoreEditorState(editor, prevEditorState);

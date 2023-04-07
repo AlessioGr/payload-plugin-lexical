@@ -1,11 +1,12 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy } from 'react';
 
-import { Props } from "./types";
-import "./index.scss";
+import { Props } from './types';
+import './index.scss';
 import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEffect';
 
-
-const LexicalRichTextFieldComponent2 = lazy(() => import('./PayloadLexicalRichTextFieldComponent'));
+const LexicalRichTextFieldComponent2 = lazy(
+  () => import('./PayloadLexicalRichTextFieldComponent'),
+);
 
 export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
   return (
@@ -16,8 +17,7 @@ export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
 };
 
 export const LexicalRichTextCell: React.FC<any> = (props) => {
-  const { cellData } =
-    props;
+  const { cellData } = props;
   const data = cellData;
 
   if (!data) {
@@ -26,8 +26,3 @@ export const LexicalRichTextCell: React.FC<any> = (props) => {
 
   return <span>{data.preview}</span>;
 };
-
-
-
-
-

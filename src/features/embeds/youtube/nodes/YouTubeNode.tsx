@@ -45,8 +45,7 @@ function YouTubeComponent({
     <BlockWithAlignableContents
       className={className}
       format={format}
-      nodeKey={nodeKey}
-    >
+      nodeKey={nodeKey}>
       <iframe
         width="560"
         height="315"
@@ -55,7 +54,7 @@ function YouTubeComponent({
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         title="YouTube video"
-        style={{maxWidth: '100%'}}
+        style={{ maxWidth: '100%' }}
       />
     </BlockWithAlignableContents>
   );
@@ -76,7 +75,7 @@ function convertYoutubeElement(
   const videoID = domNode.getAttribute('data-lexical-youtube');
   if (videoID) {
     const node = $createYouTubeNode(videoID);
-    return {node};
+    return { node };
   }
   return null;
 }
@@ -117,7 +116,10 @@ export class YouTubeNode extends DecoratorBlockNode {
     element.setAttribute('data-lexical-youtube', this.__id);
     element.setAttribute('width', '560');
     element.setAttribute('height', '315');
-    element.setAttribute('src', `https://www.youtube-nocookie.com/embed/${this.__id}`);
+    element.setAttribute(
+      'src',
+      `https://www.youtube-nocookie.com/embed/${this.__id}`,
+    );
     element.setAttribute('frameborder', '0');
     element.setAttribute(
       'allow',
@@ -125,7 +127,7 @@ export class YouTubeNode extends DecoratorBlockNode {
     );
     element.setAttribute('allowfullscreen', 'true');
     element.setAttribute('title', 'YouTube video');
-    return {element};
+    return { element };
   }
 
   static importDOM(): DOMConversionMap | null {

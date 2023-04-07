@@ -40,7 +40,8 @@ function CodeActionMenuContainer({
 
   const [lang, setLang] = useState('');
   const [isShown, setShown] = useState<boolean>(false);
-  const [shouldListenMouseMove, setShouldListenMouseMove] = useState<boolean>(false);
+  const [shouldListenMouseMove, setShouldListenMouseMove] =
+    useState<boolean>(false);
   const [position, setPosition] = useState<Position>({
     right: '0',
     top: '0',
@@ -79,7 +80,8 @@ function CodeActionMenuContainer({
       });
 
       if (codeNode) {
-        const { y: editorElemY, right: editorElemRight } = anchorElem.getBoundingClientRect();
+        const { y: editorElemY, right: editorElemRight } =
+          anchorElem.getBoundingClientRect();
         const { y, right } = codeDOMNode.getBoundingClientRect();
         setLang(_lang);
         setShown(true);
@@ -133,15 +135,9 @@ function CodeActionMenuContainer({
   return (
     <React.Fragment>
       {isShown ? (
-        <div
-          className="code-action-menu-container"
-          style={{ ...position }}
-        >
+        <div className="code-action-menu-container" style={{ ...position }}>
           <div className="code-highlight-language">{codeFriendlyName}</div>
-          <CopyButton
-            editor={editor}
-            getCodeDOMNode={getCodeDOMNode}
-          />
+          <CopyButton editor={editor} getCodeDOMNode={getCodeDOMNode} />
           {canBePrettier(normalizedLang) ? (
             <PrettierButton
               editor={editor}
@@ -166,8 +162,8 @@ function getMouseInfo(event: MouseEvent): {
       'code.PlaygroundEditorTheme__code',
     );
     const isOutside = !(
-      codeDOMNode
-      || target.closest<HTMLElement>('div.code-action-menu-container')
+      codeDOMNode ||
+      target.closest<HTMLElement>('div.code-action-menu-container')
     );
 
     return { codeDOMNode, isOutside };

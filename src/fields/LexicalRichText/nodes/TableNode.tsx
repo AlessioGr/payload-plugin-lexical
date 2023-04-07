@@ -18,9 +18,9 @@ import type {
   Spread,
 } from 'lexical';
 
-import {DecoratorNode} from 'lexical';
+import { DecoratorNode } from 'lexical';
 import * as React from 'react';
-import {Suspense} from 'react';
+import { Suspense } from 'react';
 
 export type Cell = {
   colSpan: number;
@@ -42,23 +42,23 @@ export const cellHTMLCache: Map<string, string> = new Map();
 export const cellTextContentCache: Map<string, string> = new Map();
 
 const emptyEditorJSON =
-    '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
+  '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
 
 const plainTextEditorJSON = (text: string) =>
-    text === ''
-        ? emptyEditorJSON
-        : `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":${text},"type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
+  text === ''
+    ? emptyEditorJSON
+    : `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":${text},"type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
 
 const TableComponent = React.lazy(
-    // @ts-ignore
-    () => import('./TableComponent'),
+  // @ts-ignore
+  () => import('./TableComponent'),
 );
 
 export function createUID(): string {
   return Math.random()
-      .toString(36)
-      .replace(/[^a-z]+/g, '')
-      .substr(0, 5);
+    .toString(36)
+    .replace(/[^a-z]+/g, '')
+    .substr(0, 5);
 }
 
 function createCell(type: 'normal' | 'header'): Cell {
@@ -80,12 +80,12 @@ export function createRow(): Row {
 }
 
 export type SerializedTableNode = Spread<
-    {
-      rows: Rows;
-      type: 'tablesheet';
-      version: 1;
-    },
-    SerializedLexicalNode
+  {
+    rows: Rows;
+    type: 'tablesheet';
+    version: 1;
+  },
+  SerializedLexicalNode
 >;
 
 export function extractRowsFromHTML(tableElem: HTMLTableElement): Rows {
@@ -103,7 +103,7 @@ export function extractRowsFromHTML(tableElem: HTMLTableElement): Rows {
       const isHeader = cellElem.nodeName === 'TH';
       const cell = createCell(isHeader ? 'header' : 'normal');
       cell.json = plainTextEditorJSON(
-          JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')),
+        JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')),
       );
       cells.push(cell);
     }
@@ -132,7 +132,7 @@ function convertTableElement(domNode: HTMLElement): null | DOMConversionOutput {
       const isHeader = cellElem.nodeName === 'TH';
       const cell = createCell(isHeader ? 'header' : 'normal');
       cell.json = plainTextEditorJSON(
-          JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')),
+        JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')),
       );
       cells.push(cell);
     }
@@ -140,12 +140,12 @@ function convertTableElement(domNode: HTMLElement): null | DOMConversionOutput {
     row.cells = cells;
     rows.push(row);
   }
-  return {node: $createTableNode(rows)};
+  return { node: $createTableNode(rows) };
 }
 
 export function exportTableCellsToHTML(
-    rows: Rows,
-    rect?: {startX: number; endX: number; startY: number; endY: number},
+  rows: Rows,
+  rect?: { startX: number; endX: number; startY: number; endY: number },
 ): HTMLElement {
   const table = document.createElement('table');
   const colGroup = document.createElement('colgroup');
@@ -153,31 +153,31 @@ export function exportTableCellsToHTML(
   const firstRow = rows[0];
 
   for (
-      let x = rect != null ? rect.startX : 0;
-      x < (rect != null ? rect.endX + 1 : firstRow.cells.length);
-      x++
+    let x = rect != null ? rect.startX : 0;
+    x < (rect != null ? rect.endX + 1 : firstRow.cells.length);
+    x++
   ) {
     const col = document.createElement('col');
     colGroup.append(col);
   }
 
   for (
-      let y = rect != null ? rect.startY : 0;
-      y < (rect != null ? rect.endY + 1 : rows.length);
-      y++
+    let y = rect != null ? rect.startY : 0;
+    y < (rect != null ? rect.endY + 1 : rows.length);
+    y++
   ) {
     const row = rows[y];
     const cells = row.cells;
     const rowElem = document.createElement('tr');
 
     for (
-        let x = rect != null ? rect.startX : 0;
-        x < (rect != null ? rect.endX + 1 : cells.length);
-        x++
+      let x = rect != null ? rect.startX : 0;
+      x < (rect != null ? rect.endX + 1 : cells.length);
+      x++
     ) {
       const cell = cells[x];
       const cellElem = document.createElement(
-          cell.type === 'header' ? 'th' : 'td',
+        cell.type === 'header' ? 'th' : 'td',
       );
       cellElem.innerHTML = cellHTMLCache.get(cell.json) || '';
       rowElem.appendChild(cellElem);
@@ -223,7 +223,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
   }
 
   exportDOM(): DOMExportOutput {
-    return {element: exportTableCellsToHTML(this.__rows)};
+    return { element: exportTableCellsToHTML(this.__rows) };
   }
 
   constructor(rows?: Rows, key?: NodeKey) {
@@ -248,13 +248,17 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       const mergeRow = mergeRows[y - startY];
       const cells = row.cells;
       const cellsClone = Array.from(cells);
-      const rowClone = {...row, cells: cellsClone};
+      const rowClone = { ...row, cells: cellsClone };
       const mergeCells = mergeRow.cells;
       const endX = Math.min(cells.length, startX + mergeCells.length);
       for (let x = startX; x < endX; x++) {
         const cell = cells[x];
         const mergeCell = mergeCells[x - startX];
-        const cellClone = {...cell, json: mergeCell.json, type: mergeCell.type};
+        const cellClone = {
+          ...cell,
+          json: mergeCell.json,
+          type: mergeCell.type,
+        };
         cellsClone[x] = cellClone;
       }
       rows[y] = rowClone;
@@ -268,8 +272,8 @@ export class TableNode extends DecoratorNode<JSX.Element> {
     const cells = row.cells;
     const cell = cells[x];
     const cellsClone = Array.from(cells);
-    const cellClone = {...cell, json};
-    const rowClone = {...row, cells: cellsClone};
+    const cellClone = { ...cell, json };
+    const rowClone = { ...row, cells: cellsClone };
     cellsClone[x] = cellClone;
     rows[y] = rowClone;
   }
@@ -281,8 +285,8 @@ export class TableNode extends DecoratorNode<JSX.Element> {
     const cells = row.cells;
     const cell = cells[x];
     const cellsClone = Array.from(cells);
-    const cellClone = {...cell, type};
-    const rowClone = {...row, cells: cellsClone};
+    const cellClone = { ...cell, type };
+    const rowClone = { ...row, cells: cellsClone };
     cellsClone[x] = cellClone;
     rows[y] = rowClone;
   }
@@ -294,7 +298,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       const row = rows[y];
       const cells = row.cells;
       const cellsClone = Array.from(cells);
-      const rowClone = {...row, cells: cellsClone};
+      const rowClone = { ...row, cells: cellsClone };
       const type = (cells[x] || cells[x - 1]).type;
       cellsClone.splice(x, 0, createCell(type));
       rows[y] = rowClone;
@@ -308,7 +312,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       const row = rows[y];
       const cells = row.cells;
       const cellsClone = Array.from(cells);
-      const rowClone = {...row, cells: cellsClone};
+      const rowClone = { ...row, cells: cellsClone };
       cellsClone.splice(x, 1);
       rows[y] = rowClone;
     }
@@ -321,7 +325,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       const row = rows[y];
       const cells = row.cells;
       const cellsClone = Array.from(cells);
-      const rowClone = {...row, cells: cellsClone};
+      const rowClone = { ...row, cells: cellsClone };
       const type = cells[cells.length - 1].type;
       for (let x = 0; x < count; x++) {
         cellsClone.push(createCell(type));
@@ -372,7 +376,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       const row = rows[y];
       const cells = row.cells;
       const cellsClone = Array.from(cells);
-      const rowClone = {...row, cells: cellsClone};
+      const rowClone = { ...row, cells: cellsClone };
       cellsClone[x].width = width;
       rows[y] = rowClone;
     }
@@ -380,13 +384,13 @@ export class TableNode extends DecoratorNode<JSX.Element> {
 
   decorate(_: LexicalEditor, config: EditorConfig): JSX.Element {
     return (
-        <Suspense>
-          <TableComponent
-              nodeKey={this.__key}
-              theme={config.theme}
-              rows={this.__rows}
-          />
-        </Suspense>
+      <Suspense>
+        <TableComponent
+          nodeKey={this.__key}
+          theme={config.theme}
+          rows={this.__rows}
+        />
+      </Suspense>
     );
   }
 
@@ -396,7 +400,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
 }
 
 export function $isTableNode(
-    node: LexicalNode | null | undefined,
+  node: LexicalNode | null | undefined,
 ): node is TableNode {
   return node instanceof TableNode;
 }
@@ -406,9 +410,9 @@ export function $createTableNode(rows: Rows): TableNode {
 }
 
 export function $createTableNodeWithDimensions(
-    rowCount: number,
-    columnCount: number,
-    includeHeaders = true,
+  rowCount: number,
+  columnCount: number,
+  includeHeaders = true,
 ): TableNode {
   const rows: Rows = [];
   for (let y = 0; y < columnCount; y++) {
@@ -416,9 +420,9 @@ export function $createTableNodeWithDimensions(
     rows.push(row);
     for (let x = 0; x < rowCount; x++) {
       row.cells.push(
-          createCell(
-              includeHeaders === true && (y === 0 || x === 0) ? 'header' : 'normal',
-          ),
+        createCell(
+          includeHeaders === true && (y === 0 || x === 0) ? 'header' : 'normal',
+        ),
       );
     }
   }

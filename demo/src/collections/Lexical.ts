@@ -1,11 +1,11 @@
-import { CollectionConfig } from "payload/types";
-import { lexicalRichTextField } from "../../../src/fields/lexicalRichTextField";
+import { CollectionConfig } from 'payload/types';
+import { lexicalRichTextField } from '../../../src/fields/lexicalRichTextField';
 //import lexicalRichTextField from '../../../dist/fields/lexicalRichTextField'
 
 const Lexical: CollectionConfig = {
-  slug: "lexicalRichText",
+  slug: 'lexicalRichText',
   admin: {
-    useAsTitle: "title",
+    useAsTitle: 'title',
   },
   versions: {
     drafts: {
@@ -14,17 +14,17 @@ const Lexical: CollectionConfig = {
   },
   fields: [
     {
-      name: "title",
-      type: "text",
+      name: 'title',
+      type: 'text',
       required: true,
     },
     lexicalRichTextField({
-      name: "lexicalRichTextEditor",
-      label: "Lexical Rich Text Editor",
+      name: 'lexicalRichTextEditor',
+      label: 'Lexical Rich Text Editor',
     }),
     lexicalRichTextField({
-      name: "lexicalRichTextEditor2",
-      label: "Lexical Rich Text Editor 2",
+      name: 'lexicalRichTextEditor2',
+      label: 'Lexical Rich Text Editor 2',
     }),
   ],
 };

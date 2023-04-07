@@ -5,12 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import "./index.scss";
+import './index.scss';
 
 // import { $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $findMatchingParent, mergeRegister } from "@lexical/utils";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import {
   $getSelection,
   $isRangeSelection,
@@ -23,34 +23,34 @@ import {
   NodeSelection,
   RangeSelection,
   SELECTION_CHANGE_COMMAND,
-} from "lexical";
-import { Dispatch, useCallback, useEffect, useRef, useState } from "react";
-import * as React from "react";
-import { createPortal } from "react-dom";
+} from 'lexical';
+import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
 
-import { useModal } from "@faceless-ui/modal";
-import { useTranslation } from "react-i18next";
+import { useModal } from '@faceless-ui/modal';
+import { useTranslation } from 'react-i18next';
 
-import reduceFieldsToValues from "payload/dist/admin/components/forms/Form/reduceFieldsToValues";
-import { Fields } from "payload/dist/admin/components/forms/Form/types";
-import { Field } from "payload/dist/fields/config/types";
-import { getBaseFields } from "payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields";
-import { useConfig } from "payload/dist/admin/components/utilities/Config";
-import buildStateFromSchema from "payload/dist/admin/components/forms/Form/buildStateFromSchema";
-import { useAuth } from "payload/dist/admin/components/utilities/Auth";
-import { useLocale } from "payload/dist/admin/components/utilities/Locale";
-import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
-import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
-import { getSelectedNode } from "../../../fields/LexicalRichText/utils/getSelectedNode";
+import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
+import { Fields } from 'payload/dist/admin/components/forms/Form/types';
+import { Field } from 'payload/dist/fields/config/types';
+import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
+import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
+import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import {
   $isLinkNode,
   LinkAttributes,
   TOGGLE_LINK_COMMAND,
-} from "../nodes/LinkNodeModified";
-import { LinkDrawer } from "./LinkDrawer";
-import { $isAutoLinkNode } from "../nodes/AutoLinkNodeModified";
-import { useEditorConfigContext } from "../../../fields/LexicalRichText/LexicalEditorComponent";
-import { setFloatingElemPositionForLinkEditor } from "../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor";
+} from '../nodes/LinkNodeModified';
+import { LinkDrawer } from './LinkDrawer';
+import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
+import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
+import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
 
 function LinkEditor({
   editor,
@@ -64,8 +64,8 @@ function LinkEditor({
   anchorElem: HTMLElement;
 }): JSX.Element {
   const editorRef = useRef<HTMLDivElement | null>(null);
-  const [linkUrl, setLinkUrl] = useState("");
-  const [linkLabel, setLinkLabel] = useState("");
+  const [linkUrl, setLinkUrl] = useState('');
+  const [linkLabel, setLinkLabel] = useState('');
   const [lastSelection, setLastSelection] = useState<
     RangeSelection | GridSelection | NodeSelection | null
   >(null);
@@ -76,7 +76,7 @@ function LinkEditor({
 
   const { user } = useAuth();
   const locale = useLocale();
-  const { t } = useTranslation("fields");
+  const { t } = useTranslation('fields');
 
   const [initialState, setInitialState] = useState<Fields>({});
   const [fieldSchema] = useState(() => {
@@ -84,8 +84,8 @@ function LinkEditor({
 
     if (customFieldSchema) {
       fields.push({
-        name: "fields",
-        type: "group",
+        name: 'fields',
+        type: 'group',
         admin: {
           style: {
             margin: 0,
@@ -99,23 +99,23 @@ function LinkEditor({
     }
 
     fields.push({
-      name: "sponsored",
-      label: "Sponsored",
-      type: "checkbox",
+      name: 'sponsored',
+      label: 'Sponsored',
+      type: 'checkbox',
       admin: {
         condition: ({ linkType }) => {
-          return linkType === "custom";
+          return linkType === 'custom';
         },
       },
     });
 
     fields.push({
-      name: "nofollow",
-      label: "Nofollow",
-      type: "checkbox",
+      name: 'nofollow',
+      label: 'Nofollow',
+      type: 'checkbox',
       admin: {
         condition: ({ linkType }) => {
-          return linkType === "custom";
+          return linkType === 'custom';
         },
       },
     });
@@ -141,8 +141,8 @@ function LinkEditor({
 
       // Initial state:
       let data: LinkAttributes & { text: string; fields: undefined } = {
-        text: "",
-        url: "",
+        text: '',
+        url: '',
         linkType: undefined,
         newTab: undefined,
         sponsored: undefined,
@@ -158,7 +158,7 @@ function LinkEditor({
           fields: undefined,
         };
 
-        if (parent.getAttributes()?.linkType === "custom") {
+        if (parent.getAttributes()?.linkType === 'custom') {
           setLinkUrl(parent.getAttributes()?.url);
           setLinkLabel(null);
         } else {
@@ -166,12 +166,12 @@ function LinkEditor({
           setLinkUrl(
             `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
               parent.getAttributes()?.doc?.value
-            }`
+            }`,
           );
           setLinkLabel(
             `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
               parent.getAttributes()?.doc?.value
-            }`
+            }`,
           );
         }
       } else if ($isLinkNode(node)) {
@@ -181,7 +181,7 @@ function LinkEditor({
           fields: undefined,
         };
 
-        if (node.getAttributes()?.linkType === "custom") {
+        if (node.getAttributes()?.linkType === 'custom') {
           setLinkUrl(node.getAttributes()?.url);
           setLinkLabel(null);
         } else {
@@ -189,16 +189,16 @@ function LinkEditor({
           setLinkUrl(
             `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
               parent.getAttributes()?.doc?.value
-            }`
+            }`,
           );
           setLinkLabel(
             `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
               parent.getAttributes()?.doc?.value
-            }`
+            }`,
           );
         }
       } else {
-        setLinkUrl("");
+        setLinkUrl('');
         setLinkLabel(null);
       }
 
@@ -206,7 +206,7 @@ function LinkEditor({
         fieldSchema,
         data,
         user,
-        operation: "create",
+        operation: 'create',
         locale,
         t,
       }).then((state) => {
@@ -238,12 +238,12 @@ function LinkEditor({
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== "link-input") {
+    } else if (!activeElement || activeElement.className !== 'link-input') {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
       setLastSelection(null);
-      setLinkUrl("");
+      setLinkUrl('');
       setLinkLabel(null);
     }
 
@@ -259,17 +259,17 @@ function LinkEditor({
       });
     };
 
-    window.addEventListener("resize", update);
+    window.addEventListener('resize', update);
 
     if (scrollerElem) {
-      scrollerElem.addEventListener("scroll", update);
+      scrollerElem.addEventListener('scroll', update);
     }
 
     return () => {
-      window.removeEventListener("resize", update);
+      window.removeEventListener('resize', update);
 
       if (scrollerElem) {
-        scrollerElem.removeEventListener("scroll", update);
+        scrollerElem.removeEventListener('scroll', update);
       }
     };
   }, [anchorElem.parentElement, editor, updateLinkEditor]);
@@ -288,7 +288,7 @@ function LinkEditor({
           updateLinkEditor();
           return true;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       editor.registerCommand(
         KEY_ESCAPE_COMMAND,
@@ -299,8 +299,8 @@ function LinkEditor({
           }
           return false;
         },
-        COMMAND_PRIORITY_HIGH
-      )
+        COMMAND_PRIORITY_HIGH,
+      ),
     );
   }, [editor, updateLinkEditor, setIsLink, isLink]);
 
@@ -328,9 +328,9 @@ function LinkEditor({
             newTab: data.newTab,
             sponsored: data.sponsored,
             nofollow: data.nofollow,
-            url: data.linkType === "custom" ? data.url : undefined,
+            url: data.linkType === 'custom' ? data.url : undefined,
             linkType: data.linkType,
-            doc: data.linkType === "internal" ? data.doc : undefined,
+            doc: data.linkType === 'internal' ? data.doc : undefined,
             text: data?.text,
           };
 
@@ -363,7 +363,7 @@ function LinkEditor({
 
 function useFloatingLinkEditorToolbar(
   editor: LexicalEditor,
-  anchorElem: HTMLElement
+  anchorElem: HTMLElement,
 ): JSX.Element | null {
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLink, setIsLink] = useState(false);
@@ -396,8 +396,8 @@ function useFloatingLinkEditorToolbar(
           setActiveEditor(newEditor);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
-      )
+        COMMAND_PRIORITY_CRITICAL,
+      ),
     );
   }, [editor, updateToolbar]);
 
@@ -408,7 +408,7 @@ function useFloatingLinkEditorToolbar(
       isLink={isLink}
       setIsLink={setIsLink}
     />,
-    anchorElem
+    anchorElem,
   );
 }
 

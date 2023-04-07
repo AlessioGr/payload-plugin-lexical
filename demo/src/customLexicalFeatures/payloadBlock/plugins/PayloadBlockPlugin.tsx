@@ -6,26 +6,29 @@
  *
  */
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { mergeRegister } from '@lexical/utils';
+import { COMMAND_PRIORITY_LOW, createCommand, LexicalCommand } from 'lexical';
+import { useEffect } from 'react';
 import {
-  COMMAND_PRIORITY_LOW, createCommand, LexicalCommand,
-} from "lexical";
-import { useEffect, } from "react";
-import {PayloadBlockAttributes, PayloadBlockNode, togglePayloadBlock} from "../nodes/PayloadBlockNode";
+  PayloadBlockAttributes,
+  PayloadBlockNode,
+  togglePayloadBlock,
+} from '../nodes/PayloadBlockNode';
 
+type Props = {};
 
+export const TOGGLE_PAYLOAD_BLOCK_COMMAND: LexicalCommand<PayloadBlockAttributes> =
+  createCommand('TOGGLE_PAYLOAD_BLOCK_COMMAND');
 
-type Props = { };
-
-export const TOGGLE_PAYLOAD_BLOCK_COMMAND: LexicalCommand<PayloadBlockAttributes> = createCommand('TOGGLE_PAYLOAD_BLOCK_COMMAND');
-
-export function PayloadBlockPlugin({ }: Props): null {
+export function PayloadBlockPlugin({}: Props): null {
   const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     if (!editor.hasNodes([PayloadBlockNode])) {
-      throw new Error("PayloadBlockPlugin: PayloadBlockPlugin not registered on editor");
+      throw new Error(
+        'PayloadBlockPlugin: PayloadBlockPlugin not registered on editor',
+      );
     }
     return mergeRegister(
       editor.registerCommand(
@@ -37,7 +40,7 @@ export function PayloadBlockPlugin({ }: Props): null {
           };
 
           const receivedPayloadBlockData: PayloadBlockAttributes =
-              payload as PayloadBlockAttributes;
+            payload as PayloadBlockAttributes;
 
           payloadBlockData.block = receivedPayloadBlockData.block;
           if (!payloadBlockData.block) {
@@ -46,11 +49,10 @@ export function PayloadBlockPlugin({ }: Props): null {
 
           payloadBlockData.values = receivedPayloadBlockData.values;
 
-
           togglePayloadBlock(payloadBlockData);
           return true;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
     );
   }, [editor]);

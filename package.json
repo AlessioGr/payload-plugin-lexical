@@ -12,7 +12,8 @@
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png}\" dist/",
     "build": "yarn copyfiles && yarn build:tsc",
     "build:tsc": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prettier:fix": "prettier --write ."
   },
   "repository": {
     "type": "git",

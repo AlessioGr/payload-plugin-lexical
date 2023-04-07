@@ -66,8 +66,7 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
         return handleClick();
       }}
       aria-label="copy"
-      title="Copy"
-    >
+      title="Copy">
       {isCopyCompleted ? (
         <i className="format success" />
       ) : (

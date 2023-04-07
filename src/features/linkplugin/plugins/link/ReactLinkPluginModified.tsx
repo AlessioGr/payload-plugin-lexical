@@ -6,18 +6,22 @@
  *
  */
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { mergeRegister } from "@lexical/utils";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { mergeRegister } from '@lexical/utils';
 import {
   $getSelection,
   $isElementNode,
   $isRangeSelection,
   COMMAND_PRIORITY_LOW,
   PASTE_COMMAND,
-} from "lexical";
-import { useEffect } from "react";
-import { LinkAttributes, LinkNode, toggleLink, TOGGLE_LINK_COMMAND } from '../../nodes/LinkNodeModified';
-
+} from 'lexical';
+import { useEffect } from 'react';
+import {
+  LinkAttributes,
+  LinkNode,
+  toggleLink,
+  TOGGLE_LINK_COMMAND,
+} from '../../nodes/LinkNodeModified';
 
 type Props = {
   validateUrl?: (url: string) => boolean;
@@ -28,29 +32,28 @@ export function LinkPlugin({ validateUrl }: Props): null {
 
   useEffect(() => {
     if (!editor.hasNodes([LinkNode])) {
-      throw new Error("LinkPlugin: LinkNode not registered on editor");
+      throw new Error('LinkPlugin: LinkNode not registered on editor');
     }
     return mergeRegister(
       editor.registerCommand(
         TOGGLE_LINK_COMMAND,
-        (payload: LinkAttributes & {text?: string}) => {
-          console.log("Payload received:", payload);
+        (payload: LinkAttributes & { text?: string }) => {
+          console.log('Payload received:', payload);
           let linkAttributes = payload;
-          
+
           //validate
-          if (linkAttributes?.linkType === "custom") {
+          if (linkAttributes?.linkType === 'custom') {
             if (
-              !(validateUrl === undefined ||
-              validateUrl(linkAttributes?.url))
+              !(validateUrl === undefined || validateUrl(linkAttributes?.url))
             ) {
               return false;
             }
-          } 
+          }
 
           toggleLink(linkAttributes);
           return true;
         },
-        COMMAND_PRIORITY_LOW
+        COMMAND_PRIORITY_LOW,
       ),
       validateUrl !== undefined
         ? editor.registerCommand(
@@ -65,14 +68,14 @@ export function LinkPlugin({ validateUrl }: Props): null {
               ) {
                 return false;
               }
-              const clipboardText = event.clipboardData.getData("text");
+              const clipboardText = event.clipboardData.getData('text');
               if (!validateUrl(clipboardText)) {
                 return false;
               }
               // If we select nodes that are elements then avoid applying the link.
               if (!selection.getNodes().some((node) => $isElementNode(node))) {
                 const linkAttributes: LinkAttributes = {
-                  linkType: "custom",
+                  linkType: 'custom',
                   url: clipboardText,
                 };
                 editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
@@ -81,11 +84,11 @@ export function LinkPlugin({ validateUrl }: Props): null {
               }
               return false;
             },
-            COMMAND_PRIORITY_LOW
+            COMMAND_PRIORITY_LOW,
           )
         : () => {
             // Don't paste arbritrary text as a link when there's no validate function
-          }
+          },
     );
   }, [editor, validateUrl]);
 

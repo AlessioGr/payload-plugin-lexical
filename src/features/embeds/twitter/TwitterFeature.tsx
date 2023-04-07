@@ -1,7 +1,10 @@
 import { EditorConfig, Feature } from '../../../types';
 
-import * as React from "react";
-import { AutoEmbedDrawer, PlaygroundEmbedConfig } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
+import * as React from 'react';
+import {
+  AutoEmbedDrawer,
+  PlaygroundEmbedConfig,
+} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
 import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { LexicalEditor } from 'lexical';
 import { $createTweetNode, $isTweetNode, TweetNode } from './nodes/TweetNode';
@@ -9,9 +12,7 @@ import TwitterPlugin, { INSERT_TWEET_COMMAND } from './plugins';
 import { ElementTransformer } from '@lexical/markdown';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
-
 export function TwitterFeature(props: {}): Feature {
-
   const TwitterEmbedConfig: PlaygroundEmbedConfig = {
     // e.g. Tweet or Google Map.
     contentName: 'Tweet',
@@ -31,7 +32,8 @@ export function TwitterFeature(props: {}): Feature {
 
     // Determine if a given URL is a match and return url data.
     parseUrl: (text: string) => {
-      const match = /^https:\/\/twitter\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)$/.exec(text);
+      const match =
+        /^https:\/\/twitter\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)$/.exec(text);
 
       if (match != null) {
         return {
@@ -45,7 +47,6 @@ export function TwitterFeature(props: {}): Feature {
 
     type: 'tweet',
   };
-
 
   const tweetMarkdownElementTransformer: ElementTransformer = {
     dependencies: [TweetNode],
@@ -62,18 +63,16 @@ export function TwitterFeature(props: {}): Feature {
       const tweetNode = $createTweetNode(id);
       textNode.replace(tweetNode);
     },
-    type: "element",
+    type: 'element',
   };
 
   return {
     plugins: [
       {
-        component: (<TwitterPlugin key="twitter" />),
-      }
+        component: <TwitterPlugin key="twitter" />,
+      },
     ],
-    nodes: [
-      TweetNode
-    ],
+    nodes: [TweetNode],
     embedConfigs: [TwitterEmbedConfig],
     markdownTransformers: [tweetMarkdownElementTransformer],
     modals: [
@@ -83,19 +82,18 @@ export function TwitterFeature(props: {}): Feature {
           editorConfig: EditorConfig;
         }) => AutoEmbedDrawer({ embedConfig: TwitterEmbedConfig }),
         openModalCommand: {
-          type: "autoembed-"+TwitterEmbedConfig.type,
-          command: (toggleModal, editDepth,uuid) => {
-
+          type: 'autoembed-' + TwitterEmbedConfig.type,
+          command: (toggleModal, editDepth, uuid) => {
             const autoEmbedDrawerSlug = formatDrawerSlug({
-              slug: `lexicalRichText-autoembed-`+TwitterEmbedConfig.type+uuid,
+              slug:
+                `lexicalRichText-autoembed-` + TwitterEmbedConfig.type + uuid,
               depth: editDepth,
             });
 
-
             toggleModal(autoEmbedDrawerSlug);
-          }
-        }
-      }
+          },
+        },
+      },
     ],
-  }
+  };
 }

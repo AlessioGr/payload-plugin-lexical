@@ -12,6 +12,14 @@ import { EditorConfig } from '../../../../types';
 
 import { PLAYGROUND_TRANSFORMERS } from '../MarkdownTransformers';
 
-export default function MarkdownPlugin({editorConfig}: {editorConfig: EditorConfig}): JSX.Element {
-  return <MarkdownShortcutPlugin transformers={PLAYGROUND_TRANSFORMERS(editorConfig)} />;
+export default function MarkdownPlugin({
+  editorConfig,
+}: {
+  editorConfig: EditorConfig;
+}): JSX.Element {
+  return (
+    <MarkdownShortcutPlugin
+      transformers={PLAYGROUND_TRANSFORMERS(editorConfig)}
+    />
+  );
 }

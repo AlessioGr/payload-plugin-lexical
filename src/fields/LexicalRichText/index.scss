@@ -6,7 +6,6 @@
  *
  */
 
-
 .editor-shell {
   margin: 20px auto;
   border-radius: 2px;
@@ -1200,8 +1199,6 @@ button.action-button:disabled {
   z-index: 9;
 }
 
-
-
 .toolbar button.toolbar-item {
   border: 0;
   display: flex;
@@ -1308,7 +1305,6 @@ button.action-button:disabled {
   margin: 0 4px;
 }
 
-
 .spacer {
   letter-spacing: -2px;
 }
@@ -1393,12 +1389,14 @@ button.item.dropdown-item-active i {
   }
 }
 
-html[data-theme=dark] {
-  .toolbar i, .toolbar span{
+html[data-theme='dark'] {
+  .toolbar i,
+  .toolbar span {
     filter: invert(1) brightness(1.2);
   }
 
-  .toolbar .toolbar-item:hover:not([disabled]), .toolbar .divider {
+  .toolbar .toolbar-item:hover:not([disabled]),
+  .toolbar .divider {
     background-color: #1c1c1c;
   }
 
@@ -1413,7 +1411,7 @@ html[data-theme=dark] {
     box-shadow: none;
   }
 
-  .dropdown i{
+  .dropdown i {
     filter: invert(1);
   }
 
@@ -1451,5 +1449,4 @@ html[data-theme=dark] {
   .link-editor .link-input a {
     color: rgb(102, 167, 255);
   }
-
 }

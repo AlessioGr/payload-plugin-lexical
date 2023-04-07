@@ -29,7 +29,7 @@ const start = async () => {
 
   app.listen(3001, async () => {
     console.log(
-      "Express is now listening for incoming connections on port 3001."
+      'Express is now listening for incoming connections on port 3001.',
     );
   });
 };

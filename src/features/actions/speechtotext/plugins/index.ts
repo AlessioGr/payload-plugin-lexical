@@ -6,9 +6,9 @@
  *
  */
 
-import type { LexicalCommand, LexicalEditor, RangeSelection } from "lexical";
+import type { LexicalCommand, LexicalEditor, RangeSelection } from 'lexical';
 
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   $getSelection,
   $isRangeSelection,
@@ -16,13 +16,13 @@ import {
   createCommand,
   REDO_COMMAND,
   UNDO_COMMAND,
-} from "lexical";
-import { useEffect, useRef, useState } from "react";
+} from 'lexical';
+import { useEffect, useRef, useState } from 'react';
 
-import useReport from "../../../../fields/LexicalRichText/hooks/useReport";
+import useReport from '../../../../fields/LexicalRichText/hooks/useReport';
 
 export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> = createCommand(
-  "SPEECH_TO_TEXT_COMMAND"
+  'SPEECH_TO_TEXT_COMMAND',
 );
 
 const VOICE_COMMANDS: Readonly<
@@ -31,7 +31,7 @@ const VOICE_COMMANDS: Readonly<
     (arg0: { editor: LexicalEditor; selection: RangeSelection }) => void
   >
 > = {
-  "\n": ({ selection }) => {
+  '\n': ({ selection }) => {
     selection.insertParagraph();
   },
   redo: ({ editor }) => {
@@ -43,7 +43,7 @@ const VOICE_COMMANDS: Readonly<
 };
 
 export function isSUPPORT_SPEECH_RECOGNITION(): boolean {
-  return "SpeechRecognition" in window || "webkitSpeechRecognition" in window;
+  return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 }
 
 function SpeechToTextPlugin(): null {
@@ -61,7 +61,7 @@ function SpeechToTextPlugin(): null {
       recognition.current.continuous = true;
       recognition.current.interimResults = true;
       recognition.current.addEventListener(
-        "result",
+        'result',
         (event: typeof SpeechRecognition) => {
           const resultItem = event.results.item(event.resultIndex);
           const { transcript } = resultItem.item(0);
@@ -89,7 +89,7 @@ function SpeechToTextPlugin(): null {
               }
             }
           });
-        }
+        },
       );
     }
 
@@ -114,7 +114,7 @@ function SpeechToTextPlugin(): null {
         setIsEnabled(_isEnabled);
         return true;
       },
-      COMMAND_PRIORITY_EDITOR
+      COMMAND_PRIORITY_EDITOR,
     );
   }, [editor]);
 

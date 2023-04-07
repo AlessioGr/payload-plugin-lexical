@@ -70,9 +70,13 @@ function TweetComponent({
 
   const createTweet = useCallback(async () => {
     try {
-      if (window.document.documentElement.getAttribute('data-theme') === 'dark') {
+      if (
+        window.document.documentElement.getAttribute('data-theme') === 'dark'
+      ) {
         // @ts-expect-error Twitter is attached to the window.
-        await window.twttr.widgets.createTweet(tweetID, containerRef.current, { theme: 'dark' });
+        await window.twttr.widgets.createTweet(tweetID, containerRef.current, {
+          theme: 'dark',
+        });
       } else {
         // @ts-expect-error Twitter is attached to the window.
         await window.twttr.widgets.createTweet(tweetID, containerRef.current);
@@ -118,8 +122,7 @@ function TweetComponent({
     <BlockWithAlignableContents
       className={className}
       format={format}
-      nodeKey={nodeKey}
-    >
+      nodeKey={nodeKey}>
       {isTweetLoading ? loadingComponent : null}
       <div
         style={{ display: 'inline-block', width: '550px' }}

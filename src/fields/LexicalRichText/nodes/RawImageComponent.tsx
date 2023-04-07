@@ -1,13 +1,13 @@
-import * as React from "react";
-import { LexicalEditor, NodeKey } from "lexical";
-import { Suspense, useEffect, useState } from "react";
+import * as React from 'react';
+import { LexicalEditor, NodeKey } from 'lexical';
+import { Suspense, useEffect, useState } from 'react';
 
-import { ExtraAttributes, RawImagePayload } from "./ImageNode";
-import { useConfig } from "payload/dist/admin/components/utilities/Config";
-import { useTranslation } from "react-i18next";
-import { requests } from "payload/dist/admin/api";
+import { ExtraAttributes, RawImagePayload } from './ImageNode';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+import { useTranslation } from 'react-i18next';
+import { requests } from 'payload/dist/admin/api';
 
-const ImageComponent = React.lazy(() => import("./ImageComponent"));
+const ImageComponent = React.lazy(() => import('./ImageComponent'));
 
 export default function RawImageComponent({
   rawImagePayload,
@@ -35,21 +35,18 @@ export default function RawImageComponent({
   const [imageData, setImageData] = useState<any>(null);
 
   useEffect(() => {
-
     async function loadImageData() {
-
       const relatedCollection = collections.find((coll) => {
         return coll.slug === rawImagePayload.relationTo;
       });
-
 
       const response = await requests.get(
         `${serverURL}${api}/${relatedCollection?.slug}/${rawImagePayload.value?.id}`,
         {
           headers: {
-            "Accept-Language": i18n.language,
+            'Accept-Language': i18n.language,
           },
-        }
+        },
       );
       const json = await response.json();
 
@@ -71,7 +68,6 @@ export default function RawImageComponent({
 
     loadImageData();
   }, []);
-
 
   return (
     <Suspense fallback={<p>Loading image...</p>}>

@@ -94,9 +94,10 @@ export default function AutocompletePlugin(): JSX.Element | null {
     let lastSuggestion: null | string = null;
     let searchPromise: null | SearchPromise = null;
     function $clearSuggestion() {
-      const autocompleteNode = autocompleteNodeKey !== null
-        ? $getNodeByKey(autocompleteNodeKey)
-        : null;
+      const autocompleteNode =
+        autocompleteNodeKey !== null
+          ? $getNodeByKey(autocompleteNodeKey)
+          : null;
       if (autocompleteNode !== null && autocompleteNode.isAttached()) {
         autocompleteNode.remove();
         autocompleteNodeKey = null;
@@ -122,9 +123,9 @@ export default function AutocompletePlugin(): JSX.Element | null {
           const selection = $getSelection();
           const [hasMatch, match] = $search(selection);
           if (
-            !hasMatch
-            || match !== lastMatch
-            || !$isRangeSelection(selection)
+            !hasMatch ||
+            match !== lastMatch ||
+            !$isRangeSelection(selection)
           ) {
             // Outdated
             return;
@@ -266,7 +267,8 @@ class AutocompleteServer {
           ? String.fromCharCode(char0 + 32) + searchText.substring(1)
           : searchText;
         const match = this.DATABASE.find(
-          (dictionaryWord) => dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null,
+          (dictionaryWord) =>
+            dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null,
         );
         if (match === undefined) {
           return resolve(null);

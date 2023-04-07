@@ -23,7 +23,7 @@ export type SerializedEmojiNode = Spread<
     type: 'emoji';
   },
   SerializedTextNode
-  >;
+>;
 
 export class EmojiNode extends TextNode {
   __className: string;

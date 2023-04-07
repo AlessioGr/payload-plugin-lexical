@@ -2,11 +2,7 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": false,
     "esModuleInterop": true,
@@ -21,15 +17,8 @@
       "payload/generated-types": ["./src/payload-types.ts"]
     }
   },
-  "include": [
-    "src",
-    "src/typings"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "build",
-  ],
+  "include": ["src", "src/typings"],
+  "exclude": ["node_modules", "dist", "build"],
   "ts-node": {
     "swc": true
   }

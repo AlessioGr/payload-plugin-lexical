@@ -124,7 +124,8 @@ export default function ImageComponent({
 }): JSX.Element {
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
+  const [isSelected, setSelected, clearSelection] =
+    useLexicalNodeSelection(nodeKey);
   const [isResizing, setIsResizing] = useState<boolean>(false);
   const [editor] = useLexicalComposerContext();
   const [selection, setSelection] = useState<
@@ -153,9 +154,9 @@ export default function ImageComponent({
       const latestSelection = $getSelection();
       const buttonElem = buttonRef.current;
       if (
-        isSelected
-        && $isNodeSelection(latestSelection)
-        && latestSelection.getNodes().length === 1
+        isSelected &&
+        $isNodeSelection(latestSelection) &&
+        latestSelection.getNodes().length === 1
       ) {
         if (showCaption) {
           // Move focus into nested editor
@@ -163,10 +164,8 @@ export default function ImageComponent({
           event.preventDefault();
           caption.focus();
           return true;
-        } if (
-          buttonElem !== null
-          && buttonElem !== document.activeElement
-        ) {
+        }
+        if (buttonElem !== null && buttonElem !== document.activeElement) {
           event.preventDefault();
           buttonElem.focus();
           return true;
@@ -180,8 +179,8 @@ export default function ImageComponent({
   const onEscape = useCallback(
     (event: KeyboardEvent) => {
       if (
-        activeEditorRef.current === caption
-        || buttonRef.current === event.target
+        activeEditorRef.current === caption ||
+        buttonRef.current === event.target
       ) {
         $setSelection(null);
         editor.update(() => {
@@ -313,14 +312,12 @@ export default function ImageComponent({
   };
 
   const { historyState } = useSharedHistoryContext();
-  const {
-    showNestedEditorTreeView,
-  } = Settings;
+  const { showNestedEditorTreeView } = Settings;
 
   const draggable = isSelected && $isNodeSelection(selection) && !isResizing;
   const isFocused = isSelected || isResizing;
 
-  const {editorConfig} = useEditorConfigContext();
+  const { editorConfig } = useEditorConfigContext();
   return (
     <Suspense fallback={null}>
       <React.Fragment>
@@ -342,11 +339,14 @@ export default function ImageComponent({
         {showCaption && (
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
-              {editorConfig.features.map(feature => {
-                if (feature.subEditorPlugins && feature.subEditorPlugins.length > 0) {
-                  return feature.subEditorPlugins.map(subEditorPlugin => {
+              {editorConfig.features.map((feature) => {
+                if (
+                  feature.subEditorPlugins &&
+                  feature.subEditorPlugins.length > 0
+                ) {
+                  return feature.subEditorPlugins.map((subEditorPlugin) => {
                     return subEditorPlugin;
-                  })
+                  });
                 }
               })}
               <HashtagPlugin />
@@ -355,11 +355,11 @@ export default function ImageComponent({
                 contentEditable={
                   <ContentEditable className="ImageNode__contentEditable" />
                 }
-                placeholder={(
+                placeholder={
                   <Placeholder className="ImageNode__placeholder">
                     Enter a caption...
                   </Placeholder>
-                )}
+                }
                 ErrorBoundary={LexicalErrorBoundary}
               />
               {showNestedEditorTreeView === true ? <TreeViewPlugin /> : null}

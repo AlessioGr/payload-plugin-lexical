@@ -19,9 +19,9 @@ import {
   NodeSelection,
   RangeSelection,
   SerializedElementNode,
-} from "lexical";
+} from 'lexical';
 
-import {addClassNamesToElement, isHTMLAnchorElement} from '@lexical/utils';
+import { addClassNamesToElement, isHTMLAnchorElement } from '@lexical/utils';
 import {
   $applyNodeReplacement,
   $getSelection,
@@ -30,9 +30,8 @@ import {
   createCommand,
   ElementNode,
   Spread,
-} from "lexical";
+} from 'lexical';
 import { SerializedAutoLinkNode } from './AutoLinkNodeModified';
-
 
 export type LinkAttributes = {
   url?: string;
@@ -44,65 +43,73 @@ export type LinkAttributes = {
     value: string;
     relationTo: string;
   } | null;
-  linkType?: "custom" | "internal";
+  linkType?: 'custom' | 'internal';
 };
 
 export type SerializedLinkNode = Spread<
   {
-    type: "link";
+    type: 'link';
     version: 2;
-    attributes: LinkAttributes
+    attributes: LinkAttributes;
   },
   SerializedElementNode
 >;
 
-
-
 /** @noInheritDoc */
 export class LinkNode extends ElementNode {
-
   __attributes: LinkAttributes;
 
-
   static getType(): string {
-    return "link";
+    return 'link';
   }
 
   static clone(node: LinkNode): LinkNode {
-    return new LinkNode(
-      {
-        attributes: node.__attributes,
-        key: node.__key
-      }
-    );
+    return new LinkNode({
+      attributes: node.__attributes,
+      key: node.__key,
+    });
   }
 
-  constructor({attributes = {url: null, newTab: false, sponsored: false, nofollow: false, rel: null, doc: null, linkType: "custom"}, key}: {attributes: LinkAttributes , key?: NodeKey}) {
+  constructor({
+    attributes = {
+      url: null,
+      newTab: false,
+      sponsored: false,
+      nofollow: false,
+      rel: null,
+      doc: null,
+      linkType: 'custom',
+    },
+    key,
+  }: {
+    attributes: LinkAttributes;
+    key?: NodeKey;
+  }) {
     super(key);
     this.__attributes = attributes;
   }
 
   createDOM(config: EditorConfig): HTMLAnchorElement {
-    const element = document.createElement("a");
-    if (this.__attributes?.linkType === "custom") {
+    const element = document.createElement('a');
+    if (this.__attributes?.linkType === 'custom') {
       element.href = this.__attributes.url;
     }
     if (this.__attributes?.newTab) {
-      element.target = "_blank";
+      element.target = '_blank';
     }
 
-    element.rel = "";
+    element.rel = '';
 
     if (this.__attributes?.sponsored) {
-      element.rel += "sponsored";
+      element.rel += 'sponsored';
     }
 
     if (this.__attributes?.nofollow) {
-      element.rel += " nofollow";
+      element.rel += ' nofollow';
     }
 
     if (this.__attributes?.rel !== null) {
-      element.rel += " " + this.__rel;
+      element.rel += ' ' + this.__rel;
     }
     addClassNamesToElement(element, config.theme.link);
     return element;
@@ -111,45 +118,51 @@ export class LinkNode extends ElementNode {
   updateDOM(
     prevNode: LinkNode,
     anchor: HTMLAnchorElement,
-    config: EditorConfig
+    config: EditorConfig,
   ): boolean {
     const url = this.__attributes?.url;
     const newTab = this.__attributes?.newTab;
     const sponsored = this.__attributes?.sponsored;
     const nofollow = this.__attributes?.nofollow;
     const rel = this.__attributes?.rel;
-    if (url !== prevNode.__attributes?.url && this.__attributes?.linkType === "custom") {
+    if (
+      url !== prevNode.__attributes?.url &&
+      this.__attributes?.linkType === 'custom'
+    ) {
       anchor.href = url;
     }
-    if (this.__attributes?.linkType === "internal" && prevNode.__attributes?.linkType === "custom") {
-      anchor.removeAttribute("href");
+    if (
+      this.__attributes?.linkType === 'internal' &&
+      prevNode.__attributes?.linkType === 'custom'
+    ) {
+      anchor.removeAttribute('href');
     }
 
     if (newTab !== prevNode.__attributes?.newTab) {
       if (newTab) {
-        anchor.target = "_blank";
+        anchor.target = '_blank';
       } else {
-        anchor.removeAttribute("target");
+        anchor.removeAttribute('target');
       }
     }
 
-    if(!anchor.rel){
-      anchor.rel = "";
+    if (!anchor.rel) {
+      anchor.rel = '';
     }
 
     if (sponsored !== prevNode.__attributes.sponsored) {
       if (sponsored) {
-        anchor.rel += "sponsored";
+        anchor.rel += 'sponsored';
       } else {
-        anchor.rel.replace(" sponsored", "").replace("sponsored", "")
+        anchor.rel.replace(' sponsored', '').replace('sponsored', '');
       }
     }
 
     if (nofollow !== prevNode.__attributes.nofollow) {
       if (nofollow) {
-        anchor.rel += "nofollow";
+        anchor.rel += 'nofollow';
       } else {
-        anchor.rel.replace(" nofollow", "").replace("nofollow", "")
+        anchor.rel.replace(' nofollow', '').replace('nofollow', '');
       }
     }
 
@@ -157,7 +170,7 @@ export class LinkNode extends ElementNode {
       if (rel) {
         anchor.rel += rel;
       } else {
-        anchor.removeAttribute("rel");
+        anchor.removeAttribute('rel');
       }
     }
     return false;
@@ -173,10 +186,10 @@ export class LinkNode extends ElementNode {
   }
 
   static importJSON(
-    serializedNode: SerializedLinkNode | SerializedAutoLinkNode
+    serializedNode: SerializedLinkNode | SerializedAutoLinkNode,
   ): LinkNode {
     const node = $createLinkNode({
-      attributes: serializedNode.attributes
+      attributes: serializedNode.attributes,
     });
     node.setFormat(serializedNode.format);
     node.setIndent(serializedNode.indent);
@@ -188,7 +201,7 @@ export class LinkNode extends ElementNode {
     return {
       ...super.exportJSON(),
       attributes: this.getAttributes(),
-      type: "link",
+      type: 'link',
       version: 2,
     };
   }
@@ -204,14 +217,14 @@ export class LinkNode extends ElementNode {
 
   insertNewAfter(
     selection: RangeSelection,
-    restoreSelection = true
+    restoreSelection = true,
   ): null | ElementNode {
     const element = this.getParentOrThrow().insertNewAfter(
       selection,
-      restoreSelection
+      restoreSelection,
     );
     if ($isElementNode(element)) {
-      const linkNode = $createLinkNode({attributes: this.__attributes});
+      const linkNode = $createLinkNode({ attributes: this.__attributes });
       element.append(linkNode);
       return linkNode;
     }
@@ -237,7 +250,7 @@ export class LinkNode extends ElementNode {
   extractWithChild(
     child: LexicalNode,
     selection: RangeSelection | NodeSelection | GridSelection,
-    destination: "clone" | "html"
+    destination: 'clone' | 'html',
   ): boolean {
     if (!$isRangeSelection(selection)) {
       return false;
@@ -258,42 +271,44 @@ function convertAnchorElement(domNode: Node): DOMConversionOutput {
   let node = null;
   if (isHTMLAnchorElement(domNode)) {
     const content = domNode.textContent;
-    if (content !== null && content !== "") {
-      node = $createLinkNode({attributes: {
-        url: domNode.getAttribute("href") || "",
-        rel: domNode.getAttribute("rel"),
-        newTab: domNode.getAttribute("target") === "_blank",
-        sponsored: domNode.getAttribute("rel")?.includes("sponsored") || false,
-        nofollow: domNode.getAttribute("rel")?.includes("nofollow") || false,
-        linkType: "custom",
-        doc: null,
-      }});
+    if (content !== null && content !== '') {
+      node = $createLinkNode({
+        attributes: {
+          url: domNode.getAttribute('href') || '',
+          rel: domNode.getAttribute('rel'),
+          newTab: domNode.getAttribute('target') === '_blank',
+          sponsored:
+            domNode.getAttribute('rel')?.includes('sponsored') || false,
+          nofollow: domNode.getAttribute('rel')?.includes('nofollow') || false,
+          linkType: 'custom',
+          doc: null,
+        },
+      });
     }
   }
   return { node };
 }
 
-export function $createLinkNode(
-  {attributes}: {attributes?: LinkAttributes}
-): LinkNode {
-  return $applyNodeReplacement(new LinkNode({attributes: attributes}));
+export function $createLinkNode({
+  attributes,
+}: {
+  attributes?: LinkAttributes;
+}): LinkNode {
+  return $applyNodeReplacement(new LinkNode({ attributes: attributes }));
 }
 
 export function $isLinkNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is LinkNode {
   return node instanceof LinkNode;
 }
 
+export const TOGGLE_LINK_COMMAND: LexicalCommand<LinkAttributes | null> =
+  createCommand('TOGGLE_LINK_COMMAND');
 
-
-
-
-export const TOGGLE_LINK_COMMAND: LexicalCommand<LinkAttributes | null
-> = createCommand("TOGGLE_LINK_COMMAND");
-
-export function toggleLink(linkAttributes: LinkAttributes & {text?: string}): void {
-
+export function toggleLink(
+  linkAttributes: LinkAttributes & { text?: string },
+): void {
   const selection = $getSelection();
 
   if (!$isRangeSelection(selection)) {
@@ -325,19 +340,21 @@ export function toggleLink(linkAttributes: LinkAttributes & {text?: string}): vo
       const linkNode: LinkNode = $isLinkNode(firstNode)
         ? firstNode
         : $getLinkAncestor(firstNode);
-      if (linkNode !== null) {     
+      if (linkNode !== null) {
         linkNode.setAttributes(linkAttributes);
 
-        if(linkAttributes.text && linkAttributes.text !== linkNode.getTextContent()){
+        if (
+          linkAttributes.text &&
+          linkAttributes.text !== linkNode.getTextContent()
+        ) {
           // remove all children and add child with new textcontent:
-          linkNode.append($createTextNode(linkAttributes.text))
+          linkNode.append($createTextNode(linkAttributes.text));
           linkNode.getChildren().forEach((child) => {
-            if(child !== linkNode.getLastChild()){
-              child.remove()
+            if (child !== linkNode.getLastChild()) {
+              child.remove();
             }
-          })
+          });
         }
-
 
         return;
       }
@@ -359,22 +376,25 @@ export function toggleLink(linkAttributes: LinkAttributes & {text?: string}): vo
 
       if ($isLinkNode(parent)) {
         linkNode = parent;
-        parent.setAttributes(linkAttributes)
-        if(linkAttributes.text && linkAttributes.text !== parent.getTextContent()){
+        parent.setAttributes(linkAttributes);
+        if (
+          linkAttributes.text &&
+          linkAttributes.text !== parent.getTextContent()
+        ) {
           // remove all children and add child with new textcontent:
-          parent.append($createTextNode(linkAttributes.text))
+          parent.append($createTextNode(linkAttributes.text));
           parent.getChildren().forEach((child) => {
-            if(child !== parent.getLastChild()){
-              child.remove()
+            if (child !== parent.getLastChild()) {
+              child.remove();
             }
-          })
+          });
         }
         return;
       }
 
       if (!parent.is(prevParent)) {
         prevParent = parent;
-        linkNode = $createLinkNode({attributes: linkAttributes});
+        linkNode = $createLinkNode({ attributes: linkAttributes });
 
         if ($isLinkNode(parent)) {
           if (node.getPreviousSibling() === null) {
@@ -416,7 +436,7 @@ function $getLinkAncestor(node: LexicalNode): null | LinkNode {
 
 function $getAncestor(
   node: LexicalNode,
-  predicate: (ancestor: LexicalNode) => boolean
+  predicate: (ancestor: LexicalNode) => boolean,
 ): null | LexicalNode {
   let parent: null | LexicalNode = node;
   while (

@@ -13,7 +13,7 @@ import { useEffect, useRef } from 'react';
 export default function KatexRenderer({
   equation,
   inline,
-                                        onDoubleClick,
+  onDoubleClick,
 }: Readonly<{
   equation: string;
   inline: boolean;

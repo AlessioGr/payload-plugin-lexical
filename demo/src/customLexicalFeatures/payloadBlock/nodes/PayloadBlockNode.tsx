@@ -18,63 +18,70 @@ import {
   NodeSelection,
   RangeSelection,
   SerializedLexicalNode,
-} from "lexical";
+} from 'lexical';
 
-import { $wrapNodeInElement, addClassNamesToElement } from "@lexical/utils";
+import { $wrapNodeInElement, addClassNamesToElement } from '@lexical/utils';
 import {
   $applyNodeReplacement,
   $getSelection,
   $isRangeSelection,
   Spread,
-} from "lexical";
+} from 'lexical';
 import { DecoratorNode } from 'lexical';
 import * as React from 'react';
 import { Block } from 'payload/types';
 import { Data } from 'payload/dist/admin/components/forms/Form/types';
-const PayloadBlockDisplayComponent = React.lazy(() => import("./PayloadBlockDisplayComponent"));
+const PayloadBlockDisplayComponent = React.lazy(
+  () => import('./PayloadBlockDisplayComponent'),
+);
 
 export type PayloadBlockAttributes = {
-  block?: Block,
-  values?: Data
+  block?: Block;
+  values?: Data;
 };
 
 export type SerializedPayloadBlockNode = Spread<
   {
-    type: "payloadBlock";
+    type: 'payloadBlock';
     version: 1;
-    attributes: PayloadBlockAttributes
+    attributes: PayloadBlockAttributes;
   },
   SerializedLexicalNode
 >;
 
 /** @noInheritDoc */
 export class PayloadBlockNode extends DecoratorNode<JSX.Element> {
-
   __attributes: PayloadBlockAttributes;
 
   static getType(): string {
-    return "payloadBlock";
+    return 'payloadBlock';
   }
 
   static clone(node: PayloadBlockNode): PayloadBlockNode {
-    return new PayloadBlockNode(
-      {
-        attributes: node.__attributes,
-        key: node.__key
-      }
-    );
+    return new PayloadBlockNode({
+      attributes: node.__attributes,
+      key: node.__key,
+    });
   }
 
-  constructor({attributes = {}, key}: {attributes: PayloadBlockAttributes, key?: NodeKey}) {
+  constructor({
+    attributes = {},
+    key,
+  }: {
+    attributes: PayloadBlockAttributes;
+    key?: NodeKey;
+  }) {
     super(key);
     this.__attributes = attributes;
   }
 
-
   createDOM(config: EditorConfig): HTMLSpanElement {
-    const element = document.createElement("span");
+    const element = document.createElement('span');
 
-    addClassNamesToElement(element, /*config.theme.payloadBlock*/ 'PlaygroundEditorTheme__payloadBlock');
+    addClassNamesToElement(
+      element,
+      /*config.theme.payloadBlock*/ 'PlaygroundEditorTheme__payloadBlock',
+    );
     return element;
   }
 
@@ -83,25 +90,22 @@ export class PayloadBlockNode extends DecoratorNode<JSX.Element> {
     return false;
   }
 
-
   static importJSON(
-    serializedNode: SerializedPayloadBlockNode
+    serializedNode: SerializedPayloadBlockNode,
   ): PayloadBlockNode {
     const node = $createPayloadBlockNode(serializedNode.attributes);
     return node;
   }
 
-
   exportJSON(): SerializedPayloadBlockNode {
     return {
-      type: "payloadBlock",
+      type: 'payloadBlock',
       version: 1,
-      attributes: this.getAttributes()
+      attributes: this.getAttributes(),
     };
   }
 
   decorate(): JSX.Element {
-
     return (
       <PayloadBlockDisplayComponent
         block={this.__attributes?.block}
@@ -110,9 +114,6 @@ export class PayloadBlockNode extends DecoratorNode<JSX.Element> {
     );
   }
 
-
-
-
   getAttributes(): PayloadBlockAttributes {
     return this.getLatest().__attributes;
   }
@@ -120,9 +121,6 @@ export class PayloadBlockNode extends DecoratorNode<JSX.Element> {
     const writable = this.getWritable();
     writable.__attributes = attributes;
   }
-  
-
-
 
   canInsertTextBefore(): false {
     return false;
@@ -143,7 +141,7 @@ export class PayloadBlockNode extends DecoratorNode<JSX.Element> {
   extractWithChild(
     child: LexicalNode,
     selection: RangeSelection | NodeSelection | GridSelection,
-    destination: "clone" | "html"
+    destination: 'clone' | 'html',
   ): boolean {
     if (!$isRangeSelection(selection)) {
       return false;
@@ -160,23 +158,23 @@ export class PayloadBlockNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-
 export function $createPayloadBlockNode(
-  attributes?: PayloadBlockAttributes
+  attributes?: PayloadBlockAttributes,
 ): PayloadBlockNode {
-  return $applyNodeReplacement(new PayloadBlockNode({attributes: attributes}));
+  return $applyNodeReplacement(
+    new PayloadBlockNode({ attributes: attributes }),
+  );
 }
 
 export function $isPayloadBlockNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is PayloadBlockNode {
   return node instanceof PayloadBlockNode;
 }
 
-
-
-export function togglePayloadBlock(payloadBlockData: PayloadBlockAttributes): void {
- 
+export function togglePayloadBlock(
+  payloadBlockData: PayloadBlockAttributes,
+): void {
   const selection = $getSelection();
 
   const inlineProductNode = $createPayloadBlockNode(payloadBlockData);
@@ -185,7 +183,4 @@ export function togglePayloadBlock(payloadBlockData: PayloadBlockAttributes): vo
   if ($isRootOrShadowRoot(inlineProductNode.getParentOrThrow())) {
     $wrapNodeInElement(inlineProductNode, $createParagraphNode).selectEnd();
   }
-
 }
-
-

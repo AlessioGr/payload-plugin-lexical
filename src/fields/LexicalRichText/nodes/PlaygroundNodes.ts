@@ -6,22 +6,22 @@
  *
  */
 
-import type { Klass, LexicalNode } from "lexical";
+import type { Klass, LexicalNode } from 'lexical';
 
-import { CodeHighlightNode, CodeNode } from "@lexical/code";
-import { HashtagNode } from "@lexical/hashtag";
-import { ListItemNode, ListNode } from "@lexical/list";
-import { MarkNode } from "@lexical/mark";
-import { OverflowNode } from "@lexical/overflow";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
-import { TableNode as NewTableNode } from "./TableNode";
+import { CodeHighlightNode, CodeNode } from '@lexical/code';
+import { HashtagNode } from '@lexical/hashtag';
+import { ListItemNode, ListNode } from '@lexical/list';
+import { MarkNode } from '@lexical/mark';
+import { OverflowNode } from '@lexical/overflow';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
+import { TableNode as NewTableNode } from './TableNode';
 
-import { ImageNode } from "./ImageNode";
-import type { EditorConfig } from "../../../types";
+import { ImageNode } from './ImageNode';
+import type { EditorConfig } from '../../../types';
 
 function PlaygroundNodes(
-  editorConfig: EditorConfig
+  editorConfig: EditorConfig,
 ): Array<Klass<LexicalNode>> {
   const nodes: Array<Klass<LexicalNode>> = [];
   if (editorConfig.toggles.tables.enabled) {
@@ -41,7 +41,7 @@ function PlaygroundNodes(
     HashtagNode,
     CodeHighlightNode,
     OverflowNode,
-    MarkNode
+    MarkNode,
   );
 
   for (const feature of editorConfig.features) {

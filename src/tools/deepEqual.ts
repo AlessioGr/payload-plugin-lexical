@@ -2,7 +2,7 @@ function keysWithoutUndefinedValues(obj) {
   return Object.keys(obj).filter((key) => obj[key] !== undefined);
 }
 
-export function deepEqual(obj1, obj2, nested = 0, parentKey = "top >") {
+export function deepEqual(obj1, obj2, nested = 0, parentKey = 'top >') {
   if (obj1 === obj2)
     // it's just the same object. No need to compare.
     return true;
@@ -40,7 +40,7 @@ export function deepEqual(obj1, obj2, nested = 0, parentKey = "top >") {
     }
     if (
       key in obj2 &&
-      !deepEqual(obj1[key], obj2[key], nested + 1, parentKey + " " + key)
+      !deepEqual(obj1[key], obj2[key], nested + 1, parentKey + ' ' + key)
     ) {
       //console.log("Not equal because of: " + key + " not equal");
       return false;

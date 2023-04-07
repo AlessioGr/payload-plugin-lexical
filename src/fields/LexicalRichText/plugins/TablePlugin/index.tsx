@@ -6,7 +6,7 @@
  *
  */
 
-import "./modal.scss"
+import './modal.scss';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import {
@@ -28,16 +28,22 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 import invariant from '../../shared/invariant';
 
-import { $createTableNodeWithDimensions, TableNode } from '../../nodes/TableNode';
-import Button from 'payload/dist/admin/components/elements/Button'
+import {
+  $createTableNodeWithDimensions,
+  TableNode,
+} from '../../nodes/TableNode';
+import Button from 'payload/dist/admin/components/elements/Button';
 import { DialogActions } from '../../ui/Dialog';
 import TextInput from '../../ui/TextInput';
-import {useEditDepth} from "payload/dist/admin/components/utilities/EditDepth";
-import {Drawer, formatDrawerSlug} from "payload/dist/admin/components/elements/Drawer";
-import {useModal} from "@faceless-ui/modal";
-import {Gutter} from "payload/dist/admin/components/elements/Gutter";
-import X from "payload/dist/admin/components/icons/X";
-import {useEditorConfigContext} from "../../LexicalEditorComponent";
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import {
+  Drawer,
+  formatDrawerSlug,
+} from 'payload/dist/admin/components/elements/Drawer';
+import { useModal } from '@faceless-ui/modal';
+import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+import X from 'payload/dist/admin/components/icons/X';
+import { useEditorConfigContext } from '../../LexicalEditorComponent';
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string;
@@ -62,7 +68,8 @@ export type CellEditorConfig = Readonly<{
   theme?: EditorThemeClasses;
 }>;
 
-export const INSERT_NEW_TABLE_COMMAND: LexicalCommand<InsertTableCommandPayload> = createCommand('INSERT_NEW_TABLE_COMMAND');
+export const INSERT_NEW_TABLE_COMMAND: LexicalCommand<InsertTableCommandPayload> =
+  createCommand('INSERT_NEW_TABLE_COMMAND');
 
 export const CellContext = createContext<CellContextShape>({
   cellEditorConfig: null,
@@ -72,7 +79,7 @@ export const CellContext = createContext<CellContextShape>({
   },
 });
 
-export function TableContext({ children }: {children: JSX.Element}) {
+export function TableContext({ children }: { children: JSX.Element }) {
   const [contextValue, setContextValue] = useState<{
     cellEditorConfig: null | CellEditorConfig;
     cellEditorPlugins: null | JSX.Element | Array<JSX.Element>;
@@ -91,32 +98,25 @@ export function TableContext({ children }: {children: JSX.Element}) {
           },
         }),
         [contextValue.cellEditorConfig, contextValue.cellEditorPlugins],
-      )}
-    >
+      )}>
       {children}
     </CellContext.Provider>
   );
 }
 
+const baseClass = 'rich-text-table-modal';
 
-const baseClass = "rich-text-table-modal";
-
-export function InsertTableDialog({
-}: {
-}): JSX.Element {
-  const { uuid} = useEditorConfigContext();
+export function InsertTableDialog({}: {}): JSX.Element {
+  const { uuid } = useEditorConfigContext();
 
   const editDepth = useEditDepth();
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const tableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-table`+uuid,
+    slug: `lexicalRichText-add-table` + uuid,
     depth: editDepth,
   });
-  const {
-    toggleModal,
-    closeModal
-  } = useModal();
+  const { toggleModal, closeModal } = useModal();
 
   const [rows, setRows] = useState('5');
   const [columns, setColumns] = useState('5');
@@ -142,64 +142,58 @@ export function InsertTableDialog({
   };
 
   return (
-      <Drawer slug={tableDrawerSlug} key={tableDrawerSlug} className={baseClass}>
-        <Gutter className={`${baseClass}__template`}>
-          <header className={`${baseClass}__header`}>
-            <h2 className={`${baseClass}__header-text`}>Add table</h2>
-            <Button
-                className={`${baseClass}__header-close`}
-                buttonStyle="none"
-                onClick={() => {
-                  closeModal(tableDrawerSlug);
-                }}
-            >
-              <X />
+    <Drawer slug={tableDrawerSlug} key={tableDrawerSlug} className={baseClass}>
+      <Gutter className={`${baseClass}__template`}>
+        <header className={`${baseClass}__header`}>
+          <h2 className={`${baseClass}__header-text`}>Add table</h2>
+          <Button
+            className={`${baseClass}__header-close`}
+            buttonStyle="none"
+            onClick={() => {
+              closeModal(tableDrawerSlug);
+            }}>
+            <X />
+          </Button>
+        </header>
+        <React.Fragment>
+          <TextInput
+            placeholder={'# of rows (1-500)'}
+            label="Rows"
+            onChange={setRows}
+            value={rows}
+            data-test-id="table-modal-rows"
+            numberOnly={true}
+          />
+          <TextInput
+            placeholder={'# of columns (1-50)'}
+            label="Columns"
+            onChange={setColumns}
+            value={columns}
+            data-test-id="table-modal-columns"
+            numberOnly={true}
+          />
+          <DialogActions data-test-id="table-model-confirm-insert">
+            <Button disabled={isDisabled} onClick={onClick}>
+              Confirm
             </Button>
-          </header>
-          <React.Fragment>
-            <TextInput
-                placeholder={'# of rows (1-500)'}
-                label="Rows"
-                onChange={setRows}
-                value={rows}
-                data-test-id="table-modal-rows"
-                numberOnly={true}
-            />
-            <TextInput
-                placeholder={'# of columns (1-50)'}
-                label="Columns"
-                onChange={setColumns}
-                value={columns}
-                data-test-id="table-modal-columns"
-                numberOnly={true}
-            />
-            <DialogActions data-test-id="table-model-confirm-insert">
-              <Button disabled={isDisabled} onClick={onClick}>
-                Confirm
-              </Button>
-            </DialogActions>
-          </React.Fragment>
-        </Gutter>
-      </Drawer>
+          </DialogActions>
+        </React.Fragment>
+      </Gutter>
+    </Drawer>
   );
 }
 
-export function InsertNewTableDialog({
-}: {
-}): JSX.Element {
-  const { uuid} = useEditorConfigContext();
+export function InsertNewTableDialog({}: {}): JSX.Element {
+  const { uuid } = useEditorConfigContext();
 
   const editDepth = useEditDepth();
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const newTableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-newtable`+uuid,
+    slug: `lexicalRichText-add-newtable` + uuid,
     depth: editDepth,
   });
-  const {
-    toggleModal,
-    closeModal
-  } = useModal();
+  const { toggleModal, closeModal } = useModal();
 
   const [rows, setRows] = useState('');
   const [columns, setColumns] = useState('');
@@ -221,45 +215,49 @@ export function InsertNewTableDialog({
   };
 
   return (
-      <Drawer slug={newTableDrawerSlug} key={newTableDrawerSlug} className={baseClass}>
-        <Gutter className={`${baseClass}__template`}>
-          <header className={`${baseClass}__header`}>
-            <h2 className={`${baseClass}__header-text`}>Add new table (Experimental)</h2>
-            <Button
-                className={`${baseClass}__header-close`}
-                buttonStyle="none"
-                onClick={() => {
-                  closeModal(newTableDrawerSlug);
-                }}
-            >
-              <X />
+    <Drawer
+      slug={newTableDrawerSlug}
+      key={newTableDrawerSlug}
+      className={baseClass}>
+      <Gutter className={`${baseClass}__template`}>
+        <header className={`${baseClass}__header`}>
+          <h2 className={`${baseClass}__header-text`}>
+            Add new table (Experimental)
+          </h2>
+          <Button
+            className={`${baseClass}__header-close`}
+            buttonStyle="none"
+            onClick={() => {
+              closeModal(newTableDrawerSlug);
+            }}>
+            <X />
+          </Button>
+        </header>
+        <React.Fragment>
+          <TextInput
+            placeholder={'# of rows (1-500)'}
+            label="Rows"
+            onChange={setRows}
+            value={rows}
+            data-test-id="table-modal-rows"
+            numberOnly={true}
+          />
+          <TextInput
+            placeholder={'# of columns (1-50)'}
+            label="Columns"
+            onChange={setColumns}
+            value={columns}
+            data-test-id="table-modal-columns"
+            numberOnly={true}
+          />
+          <DialogActions data-test-id="table-modal-confirm-insert">
+            <Button disabled={isDisabled} onClick={onClick}>
+              Confirm
             </Button>
-          </header>
-          <React.Fragment>
-            <TextInput
-                placeholder={'# of rows (1-500)'}
-                label="Rows"
-                onChange={setRows}
-                value={rows}
-                data-test-id="table-modal-rows"
-                numberOnly={true}
-            />
-            <TextInput
-                placeholder={'# of columns (1-50)'}
-                label="Columns"
-                onChange={setColumns}
-                value={columns}
-                data-test-id="table-modal-columns"
-                numberOnly={true}
-            />
-            <DialogActions data-test-id="table-modal-confirm-insert">
-              <Button disabled={isDisabled} onClick={onClick}>
-                Confirm
-              </Button>
-            </DialogActions>
-          </React.Fragment>
-        </Gutter>
-      </Drawer>
+          </DialogActions>
+        </React.Fragment>
+      </Gutter>
+    </Drawer>
   );
 }
 

@@ -20,7 +20,7 @@ const Media: CollectionConfig = {
       type: 'text',
       required: true,
     },
-  ]
-}
+  ],
+};
 
 export default Media;

@@ -10,9 +10,7 @@
     "declaration": true,
     "declarationDir": "./dist",
     "skipLibCheck": true,
-    "strict": false,
+    "strict": false
   },
-  "include": [
-    "src/**/*"
-  ],
+  "include": ["src/**/*"]
 }

@@ -31,7 +31,7 @@ export default function TextInput({
     <div className="Input__wrapper">
       <label className="Input__label">{label}</label>
       <input
-        type={numberOnly ? "number" : "text"}
+        type={numberOnly ? 'number' : 'text'}
         className="Input__input"
         placeholder={placeholder}
         value={value}

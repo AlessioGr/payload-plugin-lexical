@@ -6,9 +6,9 @@
  *
  */
 
-import type {EditorState, LexicalEditor} from 'lexical';
+import type { EditorState, LexicalEditor } from 'lexical';
 
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import useLayoutEffect from '../../shared/useLayoutEffect';
 import { useCommentsContext } from '../CommentPlugin';
 import { CommentStore } from '../../commenting';
@@ -20,16 +20,26 @@ export function OnChangePlugin({
 }: {
   ignoreHistoryMergeTagChange?: boolean;
   ignoreSelectionChange?: boolean;
-  onChange: (editorState: EditorState, editor: LexicalEditor, tags: Set<string>, commentStore: CommentStore) => void;
+  onChange: (
+    editorState: EditorState,
+    editor: LexicalEditor,
+    tags: Set<string>,
+    commentStore: CommentStore,
+  ) => void;
 }): null {
   const [editor] = useLexicalComposerContext();
   const commentsContext = useCommentsContext();
 
-
   useLayoutEffect(() => {
     if (onChange) {
       return editor.registerUpdateListener(
-        ({editorState, dirtyElements, dirtyLeaves, prevEditorState, tags}) => {
+        ({
+          editorState,
+          dirtyElements,
+          dirtyLeaves,
+          prevEditorState,
+          tags,
+        }) => {
           if (
             (ignoreSelectionChange &&
               dirtyElements.size === 0 &&
@@ -44,7 +54,14 @@ export function OnChangePlugin({
         },
       );
     }
-  }, [commentsContext, commentsContext.commentStore, editor, ignoreHistoryMergeTagChange, ignoreSelectionChange, onChange]);
+  }, [
+    commentsContext,
+    commentsContext.commentStore,
+    editor,
+    ignoreHistoryMergeTagChange,
+    ignoreSelectionChange,
+    onChange,
+  ]);
 
   return null;
 }

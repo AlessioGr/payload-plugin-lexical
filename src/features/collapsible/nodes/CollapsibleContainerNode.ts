@@ -17,12 +17,12 @@ import {
   NodeKey,
   SerializedElementNode,
   Spread,
-} from "lexical";
+} from 'lexical';
 
 type SerializedCollapsibleContainerNode = Spread<
   {
     open: boolean;
-    type: "collapsible-container";
+    type: 'collapsible-container';
     version: 1;
   },
   SerializedElementNode
@@ -47,7 +47,7 @@ export class CollapsibleContainerNode extends ElementNode {
   }
 
   static getType(): string {
-    return "collapsible-container";
+    return 'collapsible-container';
   }
 
   static clone(node: CollapsibleContainerNode): CollapsibleContainerNode {
@@ -55,8 +55,8 @@ export class CollapsibleContainerNode extends ElementNode {
   }
 
   createDOM(config: EditorConfig, editor: LexicalEditor): HTMLElement {
-    const dom = document.createElement("details");
-    dom.classList.add("Collapsible__container");
+    const dom = document.createElement('details');
+    dom.classList.add('Collapsible__container');
     dom.open = this.__open;
     dom.addEventListener('toggle', () => {
       const open = editor.getEditorState().read(() => this.getOpen());
@@ -69,7 +69,7 @@ export class CollapsibleContainerNode extends ElementNode {
 
   updateDOM(
     prevNode: CollapsibleContainerNode,
-    dom: HTMLDetailsElement
+    dom: HTMLDetailsElement,
   ): boolean {
     if (prevNode.__open !== this.__open) {
       dom.open = this.__open;
@@ -90,7 +90,7 @@ export class CollapsibleContainerNode extends ElementNode {
   }
 
   static importJSON(
-    serializedNode: SerializedCollapsibleContainerNode
+    serializedNode: SerializedCollapsibleContainerNode,
   ): CollapsibleContainerNode {
     const node = $createCollapsibleContainerNode(serializedNode.open);
     return node;
@@ -99,14 +99,14 @@ export class CollapsibleContainerNode extends ElementNode {
   exportDOM(): DOMExportOutput {
     const element = document.createElement('details');
     element.setAttribute('open', this.__open.toString());
-    return {element};
+    return { element };
   }
 
   exportJSON(): SerializedCollapsibleContainerNode {
     return {
       ...super.exportJSON(),
       open: this.__open,
-      type: "collapsible-container",
+      type: 'collapsible-container',
       version: 1,
     };
   }
@@ -132,7 +132,7 @@ export function $createCollapsibleContainerNode(
 }
 
 export function $isCollapsibleContainerNode(
-  node: LexicalNode | null | undefined
+  node: LexicalNode | null | undefined,
 ): node is CollapsibleContainerNode {
   return node instanceof CollapsibleContainerNode;
 }

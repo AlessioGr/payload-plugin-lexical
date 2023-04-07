@@ -134,7 +134,7 @@
   }
 }
 
-html[data-theme=dark] {
+html[data-theme='dark'] {
   .floating-text-format-popup {
     background-color: black;
     border: 1px solid var(--theme-elevation-150);
@@ -142,7 +142,7 @@ html[data-theme=dark] {
   .floating-text-format-popup i {
     filter: invert(1);
   }
-  .floating-text-format-popup .popup-item:hover:not([disabled]){
+  .floating-text-format-popup .popup-item:hover:not([disabled]) {
     background-color: #1c1c1c;
   }
 }

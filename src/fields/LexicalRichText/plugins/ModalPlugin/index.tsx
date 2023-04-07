@@ -1,16 +1,16 @@
-import { EditorConfig } from "../../../../types";
-import * as React from "react";
+import { EditorConfig } from '../../../../types';
+import * as React from 'react';
 
-import { InsertTableDialog, InsertNewTableDialog } from "../TablePlugin";
-import { ImagePayload } from "../../nodes/ImageNode";
-import { INSERT_IMAGE_COMMAND } from "../UploadPlugin";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { InsertTableDialog, InsertNewTableDialog } from '../TablePlugin';
+import { ImagePayload } from '../../nodes/ImageNode';
+import { INSERT_IMAGE_COMMAND } from '../UploadPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   COMMAND_PRIORITY_NORMAL,
   createCommand,
   LexicalCommand,
-} from "lexical";
-import { useModal } from "@faceless-ui/modal";
+} from 'lexical';
+import { useModal } from '@faceless-ui/modal';
 import {
   useCallback,
   useState,
@@ -18,17 +18,17 @@ import {
   useMemo,
   createContext,
   useContext,
-} from "react";
-import { useEditDepth } from "payload/dist/admin/components/utilities/EditDepth";
-import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
-import { SanitizedCollectionConfig } from "payload/types";
-import { useConfig } from "payload/components/utilities";
-import { useEditorConfigContext } from "../../LexicalEditorComponent";
-import { formatListDrawerSlug } from "payload/dist/admin/components/elements/ListDrawer";
-import { ListDrawer } from "../UploadPlugin/modal";
+} from 'react';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { SanitizedCollectionConfig } from 'payload/types';
+import { useConfig } from 'payload/components/utilities';
+import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer';
+import { ListDrawer } from '../UploadPlugin/modal';
 
-export const OPEN_MODAL_COMMAND: LexicalCommand<"upload" | "table" | string> =
-  createCommand("OPEN_MODAL_COMMAND");
+export const OPEN_MODAL_COMMAND: LexicalCommand<'upload' | 'table' | string> =
+  createCommand('OPEN_MODAL_COMMAND');
 
 export default function ModalPlugin(props: {
   editorConfig: EditorConfig;
@@ -40,7 +40,7 @@ export default function ModalPlugin(props: {
   const { uuid } = useEditorConfigContext();
   const {
     toggleModal = () => {
-      console.log("Error: useModal() from FacelessUI did not work correctly");
+      console.log('Error: useModal() from FacelessUI did not work correctly');
     },
     openModal,
     closeModal,
@@ -55,18 +55,18 @@ export default function ModalPlugin(props: {
   });
 
   // Register commands:
-  editor.registerCommand<"upload" | "table" | string>(
+  editor.registerCommand<'upload' | 'table' | string>(
     OPEN_MODAL_COMMAND,
-    (toOpen: "upload" | "table" | string) => {
-      if (toOpen === "upload") {
+    (toOpen: 'upload' | 'table' | string) => {
+      if (toOpen === 'upload') {
         toggleModal(addUploadDrawerSlug);
-      } else if (toOpen === "table") {
+      } else if (toOpen === 'table') {
         const addTableDrawerSlug = formatDrawerSlug({
           slug: `lexicalRichText-add-table` + uuid,
           depth: editDepth,
         });
         toggleModal(addTableDrawerSlug);
-      } else if (toOpen === "newtable") {
+      } else if (toOpen === 'newtable') {
         const addNewTableDrawerSlug = formatDrawerSlug({
           slug: `lexicalRichText-add-newtable` + uuid,
           depth: editDepth,
@@ -80,7 +80,7 @@ export default function ModalPlugin(props: {
                 featureModal.openModalCommand.command(
                   toggleModal,
                   editDepth,
-                  uuid
+                  uuid,
                 );
                 return true;
               }
@@ -91,7 +91,7 @@ export default function ModalPlugin(props: {
 
       return true;
     },
-    COMMAND_PRIORITY_NORMAL
+    COMMAND_PRIORITY_NORMAL,
   );
 
   //For upload
@@ -99,11 +99,11 @@ export default function ModalPlugin(props: {
 
   type FilteredCollectionsT = (
     collections: SanitizedCollectionConfig[],
-    options?: options
+    options?: options,
   ) => SanitizedCollectionConfig[];
   const filterRichTextCollections: FilteredCollectionsT = (
     collections,
-    options
+    options,
   ) => {
     return collections.filter(
       ({ admin: { enableRichTextRelationship }, upload }) => {
@@ -112,14 +112,14 @@ export default function ModalPlugin(props: {
         }
 
         return upload ? false : enableRichTextRelationship;
-      }
+      },
     );
   };
 
   const uploads = true; // TODO: what does it do?
   const { collections } = useConfig();
   const [enabledCollectionSlugs] = React.useState(() =>
-    filterRichTextCollections(collections, { uploads }).map(({ slug }) => slug)
+    filterRichTextCollections(collections, { uploads }).map(({ slug }) => slug),
   );
 
   /*const [
@@ -142,10 +142,10 @@ export default function ModalPlugin(props: {
       });
       closeModal(addUploadDrawerSlug);
     },
-    [editor, closeModal]
+    [editor, closeModal],
   );
   const insertUpload = ({ value, relationTo, activeEditor }) => {
-    console.log("insertUpload value:", value, "relationTo:", relationTo);
+    console.log('insertUpload value:', value, 'relationTo:', relationTo);
 
     const imagePayload: ImagePayload = {
       rawImagePayload: {
@@ -155,7 +155,7 @@ export default function ModalPlugin(props: {
     };
 
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, imagePayload);
-    console.log("Dispatched insert image command");
+    console.log('Dispatched insert image command');
 
     // injectVoidElement(editor, upload);
   };

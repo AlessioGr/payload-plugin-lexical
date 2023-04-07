@@ -6,7 +6,7 @@
  *
  */
 
-import type { LexicalEditor, NodeKey } from "lexical";
+import type { LexicalEditor, NodeKey } from 'lexical';
 
 import {
   $createCodeNode,
@@ -14,7 +14,7 @@ import {
   CODE_LANGUAGE_FRIENDLY_NAME_MAP,
   CODE_LANGUAGE_MAP,
   getLanguageFriendlyName,
-} from "@lexical/code";
+} from '@lexical/code';
 import {
   $isListNode,
   INSERT_CHECK_LIST_COMMAND,
@@ -22,29 +22,29 @@ import {
   INSERT_UNORDERED_LIST_COMMAND,
   ListNode,
   REMOVE_LIST_COMMAND,
-} from "@lexical/list";
-import { INSERT_EMBED_COMMAND } from "@lexical/react/LexicalAutoEmbedPlugin";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
+} from '@lexical/list';
+import { INSERT_EMBED_COMMAND } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $isDecoratorBlockNode } from '@lexical/react/LexicalDecoratorBlockNode';
 import {
   $createHeadingNode,
   $createQuoteNode,
   $isHeadingNode,
   HeadingTagType,
-} from "@lexical/rich-text";
+} from '@lexical/rich-text';
 import {
   $getSelectionStyleValueForProperty,
   $isParentElementRTL,
   $patchStyleText,
   $selectAll,
   $setBlocksType,
-} from "@lexical/selection";
+} from '@lexical/selection';
 import {
   $findMatchingParent,
   $getNearestBlockElementAncestorOrThrow,
   $getNearestNodeOfType,
   mergeRegister,
-} from "@lexical/utils";
+} from '@lexical/utils';
 import {
   $createParagraphNode,
   $getNodeByKey,
@@ -64,48 +64,48 @@ import {
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
-} from "lexical";
-import { useCallback, useEffect, useState } from "react";
-import * as React from "react";
+} from 'lexical';
+import { useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
 
-import { IS_APPLE } from "../../shared/environment";
+import { IS_APPLE } from '../../shared/environment';
 
-import ColorPicker from "../../ui/ColorPicker";
-import DropDown, { DropDownItem } from "../../ui/DropDown";
-import { getSelectedNode } from "../../utils/getSelectedNode";
-import { getEmbedConfigs } from "../AutoEmbedPlugin";
-import { EditorConfig } from "../../../../types";
-import { OPEN_MODAL_COMMAND } from "../ModalPlugin";
+import ColorPicker from '../../ui/ColorPicker';
+import DropDown, { DropDownItem } from '../../ui/DropDown';
+import { getSelectedNode } from '../../utils/getSelectedNode';
+import { getEmbedConfigs } from '../AutoEmbedPlugin';
+import { EditorConfig } from '../../../../types';
+import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 import {
   $isLinkNode,
   LinkAttributes,
   TOGGLE_LINK_COMMAND,
-} from "../../../../features/linkplugin/nodes/LinkNodeModified";
-import { useEditorConfigContext } from "../../LexicalEditorComponent";
-import { useModal } from "@faceless-ui/modal";
-import { useEditDepth } from "payload/components/utilities";
-import { formatDrawerSlug } from "payload/dist/admin/components/elements/Drawer";
+} from '../../../../features/linkplugin/nodes/LinkNodeModified';
+import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { useModal } from '@faceless-ui/modal';
+import { useEditDepth } from 'payload/components/utilities';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
 const blockTypeToBlockName = {
-  bullet: "Bulleted List",
-  check: "Check List",
-  code: "Code Block",
-  h1: "Heading 1",
-  h2: "Heading 2",
-  h3: "Heading 3",
-  h4: "Heading 4",
-  h5: "Heading 5",
-  h6: "Heading 6",
-  number: "Numbered List",
-  paragraph: "Normal",
-  quote: "Quote",
+  bullet: 'Bulleted List',
+  check: 'Check List',
+  code: 'Code Block',
+  h1: 'Heading 1',
+  h2: 'Heading 2',
+  h3: 'Heading 3',
+  h4: 'Heading 4',
+  h5: 'Heading 5',
+  h6: 'Heading 6',
+  number: 'Numbered List',
+  paragraph: 'Normal',
+  quote: 'Quote',
 };
 
 function getCodeLanguageOptions(): [string, string][] {
   const options: [string, string][] = [];
 
   for (const [lang, friendlyName] of Object.entries(
-    CODE_LANGUAGE_FRIENDLY_NAME_MAP
+    CODE_LANGUAGE_FRIENDLY_NAME_MAP,
   )) {
     options.push([lang, friendlyName]);
   }
@@ -116,31 +116,31 @@ function getCodeLanguageOptions(): [string, string][] {
 const CODE_LANGUAGE_OPTIONS = getCodeLanguageOptions();
 
 const FONT_FAMILY_OPTIONS: [string, string][] = [
-  ["Arial", "Arial"],
-  ["Courier New", "Courier New"],
-  ["Georgia", "Georgia"],
-  ["Times New Roman", "Times New Roman"],
-  ["Trebuchet MS", "Trebuchet MS"],
-  ["Verdana", "Verdana"],
+  ['Arial', 'Arial'],
+  ['Courier New', 'Courier New'],
+  ['Georgia', 'Georgia'],
+  ['Times New Roman', 'Times New Roman'],
+  ['Trebuchet MS', 'Trebuchet MS'],
+  ['Verdana', 'Verdana'],
 ];
 
 const FONT_SIZE_OPTIONS: [string, string][] = [
-  ["10px", "10px"],
-  ["11px", "11px"],
-  ["12px", "12px"],
-  ["13px", "13px"],
-  ["14px", "14px"],
-  ["15px", "15px"],
-  ["16px", "16px"],
-  ["17px", "17px"],
-  ["18px", "18px"],
-  ["19px", "19px"],
-  ["20px", "20px"],
+  ['10px', '10px'],
+  ['11px', '11px'],
+  ['12px', '12px'],
+  ['13px', '13px'],
+  ['14px', '14px'],
+  ['15px', '15px'],
+  ['16px', '16px'],
+  ['17px', '17px'],
+  ['18px', '18px'],
+  ['19px', '19px'],
+  ['20px', '20px'],
 ];
 
 function dropDownActiveClass(active: boolean) {
-  if (active) return "active dropdown-item-active";
-  return "";
+  if (active) return 'active dropdown-item-active';
+  return '';
 }
 
 function BlockFormatDropDown({
@@ -182,7 +182,7 @@ function BlockFormatDropDown({
   };
 
   const formatBulletList = () => {
-    if (blockType !== "bullet") {
+    if (blockType !== 'bullet') {
       editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -190,7 +190,7 @@ function BlockFormatDropDown({
   };
 
   const formatCheckList = () => {
-    if (blockType !== "check") {
+    if (blockType !== 'check') {
       editor.dispatchCommand(INSERT_CHECK_LIST_COMMAND, undefined);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -198,7 +198,7 @@ function BlockFormatDropDown({
   };
 
   const formatNumberedList = () => {
-    if (blockType !== "number") {
+    if (blockType !== 'number') {
       editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -206,7 +206,7 @@ function BlockFormatDropDown({
   };
 
   const formatQuote = () => {
-    if (blockType !== "quote") {
+    if (blockType !== 'quote') {
       editor.update(() => {
         const selection = $getSelection();
 
@@ -221,7 +221,7 @@ function BlockFormatDropDown({
   };
 
   const formatCode = () => {
-    if (blockType !== "code") {
+    if (blockType !== 'code') {
       editor.update(() => {
         let selection = $getSelection();
 
@@ -250,68 +250,58 @@ function BlockFormatDropDown({
       buttonClassName="toolbar-item block-controls"
       buttonIconClassName={`icon block-type ${blockType}`}
       buttonLabel={blockTypeToBlockName[blockType]}
-      buttonAriaLabel="Formatting options for text style"
-    >
+      buttonAriaLabel="Formatting options for text style">
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "paragraph")}`}
-        onClick={formatParagraph}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'paragraph')}`}
+        onClick={formatParagraph}>
         <i className="icon paragraph" />
         <span className="text">Normal</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "h1")}`}
-        onClick={() => formatHeading("h1")}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'h1')}`}
+        onClick={() => formatHeading('h1')}>
         <i className="icon h1" />
         <span className="text">Heading 1</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "h2")}`}
-        onClick={() => formatHeading("h2")}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'h2')}`}
+        onClick={() => formatHeading('h2')}>
         <i className="icon h2" />
         <span className="text">Heading 2</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "h3")}`}
-        onClick={() => formatHeading("h3")}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'h3')}`}
+        onClick={() => formatHeading('h3')}>
         <i className="icon h3" />
         <span className="text">Heading 3</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "bullet")}`}
-        onClick={formatBulletList}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'bullet')}`}
+        onClick={formatBulletList}>
         <i className="icon bullet-list" />
         <span className="text">Bullet List</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "number")}`}
-        onClick={formatNumberedList}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'number')}`}
+        onClick={formatNumberedList}>
         <i className="icon numbered-list" />
         <span className="text">Numbered List</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "check")}`}
-        onClick={formatCheckList}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'check')}`}
+        onClick={formatCheckList}>
         <i className="icon check-list" />
         <span className="text">Check List</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "quote")}`}
-        onClick={formatQuote}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'quote')}`}
+        onClick={formatQuote}>
         <i className="icon quote" />
         <span className="text">Quote</span>
       </DropDownItem>
       <DropDownItem
-        className={`item ${dropDownActiveClass(blockType === "code")}`}
-        onClick={formatCode}
-      >
+        className={`item ${dropDownActiveClass(blockType === 'code')}`}
+        onClick={formatCode}>
         <i className="icon code" />
         <span className="text">Code Block</span>
       </DropDownItem>
@@ -345,13 +335,13 @@ function FontDropDown({
         }
       });
     },
-    [editor, styleText]
+    [editor, styleText],
   );
 
   const buttonAriaLabel =
-    styleText === "font-family"
-      ? "Formatting options for font family"
-      : "Formatting options for font size";
+    styleText === 'font-family'
+      ? 'Formatting options for font family'
+      : 'Formatting options for font size';
 
   return (
     <DropDown
@@ -359,21 +349,19 @@ function FontDropDown({
       buttonClassName={`toolbar-item ${styleText}`}
       buttonLabel={value}
       buttonIconClassName={
-        styleText === "font-family" ? "icon block-type font-family" : ""
+        styleText === 'font-family' ? 'icon block-type font-family' : ''
       }
-      buttonAriaLabel={buttonAriaLabel}
-    >
-      {(styleText === "font-family"
+      buttonAriaLabel={buttonAriaLabel}>
+      {(styleText === 'font-family'
         ? FONT_FAMILY_OPTIONS
         : FONT_SIZE_OPTIONS
       ).map(([option, text]) => (
         <DropDownItem
           className={`item ${dropDownActiveClass(value === option)} ${
-            styleText === "font-size" ? "fontsize-item" : ""
+            styleText === 'font-size' ? 'fontsize-item' : ''
           }`}
           onClick={() => handleClick(option)}
-          key={option}
-        >
+          key={option}>
           <span className="text">{text}</span>
         </DropDownItem>
       ))}
@@ -388,14 +376,14 @@ export default function ToolbarPlugin(props: {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const [blockType, setBlockType] =
-    useState<keyof typeof blockTypeToBlockName>("paragraph");
+    useState<keyof typeof blockTypeToBlockName>('paragraph');
   const [selectedElementKey, setSelectedElementKey] = useState<NodeKey | null>(
-    null
+    null,
   );
-  const [fontSize, setFontSize] = useState<string>("15px");
-  const [fontColor, setFontColor] = useState<string>("#000");
-  const [bgColor, setBgColor] = useState<string>("#fff");
-  const [fontFamily, setFontFamily] = useState<string>("Arial");
+  const [fontSize, setFontSize] = useState<string>('15px');
+  const [fontColor, setFontColor] = useState<string>('#000');
+  const [bgColor, setBgColor] = useState<string>('#fff');
+  const [fontFamily, setFontFamily] = useState<string>('Arial');
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [isUnderline, setIsUnderline] = useState(false);
@@ -406,7 +394,7 @@ export default function ToolbarPlugin(props: {
   const [canUndo, setCanUndo] = useState(false);
   const [canRedo, setCanRedo] = useState(false);
   const [isRTL, setIsRTL] = useState(false);
-  const [codeLanguage, setCodeLanguage] = useState<string>("");
+  const [codeLanguage, setCodeLanguage] = useState<string>('');
   const [isEditable, setIsEditable] = useState(() => editor.isEditable());
   const [isLink, setIsLink] = useState(false);
 
@@ -421,8 +409,8 @@ export default function ToolbarPlugin(props: {
   const insertLink = useCallback(() => {
     if (!isLink) {
       const linkAttributes: LinkAttributes = {
-        linkType: "custom",
-        url: "https://",
+        linkType: 'custom',
+        url: 'https://',
       };
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, linkAttributes);
       openModal(linkDrawerSlug);
@@ -446,7 +434,7 @@ export default function ToolbarPlugin(props: {
 
       const anchorNode = selection.anchor.getNode();
       let element =
-        anchorNode.getKey() === "root"
+        anchorNode.getKey() === 'root'
           ? anchorNode
           : $findMatchingParent(anchorNode, (e) => {
               const parent = e.getParent();
@@ -461,13 +449,13 @@ export default function ToolbarPlugin(props: {
       const elementDOM = activeEditor.getElementByKey(elementKey);
 
       // Update text format
-      setIsBold(selection.hasFormat("bold"));
-      setIsItalic(selection.hasFormat("italic"));
-      setIsUnderline(selection.hasFormat("underline"));
-      setIsStrikethrough(selection.hasFormat("strikethrough"));
-      setIsSubscript(selection.hasFormat("subscript"));
-      setIsSuperscript(selection.hasFormat("superscript"));
-      setIsCode(selection.hasFormat("code"));
+      setIsBold(selection.hasFormat('bold'));
+      setIsItalic(selection.hasFormat('italic'));
+      setIsUnderline(selection.hasFormat('underline'));
+      setIsStrikethrough(selection.hasFormat('strikethrough'));
+      setIsSubscript(selection.hasFormat('subscript'));
+      setIsSuperscript(selection.hasFormat('superscript'));
+      setIsCode(selection.hasFormat('code'));
       setIsRTL($isParentElementRTL(selection));
 
       if (elementDOM !== null) {
@@ -475,7 +463,7 @@ export default function ToolbarPlugin(props: {
         if ($isListNode(element)) {
           const parentList = $getNearestNodeOfType<ListNode>(
             anchorNode,
-            ListNode
+            ListNode,
           );
           const type = parentList
             ? parentList.getListType()
@@ -492,7 +480,7 @@ export default function ToolbarPlugin(props: {
             const language =
               element.getLanguage() as keyof typeof CODE_LANGUAGE_MAP;
             setCodeLanguage(
-              language ? CODE_LANGUAGE_MAP[language] || language : ""
+              language ? CODE_LANGUAGE_MAP[language] || language : '',
             );
             return;
           }
@@ -500,20 +488,20 @@ export default function ToolbarPlugin(props: {
       }
       // Handle buttons
       setFontSize(
-        $getSelectionStyleValueForProperty(selection, "font-size", "15px")
+        $getSelectionStyleValueForProperty(selection, 'font-size', '15px'),
       );
       setFontColor(
-        $getSelectionStyleValueForProperty(selection, "color", "#000")
+        $getSelectionStyleValueForProperty(selection, 'color', '#000'),
       );
       setBgColor(
         $getSelectionStyleValueForProperty(
           selection,
-          "background-color",
-          "#fff"
-        )
+          'background-color',
+          '#fff',
+        ),
       );
       setFontFamily(
-        $getSelectionStyleValueForProperty(selection, "font-family", "Arial")
+        $getSelectionStyleValueForProperty(selection, 'font-family', 'Arial'),
       );
     }
   }, [activeEditor]);
@@ -526,7 +514,7 @@ export default function ToolbarPlugin(props: {
         setActiveEditor(newEditor);
         return false;
       },
-      COMMAND_PRIORITY_CRITICAL
+      COMMAND_PRIORITY_CRITICAL,
     );
   }, [editor, updateToolbar]);
 
@@ -546,7 +534,7 @@ export default function ToolbarPlugin(props: {
           setCanUndo(payload);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
+        COMMAND_PRIORITY_CRITICAL,
       ),
       activeEditor.registerCommand<boolean>(
         CAN_REDO_COMMAND,
@@ -554,8 +542,8 @@ export default function ToolbarPlugin(props: {
           setCanRedo(payload);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL
-      )
+        COMMAND_PRIORITY_CRITICAL,
+      ),
     );
   }, [activeEditor, editor, updateToolbar]);
 
@@ -568,7 +556,7 @@ export default function ToolbarPlugin(props: {
         }
       });
     },
-    [activeEditor]
+    [activeEditor],
   );
 
   const clearFormatting = useCallback(() => {
@@ -579,11 +567,11 @@ export default function ToolbarPlugin(props: {
         selection.getNodes().forEach((node) => {
           if ($isTextNode(node)) {
             node.setFormat(0);
-            node.setStyle("");
-            $getNearestBlockElementAncestorOrThrow(node).setFormat("");
+            node.setStyle('');
+            $getNearestBlockElementAncestorOrThrow(node).setFormat('');
           }
           if ($isDecoratorBlockNode(node)) {
-            node.setFormat("");
+            node.setFormat('');
           }
         });
       }
@@ -594,14 +582,14 @@ export default function ToolbarPlugin(props: {
     (value: string) => {
       applyStyleText({ color: value });
     },
-    [applyStyleText]
+    [applyStyleText],
   );
 
   const onBgColorSelect = useCallback(
     (value: string) => {
-      applyStyleText({ "background-color": value });
+      applyStyleText({ 'background-color': value });
     },
-    [applyStyleText]
+    [applyStyleText],
   );
 
   const onCodeLanguageSelect = useCallback(
@@ -615,7 +603,7 @@ export default function ToolbarPlugin(props: {
         }
       });
     },
-    [activeEditor, selectedElementKey]
+    [activeEditor, selectedElementKey],
   );
 
   return (
@@ -627,10 +615,9 @@ export default function ToolbarPlugin(props: {
           event.preventDefault();
           activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
         }}
-        title={IS_APPLE ? "Undo (⌘Z)" : "Undo (Ctrl+Z)"}
+        title={IS_APPLE ? 'Undo (⌘Z)' : 'Undo (Ctrl+Z)'}
         className="toolbar-item spaced"
-        aria-label="Undo"
-      >
+        aria-label="Undo">
         <i className="format undo" />
       </button>
       <button
@@ -640,10 +627,9 @@ export default function ToolbarPlugin(props: {
           event.preventDefault();
           activeEditor.dispatchCommand(REDO_COMMAND, undefined);
         }}
-        title={IS_APPLE ? "Redo (⌘Y)" : "Redo (Ctrl+Y)"}
+        title={IS_APPLE ? 'Redo (⌘Y)' : 'Redo (Ctrl+Y)'}
         className="toolbar-item"
-        aria-label="Redo"
-      >
+        aria-label="Redo">
         <i className="format redo" />
       </button>
       <Divider />
@@ -658,23 +644,21 @@ export default function ToolbarPlugin(props: {
           <Divider />
         </React.Fragment>
       )}
-      {blockType === "code" ? ( //ER1
+      {blockType === 'code' ? ( //ER1
         <React.Fragment>
           <DropDown
             disabled={!isEditable}
             buttonClassName="toolbar-item code-language"
             buttonLabel={getLanguageFriendlyName(codeLanguage)}
-            buttonAriaLabel="Select language"
-          >
+            buttonAriaLabel="Select language">
             {CODE_LANGUAGE_OPTIONS.map(([value, name]) => {
               return (
                 <DropDownItem
                   className={`item ${dropDownActiveClass(
-                    value === codeLanguage
+                    value === codeLanguage,
                   )}`}
                   onClick={() => onCodeLanguageSelect(value)}
-                  key={value}
-                >
+                  key={value}>
                   <span className="text">{name}</span>
                 </DropDownItem>
               );
@@ -708,14 +692,13 @@ export default function ToolbarPlugin(props: {
             disabled={!isEditable}
             onClick={(event) => {
               event.preventDefault();
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold");
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
             }}
-            className={`toolbar-item spaced ${isBold ? "active" : ""}`}
-            title={IS_APPLE ? "Bold (⌘B)" : "Bold (Ctrl+B)"}
+            className={`toolbar-item spaced ${isBold ? 'active' : ''}`}
+            title={IS_APPLE ? 'Bold (⌘B)' : 'Bold (Ctrl+B)'}
             aria-label={`Format text as bold. Shortcut: ${
-              IS_APPLE ? "⌘B" : "Ctrl+B"
-            }`}
-          >
+              IS_APPLE ? '⌘B' : 'Ctrl+B'
+            }`}>
             <i className="format bold" />
           </button>
           <button
@@ -723,14 +706,13 @@ export default function ToolbarPlugin(props: {
             disabled={!isEditable}
             onClick={(event) => {
               event.preventDefault();
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic");
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
             }}
-            className={`toolbar-item spaced ${isItalic ? "active" : ""}`}
-            title={IS_APPLE ? "Italic (⌘I)" : "Italic (Ctrl+I)"}
+            className={`toolbar-item spaced ${isItalic ? 'active' : ''}`}
+            title={IS_APPLE ? 'Italic (⌘I)' : 'Italic (Ctrl+I)'}
             aria-label={`Format text as italics. Shortcut: ${
-              IS_APPLE ? "⌘I" : "Ctrl+I"
-            }`}
-          >
+              IS_APPLE ? '⌘I' : 'Ctrl+I'
+            }`}>
             <i className="format italic" />
           </button>
           <button
@@ -738,14 +720,13 @@ export default function ToolbarPlugin(props: {
             disabled={!isEditable}
             onClick={(event) => {
               event.preventDefault();
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline");
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
             }}
-            className={`toolbar-item spaced ${isUnderline ? "active" : ""}`}
-            title={IS_APPLE ? "Underline (⌘U)" : "Underline (Ctrl+U)"}
+            className={`toolbar-item spaced ${isUnderline ? 'active' : ''}`}
+            title={IS_APPLE ? 'Underline (⌘U)' : 'Underline (Ctrl+U)'}
             aria-label={`Format text to underlined. Shortcut: ${
-              IS_APPLE ? "⌘U" : "Ctrl+U"
-            }`}
-          >
+              IS_APPLE ? '⌘U' : 'Ctrl+U'
+            }`}>
             <i className="format underline" />
           </button>
           <button
@@ -753,12 +734,11 @@ export default function ToolbarPlugin(props: {
             disabled={!isEditable}
             onClick={(event) => {
               event.preventDefault();
-              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "code");
+              activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
             }}
-            className={`toolbar-item spaced ${isCode ? "active" : ""}`}
+            className={`toolbar-item spaced ${isCode ? 'active' : ''}`}
             title="Insert code block"
-            aria-label="Insert code block"
-          >
+            aria-label="Insert code block">
             <i className="format code" />
           </button>
 
@@ -776,12 +756,11 @@ export default function ToolbarPlugin(props: {
             onClick={(event) => {
               event.preventDefault();
               insertLink();
-              editor.dispatchCommand(OPEN_MODAL_COMMAND, "link");
+              editor.dispatchCommand(OPEN_MODAL_COMMAND, 'link');
             }}
-            className={`toolbar-item spaced ${isLink ? "active" : ""}`}
+            className={`toolbar-item spaced ${isLink ? 'active' : ''}`}
             aria-label="Insert link"
-            title="Insert link"
-          >
+            title="Insert link">
             <i className="format link" />
           </button>
           {editorConfig.toggles.textColor.enabled &&
@@ -813,30 +792,27 @@ export default function ToolbarPlugin(props: {
             buttonClassName="toolbar-item spaced"
             buttonLabel=""
             buttonAriaLabel="Formatting options for additional text styles"
-            buttonIconClassName="icon dropdown-more"
-          >
+            buttonIconClassName="icon dropdown-more">
             <DropDownItem
               onClick={() => {
                 activeEditor.dispatchCommand(
                   FORMAT_TEXT_COMMAND,
-                  "strikethrough"
+                  'strikethrough',
                 );
               }}
               className={`item ${dropDownActiveClass(isStrikethrough)}`}
               title="Strikethrough"
-              aria-label="Format text with a strikethrough"
-            >
+              aria-label="Format text with a strikethrough">
               <i className="icon strikethrough" />
               <span className="text">Strikethrough</span>
             </DropDownItem>
             <DropDownItem
               onClick={() => {
-                activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, "subscript");
+                activeEditor.dispatchCommand(FORMAT_TEXT_COMMAND, 'subscript');
               }}
               className={`item ${dropDownActiveClass(isSubscript)}`}
               title="Subscript"
-              aria-label="Format text with a subscript"
-            >
+              aria-label="Format text with a subscript">
               <i className="icon subscript" />
               <span className="text">Subscript</span>
             </DropDownItem>
@@ -844,13 +820,12 @@ export default function ToolbarPlugin(props: {
               onClick={() => {
                 activeEditor.dispatchCommand(
                   FORMAT_TEXT_COMMAND,
-                  "superscript"
+                  'superscript',
                 );
               }}
               className={`item ${dropDownActiveClass(isSuperscript)}`}
               title="Superscript"
-              aria-label="Format text with a superscript"
-            >
+              aria-label="Format text with a superscript">
               <i className="icon superscript" />
               <span className="text">Superscript</span>
             </DropDownItem>
@@ -858,8 +833,7 @@ export default function ToolbarPlugin(props: {
               onClick={clearFormatting}
               className="item"
               title="Clear text formatting"
-              aria-label="Clear all text formatting"
-            >
+              aria-label="Clear all text formatting">
               <i className="icon clear" />
               <span className="text">Clear Formatting</span>
             </DropDownItem>
@@ -870,16 +844,14 @@ export default function ToolbarPlugin(props: {
             buttonClassName="toolbar-item spaced"
             buttonLabel="Insert"
             buttonAriaLabel="Insert specialized editor node"
-            buttonIconClassName="icon plus"
-          >
+            buttonIconClassName="icon plus">
             {editorConfig.toggles.upload.enabled &&
               editorConfig.toggles.upload.display && (
                 <DropDownItem
                   onClick={() => {
-                    editor.dispatchCommand(OPEN_MODAL_COMMAND, "upload");
+                    editor.dispatchCommand(OPEN_MODAL_COMMAND, 'upload');
                   }}
-                  className="item"
-                >
+                  className="item">
                   <i className="icon image" />
                   <span className="text">Upload</span>
                 </DropDownItem>
@@ -889,10 +861,9 @@ export default function ToolbarPlugin(props: {
                 editorConfig.toggles.tables.display && (
                   <DropDownItem
                     onClick={() => {
-                      editor.dispatchCommand(OPEN_MODAL_COMMAND, "table");
+                      editor.dispatchCommand(OPEN_MODAL_COMMAND, 'table');
                     }}
-                    className="item"
-                  >
+                    className="item">
                     <i className="icon table" />
                     <span className="text">Table</span>
                   </DropDownItem>
@@ -902,10 +873,9 @@ export default function ToolbarPlugin(props: {
               editorConfig.toggles.tables.display && (
                 <DropDownItem
                   onClick={() => {
-                    editor.dispatchCommand(OPEN_MODAL_COMMAND, "newtable");
+                    editor.dispatchCommand(OPEN_MODAL_COMMAND, 'newtable');
                   }}
-                  className="item"
-                >
+                  className="item">
                   <i className="icon table" />
                   <span className="text">Table (Experimental)</span>
                 </DropDownItem>
@@ -917,11 +887,10 @@ export default function ToolbarPlugin(props: {
                 onClick={() => {
                   activeEditor.dispatchCommand(
                     INSERT_EMBED_COMMAND,
-                    embedConfig.type
+                    embedConfig.type,
                   );
                 }}
-                className="item"
-              >
+                className="item">
                 {embedConfig.icon}
                 <span className="text">{embedConfig.contentName}</span>
               </DropDownItem>
@@ -945,41 +914,36 @@ export default function ToolbarPlugin(props: {
             buttonLabel="Align"
             buttonIconClassName="icon left-align"
             buttonClassName="toolbar-item spaced alignment"
-            buttonAriaLabel="Formatting options for text alignment"
-          >
+            buttonAriaLabel="Formatting options for text alignment">
             <DropDownItem
               onClick={() => {
-                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left");
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'left');
               }}
-              className="item"
-            >
+              className="item">
               <i className="icon left-align" />
               <span className="text">Left Align</span>
             </DropDownItem>
             <DropDownItem
               onClick={() => {
-                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center');
               }}
-              className="item"
-            >
+              className="item">
               <i className="icon center-align" />
               <span className="text">Center Align</span>
             </DropDownItem>
             <DropDownItem
               onClick={() => {
-                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right");
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right');
               }}
-              className="item"
-            >
+              className="item">
               <i className="icon right-align" />
               <span className="text">Right Align</span>
             </DropDownItem>
             <DropDownItem
               onClick={() => {
-                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
+                activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify');
               }}
-              className="item"
-            >
+              className="item">
               <i className="icon justify-align" />
               <span className="text">Justify Align</span>
             </DropDownItem>
@@ -988,21 +952,19 @@ export default function ToolbarPlugin(props: {
               onClick={() => {
                 activeEditor.dispatchCommand(
                   OUTDENT_CONTENT_COMMAND,
-                  undefined
+                  undefined,
                 );
               }}
-              className="item"
-            >
-              <i className={`icon ${isRTL ? "indent" : "outdent"}`} />
+              className="item">
+              <i className={`icon ${isRTL ? 'indent' : 'outdent'}`} />
               <span className="text">Outdent</span>
             </DropDownItem>
             <DropDownItem
               onClick={() => {
                 activeEditor.dispatchCommand(INDENT_CONTENT_COMMAND, undefined);
               }}
-              className="item"
-            >
-              <i className={`icon ${isRTL ? "outdent" : "indent"}`} />
+              className="item">
+              <i className={`icon ${isRTL ? 'outdent' : 'indent'}`} />
               <span className="text">Indent</span>
             </DropDownItem>
           </DropDown>

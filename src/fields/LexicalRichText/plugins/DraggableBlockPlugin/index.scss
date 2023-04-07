@@ -35,7 +35,7 @@
   will-change: transform;
 }
 
-html[data-theme=dark] {
+html[data-theme='dark'] {
   .draggable-block-menu:hover {
     background-color: #1c1c1c;
   }

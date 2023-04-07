@@ -25,10 +25,7 @@ export function DialogActions({
   children,
 }: Props): JSX.Element {
   return (
-    <div
-      className="DialogActions"
-      data-test-id={dataTestId}
-    >
+    <div className="DialogActions" data-test-id={dataTestId}>
       {children}
     </div>
   );
