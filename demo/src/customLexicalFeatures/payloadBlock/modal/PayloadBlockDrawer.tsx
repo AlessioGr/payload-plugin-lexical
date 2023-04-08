@@ -98,7 +98,7 @@ export function InsertPayloadBlockDialog(props: {
       key={drawerSlug}
       slug={drawerSlug}
       className={baseClass}
-      title={`Add ${block.block.slug} Block`}>
+      title={`Add ${block?.block?.slug ?? 'unknown'} Block`}>
       {block ? (
         <>
           <Form

@@ -435,7 +435,9 @@ function ShowDeleteCommentOrThreadDrawer({
       slug={modalSlug}
       key={modalSlug}
       className={baseClass}
-      title={`Are you sure you want to delete this ${commentOrThread.type}?`}>
+      title={`Are you sure you want to delete this ${
+        commentOrThread?.type ?? 'unknown'
+      }?`}>
       <Button
         onClick={() => {
           deleteCommentOrThread(commentOrThread, thread);
