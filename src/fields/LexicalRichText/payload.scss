@@ -19,15 +19,15 @@
 
   &--read-only {
     .editor-shell::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
       background: var(--theme-elevation-100);
-      opacity: 0.5;
-      z-index: 9;
+      opacity: 0.5 !important;
+      z-index: 9 !important;
     }
   }
 
