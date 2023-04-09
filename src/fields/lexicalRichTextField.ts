@@ -6,17 +6,15 @@ import {
 import { defaultEditorConfig, EditorConfig } from '../types';
 import { populateLexicalRelationships } from './LexicalAfterReadHook';
 import { cloneDeep } from 'lodash';
+import { FieldBase } from 'payload/dist/fields/config/types';
 
-export function lexicalRichTextField(props: {
-  name?: string;
-  label?: string;
-  localized?: boolean;
-  required?: boolean;
-  readOnly?: boolean;
-  editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig;
-}): Field {
-  const { name, label, localized, required, readOnly, editorConfigModifier } =
-    props;
+export function lexicalRichTextField(
+  props: Omit<FieldBase, 'name'> & {
+    name?: string;
+    editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig;
+  },
+): Field {
+  const { name, label, editorConfigModifier } = props;
 
   const defaultEditorConfigCloned = cloneDeep(defaultEditorConfig);
 
@@ -24,17 +22,21 @@ export function lexicalRichTextField(props: {
     ? defaultEditorConfigCloned
     : editorConfigModifier(defaultEditorConfigCloned);
 
+  if (props?.editorConfigModifier) {
+    delete props.editorConfigModifier;
+  }
+
   return {
     name: name ? name : 'richText',
     type: 'richText',
     label: label ? label : 'Rich Text',
-    localized: localized,
-    required: required,
+    ...props,
     hooks: {
+      ...props.hooks,
       afterRead: [populateLexicalRelationships],
     },
     admin: {
-      readOnly: readOnly,
+      ...props.admin,
       components: {
         Field: (args) =>
           LexicalRichTextFieldComponent({

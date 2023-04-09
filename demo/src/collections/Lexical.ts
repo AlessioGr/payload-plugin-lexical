@@ -22,6 +22,9 @@ const Lexical: CollectionConfig = {
       name: 'lexicalRichTextEditor',
       label: 'Lexical Rich Text Editor',
       required: true,
+      admin: {
+        readOnly: true,
+      },
     }),
   ],
 };
