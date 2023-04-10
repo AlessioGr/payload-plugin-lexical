@@ -83,6 +83,14 @@ export type Feature = {
 export type EditorConfig = {
   debug: boolean;
   features: Feature[];
+  output?: {
+    html?: {
+      enabled: boolean;
+    };
+    markdown?: {
+      enabled: boolean;
+    };
+  };
   toggles: {
     comments: {
       enabled: boolean;
@@ -120,6 +128,14 @@ export type EditorConfig = {
 
 export const defaultEditorConfig: EditorConfig = {
   debug: true,
+  output: {
+    html: {
+      enabled: false,
+    },
+    markdown: {
+      enabled: false,
+    },
+  },
   features: [
     EquationsFeature({}),
     EmojisFeature({}),

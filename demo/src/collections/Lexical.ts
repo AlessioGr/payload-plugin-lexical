@@ -25,6 +25,11 @@ const Lexical: CollectionConfig = {
       admin: {
         readOnly: false,
       },
+      editorConfigModifier: (defaultEditorConfig) => {
+        defaultEditorConfig.output.html.enabled = true;
+        defaultEditorConfig.output.markdown.enabled = true;
+        return defaultEditorConfig;
+      },
     }),
   ],
 };

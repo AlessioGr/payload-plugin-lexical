@@ -3,6 +3,7 @@ import Label from 'payload/dist/admin/components/forms/Label';
 import Error from 'payload/dist/admin/components/forms/Error';
 import { Comments, CommentStore } from './commenting';
 const baseClass = 'lexicalRichTextEditor';
+import { $generateHtmlFromNodes } from '@lexical/html';
 
 import { useField, withCondition } from 'payload/components/forms';
 import { LexicalEditorComponent } from './LexicalEditorComponent';
@@ -19,6 +20,7 @@ import { Validate } from 'payload/types';
 import defaultValue from './settings/defaultValue';
 import { deepEqual } from '../../tools/deepEqual';
 import './payload.scss';
+import { $convertToMarkdownString } from '@lexical/markdown';
 
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   const {
@@ -57,6 +59,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     characters: number;
     words: number;
     comments: Comments;
+    html?: string;
+    markdown?: string;
   }>({
     path: path, // required
     validate: memoizedValidate,
@@ -141,12 +145,28 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
                   ? `${textContent.slice(0, 100)}\u2026`
                   : textContent;
 
+              let html;
+              if (editorConfig?.output?.html?.enabled) {
+                html = editor.getEditorState().read(() => {
+                  return $generateHtmlFromNodes(editor, null);
+                });
+              }
+
+              let markdown;
+              if (editorConfig?.output?.markdown?.enabled) {
+                markdown = editor.getEditorState().read(() => {
+                  return $convertToMarkdownString();
+                });
+              }
+
               setValue({
                 jsonContent: json,
                 preview: preview,
                 characters: textContent?.length,
                 words: textContent?.split(' ').length,
                 comments: commentStore.getComments(),
+                html: html,
+                markdown: markdown,
               });
             }
           }}
