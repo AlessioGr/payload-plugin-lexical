@@ -27,6 +27,31 @@ https://user-images.githubusercontent.com/70709113/226221855-08e2efe3-3624-45a1-
 
 ## Example - Basic
 
+payload.config.ts:
+
+```ts
+import { buildConfig } from 'payload/config';
+import { LexicalPlugin } from '../../src/index';
+
+export default buildConfig({
+  ...
+  plugins: [
+    LexicalPlugin({
+      // Only set this if you want to use the the AISuggest Feature
+      ai: {
+        openai_key: process.env.OPENAI_KEY,
+      },
+    }),
+  ],
+  typescript: {
+    outputFile: path.resolve(__dirname, 'payload-types.ts'),
+  },
+});
+
+```
+
+Collection config:
+
 ```ts
 import { CollectionConfig } from 'payload/types';
 import { lexicalRichTextField } from 'payload-plugin-lexical';
@@ -77,6 +102,7 @@ import {
   TestRecorderFeature,
   LinkFeature,
   TableOfContentsFeature,
+  AISuggestFeature,
 } from 'payload-plugin-lexical';
 
 const Lexical: CollectionConfig = {
@@ -125,6 +151,7 @@ const Lexical: CollectionConfig = {
           TestRecorderFeature({ enabled: defaultEditorConfig.debug }), // Another debug tool used for lexical core development, with which you can automatically generate tests
           LinkFeature({}), // Obvious: hyperlinks! This includes the AutoLink plugin.
           TableOfContentsFeature({ enabled: false }), // Shows a table of contents on the right hand-side of the screen
+          AISuggestFeature({}), // Make sure you set your openai key in the plugin config to be able to use it
         ];
 
         // A feature can consist of nodes, plugins, modals, toolbar elements and more! YourOwnCustomFeature must be of type "Feature"

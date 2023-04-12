@@ -20,6 +20,7 @@ import { MaxLengthFeature } from '../../../src//features/maxlength/MaxLengthFeat
 import { LinkFeature } from '../../../src//features/linkplugin/LinkFeature';
 import { TableOfContentsFeature } from '../../../src//features/tableofcontents/TableOfContentsFeature';
 import { InlineProductFeature } from '../customLexicalFeatures/inlineProduct/InlineProductFeature';
+import { AISuggestFeature } from '../../../src//features/aisuggest/AISuggestFeature';
 
 function lexicalRichText(props?: {
   name?: string;
@@ -50,7 +51,7 @@ function lexicalRichText(props?: {
         TwitterFeature({}),
         SpeechToTextFeature({}),
         ClearEditorFeature({}),
-        MentionsFeature({}),
+        //MentionsFeature({}),
         TreeViewFeature({ enabled: defaultEditorConfig.debug }),
         KeywordsFeature({}),
         //AutoCompleteFeature({}),
@@ -61,6 +62,7 @@ function lexicalRichText(props?: {
         MaxLengthFeature({ enabled: false, maxLength: 30 }),
         LinkFeature({}),
         TableOfContentsFeature({ enabled: false }),
+        AISuggestFeature({}),
       ];
 
       defaultEditorConfig.features.push(InlineProductFeature({}));

@@ -18,3 +18,4 @@ export { LinkFeature } from './linkplugin/LinkFeature';
 export { MaxLengthFeature } from './maxlength/MaxLengthFeature';
 export { MentionsFeature } from './mentions/MentionsFeature';
 export { TableOfContentsFeature } from './tableofcontents/TableOfContentsFeature';
+export { AISuggestFeature } from './aisuggest/AISuggestFeature';

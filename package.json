@@ -57,7 +57,8 @@
     "@lexical/table": "0.9.1",
     "@lexical/utils": "0.9.1",
     "katex": "0.16.4",
-    "lexical": "0.9.1"
+    "lexical": "0.9.1",
+    "openai": "^3.2.1"
   },
   "devDependencies": {
     "@faceless-ui/modal": "2.0.1",

@@ -1,6 +1,6 @@
 import { buildConfig } from 'payload/config';
 import path from 'path';
-//import LexicalPlugin from '../../src/index'
+import { LexicalPlugin } from '../../src/index';
 //import LexicalPlugin from '../../dist/index'
 import Users from './collections/Users';
 import Media from './collections/Media';
@@ -52,7 +52,11 @@ export default buildConfig({
     fallback: true,
   },
   plugins: [
-    //LexicalPlugin(),
+    LexicalPlugin({
+      ai: {
+        openai_key: process.env.OPENAI_KEY,
+      },
+    }),
   ],
   typescript: {
     outputFile: path.resolve(__dirname, 'payload-types.ts'),
