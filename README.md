@@ -31,7 +31,7 @@ payload.config.ts:
 
 ```ts
 import { buildConfig } from 'payload/config';
-import { LexicalPlugin } from '../../src/index';
+import { LexicalPlugin } from "payload-plugin-lexical";
 
 export default buildConfig({
   ...
