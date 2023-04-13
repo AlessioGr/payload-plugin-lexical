@@ -75,6 +75,10 @@ function $search(
       text && text.length > 0
         ? parentText.substring(0, parentText.indexOf(text)) + text
         : parentText;
+  } else if ((!text || text.length < 5) && parentText.length >= 600) {
+    // Use only the last 600 characters of the parent text
+    // text = parentText.substring(parentText.length - 600);
+    // TODO: This has 2 problems: (1) for some reason it repeats the query in an endless loop and (2) it may include text AFTER the current selection. There needs to be a solution better than parentText.indexOf(text) so that this elseif isn't even needed.
   }
 
   if (text.length < 5) {
