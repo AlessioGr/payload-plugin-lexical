@@ -51,17 +51,21 @@ function $search(
     return [false, ''];
   }
   const node = selection.getNodes()[0];
-  const { anchor } = selection;
+  /*const { anchor } = selection;
   // Check siblings?
   if (!$isTextNode(node) || !node.isSimpleText() || !$isAtNodeEnd(anchor)) {
     return [false, ''];
-  }
+  }*/
 
   // Here we make sure to not only search the current node / paragraph, but also add
   // all the PREVIOUS text, if it is short enough.
   let text = node.getTextContent();
 
-  const parentText = node?.getParent()?.getParent()?.getTextContent();
+  const parentText =
+    node?.getParent()?.getParent()?.getTextContent() ??
+    node?.getParent()?.getTextContent();
+
+  console.log('parentText', parentText);
 
   if (
     parentText &&
@@ -69,7 +73,10 @@ function $search(
     parentText.length > text?.length
   ) {
     // text is parent text UNTIL text:
-    text = parentText.substring(0, parentText.indexOf(text)) + text;
+    text =
+      text && text.length > 0
+        ? parentText.substring(0, parentText.indexOf(text)) + text
+        : parentText;
   }
 
   if (text.length < 5) {
