@@ -65,8 +65,6 @@ function $search(
     node?.getParent()?.getParent()?.getTextContent() ??
     node?.getParent()?.getTextContent();
 
-  console.log('parentText', parentText);
-
   if (
     parentText &&
     parentText.length < 600 &&
