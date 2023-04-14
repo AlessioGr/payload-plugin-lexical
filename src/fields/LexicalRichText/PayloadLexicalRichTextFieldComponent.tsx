@@ -70,7 +70,13 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   const {
     showError, // whether the field should show as errored
     errorMessage, // the error message to show, if showError
-    value, // the current value of the field from the form
+    value = {
+      jsonContent: defaultValue,
+      preview: 'none',
+      characters: 0,
+      words: 0,
+      comments: undefined,
+    }, // the current value of the field from the form
     formSubmitted, // if the form has been submitted
     formProcessing, // if the form is currently processing
     setValue, // method to set the field's value in form state
@@ -87,26 +93,6 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   ]
     .filter(Boolean)
     .join(' ');
-
-  if (!value?.preview) {
-    //Convert...
-    setValue({
-      jsonContent: value,
-      preview: 'none',
-      characters: 0,
-      words: 0,
-      comments: undefined,
-    });
-  }
-  if (!value?.jsonContent) {
-    setValue({
-      jsonContent: defaultValue,
-      preview: 'none',
-      characters: 0,
-      words: 0,
-      comments: undefined,
-    });
-  }
 
   return (
     <div
@@ -145,14 +131,14 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
                   ? `${textContent.slice(0, 100)}\u2026`
                   : textContent;
 
-              let html;
+              let html: string;
               if (editorConfig?.output?.html?.enabled) {
                 html = editor.getEditorState().read(() => {
                   return $generateHtmlFromNodes(editor, null);
                 });
               }
 
-              let markdown;
+              let markdown: string;
               if (editorConfig?.output?.markdown?.enabled) {
                 markdown = editor.getEditorState().read(() => {
                   return $convertToMarkdownString();
@@ -190,7 +176,7 @@ export const lexicalValidate: Validate<unknown, unknown, any> = (
     if (jsonContent && !deepEqual(jsonContent, defaultValue)) {
       return true;
     }
-    console.log('false');
+    console.log('lexicalValidate required');
     return t('validation:required');
   }
 
