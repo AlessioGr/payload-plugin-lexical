@@ -1,7 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 
 import { Props } from './types';
-import './index.scss';
 import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEffect';
 
 const LexicalRichTextFieldComponent2 = lazy(

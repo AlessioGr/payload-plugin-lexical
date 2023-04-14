@@ -20,6 +20,7 @@ import { CommentsContext } from './plugins/CommentPlugin';
 import { TableContext } from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import { OnChangeProps } from './types';
+import './index.scss';
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments } = props;

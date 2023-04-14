@@ -25,26 +25,25 @@ import { $convertToMarkdownString } from '@lexical/markdown';
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   const {
     editorConfig,
-    path,
+    path: pathFromProps,
     required,
     validate = lexicalValidate,
     defaultValue: defaultValueFromProps, // TODO: Accept different defaultValue
     name,
     label,
-    admin,
     admin: {
       readOnly,
       style,
       className,
       width,
-      placeholder,
+      placeholder, // TODO: Accept different placeholder for richtext editor
       description,
       condition,
       hideGutter,
     } = {},
   } = props;
 
-  //const { value, setValue } = useField<Props>({ path });
+  const path = pathFromProps || name;
 
   const memoizedValidate = useCallback(
     (value, validationOptions) => {
@@ -64,6 +63,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   }>({
     path: path, // required
     validate: memoizedValidate,
+    condition,
   });
 
   // Here is what `useField` sends back
@@ -77,10 +77,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       words: 0,
       comments: undefined,
     }, // the current value of the field from the form
-    formSubmitted, // if the form has been submitted
-    formProcessing, // if the form is currently processing
     setValue, // method to set the field's value in form state
-    initialValue, // the initial value that the field mounted with,
+    initialValue, // TODO: the initial value that the field mounted with,
   } = field;
 
   const classes = [
@@ -176,7 +174,6 @@ export const lexicalValidate: Validate<unknown, unknown, any> = (
     if (jsonContent && !deepEqual(jsonContent, defaultValue)) {
       return true;
     }
-    console.log('lexicalValidate required');
     return t('validation:required');
   }
 
