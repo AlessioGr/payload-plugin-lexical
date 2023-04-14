@@ -44,8 +44,6 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     } = {},
   } = props;
 
-  console.warn('Rendering...');
-
   //const { value, setValue } = useField<Props>({ path });
 
   const memoizedValidate = useCallback(
@@ -178,7 +176,7 @@ export const lexicalValidate: Validate<unknown, unknown, any> = (
     if (jsonContent && !deepEqual(jsonContent, defaultValue)) {
       return true;
     }
-    console.log('false');
+    console.log('lexicalValidate required');
     return t('validation:required');
   }
 
