@@ -7,7 +7,9 @@
  */
 
 import type {
+  ElementNode,
   GridSelection,
+  LexicalNode,
   NodeKey,
   NodeSelection,
   RangeSelection,
@@ -43,6 +45,49 @@ export const uuid = Math.random()
   .replace(/[^a-z]+/g, '')
   .substr(0, 5);
 
+function getAllParentChildrenTextBeforeChild(
+  parentNode: ElementNode,
+  childNode: LexicalNode,
+): string {
+  let text = '';
+  let currentNode = parentNode.getFirstChild();
+
+  let found = false;
+
+  while (
+    !found &&
+    currentNode !== null &&
+    currentNode !== childNode &&
+    (!currentNode.getTextContent() ||
+      !childNode.getTextContent() ||
+      currentNode.getTextContent() !== childNode.getTextContent())
+  ) {
+    if (!currentNode?.getChildren() && currentNode?.getChildren().length > 0) {
+      for (let i = 0; i < currentNode?.getChildren().length; i++) {
+        if (
+          currentNode?.getChildren()[i] === childNode ||
+          currentNode?.getChildren()[i].getTextContent() ===
+            childNode.getTextContent()
+        ) {
+          found = true;
+          break;
+        } else {
+          text += getAllParentChildrenTextBeforeChild(
+            currentNode?.getChildren()[i],
+            childNode,
+          );
+        }
+      }
+    } else {
+      if (currentNode?.getTextContent()) {
+        text += currentNode.getTextContent();
+      }
+      currentNode = currentNode.getNextSibling();
+    }
+  }
+  return text;
+}
+
 // TODO lookup should be custom
 function $search(
   selection: null | RangeSelection | NodeSelection | GridSelection,
@@ -62,24 +107,19 @@ function $search(
   let text = node.getTextContent();
 
   const parentText =
-    node?.getParent()?.getParent()?.getTextContent() ??
-    node?.getParent()?.getTextContent();
+    getAllParentChildrenTextBeforeChild(node?.getParent()?.getParent(), node) ??
+    getAllParentChildrenTextBeforeChild(node?.getParent(), node);
 
-  if (
-    parentText &&
-    parentText.length < 600 &&
-    parentText.length > text?.length
-  ) {
+  if (parentText && parentText.length < 600) {
     // text is parent text UNTIL text:
-    text =
-      text && text.length > 0
-        ? parentText.substring(0, parentText.indexOf(text)) + text
-        : parentText;
+    text = parentText;
   } else if ((!text || text.length < 5) && parentText.length >= 600) {
     // Use only the last 600 characters of the parent text
-    // text = parentText.substring(parentText.length - 600);
+    text = parentText.substring(parentText.length - 600);
     // TODO: This has 2 problems: (1) for some reason it repeats the query in an endless loop and (2) it may include text AFTER the current selection. There needs to be a solution better than parentText.indexOf(text) so that this elseif isn't even needed.
   }
+
+  console.warn('Final text', text);
 
   if (text.length < 5) {
     return [false, ''];
