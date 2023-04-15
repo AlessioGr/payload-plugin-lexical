@@ -1,16 +1,24 @@
 {
   "compilerOptions": {
-    "target": "es2015",
-    "outDir": "./dist",
-    "allowJs": true,
+    "target": "esnext",
     "module": "commonjs",
-    "sourceMap": true,
-    "jsx": "react",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "strict": false,
     "esModuleInterop": true,
-    "declaration": true,
-    "declarationDir": "./dist",
     "skipLibCheck": true,
-    "strict": false
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "jsx": "react",
+    "moduleResolution": "Node",
+    "paths": {
+      // Tell TS where to find your generated types
+      // This is the default location below
+      "payload/generated-types": ["./src/payload-types.ts"]
+    }
   },
-  "include": ["src/**/*"]
+  "include": ["src"],
+  "ts-node": {
+    "swc": true
+  }
 }
