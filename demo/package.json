@@ -18,7 +18,6 @@
     "dotenv": "^16.0.3",
     "express": "^4.17.17",
     "payload": "1.6.32",
-    "paapi5-typescript-sdk": "^0.2.0",
     "node-cron": "^3.0.2"
   },
   "devDependencies": {
