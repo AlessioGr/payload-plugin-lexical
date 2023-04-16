@@ -8,7 +8,11 @@ import {
   IS_SUBSCRIPT,
   IS_SUPERSCRIPT,
 } from './RichTextNodeFormat';
-import { SerializedLexicalNode } from './types';
+import type { SerializedLexicalNode } from './types';
+
+function getLinkForPage(doc) {
+  return 'implement this';
+}
 
 export function serialize(children: SerializedLexicalNode[]): string[] {
   return children
@@ -59,7 +63,34 @@ export function serialize(children: SerializedLexicalNode[]): string[] {
         case 'linebreak':
           return `<br>`;
         case 'link':
-          return `<a href="${node.url}">${serializedChildren}</a>`; //TODO: Proper link handling
+          // eslint-disable-next-line no-case-declarations
+          const attributes: {
+            doc?;
+            linkType?: 'custom' | 'internal';
+            newTab?: boolean;
+            nofollow?: boolean;
+            rel?: string;
+            sponsored?: boolean;
+            url?: string;
+          } = node.attributes;
+
+          if (attributes.linkType === 'custom') {
+            return `<a href="${attributes.url}"${
+              attributes.newTab ? ' target=_"blank"' : ''
+            } rel="${attributes?.rel ?? ''}${
+              attributes?.sponsored ? ' sponsored' : ''
+            }${
+              attributes?.nofollow ? ' nofollow' : ''
+            }">${serializedChildren}</a>`;
+          }
+
+          return `<a href="${getLinkForPage(attributes.doc)}"${
+            attributes.newTab ? ' target=_"blank"' : ''
+          } rel="${attributes?.rel ?? ''}${
+            attributes?.sponsored ? ' sponsored' : ''
+          }${
+            attributes?.nofollow ? ' nofollow' : ''
+          }">${serializedChildren}</a>`; //TODO: Check doc link handling
         case 'list': //TODO handle properly, especially nested lists
           if (node.listType === 'bullet') {
             return `
@@ -77,6 +108,11 @@ export function serialize(children: SerializedLexicalNode[]): string[] {
 						<li>
 						  ${serializedChildren}
 						</li>`;
+        case 'heading':
+          return `
+								<${node.tag}>
+								  ${serializedChildren}
+								</${node.tag}>`;
         default: //Probably just a normal paragraph
           return `<p>${serializedChildren ? serializedChildren : '<br>'}</p>`;
       }

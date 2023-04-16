@@ -18,4 +18,5 @@ export type SerializedLexicalNode = {
   style?: string;
   mode?: string;
   text?: string;
+  [other: string]: any;
 };
