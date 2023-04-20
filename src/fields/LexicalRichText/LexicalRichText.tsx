@@ -105,6 +105,13 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
     };
   }, [isSmallWidthViewport]);
 
+  let hasAnyActionButtons = false;
+  editorConfig.features.forEach((feature) => {
+    if (feature.actions && feature.actions.length > 0) {
+      hasAnyActionButtons = true;
+    }
+  });
+
   return (
     <React.Fragment>
       <ModalPlugin editorConfig={editorConfig} />
@@ -126,7 +133,6 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             });
           }
         })}
-
         <DragDropPaste />
         <ClearEditorPlugin />
         <ComponentPickerPlugin editorConfig={editorConfig} />
@@ -252,7 +258,9 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             });
           }
         })}
-        <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
+        {hasAnyActionButtons && (
+          <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
+        )}
       </div>
       {editorConfig.features.map((feature) => {
         if (feature.plugins && feature.plugins.length > 0) {
