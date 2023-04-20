@@ -23,7 +23,14 @@ import { OnChangeProps } from './types';
 import './index.scss';
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig, initialComments } = props;
+  const {
+    onChange,
+    initialJSON,
+    editorConfig,
+    initialComments,
+    value,
+    setValue,
+  } = props;
 
   const initialConfig = {
     editorState: initialJSON != null ? JSON.stringify(initialJSON) : undefined,
@@ -48,6 +55,8 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
                     initialJSON={initialJSON}
                     editorConfig={editorConfig}
                     initialComments={initialComments}
+                    value={value}
+                    setValue={setValue}
                   />
                 </div>
                 {editorConfig.features.map((feature) => {
@@ -69,7 +78,14 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
 };
 
 export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig, initialComments } = props;
+  const {
+    onChange,
+    initialJSON,
+    editorConfig,
+    initialComments,
+    value,
+    setValue,
+  } = props;
 
   return (
     //<SettingsContext>
@@ -78,6 +94,8 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
       initialJSON={initialJSON}
       editorConfig={editorConfig}
       initialComments={initialComments}
+      value={value}
+      setValue={setValue}
     />
     //</SettingsContext>
   );

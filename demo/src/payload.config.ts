@@ -10,6 +10,7 @@ import LexicalCustomized from './collections/LexicalCustomized';
 import LexicalDebug from './collections/LexicalDebug';
 import Products from './collections/Products';
 import LexicalMinimal from './collections/LexicalMinimal';
+import LexicalBeforeChange from './collections/LexicalBeforeChange';
 
 export default buildConfig({
   serverURL: 'http://localhost:3001',
@@ -43,6 +44,7 @@ export default buildConfig({
     LexicalCustomized,
     LexicalMinimal,
     LexicalDebug,
+    LexicalBeforeChange,
     RichText,
     Users,
     Media,

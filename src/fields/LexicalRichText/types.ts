@@ -18,4 +18,6 @@ export type OnChangeProps = {
   initialJSON: any;
   editorConfig: EditorConfig;
   initialComments: Comments;
+  value: any;
+  setValue: (value: any) => void;
 };

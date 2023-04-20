@@ -157,6 +157,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
           initialJSON={getJsonContentFromValue(value)}
           editorConfig={editorConfig}
           initialComments={value?.comments}
+          value={value}
+          setValue={setValue}
         />
         <FieldDescription value={value} description={description} />
       </div>

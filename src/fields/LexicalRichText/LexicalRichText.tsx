@@ -49,7 +49,14 @@ import { Settings } from './settings/Settings';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 
 export const Editor: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig, initialComments } = props;
+  const {
+    onChange,
+    initialJSON,
+    editorConfig,
+    initialComments,
+    value,
+    setValue,
+  } = props;
 
   const { historyState } = useSharedHistoryContext();
 
@@ -198,6 +205,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               onChange={(editorState, editor, tags, commentStore) => {
                 onChange(editorState, editor, tags, commentStore);
               }}
+              value={value}
             />
 
             <TabFocusPlugin />
