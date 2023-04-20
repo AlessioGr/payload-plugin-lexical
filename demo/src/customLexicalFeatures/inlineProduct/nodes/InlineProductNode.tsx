@@ -53,8 +53,6 @@ export type InlineProductAttributes = {
 
 export type SerializedInlineProductNode = Spread<
   {
-    type: 'inlineProduct';
-    version: 1;
     attributes: InlineProductAttributes;
   },
   SerializedLexicalNode

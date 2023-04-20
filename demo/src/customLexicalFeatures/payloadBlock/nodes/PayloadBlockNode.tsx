@@ -42,8 +42,6 @@ export type PayloadBlockAttributes = {
 
 export type SerializedPayloadBlockNode = Spread<
   {
-    type: 'payloadBlock';
-    version: 1;
     attributes: PayloadBlockAttributes;
   },
   SerializedLexicalNode

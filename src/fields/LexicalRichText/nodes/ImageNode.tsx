@@ -69,8 +69,6 @@ export type SerializedImageNode = Spread<
   {
     rawImagePayload: RawImagePayload;
     extraAttributes: ExtraAttributes;
-    type: 'upload';
-    version: 1;
     caption: SerializedEditor;
     showCaption: boolean;
   },

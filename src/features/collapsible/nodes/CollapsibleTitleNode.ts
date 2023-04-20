@@ -24,13 +24,7 @@ import {
 import { $isCollapsibleContainerNode } from './CollapsibleContainerNode';
 import { $isCollapsibleContentNode } from './CollapsibleContentNode';
 
-type SerializedCollapsibleTitleNode = Spread<
-  {
-    type: 'collapsible-title';
-    version: 1;
-  },
-  SerializedElementNode
->;
+type SerializedCollapsibleTitleNode = SerializedElementNode;
 
 export function convertSummaryElement(
   domNode: HTMLElement,

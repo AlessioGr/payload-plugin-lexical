@@ -20,7 +20,6 @@ import { $applyNodeReplacement, TextNode } from 'lexical';
 export type SerializedEmojiNode = Spread<
   {
     className: string;
-    type: 'emoji';
   },
   SerializedTextNode
 >;

@@ -355,6 +355,15 @@ function LinkEditor({
               toggleModal(drawerSlug);
             }}
           />
+          <div
+            className="link-trash"
+            role="button"
+            tabIndex={0}
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => {
+              editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+            }}
+          />
         </div>
       )}
     </div>

@@ -14,10 +14,10 @@
     "generate:types": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload generate:types"
   },
   "dependencies": {
-    "@swc/core": "^1.3.46",
+    "@swc/core": "^1.3.52",
     "dotenv": "^16.0.3",
     "express": "^4.17.17",
-    "payload": "1.6.32",
+    "payload": "1.7.1",
     "paapi5-typescript-sdk": "^0.2.0",
     "node-cron": "^3.0.2"
   },
@@ -26,6 +26,6 @@
     "cross-env": "^7.0.3",
     "nodemon": "^2.0.22",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.3"
+    "typescript": "^5.0.4"
   }
 }

@@ -48,8 +48,6 @@ export type LinkAttributes = {
 
 export type SerializedLinkNode = Spread<
   {
-    type: 'link';
-    version: 2;
     attributes: LinkAttributes;
   },
   SerializedElementNode

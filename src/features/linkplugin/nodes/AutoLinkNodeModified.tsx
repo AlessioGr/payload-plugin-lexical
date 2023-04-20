@@ -12,13 +12,7 @@ import {
   SerializedLinkNode,
 } from './LinkNodeModified';
 
-export type SerializedAutoLinkNode = Spread<
-  {
-    type: 'autolink';
-    version: 1;
-  },
-  SerializedLinkNode
->;
+export type SerializedAutoLinkNode = SerializedLinkNode;
 
 // Custom node type to override `canInsertTextAfter` that will
 // allow typing within the link

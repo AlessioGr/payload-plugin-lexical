@@ -10,12 +10,7 @@ import './modal.scss';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
 import {
-  $createNodeSelection,
-  $createParagraphNode,
-  $getSelection,
-  $isRangeSelection,
-  $isRootOrShadowRoot,
-  $setSelection,
+  $insertNodes,
   COMMAND_PRIORITY_EDITOR,
   createCommand,
   EditorThemeClasses,
@@ -154,7 +149,7 @@ export function InsertTableDialog({}: {}): JSX.Element {
           onChange={setRows}
           value={rows}
           data-test-id="table-modal-rows"
-          numberOnly={true}
+          type="number"
         />
         <TextInput
           placeholder={'# of columns (1-50)'}
@@ -162,7 +157,7 @@ export function InsertTableDialog({}: {}): JSX.Element {
           onChange={setColumns}
           value={columns}
           data-test-id="table-modal-columns"
-          numberOnly={true}
+          type="number"
         />
         <DialogActions data-test-id="table-model-confirm-insert">
           <Button disabled={isDisabled} onClick={onClick}>
@@ -218,7 +213,7 @@ export function InsertNewTableDialog({}: {}): JSX.Element {
           onChange={setRows}
           value={rows}
           data-test-id="table-modal-rows"
-          numberOnly={true}
+          type="number"
         />
         <TextInput
           placeholder={'# of columns (1-50)'}
@@ -226,7 +221,7 @@ export function InsertNewTableDialog({}: {}): JSX.Element {
           onChange={setColumns}
           value={columns}
           data-test-id="table-modal-columns"
-          numberOnly={true}
+          type="number"
         />
         <DialogActions data-test-id="table-modal-confirm-insert">
           <Button disabled={isDisabled} onClick={onClick}>
@@ -258,42 +253,12 @@ export function TablePlugin({
     return editor.registerCommand<InsertTableCommandPayload>(
       INSERT_NEW_TABLE_COMMAND,
       ({ columns, rows, includeHeaders }) => {
-        const selection = $getSelection();
-
-        if (!$isRangeSelection(selection)) {
-          return true;
-        }
-
-        const { focus } = selection;
-        const focusNode = focus.getNode();
-
-        if (focusNode !== null) {
-          const tableNode = $createTableNodeWithDimensions(
-            Number(rows),
-            Number(columns),
-            includeHeaders,
-          );
-
-          if ($isRootOrShadowRoot(focusNode)) {
-            const target = focusNode.getChildAtIndex(focus.offset);
-
-            if (target !== null) {
-              target.insertBefore(tableNode);
-            } else {
-              focusNode.append(tableNode);
-            }
-
-            tableNode.insertBefore($createParagraphNode());
-          } else {
-            const topLevelNode = focusNode.getTopLevelElementOrThrow();
-            topLevelNode.insertAfter(tableNode);
-          }
-
-          tableNode.insertAfter($createParagraphNode());
-          const nodeSelection = $createNodeSelection();
-          nodeSelection.add(tableNode.getKey());
-          $setSelection(nodeSelection);
-        }
+        const tableNode = $createTableNodeWithDimensions(
+          Number(rows),
+          Number(columns),
+          includeHeaders,
+        );
+        $insertNodes([tableNode]);
 
         return true;
       },

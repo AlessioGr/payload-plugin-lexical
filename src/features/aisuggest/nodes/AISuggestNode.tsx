@@ -29,8 +29,6 @@ declare global {
 
 export type SerializedAISuggestNode = Spread<
   {
-    type: 'aisuggest';
-    version: 1;
     uuid: string;
   },
   SerializedLexicalNode
