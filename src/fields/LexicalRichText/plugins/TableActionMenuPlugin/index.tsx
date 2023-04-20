@@ -6,8 +6,11 @@
  *
  */
 
-import type { DEPRECATED_GridCellNode, ElementNode } from 'lexical';
-
+import type {
+  DEPRECATED_GridCellNode,
+  ElementNode,
+  LexicalEditor,
+} from 'lexical';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {
@@ -44,6 +47,7 @@ import * as React from 'react';
 import { ReactPortal, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import invariant from '../../shared/invariant';
+import ColorPicker from '../../ui/ColorPicker';
 
 function computeSelectionCount(selection: GridSelection): {
   columns: number;

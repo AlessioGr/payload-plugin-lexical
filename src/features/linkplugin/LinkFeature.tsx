@@ -10,7 +10,8 @@ import {
 } from './nodes/LinkNodeModified';
 import { AutoLinkNode } from './nodes/AutoLinkNodeModified';
 import AutoLinkPlugin from './plugins/autoLink/';
-import ClickableLinkPlugin from './plugins/clickableLink';
+import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin';
+
 /*import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
 import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
@@ -30,7 +31,7 @@ export function LinkFeature(props: {}): Feature {
     ],
     tablePlugins: [
       <LinkPlugin key="linkplugin" />,
-      <ClickableLinkPlugin key="clickablelinkplugin" />,
+      <LexicalClickableLinkPlugin key="clickablelinkplugin" />,
     ],
     subEditorPlugins: [<LinkPlugin key="linkplugin" />],
     plugins: [
@@ -38,7 +39,8 @@ export function LinkFeature(props: {}): Feature {
         component: <LinkPlugin key="linkplugin" />,
       },
       {
-        component: <ClickableLinkPlugin key="clickablelinkplugin" />,
+        component: <LexicalClickableLinkPlugin key="clickablelinkplugin" />,
+        onlyIfNotEditable: true,
       },
       {
         component: <AutoLinkPlugin key="autolinkplugin" />,

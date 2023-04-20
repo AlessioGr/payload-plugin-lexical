@@ -4,4 +4,6 @@ export const Settings = {
   isCharLimit: false,
   isCharLimitUtf8: false,
   showNestedEditorTreeView: false,
+  tableCellMerge: true,
+  tableCellBackgroundColor: true,
 };

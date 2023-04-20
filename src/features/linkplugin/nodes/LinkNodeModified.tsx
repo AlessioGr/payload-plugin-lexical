@@ -53,6 +53,14 @@ export type SerializedLinkNode = Spread<
   SerializedElementNode
 >;
 
+const SUPPORTED_URL_PROTOCOLS = new Set([
+  'http:',
+  'https:',
+  'mailto:',
+  'sms:',
+  'tel:',
+]);
+
 /** @noInheritDoc */
 export class LinkNode extends ElementNode {
   __attributes: LinkAttributes;
@@ -90,7 +98,7 @@ export class LinkNode extends ElementNode {
   createDOM(config: EditorConfig): HTMLAnchorElement {
     const element = document.createElement('a');
     if (this.__attributes?.linkType === 'custom') {
-      element.href = this.__attributes.url;
+      element.href = this.sanitizeUrl(this.__attributes.url);
     }
     if (this.__attributes?.newTab) {
       element.target = '_blank';
@@ -193,6 +201,19 @@ export class LinkNode extends ElementNode {
     node.setIndent(serializedNode.indent);
     node.setDirection(serializedNode.direction);
     return node;
+  }
+
+  sanitizeUrl(url: string): string {
+    try {
+      const parsedUrl = new URL(url);
+      // eslint-disable-next-line no-script-url
+      if (!SUPPORTED_URL_PROTOCOLS.has(parsedUrl.protocol)) {
+        return 'about:blank';
+      }
+    } catch (e) {
+      return 'https://';
+    }
+    return url;
   }
 
   exportJSON(): SerializedLinkNode | SerializedAutoLinkNode {

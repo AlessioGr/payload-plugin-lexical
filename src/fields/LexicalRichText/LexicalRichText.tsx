@@ -46,13 +46,22 @@ import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin
 import ModalPlugin from './plugins/ModalPlugin';
 import CommentPlugin from './plugins/CommentPlugin';
 import { Settings } from './settings/Settings';
+import useLexicalEditable from '@lexical/react/useLexicalEditable';
 
 export const Editor: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments } = props;
 
   const { historyState } = useSharedHistoryContext();
 
-  const { isRichText, isCharLimit, isCharLimitUtf8 } = Settings;
+  const {
+    isRichText,
+    isCharLimit,
+    isCharLimitUtf8,
+    tableCellMerge,
+    tableCellBackgroundColor,
+  } = Settings;
+
+  const isEditable = useLexicalEditable();
 
   const text = isRichText
     ? 'Enter some rich text...'
@@ -108,7 +117,11 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
           if (feature.plugins && feature.plugins.length > 0) {
             return feature.plugins.map((plugin) => {
               if (!plugin.position || plugin.position === 'normal') {
-                return plugin.component;
+                if (!plugin.onlyIfNotEditable) {
+                  return plugin.component;
+                } else {
+                  return !isEditable && plugin.component;
+                }
               }
             });
           }
@@ -139,7 +152,12 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             <ListPlugin />
             <CheckListPlugin />
             <ListMaxIndentLevelPlugin maxDepth={7} />
-            {editorConfig.toggles.tables.enabled && <TablePlugin />}
+            {editorConfig.toggles.tables.enabled && (
+              <TablePlugin
+                hasCellMerge={tableCellMerge}
+                hasCellBackgroundColor={tableCellBackgroundColor}
+              />
+            )}
             {editorConfig.toggles.tables.enabled && <TableCellResizer />}
             {editorConfig.toggles.tables.enabled && (
               <NewTablePlugin cellEditorConfig={cellEditorConfig}>
@@ -225,7 +243,11 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
           if (feature.plugins && feature.plugins.length > 0) {
             return feature.plugins.map((plugin) => {
               if (plugin.position === 'bottomInContainer') {
-                return plugin.component;
+                if (!plugin.onlyIfNotEditable) {
+                  return plugin.component;
+                } else {
+                  return !isEditable && plugin.component;
+                }
               }
             });
           }
@@ -236,7 +258,11 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         if (feature.plugins && feature.plugins.length > 0) {
           return feature.plugins.map((plugin) => {
             if (plugin.position === 'bottom') {
-              return plugin.component;
+              if (!plugin.onlyIfNotEditable) {
+                return plugin.component;
+              } else {
+                return !isEditable && plugin.component;
+              }
             }
           });
         }

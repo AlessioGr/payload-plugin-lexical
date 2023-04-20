@@ -71,7 +71,7 @@ import * as React from 'react';
 
 import { IS_APPLE } from '../../shared/environment';
 
-import ColorPicker from '../../ui/ColorPicker';
+import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import DropDown, { DropDownItem } from '../../ui/DropDown';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { getEmbedConfigs } from '../AutoEmbedPlugin';
@@ -802,7 +802,7 @@ export default function ToolbarPlugin(props: {
           </button>
           {editorConfig.toggles.textColor.enabled &&
             editorConfig.toggles.textColor.display && (
-              <ColorPicker
+              <DropdownColorPicker
                 disabled={!isEditable}
                 buttonClassName="toolbar-item color-picker"
                 buttonAriaLabel="Formatting text color"
@@ -814,7 +814,7 @@ export default function ToolbarPlugin(props: {
             )}
           {editorConfig.toggles.textBackground.enabled &&
             editorConfig.toggles.textBackground.display && (
-              <ColorPicker
+              <DropdownColorPicker
                 disabled={!isEditable}
                 buttonClassName="toolbar-item color-picker"
                 buttonAriaLabel="Formatting background color"

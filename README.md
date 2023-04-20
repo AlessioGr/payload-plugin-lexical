@@ -192,6 +192,7 @@ This currently serialized the most important stuff, but not everything. Feel fre
 - [x] Take a closer look at AutoLink. Is it necessary and what does it do?
 - [x] Make extranodes, extraplugins ... config options hold the ENTIRE nodes, and rename to just "nodes" and "plugins". Makes it easier to remove them and start from scratch, or to insert one at a special position, instead of just pushing it to the end. Especially useful for the Toolbar plugin.
 - [x] extraFloatingToolbarElements
+- [ ] Implement [Table Cell Background Color PR](https://github.com/facebook/lexical/commit/6a239b6ae1807e9dae1b434482b5ecd9513e77fa#diff-72b3aff11ff90536142b8a0276cfaabb008ba453bea2f992f7fdb173a8d1c516)
 
 ## Updating lexical
 

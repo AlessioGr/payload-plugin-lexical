@@ -28,6 +28,7 @@ export type Feature = {
     // plugins are anything which is not directly part of the editor. Like, creating a command which creates a node, or opens a modal, or some other more "outside" functionality
     component: JSX.Element;
     position?: 'normal' | 'bottom' | 'outside' | 'bottomInContainer'; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
+    onlyIfNotEditable?: boolean;
   }[];
   floatingAnchorElemPlugins?: ((
     floatingAnchorElem: HTMLDivElement,
