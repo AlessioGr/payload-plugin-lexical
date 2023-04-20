@@ -22,6 +22,8 @@ import {
   MaxLengthFeature,
   LinkFeature,
   TableOfContentsFeature,
+  ReadOnlyModeFeature,
+  ConvertFromMarkdownFeature,
 } from '../../../src';
 
 function lexicalRichText(props?: {
@@ -55,6 +57,8 @@ function lexicalRichText(props?: {
         ImportFeature({}),
         ExportFeature({}),
         ClearEditorFeature({}),
+        ReadOnlyModeFeature({}),
+        ConvertFromMarkdownFeature({}),
         MentionsFeature({}),
         TreeViewFeature({ enabled: defaultEditorConfig.debug }),
         KeywordsFeature({}),

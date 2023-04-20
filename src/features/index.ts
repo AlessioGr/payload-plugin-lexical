@@ -2,6 +2,8 @@ export { ClearEditorFeature } from './actions/cleareditor/ClearEditorFeature';
 export { SpeechToTextFeature } from './actions/speechtotext/SpeechToTextFeature';
 export { ImportFeature } from './actions/import/ImportFeature';
 export { ExportFeature } from './actions/export/ExportFeature';
+export { ReadOnlyModeFeature } from './actions/readonlymode/ReadOnlyModeFeature';
+export { ConvertFromMarkdownFeature } from './actions/convertfrommarkdown/ConvertFromMarkdownFeature';
 export { AutoCompleteFeature } from './autocomplete/AutoCompleteFeature';
 export { CollapsibleFeature } from './collapsible/CollapsibleFeature';
 export { PasteLogFeature } from './debug/pastelog/PasteLogFeature';

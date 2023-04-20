@@ -24,6 +24,7 @@ import { LinkFeature } from './features/linkplugin/LinkFeature';
 import { TableOfContentsFeature } from './features/tableofcontents/TableOfContentsFeature';
 import { ImportFeature } from './features/actions/import/ImportFeature';
 import { ExportFeature } from './features/actions/export/ExportFeature';
+import { ConvertFromMarkdownFeature, ReadOnlyModeFeature } from './features';
 
 export type Feature = {
   plugins?: {
@@ -151,6 +152,8 @@ export const defaultEditorConfig: EditorConfig = {
     ImportFeature({}),
     ExportFeature({}),
     ClearEditorFeature({}),
+    ReadOnlyModeFeature({}),
+    ConvertFromMarkdownFeature({}),
     MentionsFeature({}),
     TreeViewFeature({ enabled: false }),
     KeywordsFeature({}),

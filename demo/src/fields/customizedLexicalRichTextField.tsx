@@ -23,6 +23,8 @@ import {
   TwitterFeature,
   TypingPerfFeature,
   YouTubeFeature,
+  ReadOnlyModeFeature,
+  ConvertFromMarkdownFeature,
 } from '../../../src';
 import { InlineProductFeature } from '../customLexicalFeatures/inlineProduct/InlineProductFeature';
 
@@ -57,6 +59,8 @@ function lexicalRichText(props?: {
         ImportFeature({}),
         ExportFeature({}),
         ClearEditorFeature({}),
+        ReadOnlyModeFeature({}),
+        ConvertFromMarkdownFeature({}),
         //MentionsFeature({}),
         TreeViewFeature({ enabled: defaultEditorConfig.debug }),
         KeywordsFeature({}),
