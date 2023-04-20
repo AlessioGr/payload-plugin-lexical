@@ -22,6 +22,8 @@ import { TestRecorderFeature } from './features/debug/testrecorder/TestRecorderF
 import { MaxLengthFeature } from './features/maxlength/MaxLengthFeature';
 import { LinkFeature } from './features/linkplugin/LinkFeature';
 import { TableOfContentsFeature } from './features/tableofcontents/TableOfContentsFeature';
+import { ImportFeature } from './features/actions/import/ImportFeature';
+import { ExportFeature } from './features/actions/export/ExportFeature';
 
 export type Feature = {
   plugins?: {
@@ -146,6 +148,8 @@ export const defaultEditorConfig: EditorConfig = {
     YouTubeFeature({}),
     TwitterFeature({}),
     SpeechToTextFeature({}),
+    ImportFeature({}),
+    ExportFeature({}),
     ClearEditorFeature({}),
     MentionsFeature({}),
     TreeViewFeature({ enabled: false }),

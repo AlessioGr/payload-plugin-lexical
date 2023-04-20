@@ -91,6 +91,8 @@ import {
   YouTubeFeature,
   TwitterFeature,
   SpeechToTextFeature,
+  ImportFeature,
+  ExportFeature
   ClearEditorFeature,
   MentionsFeature,
   TreeViewFeature,
@@ -140,6 +142,8 @@ const Lexical: CollectionConfig = {
           YouTubeFeature({}), // YouTube Embed
           TwitterFeature({}), // Twitter Embed
           SpeechToTextFeature({}), // Adds a Speech-to-text button in the Actions menu (bottom right of the editor). When you click on it and speak, it converts the speech into text
+          ImportFeature({}),
+          ExportFeature({}),
           ClearEditorFeature({}), // Adds a button in the action menu which clears the editor
           MentionsFeature({}), // Ability to mention someone when you type "@"
           TreeViewFeature({ enabled: defaultEditorConfig.debug }), // If enabled, will show the node representation of the editor under the editor. Good for debugging

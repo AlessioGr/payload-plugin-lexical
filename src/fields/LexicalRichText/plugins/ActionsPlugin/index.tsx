@@ -9,7 +9,6 @@
 import type { LexicalEditor } from 'lexical';
 
 import { $createCodeNode, $isCodeNode } from '@lexical/code';
-import { exportFile, importFile } from '@lexical/file';
 import {
   $convertFromMarkdownString,
   $convertToMarkdownString,
@@ -130,29 +129,6 @@ export default function ActionsPlugin({
         }
       })}
 
-      <button
-        className="action-button import"
-        onClick={(event) => {
-          event.preventDefault();
-          importFile(editor);
-        }}
-        title="Import"
-        aria-label="Import editor state from JSON">
-        <i className="import" />
-      </button>
-      <button
-        className="action-button export"
-        onClick={(event) => {
-          event.preventDefault();
-          exportFile(editor, {
-            fileName: `Playground ${new Date().toISOString()}`,
-            source: 'Playground',
-          });
-        }}
-        title="Export"
-        aria-label="Export editor state to JSON">
-        <i className="export" />
-      </button>
       <button
         className={`action-button ${!isEditable ? 'unlock' : 'lock'}`}
         onClick={(event) => {
