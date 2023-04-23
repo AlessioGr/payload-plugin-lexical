@@ -21,6 +21,18 @@ import defaultValue from './settings/defaultValue';
 import { deepEqual } from '../../tools/deepEqual';
 import './payload.scss';
 import { $convertToMarkdownString } from '@lexical/markdown';
+import { ErrorBoundary } from 'react-error-boundary';
+
+function fallbackRender({ error, resetErrorBoundary }) {
+  // Call resetErrorBoundary() to reset the error boundary and retry the render.
+
+  return (
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{ color: 'red' }}>{error.message}</pre>
+    </div>
+  );
+}
 
 const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   const {
@@ -107,60 +119,66 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
           required={required}
         />
 
-        <LexicalEditorComponent
-          onChange={(
-            editorState: EditorState,
-            editor: LexicalEditor,
-            tags: Set<string>,
-            commentStore: CommentStore,
-          ) => {
-            const json = editorState.toJSON();
-            const valueJsonContent = getJsonContentFromValue(value);
-            if (
-              !readOnly &&
-              valueJsonContent &&
-              !deepEqual(json, valueJsonContent)
-            ) {
-              const textContent = editor.getEditorState().read(() => {
-                return $getRoot().getTextContent();
-              });
-              const preview =
-                textContent?.length > 100
-                  ? `${textContent.slice(0, 100)}\u2026`
-                  : textContent;
+        <ErrorBoundary
+          fallbackRender={fallbackRender}
+          onReset={(details) => {
+            // Reset the state of your app so the error doesn't happen again
+          }}>
+          <LexicalEditorComponent
+            onChange={(
+              editorState: EditorState,
+              editor: LexicalEditor,
+              tags: Set<string>,
+              commentStore: CommentStore,
+            ) => {
+              const json = editorState.toJSON();
+              const valueJsonContent = getJsonContentFromValue(value);
+              if (
+                !readOnly &&
+                valueJsonContent &&
+                !deepEqual(json, valueJsonContent)
+              ) {
+                const textContent = editor.getEditorState().read(() => {
+                  return $getRoot().getTextContent();
+                });
+                const preview =
+                  textContent?.length > 100
+                    ? `${textContent.slice(0, 100)}\u2026`
+                    : textContent;
 
-              let html: string;
-              if (editorConfig?.output?.html?.enabled) {
-                html = editor.getEditorState().read(() => {
-                  return $generateHtmlFromNodes(editor, null);
+                let html: string;
+                if (editorConfig?.output?.html?.enabled) {
+                  html = editor.getEditorState().read(() => {
+                    return $generateHtmlFromNodes(editor, null);
+                  });
+                }
+
+                let markdown: string;
+                if (editorConfig?.output?.markdown?.enabled) {
+                  markdown = editor.getEditorState().read(() => {
+                    return $convertToMarkdownString();
+                  });
+                }
+
+                setValue({
+                  jsonContent: json,
+                  preview: preview,
+                  characters: textContent?.length,
+                  words: textContent?.split(' ').length,
+                  comments: commentStore.getComments(),
+                  html: html,
+                  markdown: markdown,
                 });
               }
-
-              let markdown: string;
-              if (editorConfig?.output?.markdown?.enabled) {
-                markdown = editor.getEditorState().read(() => {
-                  return $convertToMarkdownString();
-                });
-              }
-
-              setValue({
-                jsonContent: json,
-                preview: preview,
-                characters: textContent?.length,
-                words: textContent?.split(' ').length,
-                comments: commentStore.getComments(),
-                html: html,
-                markdown: markdown,
-              });
-            }
-          }}
-          initialJSON={getJsonContentFromValue(value)}
-          editorConfig={editorConfig}
-          initialComments={value?.comments}
-          value={value}
-          setValue={setValue}
-        />
-        <FieldDescription value={value} description={description} />
+            }}
+            initialJSON={getJsonContentFromValue(value)}
+            editorConfig={editorConfig}
+            initialComments={value?.comments}
+            value={value}
+            setValue={setValue}
+          />
+          <FieldDescription value={value} description={description} />
+        </ErrorBoundary>
       </div>
     </div>
   );
