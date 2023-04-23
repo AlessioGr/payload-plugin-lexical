@@ -1,6 +1,6 @@
 {
   "name": "payload-plugin-lexical",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Lexical plugin for Payload CMS",
   "license": "MIT",
   "main": "dist/index.js",
