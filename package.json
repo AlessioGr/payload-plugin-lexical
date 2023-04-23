@@ -56,7 +56,7 @@
     "@lexical/selection": "0.10.0",
     "@lexical/table": "0.10.0",
     "@lexical/utils": "0.10.0",
-    "katex": "0.16.4",
+    "katex": "0.16.6",
     "lexical": "0.10.0",
     "openai": "^3.2.1"
   },
