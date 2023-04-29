@@ -148,7 +148,7 @@
   box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.test-recorder-button+.test-recorder-button {
+.test-recorder-button + .test-recorder-button {
   margin-left: 4px;
 }
 
@@ -730,11 +730,9 @@ i.prettier-error {
   .dropdown-button-text {
     display: none !important;
   }
-
   .font-size .dropdown-button-text {
     display: flex !important;
   }
-
   .code-language .dropdown-button-text {
     display: flex !important;
   }
@@ -807,7 +805,6 @@ i.prettier-error {
     opacity: 0;
     transform: translateX(-200px);
   }
-
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -1133,7 +1130,6 @@ i.chevron-down {
 .action-button-mic.active {
   animation: mic-pulsate-color 3s infinite;
 }
-
 button.action-button:disabled {
   opacity: 0.6;
   background: #eee;
@@ -1144,11 +1140,9 @@ button.action-button:disabled {
   0% {
     background-color: #ffdcdc;
   }
-
   50% {
     background-color: #ff8585;
   }
-
   100% {
     background-color: #ffdcdc;
   }
@@ -1435,7 +1429,6 @@ button.item.dropdown-item-active i {
 }
 
 html[data-theme='dark'] {
-
   .toolbar i,
   .toolbar span {
     filter: invert(1) brightness(1.2);
@@ -1488,10 +1481,10 @@ html[data-theme='dark'] {
     color: #fff;
   }
 
-  .link-editor div.link-edit,
-  .link-editor div.link-trash {
+	.link-editor div.link-edit,
+	.link-editor div.link-trash {
     filter: invert(1);
-  }
+	}
 
   .link-editor .link-input a {
     color: rgb(102, 167, 255);
