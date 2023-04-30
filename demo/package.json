@@ -1,11 +1,11 @@
 {
-  "name": "payload-starter-typescript",
-  "description": "Blank template - no collections",
+  "name": "payload-plugin-lexical-demo",
+  "description": "payload-plugin-lexical demo",
   "version": "1.0.0",
   "main": "dist/server.js",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env PAYLOAD_SEED=false PAYLOAD_DROP_DATABASE=true PAYLOAD_CONFIG_PATH=src/payload.config.ts nodemon",
+    "dev": "cross-env PAYLOAD_SEED=false PAYLOAD_DROP_DATABASE=false PAYLOAD_CONFIG_PATH=src/payload.config.ts nodemon",
     "devfixbug": "cd .. && yarn run build && cd demo && cross-env PAYLOAD_SEED=false PAYLOAD_DROP_DATABASE=true PAYLOAD_CONFIG_PATH=src/payload.config.ts nodemon",
     "build:payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload build",
     "build:server": "tsc",
