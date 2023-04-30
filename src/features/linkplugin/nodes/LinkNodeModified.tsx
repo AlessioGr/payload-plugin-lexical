@@ -19,10 +19,7 @@ import {
   NodeSelection,
   RangeSelection,
   SerializedElementNode,
-} from 'lexical';
 
-import { addClassNamesToElement, isHTMLAnchorElement } from '@lexical/utils';
-import {
   $applyNodeReplacement,
   $getSelection,
   $isElementNode,
@@ -31,6 +28,8 @@ import {
   ElementNode,
   Spread,
 } from 'lexical';
+
+import { addClassNamesToElement, isHTMLAnchorElement } from '@lexical/utils';
 import { SerializedAutoLinkNode } from './AutoLinkNodeModified';
 
 export type LinkAttributes = {
@@ -42,6 +41,7 @@ export type LinkAttributes = {
   doc?: {
     value: string;
     relationTo: string;
+    data?: any; // Will be populated in afterRead hook
   } | null;
   linkType?: 'custom' | 'internal';
 };
@@ -115,7 +115,7 @@ export class LinkNode extends ElementNode {
     }
 
     if (this.__attributes?.rel !== null) {
-      element.rel += ' ' + this.__rel;
+      element.rel += ` ${this.__rel}`;
     }
     addClassNamesToElement(element, config.theme.link);
     return element;
@@ -132,14 +132,14 @@ export class LinkNode extends ElementNode {
     const nofollow = this.__attributes?.nofollow;
     const rel = this.__attributes?.rel;
     if (
-      url !== prevNode.__attributes?.url &&
-      this.__attributes?.linkType === 'custom'
+      url !== prevNode.__attributes?.url
+      && this.__attributes?.linkType === 'custom'
     ) {
       anchor.href = url;
     }
     if (
-      this.__attributes?.linkType === 'internal' &&
-      prevNode.__attributes?.linkType === 'custom'
+      this.__attributes?.linkType === 'internal'
+      && prevNode.__attributes?.linkType === 'custom'
     ) {
       anchor.removeAttribute('href');
     }
@@ -279,9 +279,9 @@ export class LinkNode extends ElementNode {
     const focusNode = selection.focus.getNode();
 
     return (
-      this.isParentOf(anchorNode) &&
-      this.isParentOf(focusNode) &&
-      selection.getTextContent().length > 0
+      this.isParentOf(anchorNode)
+      && this.isParentOf(focusNode)
+      && selection.getTextContent().length > 0
     );
   }
 }
@@ -313,7 +313,7 @@ export function $createLinkNode({
 }: {
   attributes?: LinkAttributes;
 }): LinkNode {
-  return $applyNodeReplacement(new LinkNode({ attributes: attributes }));
+  return $applyNodeReplacement(new LinkNode({ attributes }));
 }
 
 export function $isLinkNode(
@@ -322,8 +322,7 @@ export function $isLinkNode(
   return node instanceof LinkNode;
 }
 
-export const TOGGLE_LINK_COMMAND: LexicalCommand<LinkAttributes | null> =
-  createCommand('TOGGLE_LINK_COMMAND');
+export const TOGGLE_LINK_COMMAND: LexicalCommand<LinkAttributes | null> = createCommand('TOGGLE_LINK_COMMAND');
 
 export function toggleLink(
   linkAttributes: LinkAttributes & { text?: string },
@@ -363,8 +362,8 @@ export function toggleLink(
         linkNode.setAttributes(linkAttributes);
 
         if (
-          linkAttributes.text &&
-          linkAttributes.text !== linkNode.getTextContent()
+          linkAttributes.text
+          && linkAttributes.text !== linkNode.getTextContent()
         ) {
           // remove all children and add child with new textcontent:
           linkNode.append($createTextNode(linkAttributes.text));
@@ -386,9 +385,9 @@ export function toggleLink(
       const parent = node.getParent();
 
       if (
-        parent === linkNode ||
-        parent === null ||
-        ($isElementNode(node) && !node.isInline())
+        parent === linkNode
+        || parent === null
+        || ($isElementNode(node) && !node.isInline())
       ) {
         return;
       }
@@ -397,8 +396,8 @@ export function toggleLink(
         linkNode = parent;
         parent.setAttributes(linkAttributes);
         if (
-          linkAttributes.text &&
-          linkAttributes.text !== parent.getTextContent()
+          linkAttributes.text
+          && linkAttributes.text !== parent.getTextContent()
         ) {
           // remove all children and add child with new textcontent:
           parent.append($createTextNode(linkAttributes.text));
@@ -459,9 +458,9 @@ function $getAncestor(
 ): null | LexicalNode {
   let parent: null | LexicalNode = node;
   while (
-    parent !== null &&
-    (parent = parent.getParent()) !== null &&
-    !predicate(parent)
+    parent !== null
+    && (parent = parent.getParent()) !== null
+    && !predicate(parent)
   );
   return parent;
 }

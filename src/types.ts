@@ -1,10 +1,10 @@
 import { LexicalEditor, LexicalNode, Klass } from 'lexical';
+import { Transformer } from '@lexical/markdown';
 import { EmojiPickerFeature } from './features/emojipicker/EmojiPickerFeature';
 import { EmojisFeature } from './features/emojis/EmojisFeature';
 import { EquationsFeature } from './features/equations/EquationsFeature';
 import { HorizontalRuleFeature } from './features/horizontalrule/HorizontalRuleFeature';
 import { ComponentPickerOption } from './fields/LexicalRichText/plugins/ComponentPickerPlugin';
-import { Transformer } from '@lexical/markdown';
 import { FigmaFeature } from './features/embeds/figma/FigmaFeature';
 import { PlaygroundEmbedConfig } from './fields/LexicalRichText/plugins/AutoEmbedPlugin';
 import { YouTubeFeature } from './features/embeds/youtube/YouTubeFeature';
@@ -30,7 +30,7 @@ export type Feature = {
   plugins?: {
     // plugins are anything which is not directly part of the editor. Like, creating a command which creates a node, or opens a modal, or some other more "outside" functionality
     component: JSX.Element;
-    position?: 'normal' | 'bottom' | 'outside' | 'bottomInContainer'; //Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
+    position?: 'normal' | 'bottom' | 'outside' | 'bottomInContainer'; // Outside means it's put in LexicalEditorComponent.tsx and not LexicalRichText.tsx
     onlyIfNotEditable?: boolean;
   }[];
   floatingAnchorElemPlugins?: ((
@@ -38,7 +38,7 @@ export type Feature = {
   ) => JSX.Element)[]; // Plugins which are put in the floating anchor element (the thing which appears when you select text)
   subEditorPlugins?: JSX.Element[]; // Plugins which are embedded in other sub-editor, like image captions (which is basically an editor inside of an editor)
   tablePlugins?: JSX.Element[]; // Plugins which are put inside of the newtable plugin
-  nodes?: Array<Klass<LexicalNode>>; //Nodes = Leaves and elements in Slate. Nodes are what's actually part of the editor JSON
+  nodes?: Array<Klass<LexicalNode>>; // Nodes = Leaves and elements in Slate. Nodes are what's actually part of the editor JSON
   tableCellNodes?: Array<Klass<LexicalNode>>; // Nodes which are put inside of the newtable plugin
   modals?: {
     // Modals / Drawers. They can be defined here in order to be able to open or close them with a simple lexical command. This also ensures the modals/drawers are "placed" at the correct position
@@ -81,7 +81,7 @@ export type Feature = {
   };
   markdownTransformers?: Transformer[]; // Not sure what this is exactly
   embedConfigs?: PlaygroundEmbedConfig[]; // Every embed plugin / node (like twitter, youtube or figma embeds) should define one of those
-  actions?: JSX.Element[]; //Actions are added in the ActionsPlugin - it's the buttons you see on the bottom right of the editor
+  actions?: JSX.Element[]; // Actions are added in the ActionsPlugin - it's the buttons you see on the bottom right of the editor
 };
 
 export type EditorConfig = {

@@ -1,6 +1,6 @@
 import { EditorState, LexicalEditor } from 'lexical';
-import type { EditorConfig } from '../../types';
 import { RichTextField } from 'payload/types';
+import type { EditorConfig } from '../../types';
 import { Comments, CommentStore } from './commenting';
 
 export type Props = Omit<RichTextField, 'type'> & {

@@ -27,11 +27,9 @@ export class Rect {
   private readonly _bottom: number;
 
   constructor(left: number, top: number, right: number, bottom: number) {
-    const [physicTop, physicBottom] =
-      top <= bottom ? [top, bottom] : [bottom, top];
+    const [physicTop, physicBottom] = top <= bottom ? [top, bottom] : [bottom, top];
 
-    const [physicLeft, physicRight] =
-      left <= right ? [left, right] : [right, left];
+    const [physicLeft, physicRight] = left <= right ? [left, right] : [right, left];
 
     this._top = physicTop;
     this._right = physicRight;
@@ -65,10 +63,10 @@ export class Rect {
 
   public equals({ top, left, bottom, right }: Rect): boolean {
     return (
-      top === this._top &&
-      bottom === this._bottom &&
-      left === this._left &&
-      right === this._right
+      top === this._top
+      && bottom === this._bottom
+      && left === this._left
+      && right === this._right
     );
   }
 
@@ -85,8 +83,7 @@ export class Rect {
       const isOnLeftSide = x < this._left;
       const isOnRightSide = x > this._right;
 
-      const result =
-        !isOnTopSide && !isOnBottomSide && !isOnLeftSide && !isOnRightSide;
+      const result = !isOnTopSide && !isOnBottomSide && !isOnLeftSide && !isOnRightSide;
 
       return {
         reason: {
@@ -101,14 +98,14 @@ export class Rect {
     const { top, left, bottom, right } = target;
 
     return (
-      top >= this._top &&
-      top <= this._bottom &&
-      bottom >= this._top &&
-      bottom <= this._bottom &&
-      left >= this._left &&
-      left <= this._right &&
-      right >= this._left &&
-      right <= this._right
+      top >= this._top
+      && top <= this._bottom
+      && bottom >= this._top
+      && bottom <= this._bottom
+      && left >= this._left
+      && left <= this._right
+      && right >= this._left
+      && right <= this._right
     );
   }
 

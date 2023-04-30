@@ -17,9 +17,9 @@ import {
   LexicalEditor,
   SerializedEditor,
   createEditor,
+  $applyNodeReplacement, DecoratorNode,
 } from 'lexical';
 
-import { $applyNodeReplacement, DecoratorNode } from 'lexical';
 import * as React from 'react';
 
 const RawImageComponent = React.lazy(() => import('./RawImageComponent'));
@@ -57,10 +57,10 @@ export interface ExtraAttributes {
 
 function convertImageElement(domNode: Node): null | DOMConversionOutput {
   if (domNode instanceof HTMLImageElement) {
-    //const { alt: altText, src } = domNode;
-    //const node = $createImageNode({ altText, src });
-    //return { node };
-    //TODO: Auto-upload functionality here!
+    // const { alt: altText, src } = domNode;
+    // const node = $createImageNode({ altText, src });
+    // return { node };
+    // TODO: Auto-upload functionality here!
   }
   return null;
 }
@@ -71,19 +71,23 @@ export type SerializedImageNode = Spread<
     extraAttributes: ExtraAttributes;
     caption: SerializedEditor;
     showCaption: boolean;
+    data?: any; // Populated in afterRead hook
   },
   SerializedLexicalNode
 >;
 
 export class ImageNode extends DecoratorNode<JSX.Element> {
   __rawImagePayload: RawImagePayload;
+
   __extraAttributes: ExtraAttributes = {
     widthOverride: undefined,
     heightOverride: undefined,
   };
 
   __showCaption: boolean;
+
   __caption: LexicalEditor;
+
   // Captions cannot yet be used within editor cells
   __captionsEnabled: boolean;
 
@@ -124,7 +128,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     caption?: LexicalEditor,
     captionsEnabled?: boolean,
   ) {
-    super(undefined); //TODO: Do I need a key?
+    super(undefined); // TODO: Do I need a key?
     this.__rawImagePayload = rawImagePayload;
     this.__extraAttributes = extraAttributes;
     this.__showCaption = showCaption || false;

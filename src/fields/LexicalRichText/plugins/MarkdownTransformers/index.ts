@@ -54,7 +54,7 @@ export const IMAGE: TextMatchTransformer = {
       maxWidth: 800,
       src,
     });
-    textNode.replace(imageNode); */ //TODO
+    textNode.replace(imageNode); */ // TODO
   },
   trigger: ')',
   type: 'text-match',
@@ -190,8 +190,8 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
 
       const previousSibling = parentNode.getPreviousSibling();
       if (
-        $isTableNode(previousSibling) &&
-        getTableColumnsSize(previousSibling) === maxCells
+        $isTableNode(previousSibling)
+        && getTableColumnsSize(previousSibling) === maxCells
       ) {
         previousSibling.append(...table.getChildren());
         parentNode.remove();
@@ -250,8 +250,8 @@ export const PLAYGROUND_TRANSFORMERS: (
 
   for (const feature of editorConfig.features) {
     if (
-      feature.markdownTransformers &&
-      feature.markdownTransformers.length > 0
+      feature.markdownTransformers
+      && feature.markdownTransformers.length > 0
     ) {
       for (const transformer of feature.markdownTransformers) {
         defaultTransformers.push(transformer);

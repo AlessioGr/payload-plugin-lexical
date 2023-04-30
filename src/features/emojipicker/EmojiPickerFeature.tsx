@@ -1,8 +1,8 @@
-import { Feature } from '../../types';
 import * as React from 'react';
-import EmojiPickerPlugin from './plugins';
 import { TextMatchTransformer } from '@lexical/markdown';
 import { $createTextNode } from 'lexical';
+import EmojiPickerPlugin from './plugins';
+import { Feature } from '../../types';
 import emojiList from './plugins/emoji-list';
 
 export function EmojiPickerFeature(props: {}): Feature {

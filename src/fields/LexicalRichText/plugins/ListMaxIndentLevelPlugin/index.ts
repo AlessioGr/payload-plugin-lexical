@@ -48,8 +48,7 @@ function isIndentPermitted(maxDepth: number): boolean {
     return false;
   }
 
-  const elementNodesInSelection: Set<ElementNode> =
-    getElementNodesInSelection(selection);
+  const elementNodesInSelection: Set<ElementNode> = getElementNodesInSelection(selection);
 
   let totalDepth = 0;
 

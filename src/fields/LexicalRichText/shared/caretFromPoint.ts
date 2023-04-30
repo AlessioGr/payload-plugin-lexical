@@ -23,7 +23,7 @@ export default function caretFromPoint(
       offset: range.startOffset,
     };
     // @ts-ignore
-  } else if (document.caretPositionFromPoint !== 'undefined') {
+  } if (document.caretPositionFromPoint !== 'undefined') {
     // @ts-ignore FF - no types
     const range = document.caretPositionFromPoint(x, y);
     if (range === null) {
@@ -33,8 +33,7 @@ export default function caretFromPoint(
       node: range.offsetNode,
       offset: range.offset,
     };
-  } else {
-    // Gracefully handle IE
-    return null;
   }
+  // Gracefully handle IE
+  return null;
 }

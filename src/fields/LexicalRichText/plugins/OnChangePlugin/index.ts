@@ -9,10 +9,10 @@
 import type { EditorState, LexicalEditor } from 'lexical';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { useEffect } from 'react';
 import useLayoutEffect from '../../shared/useLayoutEffect';
 import { useCommentsContext } from '../CommentPlugin';
 import { CommentStore } from '../../commenting';
-import { useEffect } from 'react';
 import { deepEqual } from '../../../../tools/deepEqual';
 
 export function OnChangePlugin({
@@ -58,11 +58,11 @@ export function OnChangePlugin({
           tags,
         }) => {
           if (
-            (ignoreSelectionChange &&
-              dirtyElements.size === 0 &&
-              dirtyLeaves.size === 0) ||
-            (ignoreHistoryMergeTagChange && tags.has('history-merge')) ||
-            prevEditorState.isEmpty()
+            (ignoreSelectionChange
+              && dirtyElements.size === 0
+              && dirtyLeaves.size === 0)
+            || (ignoreHistoryMergeTagChange && tags.has('history-merge'))
+            || prevEditorState.isEmpty()
           ) {
             return;
           }

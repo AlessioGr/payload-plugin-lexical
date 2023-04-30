@@ -4,8 +4,8 @@ function keysWithoutUndefinedValues(obj) {
 
 export function deepEqual(obj1, obj2, nested = 0, parentKey = 'top >') {
   if (obj1 === obj2)
-    // it's just the same object. No need to compare.
-    return true;
+  // it's just the same object. No need to compare.
+  { return true; }
 
   if (isPrimitive(obj1) && isPrimitive(obj2)) {
     // compare primitives
@@ -16,7 +16,7 @@ export function deepEqual(obj1, obj2, nested = 0, parentKey = 'top >') {
   const keys2 = keysWithoutUndefinedValues(obj2);
 
   if (keys1.length !== keys2.length) {
-    /*console.warn(
+    /* console.warn(
       nested +
         ' PK: ' +
         parentKey +
@@ -28,21 +28,21 @@ export function deepEqual(obj1, obj2, nested = 0, parentKey = 'top >') {
       'Key2: ' + keys2,
       'Obj1: ' + obj1,
       'Obj2: ' + obj2,
-    );*/
+    ); */
     return false;
   }
 
   // compare objects with same number of keys
-  for (let key in obj1) {
+  for (const key in obj1) {
     if (!(key in obj2) && obj1[key] !== undefined) {
-      //console.warn('Not equal because of: ' + key + ' not in obj2');
-      return false; //other object doesn't have this prop
+      // console.warn('Not equal because of: ' + key + ' not in obj2');
+      return false; // other object doesn't have this prop
     }
     if (
-      key in obj2 &&
-      !deepEqual(obj1[key], obj2[key], nested + 1, parentKey + ' ' + key)
+      key in obj2
+      && !deepEqual(obj1[key], obj2[key], nested + 1, `${parentKey} ${key}`)
     ) {
-      //console.warn('Not equal because of: ' + key + ' not equal');
+      // console.warn('Not equal because of: ' + key + ' not equal');
       return false;
     }
   }
@@ -50,7 +50,7 @@ export function deepEqual(obj1, obj2, nested = 0, parentKey = 'top >') {
   return true;
 }
 
-//check if value is primitive
+// check if value is primitive
 function isPrimitive(obj) {
   return obj !== Object(obj);
 }
