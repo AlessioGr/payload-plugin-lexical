@@ -1,8 +1,8 @@
 import { getJsonContentFromValue } from './LexicalRichText/PayloadLexicalRichTextFieldComponent';
-import payload from 'payload';
 import { FieldHook } from 'payload/types';
 import { RawImagePayload } from './LexicalRichText/nodes/ImageNode';
 import { SerializedEditorState, SerializedLexicalNode } from 'lexical';
+import { Payload } from 'payload';
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,
@@ -25,6 +25,7 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
     characters: number;
     words: number;
   }> => {
+    const payload: Payload = req.payload;
     if (!value) {
       return value;
     }
@@ -32,7 +33,7 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
     if (jsonContent && jsonContent.root && jsonContent.root.children) {
       const newChildren = [];
       for (let childNode of jsonContent.root.children) {
-        newChildren.push(await traverseLexicalField(childNode, ''));
+        newChildren.push(await traverseLexicalField(payload, childNode, ''));
       }
       jsonContent.root.children = newChildren;
     }
@@ -42,18 +43,28 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
   };
 
 async function loadUploadData(
+  payload: Payload,
   rawImagePayload: RawImagePayload,
   locale: string,
 ) {
-  return await payload.findByID({
-    collection: rawImagePayload.relationTo, // required
-    id: rawImagePayload.value.id, // required
-    depth: 2,
-    locale: locale,
-  });
+  let uploadData;
+  try {
+    uploadData = await payload.findByID({
+      collection: rawImagePayload.relationTo, // required
+      id: rawImagePayload.value.id, // required
+      depth: 2,
+      locale: locale,
+    });
+  }catch(e){
+    console.warn(e);
+    return null;
+  }
+  
+  return uploadData;
 }
 
 async function loadInternalLinkDocData(
+  payload: Payload,
   value: string,
   relationTo: string,
   locale: string,
@@ -70,6 +81,7 @@ async function loadInternalLinkDocData(
   return foundDoc;
 }
 export async function traverseLexicalField(
+  payload: Payload,
   node: SerializedLexicalNode,
   locale: string,
 ): Promise<SerializedLexicalNode> {
@@ -77,7 +89,7 @@ export async function traverseLexicalField(
   if (node.type === 'upload') {
     const rawImagePayload: RawImagePayload = node['rawImagePayload'];
     //const extraAttributes: ExtraAttributes = node["extraAttributes"];
-    const uploadData = await loadUploadData(rawImagePayload, locale);
+    const uploadData = await loadUploadData(payload, rawImagePayload, locale);
     if (uploadData) {
       node['data'] = uploadData;
     }
@@ -92,6 +104,7 @@ export async function traverseLexicalField(
     } = node['doc'];
 
     const foundDoc = await loadInternalLinkDocData(
+      payload,
       doc.value,
       doc.relationTo,
       locale,
@@ -105,7 +118,7 @@ export async function traverseLexicalField(
   if (node['children'] && node['children'].length > 0) {
     let newChildren = [];
     for (let childNode of node['children']) {
-      newChildren.push(await traverseLexicalField(childNode, locale));
+      newChildren.push(await traverseLexicalField(payload, childNode, locale));
     }
     node['children'] = newChildren;
   }
