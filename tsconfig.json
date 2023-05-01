@@ -1,16 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es2015",
+    "strictNullChecks": true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "target": "es2019",
     "outDir": "./dist",
+    "rootDir": "./src",
     "allowJs": true,
     "module": "commonjs",
     "sourceMap": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "esModuleInterop": true,
     "declaration": true,
     "declarationDir": "./dist",
     "skipLibCheck": true,
-    "strict": false
+    "strict": false,
+    "resolveJsonModule": true,
+    "moduleResolution": "node"
   },
   "include": ["src/**/*"],
   "exclude": [
@@ -20,6 +29,6 @@
     "**/*.spec.js",
     "**/*.spec.ts",
     "node_modules",
-    ".eslintrc.js"
+    ".eslintrc.js.bak"
   ]
 }
