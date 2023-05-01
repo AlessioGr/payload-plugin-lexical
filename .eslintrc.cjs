@@ -63,11 +63,7 @@ module.exports = {
   rules: {
     // Warn but allow console in production
     'no-console': ['warn'],
-    quotes: ['error', 'single'],
-    '@typescript-eslint/quotes': ['error', 'single'],
-    // At most this should be a warning.  For now, since our api is returning
-    // snake-cased data, just turn it off.
-    camelcase: ['off'],
+
     /** ***************************************************************
      * Development relaxations.
      *
