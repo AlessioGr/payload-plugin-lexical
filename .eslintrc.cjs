@@ -2,6 +2,7 @@ const inProduction = process.env.NODE_ENV === 'production'
 const warnDev = inProduction ? 'error' : 'warn'
 
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -13,9 +14,9 @@ module.exports = {
     'prettier',
   ],
   ignorePatterns: [
+    '.eslintrc.cjs',
     'node_modules',
     'mongodb',
-    '.eslintrc.js',
     'src/payload.config.ts',
     'src/server.ts',
     'playwright.config.ts',
@@ -54,7 +55,8 @@ module.exports = {
     },
     sourceType: 'module', // Allows for the use of imports
     ecmaVersion: "latest",
-    project: ['tsconfig.json']
+    project: ['tsconfig.json'],
+    tsconfigRootDir: __dirname,
   },
   plugins: [
     'react',

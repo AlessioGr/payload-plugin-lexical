@@ -21,11 +21,14 @@
     "resolveJsonModule": true,
     "moduleResolution": "node"
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/**/*",
+  ],
   "exclude": [
     "dist",
     "build",
     "tests",
+    ".eslintrc.cjs",
     "**/*.spec.js",
     "**/*.spec.ts",
     "node_modules",
