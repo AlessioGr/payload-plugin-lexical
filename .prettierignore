@@ -1,0 +1,17 @@
+node_modules
+.vscode
+coverage
+build
+dist
+/media
+.env
+public
+.eslintrc.js
+CHANGELOG.md
+docker-compose.yml
+postcss.config.js
+remix.config.js
+tailwind.config.js
+tsconfig.json
+vitest.config.ts
+
