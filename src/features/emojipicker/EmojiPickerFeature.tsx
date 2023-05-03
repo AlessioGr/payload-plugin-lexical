@@ -7,7 +7,7 @@ import EmojiPickerPlugin from './plugins';
 import emojiList from './plugins/emoji-list';
 import { type Feature } from '../../types';
 
-export function EmojiPickerFeature(props: {}): Feature {
+export function EmojiPickerFeature(): Feature {
   const emojiMarkdownTextMatchTransformer: TextMatchTransformer = {
     dependencies: [],
     export: () => null,
@@ -15,7 +15,7 @@ export function EmojiPickerFeature(props: {}): Feature {
     regExp: /:([a-z0-9_]+):/,
     replace: (textNode, [, name]) => {
       const emoji = emojiList.find((e) => e.aliases.includes(name))?.emoji;
-      if (emoji) {
+      if (emoji != null) {
         textNode.replace($createTextNode(emoji));
       }
     },
