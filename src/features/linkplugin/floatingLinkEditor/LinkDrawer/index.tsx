@@ -12,7 +12,6 @@ import X from 'payload/dist/admin/components/icons/X';
 
 import { type Props } from './types';
 
-
 import './index.scss';
 
 const baseClass = 'rich-text-link-edit-modal';
@@ -27,7 +26,7 @@ export const LinkDrawer: React.FC<Props> = ({
   const { t } = useTranslation('fields');
 
   return (
-    <Drawer slug={drawerSlug} className={baseClass} title={t('editLink')}>
+    <Drawer slug={drawerSlug} className={baseClass} title={t('editLink') ?? ''}>
       <Form onSubmit={handleModalSubmit} initialState={initialState}>
         <RenderFields
           fieldTypes={fieldTypes}

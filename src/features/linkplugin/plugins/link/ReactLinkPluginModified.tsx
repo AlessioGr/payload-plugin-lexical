@@ -45,9 +45,7 @@ export function LinkPlugin({ validateUrl }: Props): null {
 
           // validate
           if (linkAttributes?.linkType === 'custom') {
-            if (
-              !(validateUrl === undefined || validateUrl(linkAttributes?.url))
-            ) {
+            if (!(validateUrl === undefined || validateUrl(linkAttributes?.url as string))) {
               return false;
             }
           }
@@ -55,7 +53,7 @@ export function LinkPlugin({ validateUrl }: Props): null {
           toggleLink(linkAttributes);
           return true;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       validateUrl !== undefined
         ? editor.registerCommand(
@@ -86,11 +84,11 @@ export function LinkPlugin({ validateUrl }: Props): null {
               }
               return false;
             },
-            COMMAND_PRIORITY_LOW,
+            COMMAND_PRIORITY_LOW
           )
         : () => {
-            // Don't paste arbritrary text as a link when there's no validate function
-          },
+            // Don't paste arbitrary text as a link when there's no validate function
+          }
     );
   }, [editor, validateUrl]);
 

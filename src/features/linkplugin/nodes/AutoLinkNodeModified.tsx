@@ -56,7 +56,7 @@ export class AutoLinkNode extends LinkNode {
   }
 }
 
-export function $createAutoLinkNode({ attributes }: { attributes?: LinkAttributes }): AutoLinkNode {
+export function $createAutoLinkNode({ attributes }: { attributes: LinkAttributes }): AutoLinkNode {
   return $applyNodeReplacement(new AutoLinkNode({ attributes }));
 }
 export function $isAutoLinkNode(node: LexicalNode | null | undefined): node is AutoLinkNode {

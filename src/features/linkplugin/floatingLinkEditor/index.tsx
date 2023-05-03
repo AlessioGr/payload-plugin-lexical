@@ -47,11 +47,7 @@ import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalE
 import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
-import {
-  $isLinkNode,
-  type LinkAttributes,
-  TOGGLE_LINK_COMMAND,
-} from '../nodes/LinkNodeModified';
+import { $isLinkNode, type LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
 
 function LinkEditor({
   editor,
@@ -160,19 +156,19 @@ function LinkEditor({
         };
 
         if (parent.getAttributes()?.linkType === 'custom') {
-          setLinkUrl(parent.getAttributes()?.url);
-          setLinkLabel(null);
+          setLinkUrl(parent.getAttributes()?.url ?? '');
+          setLinkLabel('');
         } else {
           // internal
           setLinkUrl(
             `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
               parent.getAttributes()?.doc?.value
-            }`,
+            }`
           );
           setLinkLabel(
             `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
               parent.getAttributes()?.doc?.value
-            }`,
+            }`
           );
         }
       } else if ($isLinkNode(node)) {
@@ -183,30 +179,30 @@ function LinkEditor({
         };
 
         if (node.getAttributes()?.linkType === 'custom') {
-          setLinkUrl(node.getAttributes()?.url);
-          setLinkLabel(null);
+          setLinkUrl(node.getAttributes()?.url ?? '');
+          setLinkLabel('');
         } else {
           // internal
           setLinkUrl(
-            `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
-              parent.getAttributes()?.doc?.value
-            }`,
+            `/admin/collections/${parent?.getAttributes()?.doc?.relationTo}/${
+              parent?.getAttributes()?.doc?.value
+            }`
           );
           setLinkLabel(
-            `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
-              parent.getAttributes()?.doc?.value
-            }`,
+            `relation to ${parent?.getAttributes()?.doc?.relationTo}: ${
+              parent?.getAttributes()?.doc?.value
+            }`
           );
         }
       } else {
         setLinkUrl('');
-        setLinkLabel(null);
+        setLinkLabel('');
       }
 
-      buildStateFromSchema({
+      void buildStateFromSchema({
         fieldSchema,
         data,
-        user,
+        user: user ?? undefined,
         operation: 'create',
         locale,
         t,
@@ -239,13 +235,13 @@ function LinkEditor({
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
       setLastSelection(selection);
-    } else if ((activeElement == null) || activeElement.className !== 'link-input') {
+    } else if (activeElement == null || activeElement.className !== 'link-input') {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
       setLastSelection(null);
       setLinkUrl('');
-      setLinkLabel(null);
+      setLinkLabel('');
     }
 
     return true;
@@ -254,7 +250,7 @@ function LinkEditor({
   useEffect(() => {
     const scrollerElem = anchorElem.parentElement;
 
-    const update = () => {
+    const update = (): void => {
       editor.getEditorState().read(() => {
         updateLinkEditor();
       });
@@ -289,7 +285,7 @@ function LinkEditor({
           updateLinkEditor();
           return true;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         KEY_ESCAPE_COMMAND,
@@ -300,8 +296,8 @@ function LinkEditor({
           }
           return false;
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [editor, updateLinkEditor, setIsLink, isLink]);
 
@@ -345,13 +341,15 @@ function LinkEditor({
       {isLink && !isModalOpen(drawerSlug) && (
         <div className="link-input">
           <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-            {linkLabel ?? linkUrl}
+            {linkLabel?.length > 0 ? linkLabel : linkUrl}
           </a>
           <div
             className="link-edit"
             role="button"
             tabIndex={0}
-            onMouseDown={(event) => { event.preventDefault(); }}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
             onClick={() => {
               toggleModal(drawerSlug);
             }}
@@ -360,7 +358,9 @@ function LinkEditor({
             className="link-trash"
             role="button"
             tabIndex={0}
-            onMouseDown={(event) => { event.preventDefault(); }}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
             onClick={() => {
               editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
             }}
@@ -373,7 +373,7 @@ function LinkEditor({
 
 function useFloatingLinkEditorToolbar(
   editor: LexicalEditor,
-  anchorElem: HTMLElement,
+  anchorElem: HTMLElement
 ): JSX.Element | null {
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLink, setIsLink] = useState(false);
@@ -396,18 +396,18 @@ function useFloatingLinkEditorToolbar(
     return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
-          updateToolbar();
+          void updateToolbar();
         });
       }),
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
         (_payload, newEditor) => {
-          updateToolbar();
+          void updateToolbar();
           setActiveEditor(newEditor);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
+        COMMAND_PRIORITY_CRITICAL
+      )
     );
   }, [editor, updateToolbar]);
 
@@ -418,7 +418,7 @@ function useFloatingLinkEditorToolbar(
       isLink={isLink}
       setIsLink={setIsLink}
     />,
-    anchorElem,
+    anchorElem
   );
 }
 

@@ -19,16 +19,13 @@ import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, C
 import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
 import { useState, useCallback, useEffect } from 'react';
 */
-export function LinkFeature(props: {}): Feature {
+export function LinkFeature(): Feature {
   // TODO: Modularize link modal, toolbarplugin and floatingtexttoolbarplugin
 
   return {
     floatingAnchorElemPlugins: [
       (floatingAnchorElem) => (
-        <FloatingLinkEditorPlugin
-          anchorElem={floatingAnchorElem}
-          key="floatinglinkeditor"
-        />
+        <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} key="floatinglinkeditor" />
       ),
     ],
     tablePlugins: [
