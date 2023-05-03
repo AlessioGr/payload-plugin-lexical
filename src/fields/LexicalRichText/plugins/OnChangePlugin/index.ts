@@ -6,7 +6,6 @@
  *
  */
 
-
 import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -30,7 +29,7 @@ export function OnChangePlugin({
     editorState: EditorState,
     editor: LexicalEditor,
     tags: Set<string>,
-    commentStore: CommentStore,
+    commentStore?: CommentStore
   ) => void;
   value: any;
 }): null {
@@ -46,32 +45,23 @@ export function OnChangePlugin({
     if (!deepEqual(valueJson, editorState.toJSON())) {
       const editorState = editor.parseEditorState(valueJson);
       editor.setEditorState(editorState);
-    } else {
     }
   }, [value]);
 
   useLayoutEffect(() => {
-    if (onChange) {
+    if (onChange != null) {
       return editor.registerUpdateListener(
-        ({
-          editorState,
-          dirtyElements,
-          dirtyLeaves,
-          prevEditorState,
-          tags,
-        }) => {
+        ({ editorState, dirtyElements, dirtyLeaves, prevEditorState, tags }) => {
           if (
-            (ignoreSelectionChange
-              && dirtyElements.size === 0
-              && dirtyLeaves.size === 0)
-            || (ignoreHistoryMergeTagChange && tags.has('history-merge'))
-            || prevEditorState.isEmpty()
+            (ignoreSelectionChange && dirtyElements.size === 0 && dirtyLeaves.size === 0) ||
+            (ignoreHistoryMergeTagChange && tags.has('history-merge')) ||
+            prevEditorState.isEmpty()
           ) {
             return;
           }
 
           onChange(editorState, editor, tags, commentsContext.commentStore);
-        },
+        }
       );
     }
   }, [

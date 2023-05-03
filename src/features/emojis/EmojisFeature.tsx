@@ -4,7 +4,7 @@ import { EmojiNode } from './nodes/EmojiNode';
 import EmojisPlugin from './plugins';
 import { EditorConfig, type Feature } from '../../types';
 
-export function EmojisFeature(props: {}): Feature {
+export function EmojisFeature(): Feature {
   return {
     plugins: [
       {

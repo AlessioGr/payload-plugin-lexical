@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 
 import { useField, withCondition } from 'payload/components/forms';
 import Error from 'payload/dist/admin/components/forms/Error';
@@ -22,8 +23,6 @@ import { type Props } from './types';
 import { deepEqual } from '../../tools/deepEqual';
 
 import './payload.scss';
-
-import { ErrorBoundary } from 'react-error-boundary';
 
 const baseClass = 'lexicalRichTextEditor';
 

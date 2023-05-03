@@ -6,7 +6,6 @@ import { type Comments, type CommentStore } from './commenting';
 
 import type { EditorConfig } from '../../types';
 
-
 export type Props = Omit<RichTextField, 'type'> & {
   editorConfig: EditorConfig;
   path?: string;
@@ -17,11 +16,11 @@ export interface OnChangeProps {
     editorState: EditorState,
     editor: LexicalEditor,
     tags: Set<string>,
-    commentStore: CommentStore,
+    commentStore?: CommentStore
   ) => void;
   initialJSON: any;
   editorConfig: EditorConfig;
-  initialComments: Comments;
+  initialComments?: Comments;
   value: any;
   setValue: (value: any) => void;
 }
