@@ -37,7 +37,7 @@ export default function RawImageComponent({
   const [imageData, setImageData] = useState<any>(null);
 
   useEffect(() => {
-    async function loadImageData() {
+    async function loadImageData(): Promise<void> {
       const relatedCollection = collections.find((coll) => {
         return coll.slug === rawImagePayload.relationTo;
       });
@@ -48,35 +48,32 @@ export default function RawImageComponent({
           headers: {
             'Accept-Language': i18n.language,
           },
-        },
+        }
       );
       const json = await response.json();
 
       const imagePayload = {
         altText: json?.text,
         height:
-          extraAttributes && extraAttributes.heightOverride
-            ? extraAttributes.heightOverride
-            : json?.height,
+          extraAttributes?.heightOverride != null ? extraAttributes.heightOverride : json?.height,
         maxWidth:
-          extraAttributes && extraAttributes.widthOverride
-            ? extraAttributes.widthOverride
-            : json?.width,
+          extraAttributes?.widthOverride != null ? extraAttributes.widthOverride : json?.width,
         src: json?.url,
       };
 
       setImageData(imagePayload);
     }
 
-    loadImageData();
+    void loadImageData();
   }, []);
 
   return (
     <Suspense fallback={<p>Loading image...</p>}>
-      {imageData ? (
+      {imageData != null ? (
         <ImageComponent
           src={imageData.src}
           altText={imageData.altText}
+          // TODO: eslint typescript - not sure what this does?
           width={undefined}
           height={imageData.height}
           maxWidth={imageData.maxWidth}

@@ -20,11 +20,12 @@ export default function ActionsPlugin({
   return (
     <div className="actions">
       {editorConfig.features.map((feature) => {
-        if (((feature?.actions) != null) && feature.actions.length > 0) {
+        if (feature?.actions != null && feature.actions.length > 0) {
           return feature.actions.map((action) => {
             return action;
           });
         }
+        return null;
       })}
     </div>
   );

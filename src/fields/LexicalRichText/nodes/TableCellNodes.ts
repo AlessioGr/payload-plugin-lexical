@@ -6,7 +6,6 @@
  *
  */
 
-
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { HashtagNode } from '@lexical/hashtag';
 import { ListItemNode, ListNode } from '@lexical/list';
@@ -30,7 +29,7 @@ function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
   ];
 
   for (const feature of editorConfig.features) {
-    if ((feature.tableCellNodes != null) && feature.tableCellNodes.length > 0) {
+    if (feature.tableCellNodes != null && feature.tableCellNodes.length > 0) {
       for (const node of feature.tableCellNodes) {
         nodes.push(node);
       }

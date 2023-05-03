@@ -12,10 +12,7 @@ import * as ReactDOM from 'react-dom';
 
 import { useEditDepth } from 'payload/components/utilities';
 import Button from 'payload/dist/admin/components/elements/Button';
-import {
-  Drawer,
-  formatDrawerSlug,
-} from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 
@@ -29,13 +26,12 @@ import {
 } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
-
 import { type EditorConfig } from '../../../../types';
-
-import './modal.scss';
 import { useEditorConfigContext } from '../../LexicalEditorComponent';
 import { DialogActions } from '../../ui/Dialog';
 import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
+
+import './modal.scss';
 
 export interface PlaygroundEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
@@ -54,11 +50,11 @@ export interface PlaygroundEmbedConfig extends EmbedConfig {
   description?: string;
 }
 
-export function getEmbedConfigs(editorConfig: EditorConfig) {
-  const embedConfigs = [];
+export function getEmbedConfigs(editorConfig: EditorConfig): PlaygroundEmbedConfig[] {
+  const embedConfigs: PlaygroundEmbedConfig[] = [];
 
   for (const feature of editorConfig.features) {
-    if ((feature.embedConfigs != null) && feature.embedConfigs.length > 0) {
+    if (feature.embedConfigs != null && feature.embedConfigs.length > 0) {
       embedConfigs.push(...feature.embedConfigs);
     }
   }
@@ -78,7 +74,7 @@ function AutoEmbedMenuItem({
   onClick: () => void;
   onMouseEnter: () => void;
   option: AutoEmbedOption;
-}) {
+}): JSX.Element {
   let className = 'item';
   if (isSelected) {
     className += ' selected';
@@ -93,7 +89,8 @@ function AutoEmbedMenuItem({
       aria-selected={isSelected}
       id={`typeahead-item-${index}`}
       onMouseEnter={onMouseEnter}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       <span className="text">{option.title}</span>
     </li>
   );
@@ -109,7 +106,7 @@ function AutoEmbedMenu({
   onOptionClick: (option: AutoEmbedOption, index: number) => void;
   onOptionMouseEnter: (index: number) => void;
   options: AutoEmbedOption[];
-}) {
+}): JSX.Element {
   return (
     <div className="typeahead-popover">
       <ul>
@@ -117,8 +114,12 @@ function AutoEmbedMenu({
           <AutoEmbedMenuItem
             index={i}
             isSelected={selectedItemIndex === i}
-            onClick={() => { onOptionClick(option, i); }}
-            onMouseEnter={() => { onOptionMouseEnter(i); }}
+            onClick={() => {
+              onOptionClick(option, i);
+            }}
+            onMouseEnter={() => {
+              onOptionMouseEnter(i);
+            }}
             key={option.key}
             option={option}
           />
@@ -127,6 +128,8 @@ function AutoEmbedMenu({
     </div>
   );
 }
+// TODO: eslint typescript - is this okay?
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const debounce = (callback: (text: string) => void, delay: number) => {
   let timeoutId: number;
   return (text: string) => {
@@ -155,19 +158,17 @@ export function AutoEmbedDrawer({
       debounce((inputText: string) => {
         const urlMatch = URL_MATCHER.exec(inputText);
         if (embedConfig != null && inputText != null && urlMatch != null) {
-          Promise.resolve(embedConfig.parseUrl(inputText)).then(
-            (parseResult) => {
-              setEmbedResult(parseResult);
-            },
-          );
+          void Promise.resolve(embedConfig.parseUrl(inputText)).then((parseResult) => {
+            setEmbedResult(parseResult);
+          });
         } else if (embedResult != null) {
           setEmbedResult(null);
         }
       }, 200),
-    [embedConfig, embedResult],
+    [embedConfig, embedResult]
   );
 
-  const onClick = () => {
+  const onClick = (): void => {
     if (embedResult != null) {
       embedConfig.insertNode(editor, embedResult);
       toggleModal(autoEmbedDrawerSlug);
@@ -187,7 +188,8 @@ export function AutoEmbedDrawer({
       slug={autoEmbedDrawerSlug}
       key={autoEmbedDrawerSlug}
       className={baseClass}
-      title="Add Embed">
+      title="Add Embed"
+    >
       <div className="Input__wrapper">
         <input
           type="text"
@@ -207,7 +209,8 @@ export function AutoEmbedDrawer({
         <Button
           disabled={embedResult == null}
           onClick={onClick}
-          data-test-id={`${embedConfig.type}-embed-modal-submit-btn`}>
+          data-test-id={`${embedConfig.type}-embed-modal-submit-btn`}
+        >
           Embed
         </Button>
       </DialogActions>
@@ -215,21 +218,23 @@ export function AutoEmbedDrawer({
   );
 }
 
-export default function AutoEmbedPlugin(props: {
-  editorConfig: EditorConfig;
-}): JSX.Element {
+export default function AutoEmbedPlugin(props: { editorConfig: EditorConfig }): JSX.Element {
   const editorConfig = props.editorConfig;
 
   const [editor] = useLexicalComposerContext();
 
-  const openEmbedModal = (embedConfig: PlaygroundEmbedConfig) => {
+  const openEmbedModal = (embedConfig: PlaygroundEmbedConfig): void => {
     editor.dispatchCommand(OPEN_MODAL_COMMAND, 'autoembed-' + embedConfig.type);
   };
 
-  const getMenuOptions = (
+  const getMenuOptions: (
     activeEmbedConfig: PlaygroundEmbedConfig,
     embedFn: () => void,
-    dismissFn: () => void,
+    dismissFn: () => void
+  ) => AutoEmbedOption[] = (
+    activeEmbedConfig: PlaygroundEmbedConfig,
+    embedFn: () => void,
+    dismissFn: () => void
   ) => {
     return [
       new AutoEmbedOption('Dismiss', {
@@ -249,21 +254,17 @@ export default function AutoEmbedPlugin(props: {
         getMenuOptions={getMenuOptions}
         menuRenderFn={(
           anchorElementRef,
-          {
-            selectedIndex,
-            options,
-            selectOptionAndCleanUp,
-            setHighlightedIndex,
-          },
+          { selectedIndex, options, selectOptionAndCleanUp, setHighlightedIndex }
         ) =>
-          (anchorElementRef.current != null)
+          anchorElementRef.current != null
             ? ReactDOM.createPortal(
                 <div
                   className="typeahead-popover auto-embed-menu"
                   style={{
                     marginLeft: anchorElementRef.current.style.width,
                     width: 200,
-                  }}>
+                  }}
+                >
                   <AutoEmbedMenu
                     options={options}
                     selectedItemIndex={selectedIndex}
@@ -276,7 +277,7 @@ export default function AutoEmbedPlugin(props: {
                     }}
                   />
                 </div>,
-                anchorElementRef.current,
+                anchorElementRef.current
               )
             : null
         }
