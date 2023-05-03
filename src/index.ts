@@ -12,7 +12,9 @@ async function callOpenAI(text: string, openai: OpenAIApi): Promise<string> {
       },
       {
         role: 'user',
-        content: `Complete this sentence. Even if you cannot understand it, try to answer with what's most likely to come next. Do not use any placeholders and write like the author would write - no matter what language it is: ${text}`,
+        content: `Complete this sentence. Even if you cannot understand it, try to answer
+        with what's most likely to come next. Do not use any placeholders and write like
+        the author would write - no matter what language it is: ${text}`,
       },
     ],
   });

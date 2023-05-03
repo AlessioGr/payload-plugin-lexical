@@ -21,17 +21,12 @@ import { TableContext } from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
 import { type OnChangeProps } from './types';
 import { type EditorConfig } from '../../types';
+import { defaultEditorConfig } from '../../types';
+
 import './index.scss';
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig,
-    initialComments,
-    value,
-    setValue,
-  } = props;
+  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 
   const initialConfig = {
     editorState: initialJSON != null ? JSON.stringify(initialJSON) : undefined,
@@ -45,7 +40,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <EditorConfigContext editorConfig={editorConfig}>
+      <EditorConfigProvider editorConfig={editorConfig}>
         <SharedHistoryContext>
           <TableContext>
             <SharedAutocompleteContext>
@@ -61,32 +56,29 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
                   />
                 </div>
                 {editorConfig.features.map((feature) => {
-                  if ((feature.plugins != null) && feature.plugins.length > 0) {
+                  if (feature.plugins != null && feature.plugins.length > 0) {
                     return feature.plugins.map((plugin) => {
                       if (plugin.position === 'outside') {
                         return plugin.component;
+                      } else {
+                        return null;
                       }
                     });
+                  } else {
+                    return null;
                   }
                 })}
               </CommentsContext>
             </SharedAutocompleteContext>
           </TableContext>
         </SharedHistoryContext>
-      </EditorConfigContext>
+      </EditorConfigProvider>
     </LexicalComposer>
   );
 };
 
 export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig,
-    initialComments,
-    value,
-    setValue,
-  } = props;
+  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 
   return (
     // <SettingsContext>
@@ -102,43 +94,38 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
   );
 };
 
-interface ContextShape {
-  editorConfig?: EditorConfig;
-  uuid?: string;
+function generateQuickGuid(): string {
+  return (
+    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  ).toString();
+}
+interface ContextType {
+  editorConfig: EditorConfig;
+  uuid: string;
 }
 
-const Context: React.Context<ContextShape> = createContext({});
-function generateQuickGuid() {
-  return (
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15)
-  );
-}
-export const EditorConfigContext = ({
+const Context: React.Context<ContextType> = createContext({
+  editorConfig: defaultEditorConfig,
+  uuid: generateQuickGuid(),
+});
+
+export const EditorConfigProvider = ({
   children,
   editorConfig,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   editorConfig: EditorConfig;
 }): JSX.Element => {
   const [editor] = useLexicalComposerContext();
+  const editorContext = useMemo(() => ({ editorConfig, uuid: generateQuickGuid() }), [editor]);
 
-  let editorContextShape: ContextShape;
+  return <Context.Provider value={editorContext}>{children}</Context.Provider>;
+};
 
-  if (!editorConfig) {
-    throw new Error('editorConfig is required');
-  } else {
-    const uuid = (editorContextShape = useMemo(
-      () => ({ editorConfig, uuid: '' + generateQuickGuid() }),
-      [editor],
-    ));
+export function useEditorConfigContext(): ContextType {
+  const context = useContext(Context);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within a EditorConfigProvider');
   }
-
-  return (
-    <Context.Provider value={editorContextShape}>{children}</Context.Provider>
-  );
-};
-
-export const useEditorConfigContext = (): ContextShape => {
-  return useContext(Context);
-};
+  return context;
+}

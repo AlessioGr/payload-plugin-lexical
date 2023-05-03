@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 import { exportFile } from '@lexical/file';
@@ -20,13 +19,14 @@ function ExportAction(): JSX.Element {
         });
       }}
       title="Export"
-      aria-label="Export editor state to JSON">
+      aria-label="Export editor state to JSON"
+    >
       <i className="export" />
     </button>
   );
 }
 
-export function ExportFeature(props: {}): Feature {
+export function ExportFeature(): Feature {
   return {
     actions: [<ExportAction key="export" />],
   };

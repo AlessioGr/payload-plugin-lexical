@@ -16,23 +16,21 @@ function ClearEditorAction(): JSX.Element {
 
   useEffect(() => {
     // Not sure if this here is needed
-    return editor.registerUpdateListener(
-      ({ dirtyElements, prevEditorState, tags }) => {
-        editor.getEditorState().read(() => {
-          const root = $getRoot();
-          const children = root.getChildren();
+    return editor.registerUpdateListener(({ dirtyElements, prevEditorState, tags }) => {
+      editor.getEditorState().read(() => {
+        const root = $getRoot();
+        const children = root.getChildren();
 
-          if (children.length > 1) {
-            setIsEditorEmpty(false);
-          } else if ($isParagraphNode(children[0])) {
-            const paragraphChildren = children[0].getChildren();
-            setIsEditorEmpty(paragraphChildren.length === 0);
-          } else {
-            setIsEditorEmpty(false);
-          }
-        });
-      },
-    );
+        if (children.length > 1) {
+          setIsEditorEmpty(false);
+        } else if ($isParagraphNode(children[0])) {
+          const paragraphChildren = children[0].getChildren();
+          setIsEditorEmpty(paragraphChildren.length === 0);
+        } else {
+          setIsEditorEmpty(false);
+        }
+      });
+    });
   }, [editor]);
   return (
     <button
@@ -43,13 +41,14 @@ function ClearEditorAction(): JSX.Element {
         editor.dispatchCommand(OPEN_MODAL_COMMAND, 'clear-editor');
       }}
       title="Clear"
-      aria-label="Clear editor contents">
+      aria-label="Clear editor contents"
+    >
       <i className="clear" />
     </button>
   );
 }
 
-export function ClearEditorFeature(props: {}): Feature {
+export function ClearEditorFeature(): Feature {
   return {
     actions: [<ClearEditorAction key="cleareditor" />],
     modals: [

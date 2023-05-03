@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 import { importFile } from '@lexical/file';
@@ -17,13 +16,14 @@ function ImportAction(): JSX.Element {
         importFile(editor);
       }}
       title="Import"
-      aria-label="Import editor state from JSON">
+      aria-label="Import editor state from JSON"
+    >
       <i className="import" />
     </button>
   );
 }
 
-export function ImportFeature(props: {}): Feature {
+export function ImportFeature(): Feature {
   return {
     actions: [<ImportAction key="import" />],
   };
