@@ -50,42 +50,23 @@ import { type OnChangeProps } from './types';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 
-
-
-
 export const Editor: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig,
-    initialComments,
-    value,
-    setValue,
-  } = props;
+  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 
   const { historyState } = useSharedHistoryContext();
 
-  const {
-    isRichText,
-    isCharLimit,
-    isCharLimitUtf8,
-    tableCellMerge,
-    tableCellBackgroundColor,
-  } = Settings;
+  const { isRichText, isCharLimit, isCharLimitUtf8, tableCellMerge, tableCellBackgroundColor } =
+    Settings;
 
   const isEditable = useLexicalEditable();
 
-  const text = isRichText
-    ? 'Enter some rich text...'
-    : 'Enter some plain text...';
+  const text = isRichText ? 'Enter some rich text...' : 'Enter some plain text...';
   const placeholder = <Placeholder>{text}</Placeholder>;
-  const [floatingAnchorElem, setFloatingAnchorElem] =
-    useState<HTMLDivElement | null>(null);
+  const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
 
-  const [isSmallWidthViewport, setIsSmallWidthViewport] =
-    useState<boolean>(false);
+  const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
 
-  const onRef = (_floatingAnchorElem: HTMLDivElement) => {
+  const onRef = (_floatingAnchorElem: HTMLDivElement): void => {
     if (_floatingAnchorElem !== null) {
       setFloatingAnchorElem(_floatingAnchorElem);
     }
@@ -101,7 +82,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
   };
 
   useEffect(() => {
-    const updateViewPortWidth = () => {
+    const updateViewPortWidth = (): void => {
       const isNextSmallWidthViewport =
         CAN_USE_DOM && window.matchMedia('(max-width: 1025px)').matches;
 
@@ -119,7 +100,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
   let hasAnyActionButtons = false;
   editorConfig.features.forEach((feature) => {
-    if ((feature.actions != null) && feature.actions.length > 0) {
+    if (feature.actions != null && feature.actions.length > 0) {
       hasAnyActionButtons = true;
     }
   });
@@ -131,19 +112,22 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
       <div
         className={`editor-container ${editorConfig.debug ? 'tree-view' : ''} ${
           !isRichText ? 'plain-text' : ''
-        }`}>
+        }`}
+      >
         {editorConfig.features.map((feature) => {
-          if ((feature.plugins != null) && feature.plugins.length > 0) {
+          if (feature.plugins != null && feature.plugins.length > 0) {
             return feature.plugins.map((plugin) => {
-              if (!plugin.position || plugin.position === 'normal') {
-                if (!plugin.onlyIfNotEditable) {
+              if (plugin.position == null || plugin.position === 'normal') {
+                if (plugin.onlyIfNotEditable == null) {
                   return plugin.component;
                 } else {
                   return !isEditable && plugin.component;
                 }
               }
+              return null;
             });
           }
+          return null;
         })}
         <DragDropPaste />
         <ClearEditorPlugin />
@@ -180,22 +164,18 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             {editorConfig.toggles.tables.enabled && (
               <NewTablePlugin cellEditorConfig={cellEditorConfig}>
                 <RichTextPlugin
-                  contentEditable={
-                    <ContentEditable className="TableNode__contentEditable" />
-                  }
+                  contentEditable={<ContentEditable className="TableNode__contentEditable" />}
                   placeholder={null}
                   ErrorBoundary={LexicalErrorBoundary}
                 />
                 <React.Fragment>
                   {editorConfig.features.map((feature) => {
-                    if (
-                      (feature.tablePlugins != null) &&
-                      feature.tablePlugins.length > 0
-                    ) {
+                    if (feature.tablePlugins != null && feature.tablePlugins.length > 0) {
                       return feature.tablePlugins.map((tablePlugin) => {
                         return tablePlugin;
                       });
                     }
+                    return null;
                   })}
                 </React.Fragment>
                 <HistoryPlugin />
@@ -203,9 +183,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
               </NewTablePlugin>
             )}
-            {editorConfig.toggles.upload.enabled && (
-              <UploadPlugin captionsEnabled={false} />
-            )}
+            {editorConfig.toggles.upload.enabled && <UploadPlugin captionsEnabled={false} />}
             <OnChangePlugin
               onChange={(editorState, editor, tags, commentStore) => {
                 onChange(editorState, editor, tags, commentStore);
@@ -215,25 +193,23 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
 
             <TabFocusPlugin />
             <TabIndentationPlugin />
-            {(floatingAnchorElem != null) && !isSmallWidthViewport && (
+            {floatingAnchorElem != null && !isSmallWidthViewport && (
               <React.Fragment>
                 <DraggableBlockPlugin anchorElem={floatingAnchorElem} />
                 <CodeActionMenuPlugin anchorElem={floatingAnchorElem} />
                 {editorConfig.features.map((feature) => {
                   if (
-                    (feature.floatingAnchorElemPlugins != null) &&
+                    feature.floatingAnchorElemPlugins != null &&
                     feature.floatingAnchorElemPlugins.length > 0
                   ) {
                     return feature.floatingAnchorElemPlugins.map((plugin) => {
                       return plugin(floatingAnchorElem);
                     });
                   }
+                  return null;
                 })}
                 {editorConfig.toggles.tables.enabled && (
-                  <TableCellActionMenuPlugin
-                    anchorElem={floatingAnchorElem}
-                    cellMerge={true}
-                  />
+                  <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
                 )}
                 <FloatingTextFormatToolbarPlugin
                   anchorElem={floatingAnchorElem}
@@ -253,40 +229,41 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
           </React.Fragment>
         )}
         {(isCharLimit || isCharLimitUtf8) && (
-          <CharacterLimitPlugin
-            charset={isCharLimit ? 'UTF-16' : 'UTF-8'}
-            maxLength={5}
-          />
+          <CharacterLimitPlugin charset={isCharLimit ? 'UTF-16' : 'UTF-8'} maxLength={5} />
         )}
         {editorConfig.features.map((feature) => {
-          if ((feature.plugins != null) && feature.plugins.length > 0) {
+          if (feature.plugins != null && feature.plugins.length > 0) {
             return feature.plugins.map((plugin) => {
               if (plugin.position === 'bottomInContainer') {
-                if (!plugin.onlyIfNotEditable) {
+                if (plugin.onlyIfNotEditable == null) {
                   return plugin.component;
                 } else {
                   return !isEditable && plugin.component;
                 }
               }
+              return null;
             });
           }
+          return null;
         })}
         {hasAnyActionButtons && (
           <ActionsPlugin isRichText={isRichText} editorConfig={editorConfig} />
         )}
       </div>
       {editorConfig.features.map((feature) => {
-        if ((feature.plugins != null) && feature.plugins.length > 0) {
+        if (feature.plugins != null && feature.plugins.length > 0) {
           return feature.plugins.map((plugin) => {
             if (plugin.position === 'bottom') {
-              if (!plugin.onlyIfNotEditable) {
+              if (plugin.onlyIfNotEditable == null) {
                 return plugin.component;
               } else {
                 return !isEditable && plugin.component;
               }
             }
+            return null;
           });
         }
+        return null;
       })}
     </React.Fragment>
   );
