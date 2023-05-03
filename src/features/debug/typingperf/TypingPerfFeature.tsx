@@ -9,7 +9,7 @@ export function TypingPerfFeature(props: { enabled: boolean }): Feature {
   return {
     plugins: [
       {
-        component: enabled && <TypingPerfPlugin key="typingperf" />,
+        component: enabled ? <TypingPerfPlugin key="typingperf" /> : <></>,
         position: 'outside',
       },
     ],
