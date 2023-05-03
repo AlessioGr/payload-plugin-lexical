@@ -73,8 +73,8 @@ export default function RawImageComponent({
         <ImageComponent
           src={imageData.src}
           altText={imageData.altText}
-          // TODO: eslint typescript - not sure what this does?
-          width={undefined}
+          // TODO: eslint typescript - not sure what this does? was set to undefined
+          width="inherit"
           height={imageData.height}
           maxWidth={imageData.maxWidth}
           nodeKey={nodeKey}
