@@ -6,7 +6,7 @@ dist
 /media
 .env
 public
-.eslintrc.js
+.eslintrc.cjs
 CHANGELOG.md
 docker-compose.yml
 postcss.config.js

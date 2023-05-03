@@ -118,11 +118,12 @@ module.exports = {
         'newlines-between': 'always',
         pathGroups: [
           { pattern: 'react*', group: 'builtin', position: 'before' },
+          { pattern: 'payload*/**', group: 'external', position: 'before' },
           { pattern: '@lexical*/**', group: 'external', position: 'before' },
-          { pattern: '~/lib/**', group: 'parent', position: 'before' },
-          { pattern: '~/modules/**', group: 'parent', position: 'after' },
-          { pattern: '~/ui/**', group: 'parent', position: 'after' },
-          { pattern: '~/styles/**', group: 'parent', position: 'after' }
+          { pattern: 'lib/**', group: 'parent', position: 'before' },
+          { pattern: 'modules/**', group: 'parent', position: 'after' },
+          { pattern: 'ui/**', group: 'parent', position: 'after' },
+          { pattern: 'styles/**', group: 'parent', position: 'after' }
         ],
         pathGroupsExcludedImportTypes: [],
         alphabetize: {
