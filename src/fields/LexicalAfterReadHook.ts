@@ -1,3 +1,4 @@
+import { type Config as GeneratedTypes } from 'payload/dist/generated-types';
 import { type FieldHook } from 'payload/types';
 
 import { type SerializedEditorState, type SerializedLexicalNode } from 'lexical';
@@ -18,26 +19,26 @@ type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
     preview: string;
     characters: number;
     words: number;
-  },
+  } | null,
   any
 >;
 
 export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({
   value,
   req,
-}): Promise<{
-    jsonContent: SerializedEditorState;
-    preview: string;
-    characters: number;
-    words: number;
-  }> => {
+}): Promise<null | {
+  jsonContent: SerializedEditorState;
+  preview: string;
+  characters: number;
+  words: number;
+}> => {
   const { payload } = req;
   if (value == null) {
-    return value;
+    return null;
   }
   const jsonContent = getJsonContentFromValue(value);
-  if (jsonContent && jsonContent.root && jsonContent.root.children) {
-    const newChildren = [];
+  if (jsonContent?.root?.children != null) {
+    const newChildren: SerializedLexicalNode[] = [];
     for (const childNode of jsonContent.root.children) {
       newChildren.push(await traverseLexicalField(payload, childNode, ''));
     }
@@ -51,8 +52,8 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
 async function loadUploadData(
   payload: Payload,
   rawImagePayload: RawImagePayload,
-  locale: string,
-) {
+  locale: string
+): Promise<any> {
   let uploadData;
   try {
     uploadData = await payload.findByID({
@@ -73,8 +74,8 @@ async function loadInternalLinkDocData(
   payload: Payload,
   value: string,
   relationTo: string,
-  locale: string,
-) {
+  locale: string
+): Promise<GeneratedTypes> {
   // TODO: Adjustable depth
 
   const foundDoc = await payload.findByID({
@@ -89,37 +90,37 @@ async function loadInternalLinkDocData(
 export async function traverseLexicalField(
   payload: Payload,
   node: SerializedLexicalNode & { children?: SerializedLexicalNode[] },
-  locale: string,
+  locale: string
 ): Promise<SerializedLexicalNode> {
   // Find replacements
   if (node.type === 'upload') {
     const { rawImagePayload } = node as SerializedImageNode;
     // const extraAttributes: ExtraAttributes = node["extraAttributes"];
     const uploadData = await loadUploadData(payload, rawImagePayload, locale);
-    if (uploadData) {
+    if (uploadData != null) {
       (node as SerializedImageNode).data = uploadData;
     }
   } else if (
-    node.type === 'link'
-    && (node as SerializedLinkNode).attributes.linkType
-    && (node as SerializedLinkNode).attributes.linkType === 'internal'
+    node.type === 'link' &&
+    (node as SerializedLinkNode).attributes.linkType != null &&
+    (node as SerializedLinkNode).attributes.linkType === 'internal'
   ) {
     const { attributes } = node as SerializedLinkNode;
-
     const foundDoc = await loadInternalLinkDocData(
       payload,
-      attributes.doc.value,
-      attributes.doc.relationTo,
-      locale,
+      attributes?.doc?.value ?? '',
+      attributes?.doc?.relationTo ?? '',
+      locale
     );
-    if (foundDoc) {
-      (node as SerializedLinkNode).attributes.doc.data = foundDoc;
+    if (foundDoc != null && attributes?.doc?.data != null) {
+      // TODO: not sure about this
+      attributes.doc.data = foundDoc;
     }
   }
 
   // Run for its children
-  if ((node.children != null) && node.children.length > 0) {
-    const newChildren = [];
+  if (node.children != null && node.children.length > 0) {
+    const newChildren: SerializedLexicalNode[] = [];
     for (const childNode of node.children) {
       newChildren.push(await traverseLexicalField(payload, childNode, locale));
     }
