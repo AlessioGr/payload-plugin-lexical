@@ -9,10 +9,12 @@ export function TableOfContentsFeature(props: { enabled: boolean }): Feature {
   return {
     plugins: [
       {
-        component: enabled && (
+        component: enabled ? (
           <div key="tableofcontents">
             <TableOfContentsPlugin />
           </div>
+        ) : (
+          <></>
         ),
         position: 'bottomInContainer',
       },

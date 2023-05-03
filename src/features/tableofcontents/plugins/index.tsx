@@ -5,22 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import LexicalTableOfContents from '@lexical/react/LexicalTableOfContents';
+
 import type { TableOfContentsEntry } from '@lexical/react/LexicalTableOfContents';
 import type { HeadingTagType } from '@lexical/rich-text';
 import type { NodeKey } from 'lexical';
 
 import './index.scss';
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import LexicalTableOfContents from '@lexical/react/LexicalTableOfContents';
-
-import { useEffect, useRef, useState } from 'react';
-import * as React from 'react';
-
 const MARGIN_ABOVE_EDITOR = 624;
 const HEADING_WIDTH = 9;
 
-function indent(tagName: HeadingTagType) {
+function indent(tagName: HeadingTagType): 'heading2' | 'heading3' | undefined {
   if (tagName === 'h2') {
     return 'heading2';
   } else if (tagName === 'h3') {
@@ -53,7 +53,7 @@ function TableOfContentsList({
   const selectedIndex = useRef(0);
   const [editor] = useLexicalComposerContext();
 
-  function scrollToNode(key: NodeKey, currIndex: number) {
+  function scrollToNode(key: NodeKey, currIndex: number): void {
     editor.getEditorState().read(() => {
       const domElement = editor.getElementByKey(key);
       if (domElement !== null) {
@@ -65,14 +65,9 @@ function TableOfContentsList({
   }
 
   useEffect(() => {
-    function scrollCallback() {
-      if (
-        tableOfContents.length !== 0 &&
-        selectedIndex.current < tableOfContents.length - 1
-      ) {
-        let currentHeading = editor.getElementByKey(
-          tableOfContents[selectedIndex.current][0],
-        );
+    function scrollCallback(): void {
+      if (tableOfContents.length !== 0 && selectedIndex.current < tableOfContents.length - 1) {
+        let currentHeading = editor.getElementByKey(tableOfContents[selectedIndex.current][0]);
         if (currentHeading !== null) {
           if (isHeadingBelowTheTopOfThePage(currentHeading)) {
             // On natural scroll, user is scrolling up
@@ -82,12 +77,11 @@ function TableOfContentsList({
               selectedIndex.current > 0
             ) {
               const prevHeading = editor.getElementByKey(
-                tableOfContents[selectedIndex.current - 1][0],
+                tableOfContents[selectedIndex.current - 1][0]
               );
               if (
                 prevHeading !== null &&
-                (isHeadingAboveViewport(prevHeading) ||
-                  isHeadingBelowTheTopOfThePage(prevHeading))
+                (isHeadingAboveViewport(prevHeading) || isHeadingBelowTheTopOfThePage(prevHeading))
               ) {
                 selectedIndex.current--;
               }
@@ -103,12 +97,11 @@ function TableOfContentsList({
               selectedIndex.current < tableOfContents.length - 1
             ) {
               const nextHeading = editor.getElementByKey(
-                tableOfContents[selectedIndex.current + 1][0],
+                tableOfContents[selectedIndex.current + 1][0]
               );
               if (
                 nextHeading !== null &&
-                (isHeadingAtTheTopOfThePage(nextHeading) ||
-                  isHeadingAboveViewport(nextHeading))
+                (isHeadingAtTheTopOfThePage(nextHeading) || isHeadingAboveViewport(nextHeading))
               ) {
                 selectedIndex.current++;
               }
@@ -124,7 +117,7 @@ function TableOfContentsList({
     }
     let timerId: ReturnType<typeof setTimeout>;
 
-    function debounceFunction(func: () => void, delay: number) {
+    function debounceFunction(func: () => void, delay: number): void {
       clearTimeout(timerId);
       timerId = setTimeout(func, delay);
     }
@@ -134,7 +127,9 @@ function TableOfContentsList({
     }
 
     document.addEventListener('scroll', onScroll);
-    return () => { document.removeEventListener('scroll', onScroll); };
+    return () => {
+      document.removeEventListener('scroll', onScroll);
+    };
   }, [tableOfContents, editor]);
 
   return (
@@ -146,12 +141,13 @@ function TableOfContentsList({
               <div className="normal-heading-wrapper" key={key}>
                 <div
                   className="first-heading"
-                  onClick={() => { scrollToNode(key, index); }}
+                  onClick={() => {
+                    scrollToNode(key, index);
+                  }}
                   role="button"
-                  tabIndex={0}>
-                  {('' + text).length > 20
-                    ? text.substring(0, 20) + '...'
-                    : text}
+                  tabIndex={0}
+                >
+                  {('' + text).length > 20 ? text.substring(0, 20) + '...' : text}
                 </div>
                 <br />
               </div>
@@ -162,20 +158,21 @@ function TableOfContentsList({
                 className={`normal-heading-wrapper ${
                   selectedKey === key ? 'selected-heading-wrapper' : ''
                 }`}
-                key={key}>
+                key={key}
+              >
                 <div
-                  onClick={() => { scrollToNode(key, index); }}
+                  onClick={() => {
+                    scrollToNode(key, index);
+                  }}
                   role="button"
                   className={indent(tag)}
-                  tabIndex={0}>
+                  tabIndex={0}
+                >
                   <li
-                    className={`normal-heading ${
-                      selectedKey === key ? 'selected-heading' : ''
-                    }
-                    `}>
-                    {('' + text).length > 27
-                      ? text.substring(0, 27) + '...'
-                      : text}
+                    className={`normal-heading ${selectedKey === key ? 'selected-heading' : ''}
+                    `}
+                  >
+                    {('' + text).length > 27 ? text.substring(0, 27) + '...' : text}
                   </li>
                 </div>
               </div>
@@ -187,7 +184,7 @@ function TableOfContentsList({
   );
 }
 
-export default function TableOfContentsPlugin() {
+export default function TableOfContentsPlugin(): JSX.Element {
   return (
     <LexicalTableOfContents>
       {(tableOfContents) => {
