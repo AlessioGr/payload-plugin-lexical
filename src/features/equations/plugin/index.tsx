@@ -14,10 +14,7 @@ import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
 
 import Button from 'payload/dist/admin/components/elements/Button';
-import {
-  Drawer,
-  formatDrawerSlug,
-} from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
@@ -35,8 +32,6 @@ import {
   LexicalEditor,
 } from 'lexical';
 
-
-
 import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
 import { type EditorConfig } from '../../../types';
 import { $createEquationNode, EquationNode } from '../node/EquationNode';
@@ -52,9 +47,7 @@ export const INSERT_EQUATION_COMMAND: LexicalCommand<CommandPayload> =
 
 const baseClass = 'rich-text-equation-modal';
 
-export function InsertEquationDrawer(props: {
-  editorConfig: EditorConfig;
-}): JSX.Element {
+export function InsertEquationDrawer(props: { editorConfig: EditorConfig }): JSX.Element {
   const { uuid } = useEditorConfigContext();
 
   const [editor] = useLexicalComposerContext();
@@ -77,7 +70,7 @@ export function InsertEquationDrawer(props: {
         inline,
       });
     },
-    [activeEditor /* , onClose */],
+    [activeEditor /* , onClose */]
   );
 
   return (
@@ -85,7 +78,8 @@ export function InsertEquationDrawer(props: {
       slug={equationDrawerSlug}
       key={equationDrawerSlug}
       className={baseClass}
-      title="Add equation">
+      title="Add equation"
+    >
       <KatexEquationAlterer onConfirm={onEquationConfirm} />
     </Drawer>
   );
@@ -96,9 +90,7 @@ export default function EquationsPlugin(): JSX.Element | null {
 
   useEffect(() => {
     if (!editor.hasNodes([EquationNode])) {
-      throw new Error(
-        'EquationsPlugins: EquationsNode not registered on editor',
-      );
+      throw new Error('EquationsPlugins: EquationsNode not registered on editor');
     }
 
     return editor.registerCommand<CommandPayload>(
@@ -115,7 +107,7 @@ export default function EquationsPlugin(): JSX.Element | null {
 
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor]);
 

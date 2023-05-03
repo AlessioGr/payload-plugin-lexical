@@ -49,13 +49,13 @@ export default function EquationComponent({
         const node = $getNodeByKey(nodeKey);
         if ($isEquationNode(node)) {
           node.setEquation(equationValue);
-          if (restoreSelection) {
+          if (restoreSelection ?? false) {
             node.selectNext(0, 0);
           }
         }
       });
     },
-    [editor, equationValue, nodeKey],
+    [editor, equationValue, nodeKey]
   );
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function EquationComponent({
             }
             return false;
           },
-          COMMAND_PRIORITY_HIGH,
+          COMMAND_PRIORITY_HIGH
         ),
         editor.registerCommand(
           KEY_ESCAPE_COMMAND,
@@ -90,17 +90,15 @@ export default function EquationComponent({
             }
             return false;
           },
-          COMMAND_PRIORITY_HIGH,
-        ),
+          COMMAND_PRIORITY_HIGH
+        )
       );
     }
     return editor.registerUpdateListener(({ editorState }) => {
       const isSelected = editorState.read(() => {
         const selection = $getSelection();
         return (
-          $isNodeSelection(selection) &&
-          selection.has(nodeKey) &&
-          selection.getNodes().length === 1
+          $isNodeSelection(selection) && selection.has(nodeKey) && selection.getNodes().length === 1
         );
       });
       if (isSelected) {
@@ -119,11 +117,18 @@ export default function EquationComponent({
           ref={inputRef}
         />
       ) : (
-        <ErrorBoundary onError={(e) => { editor._onError(e); }} fallback={null}>
+        <ErrorBoundary
+          onError={(e) => {
+            editor._onError(e);
+          }}
+          fallback={null}
+        >
           <KatexRenderer
             equation={equationValue}
             inline={inline}
-            onDoubleClick={() => { setShowEquationEditor(true); }}
+            onDoubleClick={() => {
+              setShowEquationEditor(true);
+            }}
           />
         </ErrorBoundary>
       )}

@@ -43,12 +43,7 @@ export default function KatexRenderer({
     // without having a physical space.
     <React.Fragment>
       <img src="#" alt="" />
-      <span
-        role="button"
-        tabIndex={-1}
-        onDoubleClick={onDoubleClick}
-        ref={katexElementRef}
-      />
+      <span role="button" tabIndex={-1} onDoubleClick={onDoubleClick} ref={katexElementRef} />
       <img src="#" alt="" />
     </React.Fragment>
   );
