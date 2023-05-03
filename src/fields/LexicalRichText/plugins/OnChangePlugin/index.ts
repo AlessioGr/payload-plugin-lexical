@@ -37,12 +37,12 @@ export function OnChangePlugin({
   const commentsContext = useCommentsContext();
 
   useEffect(() => {
-    const valueJson = value.jsonContent;
+    const valueJson = value?.jsonContent;
     const editorState = editor.getEditorState();
 
     // In case the value is changed from outside (e.g. through some beforeChange hook in payload),
     // we need to update the lexical editor to reflect the new value.
-    if (!deepEqual(valueJson, editorState.toJSON())) {
+    if (valueJson != null && !deepEqual(valueJson, editorState.toJSON())) {
       const editorState = editor.parseEditorState(valueJson);
       editor.setEditorState(editorState);
     }

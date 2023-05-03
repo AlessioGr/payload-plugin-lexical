@@ -11,15 +11,12 @@ import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { COMMAND_PRIORITY_NORMAL, createCommand, type LexicalCommand } from 'lexical';
 
-import { useEditorConfigContext } from '@/fields/LexicalRichText/LexicalEditorComponent';
-import { type ImagePayload } from '@/fields/LexicalRichText/nodes/ImageNode';
-import {
-  InsertTableDialog,
-  InsertNewTableDialog,
-} from '@/fields/LexicalRichText/plugins/TablePlugin';
-import { INSERT_IMAGE_COMMAND } from '@/fields/LexicalRichText/plugins/UploadPlugin';
-import { ListDrawer } from '@/fields/LexicalRichText/plugins/UploadPlugin/modal';
-import { type EditorConfig } from '@/types';
+import { type EditorConfig } from '../../../../types';
+import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { type ImagePayload } from '../../nodes/ImageNode';
+import { InsertTableDialog, InsertNewTableDialog } from '../../plugins/TablePlugin';
+import { INSERT_IMAGE_COMMAND } from '../../plugins/UploadPlugin';
+import { ListDrawer } from '../../plugins/UploadPlugin/modal';
 
 export const OPEN_MODAL_COMMAND: LexicalCommand<'upload' | 'table' | string> =
   createCommand('OPEN_MODAL_COMMAND');

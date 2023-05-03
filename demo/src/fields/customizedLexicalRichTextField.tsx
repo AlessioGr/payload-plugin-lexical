@@ -2,7 +2,7 @@ import { Field } from 'payload/types';
 import { lexicalRichTextField } from '../../../src//fields/lexicalRichTextField';
 
 import {
-  AISuggestFeature,
+  // AISuggestFeature,
   ClearEditorFeature,
   CollapsibleFeature,
   EmojiPickerFeature,
@@ -28,11 +28,7 @@ import {
 } from '../../../src';
 import { InlineProductFeature } from '../customLexicalFeatures/inlineProduct/InlineProductFeature';
 
-function lexicalRichText(props?: {
-  name?: string;
-  label?: string;
-  debug?: boolean;
-}): Field {
+function lexicalRichText(props?: { name?: string; label?: string; debug?: boolean }): Field {
   return lexicalRichTextField({
     name: props?.name ? props?.name : 'lexical_richtext',
     label: props?.label ? props?.label : 'Rich Text',
@@ -72,7 +68,7 @@ function lexicalRichText(props?: {
         MaxLengthFeature({ enabled: false, maxLength: 30 }),
         LinkFeature({}),
         TableOfContentsFeature({ enabled: false }),
-        AISuggestFeature({}),
+        // AISuggestFeature({}),
       ];
 
       defaultEditorConfig.features.push(InlineProductFeature({}));
