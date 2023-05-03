@@ -26,9 +26,7 @@ type SerializedCollapsibleContainerNode = Spread<
   SerializedElementNode
 >;
 
-export function convertDetailsElement(
-  domNode: HTMLDetailsElement,
-): DOMConversionOutput | null {
+export function convertDetailsElement(domNode: HTMLDetailsElement): DOMConversionOutput | null {
   const isOpen = domNode.open !== undefined ? domNode.open : true;
   const node = $createCollapsibleContainerNode(isOpen);
   return {
@@ -59,16 +57,15 @@ export class CollapsibleContainerNode extends ElementNode {
     dom.addEventListener('toggle', () => {
       const open = editor.getEditorState().read(() => this.getOpen());
       if (open !== dom.open) {
-        editor.update(() => { this.toggleOpen(); });
+        editor.update(() => {
+          this.toggleOpen();
+        });
       }
     });
     return dom;
   }
 
-  updateDOM(
-    prevNode: CollapsibleContainerNode,
-    dom: HTMLDetailsElement,
-  ): boolean {
+  updateDOM(prevNode: CollapsibleContainerNode, dom: HTMLDetailsElement): boolean {
     if (prevNode.__open !== this.__open) {
       dom.open = this.__open;
     }
@@ -87,9 +84,7 @@ export class CollapsibleContainerNode extends ElementNode {
     };
   }
 
-  static importJSON(
-    serializedNode: SerializedCollapsibleContainerNode,
-  ): CollapsibleContainerNode {
+  static importJSON(serializedNode: SerializedCollapsibleContainerNode): CollapsibleContainerNode {
     const node = $createCollapsibleContainerNode(serializedNode.open);
     return node;
   }
@@ -123,14 +118,12 @@ export class CollapsibleContainerNode extends ElementNode {
   }
 }
 
-export function $createCollapsibleContainerNode(
-  isOpen: boolean,
-): CollapsibleContainerNode {
+export function $createCollapsibleContainerNode(isOpen: boolean): CollapsibleContainerNode {
   return new CollapsibleContainerNode(isOpen);
 }
 
 export function $isCollapsibleContainerNode(
-  node: LexicalNode | null | undefined,
+  node: LexicalNode | null | undefined
 ): node is CollapsibleContainerNode {
   return node instanceof CollapsibleContainerNode;
 }

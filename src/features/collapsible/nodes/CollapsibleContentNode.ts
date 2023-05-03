@@ -19,9 +19,7 @@ import {
 
 type SerializedCollapsibleContentNode = SerializedElementNode;
 
-export function convertCollapsibleContentElement(
-  domNode: HTMLElement,
-): DOMConversionOutput | null {
+export function convertCollapsibleContentElement(domNode: HTMLElement): DOMConversionOutput | null {
   const node = $createCollapsibleContentNode();
   return {
     node,
@@ -67,9 +65,7 @@ export class CollapsibleContentNode extends ElementNode {
     return { element };
   }
 
-  static importJSON(
-    serializedNode: SerializedCollapsibleContentNode,
-  ): CollapsibleContentNode {
+  static importJSON(serializedNode: SerializedCollapsibleContentNode): CollapsibleContentNode {
     return $createCollapsibleContentNode();
   }
 
@@ -91,7 +87,7 @@ export function $createCollapsibleContentNode(): CollapsibleContentNode {
 }
 
 export function $isCollapsibleContentNode(
-  node: LexicalNode | null | undefined,
+  node: LexicalNode | null | undefined
 ): node is CollapsibleContentNode {
   return node instanceof CollapsibleContentNode;
 }

@@ -4,7 +4,7 @@ import { AISuggestNode } from './nodes/AISuggestNode';
 import AISuggestPlugin from './plugins';
 import { type Feature } from '../../types';
 
-export function AISuggestFeature(props: {}): Feature {
+export function AISuggestFeature(): Feature {
   return {
     plugins: [
       {

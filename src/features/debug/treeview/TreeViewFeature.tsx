@@ -9,7 +9,7 @@ export function TreeViewFeature(props: { enabled: boolean }): Feature {
   return {
     plugins: [
       {
-        component: enabled && <TreeViewPlugin key="treeview" />,
+        component: enabled ? <TreeViewPlugin key="treeview" /> : <></>,
         position: 'bottom',
       },
     ],

@@ -6,7 +6,6 @@
  *
  */
 
-
 import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -16,16 +15,11 @@ import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
 import { IS_APPLE } from '../../../../fields/LexicalRichText/shared/environment';
 import useLayoutEffect from '../../../../fields/LexicalRichText/shared/useLayoutEffect';
 
-import type {
-  GridSelection,
-  LexicalEditor,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
+import type { GridSelection, LexicalEditor, NodeSelection, RangeSelection } from 'lexical';
 
-const copy = (text: string | null) => {
+const copy = (text: string | null): void => {
   const textArea = document.createElement('textarea');
-  textArea.value = text || '';
+  textArea.value = text ?? '';
   textArea.style.position = 'absolute';
   textArea.style.opacity = '0';
   document.body?.appendChild(textArea);
@@ -41,12 +35,9 @@ const copy = (text: string | null) => {
   document.body?.removeChild(textArea);
 };
 
-const download = (filename: string, text: string | null) => {
+const download = (filename: string, text: string | null): void => {
   const a = document.createElement('a');
-  a.setAttribute(
-    'href',
-    `data:text/plain;charset=utf-8,${encodeURIComponent(text || '')}`,
-  );
+  a.setAttribute('href', `data:text/plain;charset=utf-8,${encodeURIComponent(text ?? '')}`);
   a.setAttribute('download', filename);
   a.style.display = 'none';
   document.body?.appendChild(a);
@@ -54,8 +45,8 @@ const download = (filename: string, text: string | null) => {
   document.body?.removeChild(a);
 };
 
-const formatStep = (step: Step) => {
-  const formatOneStep = (name: string, value: Step['value']) => {
+const formatStep = (step: Step): string => {
+  const formatOneStep = (name: string, value: Step['value']): string => {
     switch (name) {
       case 'click': {
         return `      await page.mouse.click(${value.x}, ${value.y});`;
@@ -107,7 +98,12 @@ export function isSelectAll(event: KeyboardEvent): boolean {
 }
 
 // stolen from LexicalSelection-test
-function sanitizeSelection(selection: Selection) {
+function sanitizeSelection(selection: Selection): {
+  anchorNode: Node | null;
+  anchorOffset: number;
+  focusNode: Node | null;
+  focusOffset: number;
+} {
   const { anchorNode, focusNode } = selection;
   let { anchorOffset, focusOffset } = selection;
   if (anchorOffset !== 0) {
@@ -119,15 +115,13 @@ function sanitizeSelection(selection: Selection) {
   return { anchorNode, anchorOffset, focusNode, focusOffset };
 }
 
-function getPathFromNodeToEditor(node: Node, rootElement: HTMLElement | null) {
+function getPathFromNodeToEditor(node: Node, rootElement: HTMLElement | null): number[] {
   let currentNode: Node | null | undefined = node;
-  const path = [];
+  const path: number[] = [];
   while (currentNode !== rootElement) {
     if (currentNode !== null && currentNode !== undefined) {
       path.unshift(
-        Array.from(currentNode?.parentNode?.childNodes ?? []).indexOf(
-          currentNode as ChildNode,
-        ),
+        Array.from(currentNode?.parentNode?.childNodes ?? []).indexOf(currentNode as ChildNode)
       );
     }
     currentNode = currentNode?.parentNode;
@@ -155,16 +149,12 @@ interface Step {
 
 type Steps = Step[];
 
-function useTestRecorder(
-  editor: LexicalEditor,
-): [JSX.Element, JSX.Element | null] {
+function useTestRecorder(editor: LexicalEditor): [JSX.Element, JSX.Element | null] {
   const [steps, setSteps] = useState<Steps>([]);
   const [isRecording, setIsRecording] = useState(false);
   const [, setCurrentInnerHTML] = useState('');
   const [templatedTest, setTemplatedTest] = useState('');
-  const previousSelectionRef = useRef<
-    RangeSelection | GridSelection | NodeSelection | null
-  >(null);
+  const previousSelectionRef = useRef<RangeSelection | GridSelection | NodeSelection | null>(null);
   const skipNextSelectionChangeRef = useRef(false);
   const preRef = useRef<HTMLPreElement>(null);
 
@@ -226,21 +216,19 @@ ${steps.map(formatStep).join('\n')}
         // trying to group steps
         const currentIndex = steps.length - 1;
         const lastStep = steps[currentIndex];
-        if (lastStep) {
+        if (lastStep != null) {
           if (lastStep.name === name) {
             if (name === 'type') {
               // for typing events we just append the text
               return [
                 ...steps.slice(0, currentIndex),
+                // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                 { ...lastStep, value: lastStep.value + value },
               ];
             }
             // for other events we bump the counter if their values are the same
             if (lastStep.value === value) {
-              return [
-                ...steps.slice(0, currentIndex),
-                { ...lastStep, count: lastStep.count + 1 },
-              ];
+              return [...steps.slice(0, currentIndex), { ...lastStep, count: lastStep.count + 1 }];
             }
           }
         }
@@ -248,11 +236,11 @@ ${steps.map(formatStep).join('\n')}
         return [...currentSteps, { count: 1, name, value }];
       });
     },
-    [steps, setSteps],
+    [steps, setSteps]
   );
 
   useLayoutEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
+    const onKeyDown = (event: KeyboardEvent): void => {
       if (!isRecording) {
         return;
       }
@@ -268,7 +256,7 @@ ${steps.map(formatStep).join('\n')}
       }
     };
 
-    const onKeyUp = (event: KeyboardEvent) => {
+    const onKeyUp = (event: KeyboardEvent): void => {
       if (!isRecording) {
         return;
       }
@@ -279,10 +267,7 @@ ${steps.map(formatStep).join('\n')}
     };
 
     return editor.registerRootListener(
-      (
-        rootElement: null | HTMLElement,
-        prevRootElement: null | HTMLElement,
-      ) => {
+      (rootElement: null | HTMLElement, prevRootElement: null | HTMLElement) => {
         if (prevRootElement !== null) {
           prevRootElement.removeEventListener('keydown', onKeyDown);
           prevRootElement.removeEventListener('keyup', onKeyUp);
@@ -291,7 +276,7 @@ ${steps.map(formatStep).join('\n')}
           rootElement.addEventListener('keydown', onKeyDown);
           rootElement.addEventListener('keyup', onKeyUp);
         }
-      },
+      }
     );
   }, [editor, isRecording, pushStep]);
 
@@ -302,7 +287,7 @@ ${steps.map(formatStep).join('\n')}
   }, [generateTestContent]);
 
   useEffect(() => {
-    if (steps) {
+    if (steps != null) {
       const testContent = generateTestContent();
       if (testContent !== null) {
         setTemplatedTest(testContent);
@@ -323,16 +308,11 @@ ${steps.map(formatStep).join('\n')}
         const previousSelection = previousSelectionRef.current;
         const skipNextSelectionChange = skipNextSelectionChangeRef.current;
         if (previousSelection !== currentSelection) {
-          if (
-            dirtyLeaves.size === 0 &&
-            dirtyElements.size === 0 &&
-            !skipNextSelectionChange
-          ) {
+          if (dirtyLeaves.size === 0 && dirtyElements.size === 0 && !skipNextSelectionChange) {
             const browserSelection = window.getSelection();
             if (
-              (browserSelection != null) &&
-              (browserSelection.anchorNode == null ||
-                browserSelection.focusNode == null)
+              browserSelection != null &&
+              (browserSelection.anchorNode == null || browserSelection.focusNode == null)
             ) {
               return;
             }
@@ -344,7 +324,7 @@ ${steps.map(formatStep).join('\n')}
         if (testContent !== null) {
           setTemplatedTest(testContent);
         }
-      },
+      }
     );
     return removeUpdateListener;
   }, [editor, generateTestContent, isRecording, pushStep]);
@@ -378,7 +358,7 @@ ${steps.map(formatStep).join('\n')}
       }
       setIsRecording((currentIsRecording) => !currentIsRecording);
     },
-    [isRecording],
+    [isRecording]
   );
 
   const onSnapshotClick = useCallback(() => {

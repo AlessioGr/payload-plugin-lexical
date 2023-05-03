@@ -6,7 +6,6 @@
  *
  */
 
-
 import { useCallback, useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -26,17 +25,9 @@ import {
 
 import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
 import { addSwipeRightListener } from '../../../fields/LexicalRichText/utils/swipe';
-import {
-  $createAutocompleteNode,
-  AutocompleteNode,
-} from '../nodes/AutocompleteNode';
+import { $createAutocompleteNode, AutocompleteNode } from '../nodes/AutocompleteNode';
 
-import type {
-  GridSelection,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
+import type { GridSelection, NodeKey, NodeSelection, RangeSelection } from 'lexical';
 
 interface SearchPromise {
   dismiss: () => void;
@@ -50,7 +41,7 @@ export const uuid = Math.random()
 
 // TODO lookup should be custom
 function $search(
-  selection: null | RangeSelection | NodeSelection | GridSelection,
+  selection: null | RangeSelection | NodeSelection | GridSelection
 ): [boolean, string] {
   if (!$isRangeSelection(selection) || !selection.isCollapsed()) {
     return [false, ''];
@@ -61,11 +52,11 @@ function $search(
   if (!$isTextNode(node) || !node.isSimpleText() || !$isAtNodeEnd(anchor)) {
     return [false, ''];
   }
-  const word = [];
+  const word: string[] = [];
   const text = node.getTextContent();
   let i = node.getTextContentSize();
-  let c;
-  while (i-- && i >= 0 && (c = text[i]) !== ' ') {
+  let c: string;
+  while (i-- !== 0 && i >= 0 && (c = text[i]) !== ' ') {
     word.push(c);
   }
   if (word.length === 0) {
@@ -95,12 +86,10 @@ export default function AutocompletePlugin(): JSX.Element | null {
     let lastMatch: null | string = null;
     let lastSuggestion: null | string = null;
     let searchPromise: null | SearchPromise = null;
-    function $clearSuggestion() {
+    function $clearSuggestion(): void {
       const autocompleteNode =
-        autocompleteNodeKey !== null
-          ? $getNodeByKey(autocompleteNodeKey)
-          : null;
-      if (autocompleteNode !== null && autocompleteNode.isAttached()) {
+        autocompleteNodeKey != null ? $getNodeByKey(autocompleteNodeKey) : null;
+      if (autocompleteNode?.isAttached() != null) {
         autocompleteNode.remove();
         autocompleteNodeKey = null;
       }
@@ -114,8 +103,8 @@ export default function AutocompletePlugin(): JSX.Element | null {
     }
     function updateAsyncSuggestion(
       refSearchPromise: SearchPromise,
-      newSuggestion: null | string,
-    ) {
+      newSuggestion: null | string
+    ): void {
       if (searchPromise !== refSearchPromise || newSuggestion === null) {
         // Outdated or no suggestion
         return;
@@ -124,11 +113,7 @@ export default function AutocompletePlugin(): JSX.Element | null {
         () => {
           const selection = $getSelection();
           const [hasMatch, match] = $search(selection);
-          if (
-            !hasMatch ||
-            match !== lastMatch ||
-            !$isRangeSelection(selection)
-          ) {
+          if (!hasMatch || match !== lastMatch || !$isRangeSelection(selection)) {
             // Outdated
             return;
           }
@@ -140,18 +125,18 @@ export default function AutocompletePlugin(): JSX.Element | null {
           lastSuggestion = newSuggestion;
           setSuggestion(newSuggestion);
         },
-        { tag: 'history-merge' },
+        { tag: 'history-merge' }
       );
     }
 
-    function handleAutocompleteNodeTransform(node: AutocompleteNode) {
+    function handleAutocompleteNodeTransform(node: AutocompleteNode): void {
       const key = node.getKey();
       if (node.__uuid === uuid && key !== autocompleteNodeKey) {
         // Max one Autocomplete node per session
         $clearSuggestion();
       }
     }
-    function handleUpdate() {
+    function handleUpdate(): void {
       editor.update(() => {
         const selection = $getSelection();
         const [hasMatch, match] = $search(selection);
@@ -190,21 +175,21 @@ export default function AutocompletePlugin(): JSX.Element | null {
       $clearSuggestion();
       return true;
     }
-    function $handleKeypressCommand(e: Event) {
+    function $handleKeypressCommand(e: Event): boolean {
       if ($handleAutocompleteIntent()) {
         e.preventDefault();
         return true;
       }
       return false;
     }
-    function handleSwipeRight(_force: number, e: TouchEvent) {
+    function handleSwipeRight(_force: number, e: TouchEvent): void {
       editor.update(() => {
         if ($handleAutocompleteIntent()) {
           e.preventDefault();
         }
       });
     }
-    function unmountSuggestion() {
+    function unmountSuggestion(): void {
       editor.update(() => {
         $clearSuggestion();
       });
@@ -213,25 +198,12 @@ export default function AutocompletePlugin(): JSX.Element | null {
     const rootElem = editor.getRootElement();
 
     return mergeRegister(
-      editor.registerNodeTransform(
-        AutocompleteNode,
-        handleAutocompleteNodeTransform,
-      ),
+      editor.registerNodeTransform(AutocompleteNode, handleAutocompleteNodeTransform),
       editor.registerUpdateListener(handleUpdate),
-      editor.registerCommand(
-        KEY_TAB_COMMAND,
-        $handleKeypressCommand,
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        KEY_ARROW_RIGHT_COMMAND,
-        $handleKeypressCommand,
-        COMMAND_PRIORITY_LOW,
-      ),
-      ...(rootElem !== null
-        ? [addSwipeRightListener(rootElem, handleSwipeRight)]
-        : []),
-      unmountSuggestion,
+      editor.registerCommand(KEY_TAB_COMMAND, $handleKeypressCommand, COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_RIGHT_COMMAND, $handleKeypressCommand, COMMAND_PRIORITY_LOW),
+      ...(rootElem !== null ? [addSwipeRightListener(rootElem, handleSwipeRight)] : []),
+      unmountSuggestion
     );
   }, [editor, query, setSuggestion]);
 
@@ -250,18 +222,21 @@ class AutocompleteServer {
   query = (searchText: string): SearchPromise => {
     let isDismissed = false;
 
-    const dismiss = () => {
+    const dismiss = (): void => {
       isDismissed = true;
     };
     const promise = new Promise<null | string>((resolve, reject) => {
       setTimeout(() => {
         if (isDismissed) {
           // TODO cache result
-          reject('Dismissed'); return;
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject('Dismissed');
+          return;
         }
         const searchTextLength = searchText.length;
         if (searchText === '' || searchTextLength < 4) {
-          resolve(null); return;
+          resolve(null);
+          return;
         }
         const char0 = searchText.charCodeAt(0);
         const isCapitalized = char0 >= 65 && char0 <= 90;
@@ -269,18 +244,19 @@ class AutocompleteServer {
           ? String.fromCharCode(char0 + 32) + searchText.substring(1)
           : searchText;
         const match = this.DATABASE.find(
-          (dictionaryWord) =>
-            dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null,
+          (dictionaryWord) => dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null
         );
         if (match === undefined) {
-          resolve(null); return;
+          resolve(null);
+          return;
         }
         const matchCapitalized = isCapitalized
           ? String.fromCharCode(match.charCodeAt(0) - 32) + match.substring(1)
           : match;
         const autocompleteChunk = matchCapitalized.substring(searchTextLength);
         if (autocompleteChunk === '') {
-          resolve(null); return;
+          resolve(null);
+          return;
         }
         resolve(autocompleteChunk);
       }, this.LATENCY);

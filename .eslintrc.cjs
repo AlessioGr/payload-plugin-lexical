@@ -173,5 +173,8 @@ module.exports = {
     // add this back.  Requires explicitly setting propTypes on all custom
     // components.
     'react/prop-types': ['off'],
+
+    // 2023-05-02: Relaxed for now, but should be revisited.
+    '@typescript-eslint/restrict-template-expressions': 'off'
   }
 }

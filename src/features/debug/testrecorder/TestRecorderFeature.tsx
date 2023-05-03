@@ -9,7 +9,7 @@ export function TestRecorderFeature(props: { enabled: boolean }): Feature {
   return {
     plugins: [
       {
-        component: enabled && <TestRecorderPlugin key="testrecorder" />,
+        component: enabled ? <TestRecorderPlugin key="testrecorder" /> : <></>,
         position: 'outside',
       },
     ],

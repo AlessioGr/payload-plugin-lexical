@@ -9,7 +9,7 @@ export function PasteLogFeature(props: { enabled: boolean }): Feature {
   return {
     plugins: [
       {
-        component: enabled && <PasteLogPlugin key="pastelog" />,
+        component: enabled ? <PasteLogPlugin key="pastelog" /> : <></>,
         position: 'outside',
       },
     ],

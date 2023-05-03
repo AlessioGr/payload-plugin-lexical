@@ -4,7 +4,7 @@ import { AutocompleteNode } from './nodes/AutocompleteNode';
 import AutocompletePlugin from './plugins';
 import { type Feature } from '../../types';
 
-export function AutoCompleteFeature(props: {}): Feature {
+export function AutoCompleteFeature(): Feature {
   return {
     plugins: [
       {
