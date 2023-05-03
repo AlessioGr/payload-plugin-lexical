@@ -7,11 +7,7 @@ import {
   Spread,
 } from 'lexical';
 
-import {
-  type LinkAttributes,
-  LinkNode,
-  type SerializedLinkNode,
-} from './LinkNodeModified';
+import { type LinkAttributes, LinkNode, type SerializedLinkNode } from './LinkNodeModified';
 
 export type SerializedAutoLinkNode = SerializedLinkNode;
 
@@ -49,14 +45,8 @@ export class AutoLinkNode extends LinkNode {
     };
   }
 
-  insertNewAfter(
-    selection: RangeSelection,
-    restoreSelection = true,
-  ): null | ElementNode {
-    const element = this.getParentOrThrow().insertNewAfter(
-      selection,
-      restoreSelection,
-    );
+  insertNewAfter(selection: RangeSelection, restoreSelection = true): null | ElementNode {
+    const element = this.getParentOrThrow().insertNewAfter(selection, restoreSelection);
     if ($isElementNode(element)) {
       const linkNode = $createAutoLinkNode({ attributes: this.__attributes });
       element.append(linkNode);
@@ -66,15 +56,9 @@ export class AutoLinkNode extends LinkNode {
   }
 }
 
-export function $createAutoLinkNode({
-  attributes,
-}: {
-  attributes?: LinkAttributes;
-}): AutoLinkNode {
+export function $createAutoLinkNode({ attributes }: { attributes?: LinkAttributes }): AutoLinkNode {
   return $applyNodeReplacement(new AutoLinkNode({ attributes }));
 }
-export function $isAutoLinkNode(
-  node: LexicalNode | null | undefined,
-): node is AutoLinkNode {
+export function $isAutoLinkNode(node: LexicalNode | null | undefined): node is AutoLinkNode {
   return node instanceof AutoLinkNode;
 }

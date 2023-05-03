@@ -5,7 +5,7 @@ import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEff
 import { type Props } from './types';
 
 const LexicalRichTextFieldComponent2 = lazy(
-  async () => await import('./PayloadLexicalRichTextFieldComponent'),
+  async () => await import('./PayloadLexicalRichTextFieldComponent')
 );
 
 export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
@@ -20,7 +20,7 @@ export const LexicalRichTextCell: React.FC<any> = (props) => {
   const { cellData } = props;
   const data = cellData;
 
-  if (!data) {
+  if (data == null) {
     return <span></span>;
   }
 

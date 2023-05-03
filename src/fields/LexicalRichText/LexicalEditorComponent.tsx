@@ -125,7 +125,7 @@ export const EditorConfigProvider = ({
 export function useEditorConfigContext(): ContextType {
   const context = useContext(Context);
   if (context === undefined) {
-    throw new Error('useTheme must be used within a EditorConfigProvider');
+    throw new Error('useTheme must be used within an EditorConfigProvider');
   }
   return context;
 }
