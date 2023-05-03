@@ -23,7 +23,7 @@ interface Props {
   getCodeDOMNode: () => HTMLElement | null;
 }
 
-export function CopyButton({ editor, getCodeDOMNode }: Props) {
+export function CopyButton({ editor, getCodeDOMNode }: Props): JSX.Element {
   const [isCopyCompleted, setCopyCompleted] = useState<boolean>(false);
 
   const removeSuccessIcon = useDebounce(() => {
@@ -62,17 +62,16 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
   return (
     <button
       className="menu-item"
+      // TODO: revisit this
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       onClick={async (event) => {
         event.preventDefault();
         await handleClick();
       }}
       aria-label="copy"
-      title="Copy">
-      {isCopyCompleted ? (
-        <i className="format success" />
-      ) : (
-        <i className="format copy" />
-      )}
+      title="Copy"
+    >
+      {isCopyCompleted ? <i className="format success" /> : <i className="format copy" />}
     </button>
   );
 }

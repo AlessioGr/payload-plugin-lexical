@@ -6,7 +6,6 @@
  *
  */
 
-
 import { useEffect, useState } from 'react';
 
 import { $getRoot } from 'lexical';
@@ -43,7 +42,7 @@ export function createComment(
   author: string,
   id?: string,
   timeStamp?: number,
-  deleted?: boolean,
+  deleted?: boolean
 ): Comment {
   return {
     author,
@@ -55,11 +54,7 @@ export function createComment(
   };
 }
 
-export function createThread(
-  quote: string,
-  comments: Comment[],
-  id?: string,
-): Thread {
+export function createThread(quote: string, comments: Comment[], id?: string): Thread {
   return {
     comments,
     id: id === undefined ? createUID() : id,
@@ -103,7 +98,7 @@ export class CommentStore {
   _changeListeners: Set<() => void>;
 
   constructor(editor: LexicalEditor, initialComments?: Comments) {
-    this._comments = (initialComments != null) ? initialComments : [];
+    this._comments = initialComments != null ? initialComments : [];
     this._editor = editor;
     this._changeListeners = new Set();
   }
@@ -112,11 +107,7 @@ export class CommentStore {
     return this._comments;
   }
 
-  addComment(
-    commentOrThread: Comment | Thread,
-    thread?: Thread,
-    offset?: number,
-  ): void {
+  addComment(commentOrThread: Comment | Thread, thread?: Thread, offset?: number): void {
     const nextComments = Array.from(this._comments);
     // The YJS types explicitly use `any` as well.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -127,8 +118,7 @@ export class CommentStore {
         if (comment.type === 'thread' && comment.id === thread.id) {
           const newThread = cloneThread(comment);
           nextComments.splice(i, 1, newThread);
-          const insertOffset =
-            offset !== undefined ? offset : newThread.comments.length;
+          const insertOffset = offset !== undefined ? offset : newThread.comments.length;
 
           newThread.comments.splice(insertOffset, 0, commentOrThread);
           break;
@@ -145,7 +135,7 @@ export class CommentStore {
 
   deleteCommentOrThread(
     commentOrThread: Comment | Thread,
-    thread?: Thread,
+    thread?: Thread
   ): { markedComment: Comment; index: number } | null {
     const nextComments = Array.from(this._comments);
     // The YJS types explicitly use `any` as well.
@@ -176,7 +166,7 @@ export class CommentStore {
     if (commentOrThread.type === 'comment') {
       return {
         index: commentIndex as number,
-        markedComment: markDeleted(commentOrThread ),
+        markedComment: markDeleted(commentOrThread),
       };
     }
 
@@ -192,16 +182,18 @@ export class CommentStore {
   }
 }
 
-export function useCommentStore(commentStore: CommentStore): Comments {
-  const [comments, setComments] = useState<Comments>(
-    commentStore.getComments(),
-  );
+export function useCommentStore(commentStore?: CommentStore): Comments {
+  if (commentStore !== undefined) {
+    const [comments, setComments] = useState<Comments>(commentStore.getComments());
 
-  useEffect(() => {
-    return commentStore.registerOnChange(() => {
-      setComments(commentStore.getComments());
-    });
-  }, [commentStore]);
+    useEffect(() => {
+      return commentStore.registerOnChange(() => {
+        setComments(commentStore.getComments());
+      });
+    }, [commentStore]);
 
-  return comments;
+    return comments;
+  } else {
+    return [];
+  }
 }
