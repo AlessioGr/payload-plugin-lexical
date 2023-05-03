@@ -22,8 +22,7 @@ import { type TextNode } from 'lexical';
 import { $createMentionNode } from '../nodes/MentionNode';
 import './index.scss';
 
-const PUNCTUATION =
-  '\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%\'"~=<>_:;';
+const PUNCTUATION = '\\.,\\+\\*\\?\\$\\@\\|#{}\\(\\)\\^\\-\\[\\]\\\\/!%\'"~=<>_:;';
 const NAME = `\\b[A-Z][^\\s${PUNCTUATION}]`;
 
 const DocumentMentionsRegex = {
@@ -32,7 +31,7 @@ const DocumentMentionsRegex = {
 };
 
 const CapitalizedNameMentionsRegex = new RegExp(
-  `(^|[^#])((?:${DocumentMentionsRegex.NAME}{${1},})$)`,
+  `(^|[^#])((?:${DocumentMentionsRegex.NAME}{${1},})$)`
 );
 
 const PUNC = DocumentMentionsRegex.PUNCTUATION;
@@ -58,7 +57,7 @@ const LENGTH_LIMIT = 75;
 const AtSignMentionsRegex = new RegExp(
   `${'(^|\\s|\\()(' + '['}${TRIGGERS}]` +
     `((?:${VALID_CHARS}${VALID_JOINS}){0,${LENGTH_LIMIT}})` +
-    ')$',
+    ')$'
 );
 
 // 50 is the longest alias length limit.
@@ -66,9 +65,7 @@ const ALIAS_LENGTH_LIMIT = 50;
 
 // Regex used to match alias.
 const AtSignMentionsRegexAliasRegex = new RegExp(
-  `${'(^|\\s|\\()(' + '['}${TRIGGERS}]` +
-    `((?:${VALID_CHARS}){0,${ALIAS_LENGTH_LIMIT}})` +
-    ')$',
+  `${'(^|\\s|\\()(' + '['}${TRIGGERS}]` + `((?:${VALID_CHARS}){0,${ALIAS_LENGTH_LIMIT}})` + ')$'
 );
 
 // At most, 5 suggestions are shown in the popup.
@@ -486,14 +483,14 @@ const dummyLookupService = {
   search(string: string, callback: (results: string[]) => void): void {
     setTimeout(() => {
       const results = dummyMentionsData.filter((mention) =>
-        mention.toLowerCase().includes(string.toLowerCase()),
+        mention.toLowerCase().includes(string.toLowerCase())
       );
       callback(results);
     }, 500);
   },
 };
 
-function useMentionLookupService(mentionString: string | null) {
+function useMentionLookupService(mentionString: string | null): string[] {
   const [results, setResults] = useState<string[]>([]);
 
   useEffect(() => {
@@ -522,10 +519,7 @@ function useMentionLookupService(mentionString: string | null) {
   return results;
 }
 
-function checkForCapitalizedNameMentions(
-  text: string,
-  minMatchLength: number,
-): QueryMatch | null {
+function checkForCapitalizedNameMentions(text: string, minMatchLength: number): QueryMatch | null {
   const match = CapitalizedNameMentionsRegex.exec(text);
   if (match !== null) {
     // The strategy ignores leading whitespace but we need to know it's
@@ -544,10 +538,7 @@ function checkForCapitalizedNameMentions(
   return null;
 }
 
-function checkForAtSignMentions(
-  text: string,
-  minMatchLength: number,
-): QueryMatch | null {
+function checkForAtSignMentions(text: string, minMatchLength: number): QueryMatch | null {
   let match = AtSignMentionsRegex.exec(text);
 
   if (match === null) {
@@ -599,7 +590,7 @@ function MentionsTypeaheadMenuItem({
   onClick: () => void;
   onMouseEnter: () => void;
   option: MentionTypeaheadOption;
-}) {
+}): JSX.Element {
   let className = 'item';
   if (isSelected) {
     className += ' selected';
@@ -614,7 +605,8 @@ function MentionsTypeaheadMenuItem({
       aria-selected={isSelected}
       id={`typeahead-item-${index}`}
       onMouseEnter={onMouseEnter}
-      onClick={onClick}>
+      onClick={onClick}
+    >
       {option.picture}
       <span className="text">{option.name}</span>
     </li>
@@ -635,19 +627,16 @@ export default function NewMentionsPlugin(): JSX.Element | null {
   const options = useMemo(
     () =>
       results
-        .map(
-          (result) =>
-            new MentionTypeaheadOption(result, <i className="icon user" />),
-        )
+        .map((result) => new MentionTypeaheadOption(result, <i className="icon user" />))
         .slice(0, SUGGESTION_LIST_LENGTH_LIMIT),
-    [results],
+    [results]
   );
 
   const onSelectOption = useCallback(
     (
       selectedOption: MentionTypeaheadOption,
       nodeToReplace: TextNode | null,
-      closeMenu: () => void,
+      closeMenu: () => void
     ) => {
       editor.update(() => {
         const mentionNode = $createMentionNode(selectedOption.name);
@@ -658,7 +647,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
         closeMenu();
       });
     },
-    [editor],
+    [editor]
   );
 
   const checkForMentionMatch = useCallback(
@@ -669,7 +658,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
       }
       return getPossibleQueryMatch(text);
     },
-    [checkForSlashTriggerMatch, editor],
+    [checkForSlashTriggerMatch, editor]
   );
 
   return (
@@ -680,9 +669,9 @@ export default function NewMentionsPlugin(): JSX.Element | null {
       options={options}
       menuRenderFn={(
         anchorElementRef,
-        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
+        { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex }
       ) =>
-        (anchorElementRef.current != null) && (results.length > 0)
+        anchorElementRef.current != null && results.length > 0
           ? ReactDOM.createPortal(
               <div className="typeahead-popover mentions-menu">
                 <ul>
@@ -703,7 +692,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
                   ))}
                 </ul>
               </div>,
-              anchorElementRef.current,
+              anchorElementRef.current
             )
           : null
       }

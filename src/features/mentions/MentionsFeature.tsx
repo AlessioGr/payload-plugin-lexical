@@ -4,7 +4,7 @@ import { MentionNode } from './nodes/MentionNode';
 import MentionsPlugin from './plugins';
 import { type Feature } from '../../types';
 
-export function MentionsFeature(props: {}): Feature {
+export function MentionsFeature(): Feature {
   return {
     plugins: [
       {
