@@ -15,7 +15,9 @@ module.exports = {
   ],
   ignorePatterns: [
     '.eslintrc.cjs',
+    'demo',
     'node_modules',
+    'serialize-example',
     'mongodb',
     'src/payload.config.ts',
     'src/server.ts',
@@ -26,7 +28,6 @@ module.exports = {
     'build',
     'dist',
     '/media',
-    '/demo/uploads',
     'vitest.config.ts',
     'prettier.config.js',
     'commitlint.config.js'

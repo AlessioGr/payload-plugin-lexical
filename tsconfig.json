@@ -25,12 +25,14 @@
     "src/**/*",
   ],
   "exclude": [
+    "demo",
+    "node_modules",
+    "serialize-example",
     "dist",
     "build",
     "tests",
     ".eslintrc.cjs",
     "**/*.spec.js",
-    "**/*.spec.ts",
-    "node_modules",
+    "**/*.spec.ts"
   ]
 }
