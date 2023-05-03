@@ -4,7 +4,7 @@ import { KeywordNode } from './nodes/KeywordNode';
 import KeywordsPlugin from './plugins';
 import { type Feature } from '../../types';
 
-export function KeywordsFeature(props: {}): Feature {
+export function KeywordsFeature(): Feature {
   return {
     plugins: [
       {

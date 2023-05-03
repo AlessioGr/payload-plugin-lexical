@@ -15,7 +15,7 @@ import { DropDownItem } from '../../fields/LexicalRichText/ui/DropDown';
 import { type EditorConfig, type Feature } from '../../types';
 import './index.scss';
 
-export function HorizontalRuleFeature(props: {}): Feature {
+export function HorizontalRuleFeature(): Feature {
   const horizontalRuleMarkdownElementTransformer: ElementTransformer = {
     dependencies: [HorizontalRuleNode],
     export: (node: LexicalNode) => {
@@ -39,13 +39,12 @@ export function HorizontalRuleFeature(props: {}): Feature {
 
   const componentPickerOption = (
     editor: LexicalEditor,
-    editorConfig: EditorConfig,
-  ) =>
+    editorConfig: EditorConfig
+  ): ComponentPickerOption =>
     new ComponentPickerOption('Horizontal Rule', {
       icon: <i className="icon horizontal-rule" />,
       keywords: ['horizontal rule', 'divider', 'hr'],
-      onSelect: () =>
-        editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
+      onSelect: () => editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined),
     });
 
   return {
@@ -62,12 +61,10 @@ export function HorizontalRuleFeature(props: {}): Feature {
             <DropDownItem
               key="horizontalrule"
               onClick={() => {
-                editor.dispatchCommand(
-                  INSERT_HORIZONTAL_RULE_COMMAND,
-                  undefined,
-                );
+                editor.dispatchCommand(INSERT_HORIZONTAL_RULE_COMMAND, undefined);
               }}
-              className="item">
+              className="item"
+            >
               <i className="icon horizontal-rule" />
               <span className="text">Horizontal Rule</span>
             </DropDownItem>
