@@ -8,7 +8,6 @@ import {
   $convertToMarkdownString,
 } from '@lexical/markdown';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { $createTextNode, $getRoot } from 'lexical';
 
 import { useEditorConfigContext } from '../../..';

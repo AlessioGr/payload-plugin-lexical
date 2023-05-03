@@ -10,7 +10,6 @@ import * as React from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
-
 import {
   $createParagraphNode,
   $createRangeSelection,

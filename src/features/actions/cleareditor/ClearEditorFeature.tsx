@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { $getRoot, $isParagraphNode } from 'lexical';
 
 import { ClearEditorDrawer } from './drawer';

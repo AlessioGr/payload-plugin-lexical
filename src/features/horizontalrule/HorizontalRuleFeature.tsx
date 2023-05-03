@@ -8,7 +8,6 @@ import {
   INSERT_HORIZONTAL_RULE_COMMAND,
 } from '@lexical/react/LexicalHorizontalRuleNode';
 import { HorizontalRulePlugin } from '@lexical/react/LexicalHorizontalRulePlugin';
-
 import { type LexicalEditor, type LexicalNode } from 'lexical';
 
 import { ComponentPickerOption } from '../../fields/LexicalRichText/plugins/ComponentPickerPlugin';

@@ -8,7 +8,6 @@
  */
 
 import { addClassNamesToElement, isHTMLAnchorElement } from '@lexical/utils';
-
 import {
   $createTextNode,
   type DOMConversionMap,

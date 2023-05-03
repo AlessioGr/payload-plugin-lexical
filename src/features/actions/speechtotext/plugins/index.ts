@@ -10,7 +10,6 @@
 import { useEffect, useRef, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import {
   $getSelection,
   $isRangeSelection,

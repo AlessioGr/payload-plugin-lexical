@@ -25,10 +25,9 @@ import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth'
 import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
 import { type Field } from 'payload/dist/fields/config/types';
 
+import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
-
-import { useModal } from '@faceless-ui/modal';
 import {
   $getSelection,
   $isRangeSelection,

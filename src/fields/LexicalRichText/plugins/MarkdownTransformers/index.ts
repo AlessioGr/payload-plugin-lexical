@@ -29,7 +29,6 @@ import {
   TableNode,
   TableRowNode,
 } from '@lexical/table';
-
 import { $isParagraphNode, $isTextNode, type LexicalNode } from 'lexical';
 
 import { type EditorConfig } from '../../../../types';

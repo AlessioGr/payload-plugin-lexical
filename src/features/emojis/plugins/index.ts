@@ -10,7 +10,6 @@
 import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { TextNode } from 'lexical';
 
 import { $createEmojiNode, EmojiNode } from '../nodes/EmojiNode';

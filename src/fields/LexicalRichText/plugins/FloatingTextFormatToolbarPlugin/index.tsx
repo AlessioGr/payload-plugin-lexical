@@ -15,11 +15,10 @@ import { createPortal } from 'react-dom';
 import { useEditDepth } from 'payload/components/utilities';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
+import { useModal } from '@faceless-ui/modal';
 import { $isCodeHighlightNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-
-import { useModal } from '@faceless-ui/modal';
 import {
   $getSelection,
   $isRangeSelection,

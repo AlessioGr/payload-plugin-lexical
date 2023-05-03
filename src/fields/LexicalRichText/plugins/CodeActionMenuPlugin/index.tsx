@@ -19,7 +19,6 @@ import {
   normalizeCodeLang,
 } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { $getNearestNodeFromDOMNode } from 'lexical';
 
 import { CopyButton } from './components/CopyButton';

@@ -8,7 +8,6 @@ import { type Validate } from 'payload/types';
 
 import { $generateHtmlFromNodes } from '@lexical/html';
 import { $convertToMarkdownString } from '@lexical/markdown';
-
 import {
   $getRoot,
   type EditorState,

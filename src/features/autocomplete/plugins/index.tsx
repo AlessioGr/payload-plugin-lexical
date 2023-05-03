@@ -12,7 +12,6 @@ import { useCallback, useEffect } from 'react';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $isAtNodeEnd } from '@lexical/selection';
 import { mergeRegister } from '@lexical/utils';
-
 import {
   $createTextNode,
   $getNodeByKey,

@@ -29,7 +29,6 @@ import {
   TableCellHeaderStates,
   TableCellNode,
 } from '@lexical/table';
-
 import {
   $createParagraphNode,
   $getRoot,

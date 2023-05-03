@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-
 import {
   $getSelection,
   $isElementNode,

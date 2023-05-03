@@ -3,7 +3,6 @@ import * as React from 'react';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
 import { type TextMatchTransformer } from '@lexical/markdown';
-
 import { type LexicalEditor } from 'lexical';
 
 import {

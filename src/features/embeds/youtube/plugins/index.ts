@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $insertNodeToNearestRoot } from '@lexical/utils';
-
 import {
   COMMAND_PRIORITY_EDITOR,
   createCommand,

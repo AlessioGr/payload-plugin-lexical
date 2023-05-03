@@ -16,7 +16,6 @@ import {
   TypeaheadOption,
   useBasicTypeaheadTriggerMatch,
 } from '@lexical/react/LexicalTypeaheadMenuPlugin';
-
 import {
   $createTextNode,
   $getSelection,

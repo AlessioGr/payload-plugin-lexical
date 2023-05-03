@@ -6,7 +6,6 @@
  *
  */
 import { $isAtNodeEnd } from '@lexical/selection';
-
 import { type ElementNode, type RangeSelection, type TextNode } from 'lexical';
 
 export function getSelectedNode(

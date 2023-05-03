@@ -1,7 +1,6 @@
 import * as React from 'react';
 
 import { type TextMatchTransformer } from '@lexical/markdown';
-
 import { $createTextNode } from 'lexical';
 
 import EmojiPickerPlugin from './plugins';

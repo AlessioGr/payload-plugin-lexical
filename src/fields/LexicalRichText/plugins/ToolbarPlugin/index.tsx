@@ -13,6 +13,7 @@ import * as React from 'react';
 import { useEditDepth } from 'payload/components/utilities';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
+import { useModal } from '@faceless-ui/modal';
 import {
   $createCodeNode,
   $isCodeNode,
@@ -51,8 +52,6 @@ import {
   $getNearestNodeOfType,
   mergeRegister,
 } from '@lexical/utils';
-
-import { useModal } from '@faceless-ui/modal';
 import {
   $createParagraphNode,
   $getNodeByKey,

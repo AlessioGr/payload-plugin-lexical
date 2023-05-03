@@ -29,6 +29,8 @@ import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
 
+
+import { useModal } from '@faceless-ui/modal';
 import {
   $createMarkNode,
   $getMarkIDs,
@@ -47,8 +49,6 @@ import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { createDOMRange, createRectsFromDOMRange } from '@lexical/selection';
 import { $isRootTextContentEmpty, $rootTextContent } from '@lexical/text';
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
-
-import { useModal } from '@faceless-ui/modal';
 import {
   $getNodeByKey,
   $getSelection,

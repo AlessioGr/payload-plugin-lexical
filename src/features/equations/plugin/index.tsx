@@ -22,10 +22,9 @@ import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
 
+import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $wrapNodeInElement } from '@lexical/utils';
-
-import { useModal } from '@faceless-ui/modal';
 import {
   $createParagraphNode,
   $insertNodes,

@@ -7,7 +7,6 @@
  */
 import type { TableOfContentsEntry } from '@lexical/react/LexicalTableOfContents';
 import type { HeadingTagType } from '@lexical/rich-text';
-
 import type { NodeKey } from 'lexical';
 
 import './index.scss';

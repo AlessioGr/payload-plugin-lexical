@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-
 import { type LexicalEditor } from 'lexical';
 
 import { EditorConfig, type Feature } from '../../../types';

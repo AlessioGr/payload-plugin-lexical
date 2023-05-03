@@ -12,9 +12,8 @@ import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { useModal } from '@faceless-ui/modal';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { CLEAR_EDITOR_COMMAND, LexicalEditor } from 'lexical';
 
 import { useEditorConfigContext } from '../../../../fields/LexicalRichText/LexicalEditorComponent';

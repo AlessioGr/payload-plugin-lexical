@@ -12,7 +12,6 @@ import { ErrorBoundary } from 'react-error-boundary';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-
 import {
   $getNodeByKey,
   $getSelection,

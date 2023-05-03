@@ -6,7 +6,6 @@
  *
  */
 import type { Cell } from '@lexical/table';
-
 import type { LexicalEditor } from 'lexical';
 
 import './index.scss';
@@ -33,7 +32,6 @@ import {
   $isTableRowNode,
   getCellFromTarget,
 } from '@lexical/table';
-
 import {
   $getNearestNodeFromDOMNode,
   $getSelection,

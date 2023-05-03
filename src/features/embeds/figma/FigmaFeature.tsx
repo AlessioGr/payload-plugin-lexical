@@ -4,7 +4,6 @@ import * as React from 'react';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
 import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-
 import { type LexicalEditor } from 'lexical';
 
 import { FigmaNode } from './nodes/FigmaNode';

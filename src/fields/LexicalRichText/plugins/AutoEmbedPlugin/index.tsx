@@ -19,6 +19,7 @@ import {
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 
+import { useModal } from '@faceless-ui/modal';
 import {
   AutoEmbedOption,
   type EmbedConfig,
@@ -28,7 +29,6 @@ import {
 } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
-import { useModal } from '@faceless-ui/modal';
 
 import { type EditorConfig } from '../../../../types';
 

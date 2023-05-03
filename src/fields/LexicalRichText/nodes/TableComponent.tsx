@@ -28,7 +28,6 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
-
 import {
   $addUpdateTag,
   $createParagraphNode,

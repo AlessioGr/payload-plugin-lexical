@@ -5,7 +5,6 @@ import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer'
 
 import { type ElementTransformer } from '@lexical/markdown';
 import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-
 import { type LexicalEditor } from 'lexical';
 
 import { $createTweetNode, $isTweetNode, TweetNode } from './nodes/TweetNode';

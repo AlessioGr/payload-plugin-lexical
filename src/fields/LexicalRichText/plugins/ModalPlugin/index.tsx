@@ -14,9 +14,8 @@ import { formatListDrawerSlug } from 'payload/dist/admin/components/elements/Lis
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
 import { type SanitizedCollectionConfig } from 'payload/types';
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-
 import { useModal } from '@faceless-ui/modal';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
   COMMAND_PRIORITY_NORMAL,
   createCommand,
