@@ -34,7 +34,6 @@ import { $isParagraphNode, $isTextNode, type LexicalNode } from 'lexical';
 import { type EditorConfig } from '../../../../types';
 import { $isImageNode, ImageNode } from '../../nodes/ImageNode';
 
-
 export const IMAGE: TextMatchTransformer = {
   dependencies: [ImageNode],
   export: (node) => {
@@ -63,9 +62,7 @@ export const IMAGE: TextMatchTransformer = {
 const TABLE_ROW_REG_EXP = /^(?:\|)(.+)(?:\|)\s?$/;
 const TABLE_ROW_DIVIDER_REG_EXP = /^(\| ?:?-*:? ?)+\|\s?$/;
 
-export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
-  editorConfig,
-) => {
+export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (editorConfig) => {
   return {
     dependencies: [TableNode, TableRowNode, TableCellNode],
     export: (node: LexicalNode) => {
@@ -76,7 +73,7 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
       const output: string[] = [];
 
       for (const row of node.getChildren()) {
-        const rowOutput = [];
+        const rowOutput: string[] = [];
         if (!$isTableRowNode(row)) {
           continue;
         }
@@ -86,10 +83,10 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
           // It's TableCellNode so it's just to make flow happy
           if ($isTableCellNode(cell)) {
             rowOutput.push(
-              $convertToMarkdownString(
-                PLAYGROUND_TRANSFORMERS(editorConfig),
-                cell,
-              ).replace(/\n/g, '\\n'),
+              $convertToMarkdownString(PLAYGROUND_TRANSFORMERS(editorConfig), cell).replace(
+                /\n/g,
+                '\\n'
+              )
             );
             if (cell.__headerState === TableCellHeaderStates.ROW) {
               isHeaderRow = true;
@@ -110,13 +107,13 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
       // Header row
       if (TABLE_ROW_DIVIDER_REG_EXP.test(match[0])) {
         const table = parentNode.getPreviousSibling();
-        if ((table == null) || !$isTableNode(table)) {
+        if (table == null || !$isTableNode(table)) {
           return;
         }
 
         const rows = table.getChildren();
         const lastRow = rows[rows.length - 1];
-        if (!lastRow || !$isTableRowNode(lastRow)) {
+        if (lastRow == null || !$isTableRowNode(lastRow)) {
           return;
         }
 
@@ -158,10 +155,7 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
           break;
         }
 
-        const cells = mapToTableCells(
-          firstChild.getTextContent(),
-          editorConfig,
-        );
+        const cells = mapToTableCells(firstChild.getTextContent(), editorConfig);
 
         if (cells == null) {
           break;
@@ -181,17 +175,12 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
         table.append(tableRow);
 
         for (let i = 0; i < maxCells; i++) {
-          tableRow.append(
-            i < cells.length ? cells[i] : createTableCell('', editorConfig),
-          );
+          tableRow.append(i < cells.length ? cells[i] : createTableCell('', editorConfig));
         }
       }
 
       const previousSibling = parentNode.getPreviousSibling();
-      if (
-        $isTableNode(previousSibling)
-        && getTableColumnsSize(previousSibling) === maxCells
-      ) {
+      if ($isTableNode(previousSibling) && getTableColumnsSize(previousSibling) === maxCells) {
         previousSibling.append(...table.getChildren());
         parentNode.remove();
       } else {
@@ -204,40 +193,33 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
   };
 };
 
-function getTableColumnsSize(table: TableNode) {
+function getTableColumnsSize(table: TableNode): number {
   const row = table.getFirstChild();
   return $isTableRowNode(row) ? row.getChildrenSize() : 0;
 }
 
-const createTableCell = (
-  textContent: string,
-  editorConfig: EditorConfig,
-): TableCellNode => {
+const createTableCell = (textContent: string, editorConfig: EditorConfig): TableCellNode => {
   textContent = textContent.replace(/\\n/g, '\n');
   const cell = $createTableCellNode(TableCellHeaderStates.NO_STATUS);
-  $convertFromMarkdownString(
-    textContent,
-    PLAYGROUND_TRANSFORMERS(editorConfig),
-    cell,
-  );
+  $convertFromMarkdownString(textContent, PLAYGROUND_TRANSFORMERS(editorConfig), cell);
   return cell;
 };
 
 const mapToTableCells = (
   textContent: string,
-  editorConfig: EditorConfig,
+  editorConfig: EditorConfig
 ): TableCellNode[] | null => {
   const match = textContent.match(TABLE_ROW_REG_EXP);
-  if ((match == null) || !match[1]) {
+  if (match == null || match[1] == null) {
     return null;
   }
 
   return match[1].split('|').map((text) => createTableCell(text, editorConfig));
 };
 
-export const PLAYGROUND_TRANSFORMERS: (
-  editorConfig: EditorConfig,
-) => Transformer[] = (editorConfig) => {
+export const PLAYGROUND_TRANSFORMERS: (editorConfig: EditorConfig) => Transformer[] = (
+  editorConfig
+) => {
   const defaultTransformers = [
     TABLE(editorConfig),
     IMAGE,
@@ -248,10 +230,7 @@ export const PLAYGROUND_TRANSFORMERS: (
   ];
 
   for (const feature of editorConfig.features) {
-    if (
-      (feature.markdownTransformers != null)
-      && feature.markdownTransformers.length > 0
-    ) {
+    if (feature.markdownTransformers != null && feature.markdownTransformers.length > 0) {
       for (const transformer of feature.markdownTransformers) {
         defaultTransformers.push(transformer);
       }

@@ -29,12 +29,9 @@ export default function DropdownColorPicker({
   color,
   onChange,
   ...rest
-}: Props) {
+}: Props): JSX.Element {
   return (
-    <DropDown
-      {...rest}
-      disabled={disabled}
-      stopCloseOnClickSelf={stopCloseOnClickSelf}>
+    <DropDown {...rest} disabled={disabled} stopCloseOnClickSelf={stopCloseOnClickSelf}>
       <ColorPicker color={color} onChange={onChange} />
     </DropDown>
   );

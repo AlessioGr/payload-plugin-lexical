@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
  *
@@ -6,13 +8,12 @@
  *
  */
 
-
 import * as React from 'react';
 import { useRef } from 'react';
 
 import type { LexicalEditor } from 'lexical';
 
-function clamp(value: number, min: number, max: number) {
+function clamp(value: number, min: number, max: number): number {
   return Math.min(Math.max(value, min), max);
 }
 
@@ -73,19 +74,15 @@ export default function ImageResizer({
   const editorRootElement = editor.getRootElement();
   // Find max width, accounting for editor padding.
   const maxWidthContainer =
-    maxWidth ||
-    (editorRootElement !== null
-      ? editorRootElement.getBoundingClientRect().width - 20
-      : 100);
+    maxWidth ??
+    (editorRootElement !== null ? editorRootElement.getBoundingClientRect().width - 20 : 100);
   const maxHeightContainer =
-    editorRootElement !== null
-      ? editorRootElement.getBoundingClientRect().height - 20
-      : 100;
+    editorRootElement !== null ? editorRootElement.getBoundingClientRect().height - 20 : 100;
 
   const minWidth = 100;
   const minHeight = 100;
 
-  const setStartCursor = (direction: number) => {
+  const setStartCursor = (direction: number): void => {
     const ew = direction === Direction.east || direction === Direction.west;
     const ns = direction === Direction.north || direction === Direction.south;
     const nwse =
@@ -95,33 +92,17 @@ export default function ImageResizer({
     const cursorDir = ew ? 'ew' : ns ? 'ns' : nwse ? 'nwse' : 'nesw';
 
     if (editorRootElement !== null) {
-      editorRootElement.style.setProperty(
-        'cursor',
-        `${cursorDir}-resize`,
-        'important',
-      );
+      editorRootElement.style.setProperty('cursor', `${cursorDir}-resize`, 'important');
     }
     if (document.body !== null) {
-      document.body.style.setProperty(
-        'cursor',
-        `${cursorDir}-resize`,
-        'important',
-      );
-      userSelect.current.value = document.body.style.getPropertyValue(
-        '-webkit-user-select',
-      );
-      userSelect.current.priority = document.body.style.getPropertyPriority(
-        '-webkit-user-select',
-      );
-      document.body.style.setProperty(
-        '-webkit-user-select',
-        'none',
-        'important',
-      );
+      document.body.style.setProperty('cursor', `${cursorDir}-resize`, 'important');
+      userSelect.current.value = document.body.style.getPropertyValue('-webkit-user-select');
+      userSelect.current.priority = document.body.style.getPropertyPriority('-webkit-user-select');
+      document.body.style.setProperty('-webkit-user-select', 'none', 'important');
     }
   };
 
-  const setEndCursor = () => {
+  const setEndCursor = (): void => {
     if (editorRootElement !== null) {
       editorRootElement.style.setProperty('cursor', 'text');
     }
@@ -130,15 +111,15 @@ export default function ImageResizer({
       document.body.style.setProperty(
         '-webkit-user-select',
         userSelect.current.value,
-        userSelect.current.priority,
+        userSelect.current.priority
       );
     }
   };
 
   const handlePointerDown = (
     event: React.PointerEvent<HTMLDivElement>,
-    direction: number,
-  ) => {
+    direction: number
+  ): void => {
     if (!editor.isEditable()) {
       return;
     }
@@ -170,14 +151,12 @@ export default function ImageResizer({
       document.addEventListener('pointerup', handlePointerUp);
     }
   };
-  const handlePointerMove = (event: PointerEvent) => {
+  const handlePointerMove = (event: PointerEvent): void => {
     const image = imageRef.current;
     const positioning = positioningRef.current;
 
-    const isHorizontal =
-      positioning.direction & (Direction.east | Direction.west);
-    const isVertical =
-      positioning.direction & (Direction.south | Direction.north);
+    const isHorizontal = positioning.direction & (Direction.east | Direction.west);
+    const isVertical = positioning.direction & (Direction.south | Direction.north);
 
     if (image !== null && positioning.isResizing) {
       // Corner cursor
@@ -185,11 +164,7 @@ export default function ImageResizer({
         let diff = Math.floor(positioning.startX - event.clientX);
         diff = positioning.direction & Direction.east ? -diff : diff;
 
-        const width = clamp(
-          positioning.startWidth + diff,
-          minWidth,
-          maxWidthContainer,
-        );
+        const width = clamp(positioning.startWidth + diff, minWidth, maxWidthContainer);
 
         const height = width / positioning.ratio;
         image.style.width = `${width}px`;
@@ -200,11 +175,7 @@ export default function ImageResizer({
         let diff = Math.floor(positioning.startY - event.clientY);
         diff = positioning.direction & Direction.south ? -diff : diff;
 
-        const height = clamp(
-          positioning.startHeight + diff,
-          minHeight,
-          maxHeightContainer,
-        );
+        const height = clamp(positioning.startHeight + diff, minHeight, maxHeightContainer);
 
         image.style.height = `${height}px`;
         positioning.currentHeight = height;
@@ -212,18 +183,14 @@ export default function ImageResizer({
         let diff = Math.floor(positioning.startX - event.clientX);
         diff = positioning.direction & Direction.east ? -diff : diff;
 
-        const width = clamp(
-          positioning.startWidth + diff,
-          minWidth,
-          maxWidthContainer,
-        );
+        const width = clamp(positioning.startWidth + diff, minWidth, maxWidthContainer);
 
         image.style.width = `${width}px`;
         positioning.currentWidth = width;
       }
     }
   };
-  const handlePointerUp = () => {
+  const handlePointerUp = (): void => {
     const image = imageRef.current;
     const positioning = positioningRef.current;
     const controlWrapper = controlWrapperRef.current;
@@ -256,7 +223,8 @@ export default function ImageResizer({
           ref={buttonRef}
           onClick={() => {
             setShowCaption(!showCaption);
-          }}>
+          }}
+        >
           Add Caption
         </button>
       )}

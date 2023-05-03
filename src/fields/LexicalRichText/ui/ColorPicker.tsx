@@ -39,10 +39,7 @@ const basicColors = [
 const WIDTH = 214;
 const HEIGHT = 150;
 
-export default function ColorPicker({
-  color,
-  onChange,
-}: Readonly<ColorPickerProps>): JSX.Element {
+export default function ColorPicker({ color, onChange }: Readonly<ColorPickerProps>): JSX.Element {
   const [selfColor, setSelfColor] = useState(transformColor('hex', color));
   const [inputColor, setInputColor] = useState(color);
   const innerDivRef = useRef(null);
@@ -52,17 +49,17 @@ export default function ColorPicker({
       x: (selfColor.hsv.s / 100) * WIDTH,
       y: ((100 - selfColor.hsv.v) / 100) * HEIGHT,
     }),
-    [selfColor.hsv.s, selfColor.hsv.v],
+    [selfColor.hsv.s, selfColor.hsv.v]
   );
 
   const huePosition = useMemo(
     () => ({
       x: (selfColor.hsv.h / 360) * WIDTH,
     }),
-    [selfColor.hsv],
+    [selfColor.hsv]
   );
 
-  const onSetHex = (hex: string) => {
+  const onSetHex = (hex: string): void => {
     setInputColor(hex);
     if (/^#[0-9A-Fa-f]{6}$/i.test(hex)) {
       const newColor = transformColor('hex', hex);
@@ -70,7 +67,7 @@ export default function ColorPicker({
     }
   };
 
-  const onMoveSaturation = ({ x, y }: Position) => {
+  const onMoveSaturation = ({ x, y }: Position): void => {
     const newHsv = {
       ...selfColor.hsv,
       s: (x / WIDTH) * 100,
@@ -81,7 +78,7 @@ export default function ColorPicker({
     setInputColor(newColor.hex);
   };
 
-  const onMoveHue = ({ x }: Position) => {
+  const onMoveHue = ({ x }: Position): void => {
     const newHsv = { ...selfColor.hsv, h: (x / WIDTH) * 360 };
     const newColor = transformColor('hsv', newHsv);
 
@@ -91,7 +88,7 @@ export default function ColorPicker({
 
   useEffect(() => {
     // Check if the dropdown is actually active
-    if (innerDivRef.current !== null && (onChange != null)) {
+    if (innerDivRef.current !== null && onChange != null) {
       onChange(selfColor.hex);
       setInputColor(selfColor.hex);
     }
@@ -105,10 +102,7 @@ export default function ColorPicker({
   }, [color]);
 
   return (
-    <div
-      className="color-picker-wrapper"
-      style={{ width: WIDTH }}
-      ref={innerDivRef}>
+    <div className="color-picker-wrapper" style={{ width: WIDTH }} ref={innerDivRef}>
       <TextInput label="Hex" onChange={onSetHex} value={inputColor} />
       <div className="color-picker-basic-color">
         {basicColors.map((basicColor) => (
@@ -126,7 +120,8 @@ export default function ColorPicker({
       <MoveWrapper
         className="color-picker-saturation"
         style={{ backgroundColor: `hsl(${selfColor.hsv.h}, 100%, 50%)` }}
-        onChange={onMoveSaturation}>
+        onChange={onMoveSaturation}
+      >
         <div
           className="color-picker-saturation_cursor"
           style={{
@@ -145,10 +140,7 @@ export default function ColorPicker({
           }}
         />
       </MoveWrapper>
-      <div
-        className="color-picker-color"
-        style={{ backgroundColor: selfColor.hex }}
-      />
+      <div className="color-picker-color" style={{ backgroundColor: selfColor.hex }} />
     </div>
   );
 }
@@ -165,12 +157,7 @@ interface MoveWrapperProps {
   children: JSX.Element;
 }
 
-function MoveWrapper({
-  className,
-  style,
-  onChange,
-  children,
-}: MoveWrapperProps) {
+function MoveWrapper({ className, style, onChange, children }: MoveWrapperProps): JSX.Element {
   const divRef = useRef<HTMLDivElement>(null);
 
   const move = (e: React.MouseEvent | MouseEvent): void => {
@@ -206,17 +193,13 @@ function MoveWrapper({
   };
 
   return (
-    <div
-      ref={divRef}
-      className={className}
-      style={style}
-      onMouseDown={onMouseDown}>
+    <div ref={divRef} className={className} style={style} onMouseDown={onMouseDown}>
       {children}
     </div>
   );
 }
 
-function clamp(value: number, max: number, min: number) {
+function clamp(value: number, max: number, min: number): number {
   return value > max ? max : value < min ? min : value;
 }
 
@@ -250,7 +233,7 @@ export function toHex(value: string): string {
   } else if (value.length === 4 || value.length === 5) {
     value = value
       .split('')
-      .map((v, i) => (i ? v + v : '#'))
+      .map((v, i) => (i !== 0 ? v + v : '#'))
       .join('');
 
     return value;
@@ -263,13 +246,11 @@ export function toHex(value: string): string {
 
 function hex2rgb(hex: string): RGB {
   const rbgArr = (
-    (hex
-      .replace(
-        /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-        (m, r, g, b) => '#' + r + r + g + g + b + b,
-      )
+    hex
+      // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+      .replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b)
       .substring(1)
-      .match(/.{2}/g) != null) || []
+      .match(/.{2}/g) ?? []
   ).map((x) => parseInt(x, 16));
 
   return {
@@ -287,14 +268,15 @@ function rgb2hsv({ r, g, b }: RGB): HSV {
   const max = Math.max(r, g, b);
   const d = max - Math.min(r, g, b);
 
-  const h = d
-    ? (max === r
-        ? (g - b) / d + (g < b ? 6 : 0)
-        : max === g
-        ? 2 + (b - r) / d
-        : 4 + (r - g) / d) * 60
-    : 0;
-  const s = max ? (d / max) * 100 : 0;
+  const h =
+    d !== 0
+      ? (max === r
+          ? (g - b) / d + (g < b ? 6 : 0)
+          : max === g
+          ? 2 + (b - r) / d
+          : 4 + (r - g) / d) * 60
+      : 0;
+  const s = max !== 0 ? (d / max) * 100 : 0;
   const v = max * 100;
 
   return { h, s, v };
@@ -322,10 +304,7 @@ function rgb2hex({ b, g, r }: RGB): string {
   return '#' + [r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('');
 }
 
-function transformColor<M extends keyof Color, C extends Color[M]>(
-  format: M,
-  color: C,
-): Color {
+function transformColor<M extends keyof Color, C extends Color[M]>(format: M, color: C): Color {
   let hex: Color['hex'] = toHex('#121212');
   let rgb: Color['rgb'] = hex2rgb(hex);
   let hsv: Color['hsv'] = rgb2hsv(rgb);

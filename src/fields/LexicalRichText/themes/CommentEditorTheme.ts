@@ -6,11 +6,11 @@
  *
  */
 
+import baseTheme from './PlaygroundEditorTheme';
+
 import type { EditorThemeClasses } from 'lexical';
 
 import './CommentEditorTheme.scss';
-
-import baseTheme from './PlaygroundEditorTheme';
 
 const theme: EditorThemeClasses = {
   ...baseTheme,

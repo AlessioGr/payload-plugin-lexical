@@ -63,10 +63,7 @@ export class Rect {
 
   public equals({ top, left, bottom, right }: Rect): boolean {
     return (
-      top === this._top
-      && bottom === this._bottom
-      && left === this._left
-      && right === this._right
+      top === this._top && bottom === this._bottom && left === this._left && right === this._right
     );
   }
 
@@ -98,14 +95,14 @@ export class Rect {
     const { top, left, bottom, right } = target;
 
     return (
-      top >= this._top
-      && top <= this._bottom
-      && bottom >= this._top
-      && bottom <= this._bottom
-      && left >= this._left
-      && left <= this._right
-      && right >= this._left
-      && right <= this._right
+      top >= this._top &&
+      top <= this._bottom &&
+      bottom >= this._top &&
+      bottom <= this._bottom &&
+      left >= this._left &&
+      left <= this._right &&
+      right >= this._left &&
+      right <= this._right
     );
   }
 
@@ -128,21 +125,11 @@ export class Rect {
     return new Rect(left, top, right, bottom);
   }
 
-  static fromLTRB(
-    left: number,
-    top: number,
-    right: number,
-    bottom: number,
-  ): Rect {
+  static fromLTRB(left: number, top: number, right: number, bottom: number): Rect {
     return new Rect(left, top, right, bottom);
   }
 
-  static fromLWTH(
-    left: number,
-    width: number,
-    top: number,
-    height: number,
-  ): Rect {
+  static fromLWTH(left: number, width: number, top: number, height: number): Rect {
     return new Rect(left, top, left + width, top + height);
   }
 

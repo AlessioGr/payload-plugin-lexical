@@ -4,34 +4,32 @@ import { type Field } from 'payload/types';
 import { cloneDeep } from 'lodash';
 
 import { populateLexicalRelationships } from './LexicalAfterReadHook';
-import {
-  LexicalRichTextFieldComponent,
-  LexicalRichTextCell,
-} from './LexicalRichText';
+import { LexicalRichTextFieldComponent, LexicalRichTextCell } from './LexicalRichText';
 import { defaultEditorConfig, type EditorConfig } from '../types';
 
 export function lexicalRichTextField(
   props: Omit<FieldBase, 'name'> & {
     name?: string;
     editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig;
-  },
+  }
 ): Field {
   const { name, label, editorConfigModifier } = props;
 
   const defaultEditorConfigCloned = cloneDeep(defaultEditorConfig);
 
-  const finalEditorConfig: EditorConfig = (editorConfigModifier == null)
-    ? defaultEditorConfigCloned
-    : editorConfigModifier(defaultEditorConfigCloned);
+  const finalEditorConfig: EditorConfig =
+    editorConfigModifier == null
+      ? defaultEditorConfigCloned
+      : editorConfigModifier(defaultEditorConfigCloned);
 
-  if ((props?.editorConfigModifier) != null) {
+  if (props?.editorConfigModifier != null) {
     delete props.editorConfigModifier;
   }
 
   return {
-    name: name || 'richText',
+    name: name ?? 'richText',
     type: 'richText',
-    label: label || 'Rich Text',
+    label: label ?? 'Rich Text',
     ...props,
     hooks: {
       ...props.hooks,
@@ -40,10 +38,11 @@ export function lexicalRichTextField(
     admin: {
       ...props.admin,
       components: {
-        Field: (args) => LexicalRichTextFieldComponent({
-          ...args,
-          editorConfig: finalEditorConfig,
-        }),
+        Field: (args) =>
+          LexicalRichTextFieldComponent({
+            ...args,
+            editorConfig: finalEditorConfig,
+          }),
         Cell: (args) => LexicalRichTextCell({ ...args, editorConfig: finalEditorConfig }),
       },
     },

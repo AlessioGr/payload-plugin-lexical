@@ -37,11 +37,10 @@ import {
 } from '../../nodes/ImageNode';
 import { CAN_USE_DOM } from '../../shared/canUseDOM';
 
-
 export type InsertImagePayload = Readonly<ImagePayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
-  CAN_USE_DOM ? ((targetWindow != null) || window).getSelection() : null;
+  CAN_USE_DOM ? (targetWindow ?? window).getSelection() : null;
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
   createCommand('INSERT_IMAGE_COMMAND');
@@ -63,10 +62,7 @@ export default function UploadPlugin({
         INSERT_IMAGE_COMMAND,
         (insertImagePayload: ImagePayload) => {
           // This is run on the browser. Can't just use 'payload' object
-          console.log(
-            'Received INSERT_IMAGE_COMMAND with payload',
-            insertImagePayload,
-          );
+          console.log('Received INSERT_IMAGE_COMMAND with payload', insertImagePayload);
           editor.update(() => {
             const imageNode = $createImageNode(
               insertImagePayload.rawImagePayload,
@@ -76,7 +72,7 @@ export default function UploadPlugin({
               },
               insertImagePayload?.showCaption,
               insertImagePayload?.caption,
-              insertImagePayload?.captionsEnabled,
+              insertImagePayload?.captionsEnabled
             );
             $insertNodes([imageNode]);
             if ($isRootOrShadowRoot(imageNode.getParentOrThrow())) {
@@ -146,29 +142,29 @@ export default function UploadPlugin({
 
           return true;
         },
-        COMMAND_PRIORITY_EDITOR,
+        COMMAND_PRIORITY_EDITOR
       ),
       editor.registerCommand<DragEvent>(
         DRAGSTART_COMMAND,
         (event) => {
           return onDragStart(event);
         },
-        COMMAND_PRIORITY_HIGH,
+        COMMAND_PRIORITY_HIGH
       ),
       editor.registerCommand<DragEvent>(
         DRAGOVER_COMMAND,
         (event) => {
           return onDragover(event);
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand<DragEvent>(
         DROP_COMMAND,
         (event) => {
           return onDrop(event, editor);
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [captionsEnabled, editor]);
 
@@ -177,7 +173,7 @@ export default function UploadPlugin({
 
 const TRANSPARENT_IMAGE =
   'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-let img = null;
+let img: HTMLImageElement;
 
 function onDragStart(event: DragEvent): boolean {
   const node = getImageNodeInSelection();
@@ -189,7 +185,8 @@ function onDragStart(event: DragEvent): boolean {
     return false;
   }
   dataTransfer.setData('text/plain', '_');
-  if (!img) {
+  // TODO: eslint typescript - allways true? from let img: HTMLImageElement; above?
+  if (img == null) {
     img = document.createElement('img');
     img.src = TRANSPARENT_IMAGE;
   }
@@ -203,7 +200,7 @@ function onDragStart(event: DragEvent): boolean {
         key: node.getKey(),
       },
       type: 'upload',
-    }),
+    })
   );
 
   return true;
@@ -255,7 +252,7 @@ function getImageNodeInSelection(): ImageNode | null {
 
 function getDragImageData(event: DragEvent): null | InsertImagePayload {
   const dragData = event.dataTransfer?.getData('application/x-lexical-drag');
-  if (!dragData) {
+  if (dragData == null) {
     return null;
   }
   const { type, data } = JSON.parse(dragData);
@@ -276,11 +273,11 @@ declare global {
 function canDropImage(event: DragEvent): boolean {
   const { target } = event;
   return !!(
-    (target != null) &&
+    target != null &&
     target instanceof HTMLElement &&
-    (target.closest('code, span.editor-image') == null) &&
-    (target.parentElement != null) &&
-    (target.parentElement.closest('div.ContentEditable__root') != null)
+    target.closest('code, span.editor-image') == null &&
+    target.parentElement != null &&
+    target.parentElement.closest('div.ContentEditable__root') != null
   );
 }
 
@@ -294,10 +291,10 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
       ? (target as Document).defaultView
       : (target as Element).ownerDocument.defaultView;
   const domSelection = getDOMSelection(targetWindow);
-  if (document.caretRangeFromPoint) {
+  if (document.caretRangeFromPoint != null) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY);
-  } else if ((event.rangeParent != null) && domSelection !== null) {
-    domSelection.collapse(event.rangeParent, event.rangeOffset || 0);
+  } else if (event.rangeParent != null && domSelection !== null) {
+    domSelection.collapse(event.rangeParent, event.rangeOffset ?? 0);
     range = domSelection.getRangeAt(0);
   } else {
     throw Error('Cannot get the selection when dragging');

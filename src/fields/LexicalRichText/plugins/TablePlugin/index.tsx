@@ -10,12 +10,8 @@ import './modal.scss';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 
-
 import Button from 'payload/dist/admin/components/elements/Button';
-import {
-  Drawer,
-  formatDrawerSlug,
-} from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
@@ -35,10 +31,7 @@ import {
 } from 'lexical';
 
 import { useEditorConfigContext } from '../../LexicalEditorComponent';
-import {
-  $createTableNodeWithDimensions,
-  TableNode,
-} from '../../nodes/TableNode';
+import { $createTableNodeWithDimensions, TableNode } from '../../nodes/TableNode';
 import invariant from '../../shared/invariant';
 import { DialogActions } from '../../ui/Dialog';
 import TextInput from '../../ui/TextInput';
@@ -54,7 +47,7 @@ export interface CellContextShape {
   cellEditorPlugins: null | JSX.Element | JSX.Element[];
   set: (
     cellEditorConfig: null | CellEditorConfig,
-    cellEditorPlugins: null | JSX.Element | JSX.Element[],
+    cellEditorPlugins: null | JSX.Element | JSX.Element[]
   ) => void;
 }
 
@@ -66,8 +59,9 @@ export type CellEditorConfig = Readonly<{
   theme?: EditorThemeClasses;
 }>;
 
-export const INSERT_NEW_TABLE_COMMAND: LexicalCommand<InsertTableCommandPayload> =
-  createCommand('INSERT_NEW_TABLE_COMMAND');
+export const INSERT_NEW_TABLE_COMMAND: LexicalCommand<InsertTableCommandPayload> = createCommand(
+  'INSERT_NEW_TABLE_COMMAND'
+);
 
 export const CellContext = createContext<CellContextShape>({
   cellEditorConfig: null,
@@ -77,7 +71,7 @@ export const CellContext = createContext<CellContextShape>({
   },
 });
 
-export function TableContext({ children }: { children: JSX.Element }) {
+export function TableContext({ children }: { children: JSX.Element }): JSX.Element {
   const [contextValue, setContextValue] = useState<{
     cellEditorConfig: null | CellEditorConfig;
     cellEditorPlugins: null | JSX.Element | JSX.Element[];
@@ -95,8 +89,9 @@ export function TableContext({ children }: { children: JSX.Element }) {
             setContextValue({ cellEditorConfig, cellEditorPlugins });
           },
         }),
-        [contextValue.cellEditorConfig, contextValue.cellEditorPlugins],
-      )}>
+        [contextValue.cellEditorConfig, contextValue.cellEditorPlugins]
+      )}
+    >
       {children}
     </CellContext.Provider>
   );
@@ -104,7 +99,7 @@ export function TableContext({ children }: { children: JSX.Element }) {
 
 const baseClass = 'rich-text-table-modal';
 
-export function InsertTableDialog({}: {}): JSX.Element {
+export function InsertTableDialog(): JSX.Element {
   const { uuid } = useEditorConfigContext();
 
   const editDepth = useEditDepth();
@@ -123,14 +118,14 @@ export function InsertTableDialog({}: {}): JSX.Element {
   useEffect(() => {
     const row = Number(rows);
     const column = Number(columns);
-    if (row && row > 0 && row <= 500 && column && column > 0 && column <= 50) {
+    if (row != null && row > 0 && row <= 500 && column != null && column > 0 && column <= 50) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
   }, [rows, columns]);
 
-  const onClick = () => {
+  const onClick = (): void => {
     activeEditor.dispatchCommand(INSERT_TABLE_COMMAND, {
       columns,
       rows,
@@ -140,11 +135,7 @@ export function InsertTableDialog({}: {}): JSX.Element {
   };
 
   return (
-    <Drawer
-      slug={tableDrawerSlug}
-      key={tableDrawerSlug}
-      className={baseClass}
-      title="Add table">
+    <Drawer slug={tableDrawerSlug} key={tableDrawerSlug} className={baseClass} title="Add table">
       <React.Fragment>
         <TextInput
           placeholder={'# of rows (1-500)'}
@@ -172,7 +163,7 @@ export function InsertTableDialog({}: {}): JSX.Element {
   );
 }
 
-export function InsertNewTableDialog({}: {}): JSX.Element {
+export function InsertNewTableDialog(): JSX.Element {
   const { uuid } = useEditorConfigContext();
 
   const editDepth = useEditDepth();
@@ -191,14 +182,14 @@ export function InsertNewTableDialog({}: {}): JSX.Element {
   useEffect(() => {
     const row = Number(rows);
     const column = Number(columns);
-    if (row && row > 0 && row <= 500 && column && column > 0 && column <= 50) {
+    if (row != null && row > 0 && row <= 500 && column != null && column > 0 && column <= 50) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
   }, [rows, columns]);
 
-  const onClick = () => {
+  const onClick = (): void => {
     activeEditor.dispatchCommand(INSERT_NEW_TABLE_COMMAND, { columns, rows });
     closeModal(newTableDrawerSlug);
   };
@@ -208,7 +199,8 @@ export function InsertNewTableDialog({}: {}): JSX.Element {
       slug={newTableDrawerSlug}
       key={newTableDrawerSlug}
       className={baseClass}
-      title="Add new table (Experimental)">
+      title="Add new table (Experimental)"
+    >
       <React.Fragment>
         <TextInput
           placeholder={'# of rows (1-500)'}
@@ -259,13 +251,13 @@ export function TablePlugin({
         const tableNode = $createTableNodeWithDimensions(
           Number(rows),
           Number(columns),
-          includeHeaders,
+          includeHeaders
         );
         $insertNodes([tableNode]);
 
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [cellContext, cellEditorConfig, children, editor]);
 

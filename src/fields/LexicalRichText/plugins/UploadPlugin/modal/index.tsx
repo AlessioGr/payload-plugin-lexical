@@ -17,21 +17,19 @@ import { useConfig } from 'payload/dist/admin/components/utilities/Config';
 
 import { useModal } from '@faceless-ui/modal';
 
-
-
+// TODO: Prefer React function definitions over variable declarations and React.FC
 export const ListDrawer: React.FC<ListDrawerProps> = (props) => {
   const { drawerSlug } = props;
 
   return (
-    <Drawer
-      slug={drawerSlug}
-      className={baseClass}
-      header={false}
-      gutter={false}>
+    <Drawer slug={drawerSlug ?? ''} className={baseClass} header={false} gutter={false}>
       <ListDrawerContent {...props} />
     </Drawer>
   );
 };
+
+// TODO: Prefer React function definitions (above) over variable declarations
+ListDrawer.displayName = 'ListDrawer';
 
 export const useListDrawer: UseListDrawer = ({
   collectionSlugs: collectionSlugsFromProps,
@@ -44,9 +42,7 @@ export const useListDrawer: UseListDrawer = ({
   const uuid = useId();
   const { modalState, toggleModal, closeModal, openModal } = useModal();
   const [isOpen, setIsOpen] = useState(false);
-  const [collectionSlugs, setCollectionSlugs] = useState(
-    collectionSlugsFromProps,
-  );
+  const [collectionSlugs, setCollectionSlugs] = useState(collectionSlugsFromProps);
 
   const drawerSlug = formatListDrawerSlug({
     depth: drawerDepth,
@@ -58,9 +54,9 @@ export const useListDrawer: UseListDrawer = ({
   }, [modalState, drawerSlug]);
 
   useEffect(() => {
-    if ((collectionSlugs == null) || collectionSlugs.length === 0) {
+    if (collectionSlugs == null || collectionSlugs.length === 0) {
       const filteredCollectionSlugs = collections.filter(({ upload }) => {
-        if (uploads) {
+        if (uploads != null) {
           return Boolean(upload);
         }
         return true;
@@ -82,11 +78,13 @@ export const useListDrawer: UseListDrawer = ({
   }, [drawerSlug, openModal]);
 
   const MemoizedDrawer = useMemo(() => {
-    return (props) => (
+    // eslint-disable-next-line react/display-name
+    return (props: JSX.IntrinsicAttributes & ListDrawerProps): JSX.Element => (
       <ListDrawer
         {...props}
         drawerSlug={drawerSlug}
-        collectionSlugs={collectionSlugs}
+        collectionSlugs={collectionSlugs ?? []}
+        // @ts-expect-error: TODO: eslint typescript - uploads do not exist as a prop on ListDrawer
         uploads={uploads}
         closeDrawer={closeDrawer}
         key={drawerSlug}
@@ -94,17 +92,19 @@ export const useListDrawer: UseListDrawer = ({
         filterOptions={filterOptions}
       />
     );
-  }, [
-    drawerSlug,
-    collectionSlugs,
-    uploads,
-    closeDrawer,
-    selectedCollection,
-    filterOptions,
-  ]);
+  }, [drawerSlug, collectionSlugs, uploads, closeDrawer, selectedCollection, filterOptions]);
 
   const MemoizedDrawerToggler = useMemo(() => {
-    return (props) => <ListDrawerToggler {...props} drawerSlug={drawerSlug} />;
+    // eslint-disable-next-line react/display-name
+    return (
+      props: JSX.IntrinsicAttributes &
+        React.HTMLAttributes<HTMLButtonElement> & {
+          children?: React.ReactNode;
+          className?: string | undefined;
+          drawerSlug?: string | undefined;
+          disabled?: boolean | undefined;
+        }
+    ) => <ListDrawerToggler {...props} drawerSlug={drawerSlug} />;
   }, [drawerSlug]);
 
   const MemoizedDrawerState = useMemo(
@@ -116,7 +116,7 @@ export const useListDrawer: UseListDrawer = ({
       closeDrawer,
       openDrawer,
     }),
-    [drawerDepth, drawerSlug, isOpen, toggleDrawer, closeDrawer, openDrawer],
+    [drawerDepth, drawerSlug, isOpen, toggleDrawer, closeDrawer, openDrawer]
   );
 
   return [MemoizedDrawer, MemoizedDrawerToggler, MemoizedDrawerState];
