@@ -41,9 +41,6 @@ import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
 
-
-
-
 function TextFormatFloatingToolbar({
   editor,
   anchorElem,
@@ -92,15 +89,12 @@ function TextFormatFloatingToolbar({
     }
   }, [editor, isLink]);
 
-  const insertComment = () => {
+  const insertComment = (): void => {
     editor.dispatchCommand(INSERT_INLINE_COMMAND, undefined);
   };
 
-  function mouseMoveListener(e: MouseEvent) {
-    if (
-      ((popupCharStylesEditorRef?.current) != null) &&
-      (e.buttons === 1 || e.buttons === 3)
-    ) {
+  function mouseMoveListener(e: MouseEvent): void {
+    if (popupCharStylesEditorRef?.current != null && (e.buttons === 1 || e.buttons === 3)) {
       if (popupCharStylesEditorRef.current.style.pointerEvents !== 'none') {
         const x = e.clientX;
         const y = e.clientY;
@@ -113,8 +107,8 @@ function TextFormatFloatingToolbar({
       }
     }
   }
-  function mouseUpListener(e: MouseEvent) {
-    if ((popupCharStylesEditorRef?.current) != null) {
+  function mouseUpListener(e: MouseEvent): void {
+    if (popupCharStylesEditorRef?.current != null) {
       if (popupCharStylesEditorRef.current.style.pointerEvents !== 'auto') {
         popupCharStylesEditorRef.current.style.pointerEvents = 'auto';
       }
@@ -122,7 +116,7 @@ function TextFormatFloatingToolbar({
   }
 
   useEffect(() => {
-    if ((popupCharStylesEditorRef?.current) != null) {
+    if (popupCharStylesEditorRef?.current != null) {
       document.addEventListener('mousemove', mouseMoveListener);
       document.addEventListener('mouseup', mouseUpListener);
 
@@ -160,7 +154,7 @@ function TextFormatFloatingToolbar({
   useEffect(() => {
     const scrollerElem = anchorElem.parentElement;
 
-    const update = () => {
+    const update = (): void => {
       editor.getEditorState().read(() => {
         updateTextFormatFloatingToolbar();
       });
@@ -196,8 +190,8 @@ function TextFormatFloatingToolbar({
           updateTextFormatFloatingToolbar();
           return false;
         },
-        COMMAND_PRIORITY_LOW,
-      ),
+        COMMAND_PRIORITY_LOW
+      )
     );
   }, [editor, updateTextFormatFloatingToolbar]);
 
@@ -211,7 +205,8 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold');
             }}
             className={`popup-item spaced ${isBold ? 'active' : ''}`}
-            aria-label="Format text as bold">
+            aria-label="Format text as bold"
+          >
             <i className="format bold" />
           </button>
           <button
@@ -220,7 +215,8 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic');
             }}
             className={`popup-item spaced ${isItalic ? 'active' : ''}`}
-            aria-label="Format text as italics">
+            aria-label="Format text as italics"
+          >
             <i className="format italic" />
           </button>
           <button
@@ -229,7 +225,8 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'underline');
             }}
             className={`popup-item spaced ${isUnderline ? 'active' : ''}`}
-            aria-label="Format text to underlined">
+            aria-label="Format text to underlined"
+          >
             <i className="format underline" />
           </button>
           <button
@@ -238,7 +235,8 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'strikethrough');
             }}
             className={`popup-item spaced ${isStrikethrough ? 'active' : ''}`}
-            aria-label="Format text with a strikethrough">
+            aria-label="Format text with a strikethrough"
+          >
             <i className="format strikethrough" />
           </button>
           <button
@@ -248,7 +246,8 @@ function TextFormatFloatingToolbar({
             }}
             className={`popup-item spaced ${isSubscript ? 'active' : ''}`}
             title="Subscript"
-            aria-label="Format Subscript">
+            aria-label="Format Subscript"
+          >
             <i className="format subscript" />
           </button>
           <button
@@ -258,7 +257,8 @@ function TextFormatFloatingToolbar({
             }}
             className={`popup-item spaced ${isSuperscript ? 'active' : ''}`}
             title="Superscript"
-            aria-label="Format Superscript">
+            aria-label="Format Superscript"
+          >
             <i className="format superscript" />
           </button>
           <button
@@ -267,7 +267,8 @@ function TextFormatFloatingToolbar({
               editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'code');
             }}
             className={`popup-item spaced ${isCode ? 'active' : ''}`}
-            aria-label="Insert code block">
+            aria-label="Insert code block"
+          >
             <i className="format code" />
           </button>
           <button
@@ -275,26 +276,24 @@ function TextFormatFloatingToolbar({
             className={'popup-item spaced ' + (isLink ? 'active' : '')}
             aria-label="Insert link"
             title="Insert link"
-            type="button">
+            type="button"
+          >
             <i className="format link" />
           </button>
           {editorConfig.features.map((feature) => {
-            if (
-              (feature.floatingTextFormatToolbar != null) &&
-              (feature.floatingTextFormatToolbar.components != null)
-            ) {
-              return feature.floatingTextFormatToolbar?.components?.map(
-                (floatingToolbarItem) => {
-                  return floatingToolbarItem(editor, editorConfig);
-                },
-              );
+            if (feature?.floatingTextFormatToolbar?.components != null) {
+              return feature.floatingTextFormatToolbar?.components?.map((floatingToolbarItem) => {
+                return floatingToolbarItem(editor, editorConfig);
+              });
             }
+            return null;
           })}
           {editorConfig.toggles.comments.enabled && (
             <button
               onClick={insertComment}
               className={'popup-item spaced insert-comment'}
-              aria-label="Insert comment">
+              aria-label="Insert comment"
+            >
               <i className="format add-comment" />
             </button>
           )}
@@ -307,7 +306,7 @@ function TextFormatFloatingToolbar({
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
-  editorConfig: EditorConfig,
+  editorConfig: EditorConfig
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -362,10 +361,7 @@ function useFloatingTextFormatToolbar(
         setIsLink(false);
       }
 
-      if (
-        !$isCodeHighlightNode(selection.anchor.getNode()) &&
-        selection.getTextContent() !== ''
-      ) {
+      if (!$isCodeHighlightNode(selection.anchor.getNode()) && selection.getTextContent() !== '') {
         setIsText($isTextNode(node));
       } else {
         setIsText(false);
@@ -374,7 +370,6 @@ function useFloatingTextFormatToolbar(
       const rawTextContent = selection.getTextContent().replace(/\n/g, '');
       if (!selection.isCollapsed() && rawTextContent === '') {
         setIsText(false);
-        
       }
     });
   }, [editor]);
@@ -395,7 +390,7 @@ function useFloatingTextFormatToolbar(
         if (editor.getRootElement() === null) {
           setIsText(false);
         }
-      }),
+      })
     );
   }, [editor, updatePopup]);
 
@@ -417,7 +412,7 @@ function useFloatingTextFormatToolbar(
       isCode={isCode}
       editorConfig={editorConfig}
     />,
-    anchorElem,
+    anchorElem
   );
 }
 

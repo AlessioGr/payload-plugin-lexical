@@ -15,13 +15,7 @@ import { COMMAND_PRIORITY_LOW } from 'lexical';
 
 import { INSERT_IMAGE_COMMAND } from '../UploadPlugin';
 
-const ACCEPTABLE_IMAGE_TYPES = [
-  'image/',
-  'image/heic',
-  'image/heif',
-  'image/gif',
-  'image/webp',
-];
+const ACCEPTABLE_IMAGE_TYPES = ['image/', 'image/heic', 'image/heif', 'image/gif', 'image/webp'];
 
 export default function DragDropPaste(): null {
   const [editor] = useLexicalComposerContext();
@@ -29,15 +23,16 @@ export default function DragDropPaste(): null {
     return editor.registerCommand(
       DRAG_DROP_PASTE,
       (files) => {
-        (async () => {
+        void (async () => {
           const filesResult = await mediaFileReader(
             files,
-            [ACCEPTABLE_IMAGE_TYPES].flatMap((x) => x),
+            [ACCEPTABLE_IMAGE_TYPES].flatMap((x) => x)
           );
           for (const { file, result } of filesResult) {
             if (isMimeType(file, ACCEPTABLE_IMAGE_TYPES)) {
               editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                // @ts-expect-error
+                // TODO: eslint typescript - revisit
+                // @ts-expect-error: what?
                 altText: file.name,
                 src: result,
               });
@@ -46,7 +41,7 @@ export default function DragDropPaste(): null {
         })();
         return true;
       },
-      COMMAND_PRIORITY_LOW,
+      COMMAND_PRIORITY_LOW
     );
   }, [editor]);
   return null;

@@ -8,12 +8,7 @@
 import './index.scss';
 
 import * as React from 'react';
-import {
-  type DragEvent as ReactDragEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type DragEvent as ReactDragEvent, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -64,7 +59,7 @@ function getTopLevelNodeKeys(editor: LexicalEditor): string[] {
 function getBlockElement(
   anchorElem: HTMLElement,
   editor: LexicalEditor,
-  event: MouseEvent,
+  event: MouseEvent
 ): HTMLElement | null {
   const anchorElementRect = anchorElem.getBoundingClientRect();
   const topLevelNodeKeys = getTopLevelNodeKeys(editor);
@@ -128,8 +123,8 @@ function isOnMenu(element: HTMLElement): boolean {
 function setMenuPosition(
   targetElem: HTMLElement | null,
   floatingElem: HTMLElement,
-  anchorElem: HTMLElement,
-) {
+  anchorElem: HTMLElement
+): void {
   if (targetElem == null) {
     floatingElem.style.opacity = '0';
     floatingElem.style.transform = 'translate(-10000px, -10000px)';
@@ -152,10 +147,7 @@ function setMenuPosition(
   floatingElem.style.transform = `translate(${left}px, ${top}px)`;
 }
 
-function setDragImage(
-  dataTransfer: DataTransfer,
-  draggableBlockElem: HTMLElement,
-) {
+function setDragImage(dataTransfer: DataTransfer, draggableBlockElem: HTMLElement): void {
   const { transform } = draggableBlockElem.style;
 
   // Remove dragImage borders
@@ -171,13 +163,12 @@ function setTargetLine(
   targetLineElem: HTMLElement,
   targetBlockElem: HTMLElement,
   mouseY: number,
-  anchorElem: HTMLElement,
-) {
+  anchorElem: HTMLElement
+): void {
   const targetStyle = window.getComputedStyle(targetBlockElem);
   const { top: targetBlockElemTop, height: targetBlockElemHeight } =
     targetBlockElem.getBoundingClientRect();
-  const { top: anchorTop, width: anchorWidth } =
-    anchorElem.getBoundingClientRect();
+  const { top: anchorTop, width: anchorWidth } = anchorElem.getBoundingClientRect();
 
   let lineTop = targetBlockElemTop;
   // At the bottom of the target
@@ -191,13 +182,11 @@ function setTargetLine(
   const left = TEXT_BOX_HORIZONTAL_PADDING - SPACE;
 
   targetLineElem.style.transform = `translate(${left}px, ${top}px)`;
-  targetLineElem.style.width = `${
-    anchorWidth - (TEXT_BOX_HORIZONTAL_PADDING - SPACE) * 2
-  }px`;
+  targetLineElem.style.width = `${anchorWidth - (TEXT_BOX_HORIZONTAL_PADDING - SPACE) * 2}px`;
   targetLineElem.style.opacity = '.4';
 }
 
-function hideTargetLine(targetLineElem: HTMLElement | null) {
+function hideTargetLine(targetLineElem: HTMLElement | null): void {
   if (targetLineElem != null) {
     targetLineElem.style.opacity = '0';
     targetLineElem.style.transform = 'translate(-10000px, -10000px)';
@@ -207,18 +196,17 @@ function hideTargetLine(targetLineElem: HTMLElement | null) {
 function useDraggableBlockMenu(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
-  isEditable: boolean,
+  isEditable: boolean
 ): JSX.Element {
   const scrollerElem = anchorElem.parentElement;
 
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
   const isDraggingBlockRef = useRef<boolean>(false);
-  const [draggableBlockElem, setDraggableBlockElem] =
-    useState<HTMLElement | null>(null);
+  const [draggableBlockElem, setDraggableBlockElem] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    function onMouseMove(event: MouseEvent) {
+    function onMouseMove(event: MouseEvent): void {
       const { target } = event;
       if (!isHTMLElement(target)) {
         setDraggableBlockElem(null);
@@ -234,7 +222,7 @@ function useDraggableBlockMenu(
       setDraggableBlockElem(_draggableBlockElem);
     }
 
-    function onMouseLeave() {
+    function onMouseLeave(): void {
       setDraggableBlockElem(null);
     }
 
@@ -286,7 +274,7 @@ function useDraggableBlockMenu(
         return false;
       }
       const { target, dataTransfer, pageY } = event;
-      const dragData = dataTransfer?.getData(DRAG_DATA_FORMAT) || '';
+      const dragData = dataTransfer?.getData(DRAG_DATA_FORMAT) ?? '';
       const draggedNode = $getNodeByKey(dragData);
       if (draggedNode == null) {
         return false;
@@ -323,21 +311,21 @@ function useDraggableBlockMenu(
         (event) => {
           return onDragover(event);
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         DROP_COMMAND,
         (event) => {
           return onDrop(event);
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [anchorElem, editor]);
 
   function onDragStart(event: ReactDragEvent<HTMLDivElement>): void {
     const { dataTransfer } = event;
-    if (!dataTransfer || (draggableBlockElem == null)) {
+    if (dataTransfer == null || draggableBlockElem == null) {
       return;
     }
     setDragImage(dataTransfer, draggableBlockElem);
@@ -364,12 +352,13 @@ function useDraggableBlockMenu(
         ref={menuRef}
         draggable
         onDragStart={onDragStart}
-        onDragEnd={onDragEnd}>
+        onDragEnd={onDragEnd}
+      >
         <div className={isEditable ? 'icon' : ''} />
       </div>
       <div className="draggable-block-target-line" ref={targetLineRef} />
     </React.Fragment>,
-    anchorElem,
+    anchorElem
   );
 }
 
