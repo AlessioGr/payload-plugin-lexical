@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
@@ -14,7 +13,7 @@ import {
 } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
 import { type EditorConfig, type Feature } from '../../../types';
 
-export function YouTubeFeature(props: {}): Feature {
+export function YouTubeFeature(): Feature {
   const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
     contentName: 'Youtube Video',
 
@@ -31,12 +30,9 @@ export function YouTubeFeature(props: {}): Feature {
 
     // Determine if a given URL is a match and return url data.
     parseUrl: async (url: string) => {
-      const match =
-        /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(
-          url,
-        );
+      const match = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/.exec(url);
 
-      const id = (match != null) ? (match?.[2].length === 11 ? match[2] : null) : null;
+      const id = match != null ? (match?.[2].length === 11 ? match[2] : null) : null;
 
       if (id != null) {
         return {
@@ -61,16 +57,13 @@ export function YouTubeFeature(props: {}): Feature {
     embedConfigs: [YoutubeEmbedConfig],
     modals: [
       {
-        modal: (props: {
-          activeEditor: LexicalEditor;
-          editorConfig: EditorConfig;
-        }) => AutoEmbedDrawer({ embedConfig: YoutubeEmbedConfig }),
+        modal: (props: { activeEditor: LexicalEditor; editorConfig: EditorConfig }) =>
+          AutoEmbedDrawer({ embedConfig: YoutubeEmbedConfig }),
         openModalCommand: {
           type: 'autoembed-' + YoutubeEmbedConfig.type,
           command: (toggleModal, editDepth, uuid) => {
             const autoEmbedDrawerSlug = formatDrawerSlug({
-              slug:
-                `lexicalRichText-autoembed-` + YoutubeEmbedConfig.type + uuid,
+              slug: `lexicalRichText-autoembed-` + YoutubeEmbedConfig.type + uuid,
               depth: editDepth,
             });
 

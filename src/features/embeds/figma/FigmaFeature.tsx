@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
@@ -14,7 +13,7 @@ import {
 } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
 import { type EditorConfig, type Feature } from '../../../types';
 
-export function FigmaFeature(props: {}): Feature {
+export function FigmaFeature(): Feature {
   const FigmaEmbedConfig: PlaygroundEmbedConfig = {
     contentName: 'Figma Document',
 
@@ -31,9 +30,7 @@ export function FigmaFeature(props: {}): Feature {
     // Determine if a given URL is a match and return url data.
     parseUrl: (text: string) => {
       const match =
-        /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(
-          text,
-        );
+        /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(text);
 
       if (match != null) {
         return {

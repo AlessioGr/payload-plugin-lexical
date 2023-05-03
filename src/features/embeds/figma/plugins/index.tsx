@@ -10,18 +10,12 @@ import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $insertNodeToNearestRoot } from '@lexical/utils';
-import {
-  COMMAND_PRIORITY_EDITOR,
-  createCommand,
-  type LexicalCommand,
-} from 'lexical';
+import { COMMAND_PRIORITY_EDITOR, createCommand, type LexicalCommand } from 'lexical';
 
 import { $createFigmaNode, FigmaNode } from '../nodes/FigmaNode';
 import './index.scss';
 
-export const INSERT_FIGMA_COMMAND: LexicalCommand<string> = createCommand(
-  'INSERT_FIGMA_COMMAND',
-);
+export const INSERT_FIGMA_COMMAND: LexicalCommand<string> = createCommand('INSERT_FIGMA_COMMAND');
 
 export default function FigmaPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
@@ -38,7 +32,7 @@ export default function FigmaPlugin(): JSX.Element | null {
         $insertNodeToNearestRoot(figmaNode);
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor]);
 

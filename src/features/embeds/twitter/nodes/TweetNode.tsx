@@ -6,7 +6,6 @@
  *
  */
 
-
 import * as React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
@@ -43,11 +42,9 @@ type TweetComponentProps = Readonly<{
   tweetID: string;
 }>;
 
-function convertTweetElement(
-  domNode: HTMLDivElement,
-): DOMConversionOutput | null {
+function convertTweetElement(domNode: HTMLDivElement): DOMConversionOutput | null {
   const id = domNode.getAttribute('data-lexical-tweet-id');
-  if (id) {
+  if (id != null) {
     const node = $createTweetNode(id);
     return { node };
   }
@@ -64,7 +61,7 @@ function TweetComponent({
   onError,
   onLoad,
   tweetID,
-}: TweetComponentProps) {
+}: TweetComponentProps): JSX.Element {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   const previousTweetIDRef = useRef<string>('');
@@ -72,9 +69,7 @@ function TweetComponent({
 
   const createTweet = useCallback(async () => {
     try {
-      if (
-        window.document.documentElement.getAttribute('data-theme') === 'dark'
-      ) {
+      if (window.document.documentElement.getAttribute('data-theme') === 'dark') {
         // @ts-expect-error Twitter is attached to the window.
         await window.twttr.widgets.createTweet(tweetID, containerRef.current, {
           theme: 'dark',
@@ -111,25 +106,19 @@ function TweetComponent({
           script.onerror = onError as OnErrorEventHandler;
         }
       } else {
-        createTweet();
+        void createTweet();
       }
 
-      if (previousTweetIDRef) {
+      if (previousTweetIDRef != null) {
         previousTweetIDRef.current = tweetID;
       }
     }
   }, [createTweet, onError, tweetID]);
 
   return (
-    <BlockWithAlignableContents
-      className={className}
-      format={format}
-      nodeKey={nodeKey}>
+    <BlockWithAlignableContents className={className} format={format} nodeKey={nodeKey}>
       {isTweetLoading ? loadingComponent : null}
-      <div
-        style={{ display: 'inline-block', width: '550px' }}
-        ref={containerRef}
-      />
+      <div style={{ display: 'inline-block', width: '550px' }} ref={containerRef} />
     </BlockWithAlignableContents>
   );
 }
@@ -200,17 +189,19 @@ export class TweetNode extends DecoratorBlockNode {
 
   getTextContent(
     _includeInert?: boolean | undefined,
-    _includeDirectionless?: false | undefined,
+    _includeDirectionless?: false | undefined
   ): string {
     return `https://twitter.com/i/web/status/${this.__id}`;
   }
 
   decorate(editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = (config.theme.embedBlock != null) || {};
-    const className = {
-      base: embedBlockTheme.base || '',
-      focus: embedBlockTheme.focus || '',
-    };
+    let className;
+    if (config.theme.embedBlock != null) {
+      className = {
+        base: config.theme.embedBlock.base ?? '',
+        focus: config.theme.embedBlock.focus ?? '',
+      };
+    }
     return (
       <TweetComponent
         className={className}
@@ -231,8 +222,6 @@ export function $createTweetNode(tweetID: string): TweetNode {
   return new TweetNode(tweetID);
 }
 
-export function $isTweetNode(
-  node: TweetNode | LexicalNode | null | undefined,
-): node is TweetNode {
+export function $isTweetNode(node: TweetNode | LexicalNode | null | undefined): node is TweetNode {
   return node instanceof TweetNode;
 }
