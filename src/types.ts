@@ -1,5 +1,4 @@
 import { type Transformer } from '@lexical/markdown';
-
 import { type LexicalEditor, type LexicalNode, type Klass } from 'lexical';
 
 import { ConvertFromMarkdownFeature, ReadOnlyModeFeature } from './features';
