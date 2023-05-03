@@ -6,17 +6,19 @@
  *
  */
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import {
-  LexicalTypeaheadMenuPlugin,
-  QueryMatch,
-  TypeaheadOption,
-  useBasicTypeaheadTriggerMatch,
-} from '@lexical/react/LexicalTypeaheadMenuPlugin';
-import { TextNode } from 'lexical';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import {
+  LexicalTypeaheadMenuPlugin,
+  type QueryMatch,
+  TypeaheadOption,
+  useBasicTypeaheadTriggerMatch,
+} from '@lexical/react/LexicalTypeaheadMenuPlugin';
+
+import { type TextNode } from 'lexical';
 
 import { $createMentionNode } from '../nodes/MentionNode';
 import './index.scss';
@@ -482,7 +484,7 @@ const dummyMentionsData = [
 ];
 
 const dummyLookupService = {
-  search(string: string, callback: (results: Array<string>) => void): void {
+  search(string: string, callback: (results: string[]) => void): void {
     setTimeout(() => {
       const results = dummyMentionsData.filter((mention) =>
         mention.toLowerCase().includes(string.toLowerCase()),
@@ -493,7 +495,7 @@ const dummyLookupService = {
 };
 
 function useMentionLookupService(mentionString: string | null) {
-  const [results, setResults] = useState<Array<string>>([]);
+  const [results, setResults] = useState<string[]>([]);
 
   useEffect(() => {
     const cachedResults = mentionsCache.get(mentionString);
@@ -650,7 +652,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
     ) => {
       editor.update(() => {
         const mentionNode = $createMentionNode(selectedOption.name);
-        if (nodeToReplace) {
+        if (nodeToReplace != null) {
           nodeToReplace.replace(mentionNode);
         }
         mentionNode.select();
@@ -681,7 +683,7 @@ export default function NewMentionsPlugin(): JSX.Element | null {
         anchorElementRef,
         { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
       ) =>
-        anchorElementRef.current && results.length
+        (anchorElementRef.current != null) && (results.length > 0)
           ? ReactDOM.createPortal(
               <div className="typeahead-popover mentions-menu">
                 <ul>

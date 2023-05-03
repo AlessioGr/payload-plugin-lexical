@@ -6,7 +6,17 @@
  *
  */
 
-import type { RangeSelection, TextFormatType } from 'lexical';
+
+import {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
 
 import {
   $generateJSONFromSelectedNodes,
@@ -18,6 +28,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $addUpdateTag,
   $createParagraphNode,
@@ -32,7 +43,7 @@ import {
   COPY_COMMAND,
   createEditor,
   CUT_COMMAND,
-  EditorThemeClasses,
+  type EditorThemeClasses,
   FORMAT_TEXT_COMMAND,
   KEY_ARROW_DOWN_COMMAND,
   KEY_ARROW_LEFT_COMMAND,
@@ -43,37 +54,29 @@ import {
   KEY_ENTER_COMMAND,
   KEY_ESCAPE_COMMAND,
   KEY_TAB_COMMAND,
-  LexicalEditor,
-  NodeKey,
+  type LexicalEditor,
+  type NodeKey,
   PASTE_COMMAND,
-} from 'lexical';
-import {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
-import { IS_APPLE } from '../shared/environment';
+ type RangeSelection, type TextFormatType } from 'lexical';
 
-import { CellContext } from '../plugins/TablePlugin';
 import {
   $isTableNode,
-  Cell,
+  type Cell,
   cellHTMLCache,
   cellTextContentCache,
   createRow,
   createUID,
   exportTableCellsToHTML,
   extractRowsFromHTML,
-  Rows,
-  TableNode,
+  type Rows,
+  type TableNode,
 } from './TableNode';
+import { CellContext } from '../plugins/TablePlugin';
+import { IS_APPLE } from '../shared/environment';
 
-type SortOptions = { type: 'ascending' | 'descending'; x: number };
+
+
+interface SortOptions { type: 'ascending' | 'descending'; x: number }
 
 const NO_CELLS: [] = [];
 
@@ -192,7 +195,7 @@ function getTableCellWidth(domElement: HTMLElement): number {
 
 function $updateCells(
   rows: Rows,
-  ids: Array<string>,
+  ids: string[],
   cellCoordMap: Map<string, [number, number]>,
   cellEditor: null | LexicalEditor,
   updateTableNode: (fn2: (tableNode: TableNode) => void) => void,
@@ -260,7 +263,7 @@ function getSelectedIDs(
   startID: string,
   endID: string,
   cellCoordMap: Map<string, [number, number]>,
-): Array<string> {
+): string[] {
   const rect = getSelectedRect(startID, endID, cellCoordMap);
   if (rect === null) {
     return [];
@@ -340,7 +343,7 @@ function TableActionMenu({
 }: {
   cell: Cell;
   menuElem: HTMLElement;
-  updateCellsByID: (ids: Array<string>, fn: () => void) => void;
+  updateCellsByID: (ids: string[], fn: () => void) => void;
   onClose: () => void;
   updateTableNode: (fn2: (tableNode: TableNode) => void) => void;
   cellCoordMap: Map<string, [number, number]>;
@@ -371,7 +374,7 @@ function TableActionMenu({
     };
 
     window.addEventListener('click', handleClickOutside);
-    return () => window.removeEventListener('click', handleClickOutside);
+    return () => { window.removeEventListener('click', handleClickOutside); };
   }, [onClose]);
   const coords = cellCoordMap.get(cell.id);
 
@@ -586,7 +589,7 @@ function TableCell({
   isPrimarySelected: boolean;
   theme: EditorThemeClasses;
   cellEditor: LexicalEditor;
-  updateCellsByID: (ids: Array<string>, fn: () => void) => void;
+  updateCellsByID: (ids: string[], fn: () => void) => void;
   updateTableNode: (fn2: (tableNode: TableNode) => void) => void;
   cellCoordMap: Map<string, [number, number]>;
   rows: Rows;
@@ -663,7 +666,7 @@ function TableCell({
             cell={cell}
             menuElem={menuElem}
             updateCellsByID={updateCellsByID}
-            onClose={() => setShowMenu(false)}
+            onClose={() => { setShowMenu(false); }}
             updateTableNode={updateTableNode}
             cellCoordMap={cellCoordMap}
             rows={rows}
@@ -751,12 +754,12 @@ export default function TableComponent({
     const _cellEditor = createEditor({
       namespace: cellEditorConfig.namespace,
       nodes: cellEditorConfig.nodes,
-      onError: (error) => cellEditorConfig.onError(error, _cellEditor),
+      onError: (error) => { cellEditorConfig.onError(error, _cellEditor); },
       theme: cellEditorConfig.theme,
     });
     return _cellEditor;
   }, [cellEditorConfig]);
-  const [selectedCellIDs, setSelectedCellIDs] = useState<Array<string>>([]);
+  const [selectedCellIDs, setSelectedCellIDs] = useState<string[]>([]);
   const selectedCellSet = useMemo<Set<string>>(
     () => new Set(selectedCellIDs),
     [selectedCellIDs],
@@ -1111,7 +1114,7 @@ export default function TableComponent({
   ]);
 
   const updateCellsByID = useCallback(
-    (ids: Array<string>, fn: () => void) => {
+    (ids: string[], fn: () => void) => {
       $updateCells(rows, ids, cellCoordMap, cellEditor, updateTableNode, fn);
     },
     [cellCoordMap, cellEditor, rows, updateTableNode],
@@ -1197,7 +1200,7 @@ export default function TableComponent({
 
     const pasteContent = async (event: ClipboardEvent) => {
       let clipboardData: null | DataTransfer | ClipboardItem =
-        (event instanceof InputEvent ? null : event.clipboardData) || null;
+        ((event instanceof InputEvent ? null : event.clipboardData) != null) || null;
 
       if (primarySelectedCellID !== null && cellEditor !== null) {
         event.preventDefault();

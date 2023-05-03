@@ -8,8 +8,9 @@
 
 import './ContentEditable.scss';
 
-import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import * as React from 'react';
+
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 
 export default function LexicalContentEditable({
   className,

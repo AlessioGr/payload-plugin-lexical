@@ -17,7 +17,7 @@ export function setFloatingElemPosition(
 ): void {
   const scrollerElem = anchorElem.parentElement;
 
-  if (targetRect === null || !scrollerElem) {
+  if (targetRect === null || (scrollerElem == null)) {
     floatingElem.style.opacity = '0';
     floatingElem.style.transform = 'translate(-10000px, -10000px)';
     return;

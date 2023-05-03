@@ -1,14 +1,18 @@
-import { EditorState, LexicalEditor } from 'lexical';
-import { RichTextField } from 'payload/types';
+import { type RichTextField } from 'payload/types';
+
+import { type EditorState, type LexicalEditor } from 'lexical';
+
+import { type Comments, type CommentStore } from './commenting';
+
 import type { EditorConfig } from '../../types';
-import { Comments, CommentStore } from './commenting';
+
 
 export type Props = Omit<RichTextField, 'type'> & {
   editorConfig: EditorConfig;
   path?: string;
 };
 
-export type OnChangeProps = {
+export interface OnChangeProps {
   onChange: (
     editorState: EditorState,
     editor: LexicalEditor,
@@ -20,4 +24,4 @@ export type OnChangeProps = {
   initialComments: Comments;
   value: any;
   setValue: (value: any) => void;
-};
+}

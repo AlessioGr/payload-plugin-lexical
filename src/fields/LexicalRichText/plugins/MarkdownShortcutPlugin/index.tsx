@@ -6,10 +6,11 @@
  *
  */
 
-import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import * as React from 'react';
-import { EditorConfig } from '../../../../types';
 
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+
+import { type EditorConfig } from '../../../../types';
 import { PLAYGROUND_TRANSFORMERS } from '../MarkdownTransformers';
 
 export default function MarkdownPlugin({

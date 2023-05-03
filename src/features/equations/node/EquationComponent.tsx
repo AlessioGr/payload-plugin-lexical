@@ -6,30 +6,32 @@
  *
  */
 
+import * as React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $getNodeByKey,
   $getSelection,
   $isNodeSelection,
   COMMAND_PRIORITY_HIGH,
   KEY_ESCAPE_COMMAND,
-  NodeKey,
+  type NodeKey,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import * as React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
 
+import { $isEquationNode } from './EquationNode';
 import EquationEditor from '../ui/EquationEditor';
 import KatexRenderer from '../ui/KatexRenderer';
-import { $isEquationNode } from './EquationNode';
 
-type EquationComponentProps = {
+interface EquationComponentProps {
   equation: string;
   inline: boolean;
   nodeKey: NodeKey;
-};
+}
 
 export default function EquationComponent({
   equation,
@@ -118,11 +120,11 @@ export default function EquationComponent({
           ref={inputRef}
         />
       ) : (
-        <ErrorBoundary onError={(e) => editor._onError(e)} fallback={null}>
+        <ErrorBoundary onError={(e) => { editor._onError(e); }} fallback={null}>
           <KatexRenderer
             equation={equationValue}
             inline={inline}
-            onDoubleClick={() => setShowEquationEditor(true)}
+            onDoubleClick={() => { setShowEquationEditor(true); }}
           />
         </ErrorBoundary>
       )}

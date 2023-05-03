@@ -1,8 +1,10 @@
-import { EditorConfig, Feature } from '../../../types';
 
 import * as React from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
 import { exportFile } from '@lexical/file';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { EditorConfig, type Feature } from '../../../types';
 
 function ExportAction(): JSX.Element {
   const [editor] = useLexicalComposerContext();

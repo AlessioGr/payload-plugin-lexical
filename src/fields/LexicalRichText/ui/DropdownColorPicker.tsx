@@ -11,7 +11,7 @@ import * as React from 'react';
 import ColorPicker from './ColorPicker';
 import DropDown from './DropDown';
 
-type Props = {
+interface Props {
   disabled?: boolean;
   buttonAriaLabel?: string;
   buttonClassName: string;
@@ -21,7 +21,7 @@ type Props = {
   stopCloseOnClickSelf?: boolean;
   color: string;
   onChange?: (color: string) => void;
-};
+}
 
 export default function DropdownColorPicker({
   disabled = false,

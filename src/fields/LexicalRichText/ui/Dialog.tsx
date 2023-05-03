@@ -9,7 +9,7 @@
 import './Dialog.scss';
 
 import * as React from 'react';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 type Props = Readonly<{
   'data-test-id'?: string;

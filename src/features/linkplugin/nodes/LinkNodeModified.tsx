@@ -7,18 +7,20 @@
  *
  */
 
+import { addClassNamesToElement, isHTMLAnchorElement } from '@lexical/utils';
+
 import {
   $createTextNode,
-  DOMConversionMap,
-  DOMConversionOutput,
-  EditorConfig,
-  GridSelection,
-  LexicalCommand,
-  LexicalNode,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-  SerializedElementNode,
+  type DOMConversionMap,
+  type DOMConversionOutput,
+  type EditorConfig,
+  type GridSelection,
+  type LexicalCommand,
+  type LexicalNode,
+  type NodeKey,
+  type NodeSelection,
+  type RangeSelection,
+  type SerializedElementNode,
 
   $applyNodeReplacement,
   $getSelection,
@@ -26,13 +28,12 @@ import {
   $isRangeSelection,
   createCommand,
   ElementNode,
-  Spread,
+  type Spread,
 } from 'lexical';
 
-import { addClassNamesToElement, isHTMLAnchorElement } from '@lexical/utils';
-import { SerializedAutoLinkNode } from './AutoLinkNodeModified';
+import { type SerializedAutoLinkNode } from './AutoLinkNodeModified';
 
-export type LinkAttributes = {
+export interface LinkAttributes {
   url?: string;
   rel?: null | string;
   newTab?: boolean;
@@ -44,7 +45,7 @@ export type LinkAttributes = {
     data?: any; // Will be populated in afterRead hook
   } | null;
   linkType?: 'custom' | 'internal';
-};
+}
 
 export type SerializedLinkNode = Spread<
   {

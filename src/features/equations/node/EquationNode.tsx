@@ -6,24 +6,25 @@
  *
  */
 
-import type {
-  DOMConversionMap,
-  DOMConversionOutput,
-  EditorConfig,
-  LexicalNode,
-  NodeKey,
-  SerializedLexicalNode,
-  Spread,
-} from 'lexical';
 
-import katex from 'katex';
-import { $applyNodeReplacement, DecoratorNode, DOMExportOutput } from 'lexical';
 import * as React from 'react';
 import { Suspense } from 'react';
 
+import katex from 'katex';
+import { $applyNodeReplacement, DecoratorNode, type DOMExportOutput ,
+  type DOMConversionMap,
+  type DOMConversionOutput,
+  type EditorConfig,
+  type LexicalNode,
+  type NodeKey,
+  type SerializedLexicalNode,
+  type Spread,
+} from 'lexical';
+
+
 const EquationComponent = React.lazy(
-  // @ts-ignore
-  () => import('./EquationComponent'),
+  // @ts-expect-error
+  async () => await import('./EquationComponent'),
 );
 
 export type SerializedEquationNode = Spread<

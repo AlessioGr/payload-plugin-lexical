@@ -5,15 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import * as React from 'react';
+import { useState } from 'react';
+
 import { $isCodeNode } from '@lexical/code';
+
 import {
   $getNearestNodeFromDOMNode,
   $getSelection,
   $setSelection,
-  LexicalEditor,
+  type LexicalEditor,
 } from 'lexical';
-import * as React from 'react';
-import { useState } from 'react';
 
 import { useDebounce } from '../../utils';
 
@@ -32,7 +34,7 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
   async function handleClick(): Promise<void> {
     const codeDOMNode = getCodeDOMNode();
 
-    if (!codeDOMNode) {
+    if (codeDOMNode == null) {
       return;
     }
 
@@ -61,9 +63,9 @@ export function CopyButton({ editor, getCodeDOMNode }: Props) {
   return (
     <button
       className="menu-item"
-      onClick={(event) => {
+      onClick={async (event) => {
         event.preventDefault();
-        return handleClick();
+        await handleClick();
       }}
       aria-label="copy"
       title="Copy">

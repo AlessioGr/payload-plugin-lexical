@@ -5,9 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { isPoint, Point } from './point';
+import { isPoint, type Point } from './point';
 
-type ContainsPointReturn = {
+interface ContainsPointReturn {
   result: boolean;
   reason: {
     isOnTopSide: boolean;
@@ -15,7 +15,7 @@ type ContainsPointReturn = {
     isOnLeftSide: boolean;
     isOnRightSide: boolean;
   };
-};
+}
 
 export class Rect {
   private readonly _left: number;

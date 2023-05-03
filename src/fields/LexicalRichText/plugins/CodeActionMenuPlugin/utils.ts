@@ -5,8 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { debounce } from 'lodash';
 import { useMemo, useRef } from 'react';
+
+import { debounce } from 'lodash';
 
 export function useDebounce<T extends(...args: never[]) => void>(
   fn: T,
@@ -18,7 +19,7 @@ export function useDebounce<T extends(...args: never[]) => void>(
   return useMemo(
     () => debounce(
       (...args: Parameters<T>) => {
-        if (funcRef.current) {
+        if (funcRef.current != null) {
           funcRef.current(...args);
         }
       },

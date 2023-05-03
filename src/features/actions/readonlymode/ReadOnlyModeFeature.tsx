@@ -1,10 +1,13 @@
-import { EditorConfig, Feature } from '../../../types';
 
 import * as React from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useState } from 'react';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import { LexicalEditor } from 'lexical';
+
+import { type LexicalEditor } from 'lexical';
+
+import { EditorConfig, type Feature } from '../../../types';
 
 async function sendEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());

@@ -1,12 +1,14 @@
-import { EditorConfig, Feature } from '../../types';
 import * as React from 'react';
-import CollapsiblePlugin, { INSERT_COLLAPSIBLE_COMMAND } from './plugins';
+
+import { type LexicalEditor } from 'lexical';
+
 import { CollapsibleContainerNode } from './nodes/CollapsibleContainerNode';
 import { CollapsibleContentNode } from './nodes/CollapsibleContentNode';
 import { CollapsibleTitleNode } from './nodes/CollapsibleTitleNode';
-import { LexicalEditor } from 'lexical';
+import CollapsiblePlugin, { INSERT_COLLAPSIBLE_COMMAND } from './plugins';
 import { ComponentPickerOption } from '../../fields/LexicalRichText/plugins/ComponentPickerPlugin';
 import { DropDownItem } from '../../fields/LexicalRichText/ui/DropDown';
+import { type EditorConfig, type Feature } from '../../types';
 
 export function CollapsibleFeature(props: {}): Feature {
   const componentPickerOption = (

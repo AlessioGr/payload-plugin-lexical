@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { TextMatchTransformer } from '@lexical/markdown';
+
+import { type TextMatchTransformer } from '@lexical/markdown';
+
 import { $createTextNode } from 'lexical';
+
 import EmojiPickerPlugin from './plugins';
-import { Feature } from '../../types';
 import emojiList from './plugins/emoji-list';
+import { type Feature } from '../../types';
 
 export function EmojiPickerFeature(props: {}): Feature {
   const emojiMarkdownTextMatchTransformer: TextMatchTransformer = {

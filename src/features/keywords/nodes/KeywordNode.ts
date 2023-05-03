@@ -6,6 +6,8 @@
  *
  */
 
+import { TextNode } from 'lexical';
+
 import type {
   EditorConfig,
   LexicalNode,
@@ -13,7 +15,6 @@ import type {
   Spread,
 } from 'lexical';
 
-import { TextNode } from 'lexical';
 
 export type SerializedKeywordNode = SerializedTextNode;
 

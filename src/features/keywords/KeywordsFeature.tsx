@@ -1,7 +1,8 @@
-import { Feature } from '../../types';
 import * as React from 'react';
+
 import { KeywordNode } from './nodes/KeywordNode';
 import KeywordsPlugin from './plugins';
+import { type Feature } from '../../types';
 
 export function KeywordsFeature(props: {}): Feature {
   return {

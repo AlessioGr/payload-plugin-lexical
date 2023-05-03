@@ -9,7 +9,7 @@
 import * as React from 'react';
 import {
   createContext,
-  ReactNode,
+  type ReactNode,
   useContext,
   useEffect,
   useMemo,
@@ -37,7 +37,7 @@ export const SharedAutocompleteContext = ({
 }): JSX.Element => {
   const context: ContextShape = useMemo(() => {
     let suggestion: Suggestion | null = null;
-    const listeners: Set<CallbackFn> = new Set();
+    const listeners = new Set<CallbackFn>();
     return [
       (cb: (newSuggestion: Suggestion) => void) => {
         cb(suggestion);

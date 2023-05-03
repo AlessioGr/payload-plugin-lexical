@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Feature } from '../../../types';
+
 import TypingPerfPlugin from './plugins';
+import { type Feature } from '../../../types';
 
 export function TypingPerfFeature(props: { enabled: boolean }): Feature {
   const { enabled = false } = props;

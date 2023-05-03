@@ -6,7 +6,12 @@
  *
  */
 
-import type { LexicalEditor, NodeKey } from 'lexical';
+
+import { useCallback, useEffect, useState } from 'react';
+import * as React from 'react';
+
+import { useEditDepth } from 'payload/components/utilities';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
 import {
   $createCodeNode,
@@ -31,7 +36,7 @@ import {
   $createQuoteNode,
   $isHeadingNode,
   $isQuoteNode,
-  HeadingTagType,
+  type HeadingTagType,
 } from '@lexical/rich-text';
 import {
   $getSelectionStyleValueForProperty,
@@ -46,6 +51,8 @@ import {
   $getNearestNodeOfType,
   mergeRegister,
 } from '@lexical/utils';
+
+import { useModal } from '@faceless-ui/modal';
 import {
   $createParagraphNode,
   $getNodeByKey,
@@ -66,26 +73,24 @@ import {
   SELECTION_CHANGE_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useState } from 'react';
-import * as React from 'react';
 
-import { IS_APPLE } from '../../shared/environment';
-
-import DropdownColorPicker from '../../ui/DropdownColorPicker';
-import DropDown, { DropDownItem } from '../../ui/DropDown';
-import { getSelectedNode } from '../../utils/getSelectedNode';
-import { getEmbedConfigs } from '../AutoEmbedPlugin';
-import { EditorConfig } from '../../../../types';
-import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 import {
   $isLinkNode,
-  LinkAttributes,
+  type LinkAttributes,
   TOGGLE_LINK_COMMAND,
 } from '../../../../features/linkplugin/nodes/LinkNodeModified';
+import { type EditorConfig } from '../../../../types';
 import { useEditorConfigContext } from '../../LexicalEditorComponent';
-import { useModal } from '@faceless-ui/modal';
-import { useEditDepth } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { IS_APPLE } from '../../shared/environment';
+import DropDown, { DropDownItem } from '../../ui/DropDown';
+import DropdownColorPicker from '../../ui/DropdownColorPicker';
+import { getSelectedNode } from '../../utils/getSelectedNode';
+import { getEmbedConfigs } from '../AutoEmbedPlugin';
+import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
+
+
+
+import type { LexicalEditor, NodeKey } from 'lexical';
 
 const blockTypeToBlockName = {
   bullet: 'Bulleted List',
@@ -107,8 +112,8 @@ const rootTypeToRootName = {
   table: 'Table',
 };
 
-function getCodeLanguageOptions(): [string, string][] {
-  const options: [string, string][] = [];
+function getCodeLanguageOptions(): Array<[string, string]> {
+  const options: Array<[string, string]> = [];
 
   for (const [lang, friendlyName] of Object.entries(
     CODE_LANGUAGE_FRIENDLY_NAME_MAP,
@@ -121,7 +126,7 @@ function getCodeLanguageOptions(): [string, string][] {
 
 const CODE_LANGUAGE_OPTIONS = getCodeLanguageOptions();
 
-const FONT_FAMILY_OPTIONS: [string, string][] = [
+const FONT_FAMILY_OPTIONS: Array<[string, string]> = [
   ['Arial', 'Arial'],
   ['Courier New', 'Courier New'],
   ['Georgia', 'Georgia'],
@@ -130,7 +135,7 @@ const FONT_FAMILY_OPTIONS: [string, string][] = [
   ['Verdana', 'Verdana'],
 ];
 
-const FONT_SIZE_OPTIONS: [string, string][] = [
+const FONT_SIZE_OPTIONS: Array<[string, string]> = [
   ['10px', '10px'],
   ['11px', '11px'],
   ['12px', '12px'],
@@ -267,19 +272,19 @@ function BlockFormatDropDown({
       </DropDownItem>
       <DropDownItem
         className={`item ${dropDownActiveClass(blockType === 'h1')}`}
-        onClick={() => formatHeading('h1')}>
+        onClick={() => { formatHeading('h1'); }}>
         <i className="icon h1" />
         <span className="text">Heading 1</span>
       </DropDownItem>
       <DropDownItem
         className={`item ${dropDownActiveClass(blockType === 'h2')}`}
-        onClick={() => formatHeading('h2')}>
+        onClick={() => { formatHeading('h2'); }}>
         <i className="icon h2" />
         <span className="text">Heading 2</span>
       </DropDownItem>
       <DropDownItem
         className={`item ${dropDownActiveClass(blockType === 'h3')}`}
-        onClick={() => formatHeading('h3')}>
+        onClick={() => { formatHeading('h3'); }}>
         <i className="icon h3" />
         <span className="text">Heading 3</span>
       </DropDownItem>
@@ -368,7 +373,7 @@ function FontDropDown({
           className={`item ${dropDownActiveClass(value === option)} ${
             styleText === 'font-size' ? 'fontsize-item' : ''
           }`}
-          onClick={() => handleClick(option)}
+          onClick={() => { handleClick(option); }}
           key={option}>
           <span className="text">{text}</span>
         </DropDownItem>
@@ -482,7 +487,7 @@ export default function ToolbarPlugin(props: {
             anchorNode,
             ListNode,
           );
-          const type = parentList
+          const type = (parentList != null)
             ? parentList.getListType()
             : element.getListType();
           setBlockType(type);
@@ -695,7 +700,7 @@ export default function ToolbarPlugin(props: {
                 className={`item ${dropDownActiveClass(
                   value === codeLanguage,
                 )}`}
-                onClick={() => onCodeLanguageSelect(value)}
+                onClick={() => { onCodeLanguageSelect(value); }}
                 key={value}>
                 <span className="text">{name}</span>
               </DropDownItem>
@@ -780,7 +785,7 @@ export default function ToolbarPlugin(props: {
           </button>
 
           {editorConfig.features.map((feature) => {
-            if (feature.toolbar && feature.toolbar.normal) {
+            if ((feature.toolbar != null) && (feature.toolbar.normal != null)) {
               return feature.toolbar?.normal?.map((normalToolbarItem) => {
                 return normalToolbarItem(editor, editorConfig, isEditable);
               });
@@ -925,7 +930,7 @@ export default function ToolbarPlugin(props: {
                     <i className="icon table" />
                     <span className="text">Table</span>
                   </DropDownItem>
-                ) //TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
+                ) // TODO: Replace this with experimental table once not experimental anymore. Might be worth the wait as it's better, and its data structure is different */
             }
             {editorConfig.toggles.tables.enabled &&
               editorConfig.toggles.tables.display && (
@@ -955,7 +960,7 @@ export default function ToolbarPlugin(props: {
             ))}
 
             {editorConfig.features.map((feature) => {
-              if (feature.toolbar && feature.toolbar.insert) {
+              if ((feature.toolbar != null) && (feature.toolbar.insert != null)) {
                 return feature.toolbar?.insert?.map((insertToolbarItem) => {
                   return insertToolbarItem(editor, editorConfig);
                 });

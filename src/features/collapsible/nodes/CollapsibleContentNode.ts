@@ -7,13 +7,13 @@
  */
 
 import {
-  DOMConversionMap,
-  DOMConversionOutput,
-  DOMExportOutput,
-  EditorConfig,
+  type DOMConversionMap,
+  type DOMConversionOutput,
+  type DOMExportOutput,
+  type EditorConfig,
   ElementNode,
-  LexicalNode,
-  SerializedElementNode,
+  type LexicalNode,
+  type SerializedElementNode,
   Spread,
 } from 'lexical';
 

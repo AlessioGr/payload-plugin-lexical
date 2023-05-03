@@ -1,27 +1,33 @@
-import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription';
-import Label from 'payload/dist/admin/components/forms/Label';
-import Error from 'payload/dist/admin/components/forms/Error';
-import { Comments, CommentStore } from './commenting';
-const baseClass = 'lexicalRichTextEditor';
-import { $generateHtmlFromNodes } from '@lexical/html';
+import React, { useCallback } from 'react';
 
 import { useField, withCondition } from 'payload/components/forms';
-import { LexicalEditorComponent } from './LexicalEditorComponent';
-import React, { useCallback } from 'react';
+import Error from 'payload/dist/admin/components/forms/Error';
+import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription';
+import Label from 'payload/dist/admin/components/forms/Label';
+import { type Validate } from 'payload/types';
+
+import { $generateHtmlFromNodes } from '@lexical/html';
+import { $convertToMarkdownString } from '@lexical/markdown';
 
 import {
   $getRoot,
-  EditorState,
-  LexicalEditor,
-  SerializedEditorState,
+  type EditorState,
+  type LexicalEditor,
+  type SerializedEditorState,
 } from 'lexical';
-import { Props } from './types';
-import { Validate } from 'payload/types';
+
+import { type Comments, type CommentStore } from './commenting';
+import { LexicalEditorComponent } from './LexicalEditorComponent';
 import defaultValue from './settings/defaultValue';
+import { type Props } from './types';
 import { deepEqual } from '../../tools/deepEqual';
+
 import './payload.scss';
-import { $convertToMarkdownString } from '@lexical/markdown';
+
 import { ErrorBoundary } from 'react-error-boundary';
+
+
+const baseClass = 'lexicalRichTextEditor';
 
 function fallbackRender({ error, resetErrorBoundary }) {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
@@ -58,8 +64,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   const path = pathFromProps || name;
 
   const memoizedValidate = useCallback(
-    (value, validationOptions) => {
-      return lexicalValidate(value, { ...validationOptions, required }); //TODO use "validate" here so people can customize their validate. Sadly that breaks for some reason (it uses no validate rather than lexical as default one if that's done)
+    async (value, validationOptions) => {
+      return await lexicalValidate(value, { ...validationOptions, required }); // TODO use "validate" here so people can customize their validate. Sadly that breaks for some reason (it uses no validate rather than lexical as default one if that's done)
     },
     [validate, required],
   );
@@ -73,7 +79,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     html?: string;
     markdown?: string;
   }>({
-    path: path, // required
+    path, // required
     validate: memoizedValidate,
     condition,
   });
@@ -162,12 +168,12 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
 
                 setValue({
                   jsonContent: json,
-                  preview: preview,
+                  preview,
                   characters: textContent?.length,
                   words: textContent?.split(' ').length,
                   comments: commentStore.getComments(),
-                  html: html,
-                  markdown: markdown,
+                  html,
+                  markdown,
                 });
               }
             }}

@@ -9,15 +9,15 @@
 import {
   $createParagraphNode,
   $isElementNode,
-  DOMConversionMap,
-  DOMConversionOutput,
-  DOMExportOutput,
-  EditorConfig,
+  type DOMConversionMap,
+  type DOMConversionOutput,
+  type DOMExportOutput,
+  type EditorConfig,
   ElementNode,
-  LexicalEditor,
-  LexicalNode,
-  RangeSelection,
-  SerializedElementNode,
+  type LexicalEditor,
+  type LexicalNode,
+  type RangeSelection,
+  type SerializedElementNode,
   Spread,
 } from 'lexical';
 

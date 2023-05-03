@@ -6,9 +6,11 @@
  *
  */
 
-import type { LexicalCommand, LexicalEditor, RangeSelection } from 'lexical';
+
+import { useEffect, useRef, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
 import {
   $getSelection,
   $isRangeSelection,
@@ -17,9 +19,10 @@ import {
   REDO_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-import { useEffect, useRef, useState } from 'react';
 
 import useReport from '../../../../fields/LexicalRichText/hooks/useReport';
+
+import type { LexicalCommand, LexicalEditor, RangeSelection } from 'lexical';
 
 export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> = createCommand(
   'SPEECH_TO_TEXT_COMMAND',
@@ -50,7 +53,7 @@ function SpeechToTextPlugin(): null {
   const [editor] = useLexicalComposerContext();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const SpeechRecognition =
-    // @ts-ignore
+    // @ts-expect-error
     window.SpeechRecognition || window.webkitSpeechRecognition;
   const recognition = useRef<typeof SpeechRecognition | null>(null);
   const report = useReport();

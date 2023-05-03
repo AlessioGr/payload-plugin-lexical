@@ -1,15 +1,19 @@
-import { EditorConfig, Feature } from '../../../types';
 
 import * as React from 'react';
-import FigmaPlugin, { INSERT_FIGMA_COMMAND } from './plugins';
+
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+
+import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
+
+import { type LexicalEditor } from 'lexical';
+
 import { FigmaNode } from './nodes/FigmaNode';
+import FigmaPlugin, { INSERT_FIGMA_COMMAND } from './plugins';
 import {
   AutoEmbedDrawer,
-  PlaygroundEmbedConfig,
+  type PlaygroundEmbedConfig,
 } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
-import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-import { LexicalEditor } from 'lexical';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { type EditorConfig, type Feature } from '../../../types';
 
 export function FigmaFeature(props: {}): Feature {
   const FigmaEmbedConfig: PlaygroundEmbedConfig = {

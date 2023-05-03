@@ -1,10 +1,11 @@
 import React, { Suspense, lazy } from 'react';
 
-import { Props } from './types';
 import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEffect';
 
+import { type Props } from './types';
+
 const LexicalRichTextFieldComponent2 = lazy(
-  () => import('./PayloadLexicalRichTextFieldComponent'),
+  async () => await import('./PayloadLexicalRichTextFieldComponent'),
 );
 
 export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {

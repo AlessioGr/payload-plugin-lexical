@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { createContext, ReactNode, useContext } from 'react';
+import { createContext, type ReactNode, useContext } from 'react';
 
 import type {
   EditorState,
@@ -17,6 +17,17 @@ import type {
 
 import './index.scss';
 import './modal.scss';
+
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
+
+
+import Button from 'payload/dist/admin/components/elements/Button';
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
+import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+import X from 'payload/dist/admin/components/icons/X';
+import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
 
 import {
   $createMarkNode,
@@ -36,6 +47,8 @@ import { PlainTextPlugin } from '@lexical/react/LexicalPlainTextPlugin';
 import { createDOMRange, createRectsFromDOMRange } from '@lexical/selection';
 import { $isRootTextContentEmpty, $rootTextContent } from '@lexical/text';
 import { mergeRegister, registerNestedElementResolver } from '@lexical/utils';
+
+import { useModal } from '@faceless-ui/modal';
 import {
   $getNodeByKey,
   $getSelection,
@@ -46,29 +59,20 @@ import {
   createCommand,
   KEY_ESCAPE_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
-import useLayoutEffect from '../../shared/useLayoutEffect';
 
 import {
-  Comment,
-  Comments,
+  type Comment,
+  type Comments,
   CommentStore,
   createComment,
   createThread,
-  Thread,
+  type Thread,
   useCommentStore,
 } from '../../commenting';
+import useLayoutEffect from '../../shared/useLayoutEffect';
 import CommentEditorTheme from '../../themes/CommentEditorTheme';
-import Button from 'payload/dist/admin/components/elements/Button';
 import ContentEditable from '../../ui/ContentEditable';
 import Placeholder from '../../ui/Placeholder';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
-import { useModal } from '@faceless-ui/modal';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
-import X from 'payload/dist/admin/components/icons/X';
 
 export const INSERT_INLINE_COMMAND: LexicalCommand<void> = createCommand(
   'INSERT_INLINE_COMMAND',
@@ -270,7 +274,7 @@ function CommentInputBox({
           boxElem.style.top = `${bottom + 20}px`;
           const selectionRectsLength = selectionRects.length;
           const { container } = selectionState;
-          const elements: Array<HTMLSpanElement> = selectionState.elements;
+          const elements: HTMLSpanElement[] = selectionState.elements;
           const elementsLength = elements.length;
 
           for (let i = 0; i < selectionRectsLength; i++) {
@@ -325,7 +329,7 @@ function CommentInputBox({
     if (canSubmit) {
       let quote = editor.getEditorState().read(() => {
         const selection = selectionRef.current;
-        return selection ? selection.getTextContent() : '';
+        return (selection != null) ? selection.getTextContent() : '';
       });
       if (quote.length > 100) {
         quote = quote.slice(0, 99) + '…';
@@ -529,7 +533,7 @@ function CommentsPanelList({
   submitAddComment,
   markNodeMap,
 }: {
-  activeIDs: Array<string>;
+  activeIDs: string[];
   comments: Comments;
   deleteCommentOrThread: (
     commentOrThread: Comment | Thread,
@@ -578,7 +582,7 @@ function CommentsPanelList({
             const markNodeKeys = markNodeMap.get(id);
             if (
               markNodeKeys !== undefined &&
-              (activeIDs === null || activeIDs.indexOf(id) === -1)
+              (activeIDs === null || !activeIDs.includes(id))
             ) {
               const activeElement = document.activeElement;
               // Move selection to the start of the mark, so that we
@@ -610,13 +614,13 @@ function CommentsPanelList({
               onClick={handleClickThread}
               className={`CommentPlugin_CommentsPanel_List_Thread ${
                 markNodeMap.has(id) ? 'interactive' : ''
-              } ${activeIDs.indexOf(id) === -1 ? '' : 'active'}`}>
+              } ${!activeIDs.includes(id) ? '' : 'active'}`}>
               <div className="CommentPlugin_CommentsPanel_List_Thread_QuoteBox">
                 <blockquote className="CommentPlugin_CommentsPanel_List_Thread_Quote">
                   {'> '}
                   <span>{commentOrThread.quote}</span>
                 </blockquote>
-                {/* INTRODUCE DELETE THREAD HERE*/}
+                {/* INTRODUCE DELETE THREAD HERE */}
                 <Button
                   onClick={() => {
                     openModal('lexicalRichText-thread-delete');
@@ -673,7 +677,7 @@ function CommentsPanel({
   submitAddComment,
   markNodeMap,
 }: {
-  activeIDs: Array<string>;
+  activeIDs: string[];
   comments: Comments;
   deleteCommentOrThread: (
     commentOrThread: Comment | Thread,
@@ -710,11 +714,11 @@ function CommentsPanel({
 
 function useCollabAuthorName(): string {
   const { user } = useAuth();
-  return user?.email ? user.email : 'Payload User'; //TODO Ability to set a display name instead of email
+  return user?.email ? user.email : 'Payload User'; // TODO Ability to set a display name instead of email
 }
 
 export default function CommentPlugin({}: {}): JSX.Element {
-  //const collabContext = useCollaborationContext();
+  // const collabContext = useCollaborationContext();
   const [editor] = useLexicalComposerContext();
   const { commentStore } = useCommentsContext();
   const comments = useCommentStore(commentStore);
@@ -722,18 +726,18 @@ export default function CommentPlugin({}: {}): JSX.Element {
     return new Map();
   }, []);
   const [activeAnchorKey, setActiveAnchorKey] = useState<NodeKey | null>();
-  const [activeIDs, setActiveIDs] = useState<Array<string>>([]);
+  const [activeIDs, setActiveIDs] = useState<string[]>([]);
   const [showCommentInput, setShowCommentInput] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  //const { yjsDocMap } = collabContext;
+  // const { yjsDocMap } = collabContext;
 
   useEffect(() => {
-    /*if (providerFactory) {
+    /* if (providerFactory) {
       const provider = providerFactory("comments", yjsDocMap);
       return commentStore.registerCollaboration(provider);
-    }*/
-    //TODO ??
-  }, [commentStore /*, yjsDocMap*/]);
+    } */
+    // TODO ??
+  }, [commentStore /*, yjsDocMap */]);
 
   const cancelAddComment = useCallback(() => {
     editor.update(() => {
@@ -753,7 +757,7 @@ export default function CommentPlugin({}: {}): JSX.Element {
           comment,
           thread,
         );
-        if (!deletionInfo) return;
+        if (deletionInfo == null) return;
         const { markedComment, index } = deletionInfo;
         commentStore.addComment(markedComment, thread, index);
       } else {
@@ -807,7 +811,7 @@ export default function CommentPlugin({}: {}): JSX.Element {
   );
 
   useEffect(() => {
-    const changedElems: Array<HTMLElement> = [];
+    const changedElems: HTMLElement[] = [];
     for (let i = 0; i < activeIDs.length; i++) {
       const id = activeIDs[i];
       const keys = markNodeMap.get(id);
@@ -831,7 +835,7 @@ export default function CommentPlugin({}: {}): JSX.Element {
   }, [activeIDs, editor, markNodeMap]);
 
   useEffect(() => {
-    const markNodeKeysToIDs: Map<NodeKey, Array<string>> = new Map();
+    const markNodeKeysToIDs = new Map<NodeKey, string[]>();
 
     return mergeRegister(
       registerNestedElementResolver<MarkNode>(
@@ -855,7 +859,7 @@ export default function CommentPlugin({}: {}): JSX.Element {
             let ids: NodeKey[] = [];
 
             if (mutation === 'destroyed') {
-              ids = markNodeKeysToIDs.get(key) || [];
+              ids = (markNodeKeysToIDs.get(key) != null) || [];
             } else if ($isMarkNode(node)) {
               ids = node.getIDs();
             }
@@ -968,7 +972,7 @@ export default function CommentPlugin({}: {}): JSX.Element {
           className={`CommentPlugin_ShowCommentsButton ${
             showComments ? 'active' : ''
           }`}
-          onClick={() => setShowComments(!showComments)}
+          onClick={() => { setShowComments(!showComments); }}
           tooltip={showComments ? 'Hide Comments' : 'Show Comments'}>
           <i className="comments" />
         </Button>
@@ -988,9 +992,9 @@ export default function CommentPlugin({}: {}): JSX.Element {
   );
 }
 
-type ContextShape = {
+interface ContextShape {
   commentStore?: CommentStore;
-};
+}
 
 const Context: React.Context<ContextShape> = createContext({});
 
@@ -1005,7 +1009,7 @@ export const CommentsContext = ({
 
   let commentsContext: ContextShape;
 
-  if (!initialComments) {
+  if (initialComments == null) {
     commentsContext = useMemo(
       () => ({ commentStore: new CommentStore(editor) }),
       [editor],

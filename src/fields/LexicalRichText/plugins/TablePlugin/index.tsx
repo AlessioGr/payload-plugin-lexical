@@ -7,38 +7,42 @@
  */
 
 import './modal.scss';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { INSERT_TABLE_COMMAND } from '@lexical/table';
-import {
-  $insertNodes,
-  COMMAND_PRIORITY_EDITOR,
-  createCommand,
-  EditorThemeClasses,
-  Klass,
-  LexicalCommand,
-  LexicalEditor,
-  LexicalNode,
-} from 'lexical';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
-import invariant from '../../shared/invariant';
 
-import {
-  $createTableNodeWithDimensions,
-  TableNode,
-} from '../../nodes/TableNode';
+
 import Button from 'payload/dist/admin/components/elements/Button';
-import { DialogActions } from '../../ui/Dialog';
-import TextInput from '../../ui/TextInput';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
 import {
   Drawer,
   formatDrawerSlug,
 } from 'payload/dist/admin/components/elements/Drawer';
-import { useModal } from '@faceless-ui/modal';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { INSERT_TABLE_COMMAND } from '@lexical/table';
+
+import { useModal } from '@faceless-ui/modal';
+import {
+  $insertNodes,
+  COMMAND_PRIORITY_EDITOR,
+  createCommand,
+  type EditorThemeClasses,
+  type Klass,
+  type LexicalCommand,
+  type LexicalEditor,
+  type LexicalNode,
+} from 'lexical';
+
 import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import {
+  $createTableNodeWithDimensions,
+  TableNode,
+} from '../../nodes/TableNode';
+import invariant from '../../shared/invariant';
+import { DialogActions } from '../../ui/Dialog';
+import TextInput from '../../ui/TextInput';
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string;
@@ -46,14 +50,14 @@ export type InsertTableCommandPayload = Readonly<{
   includeHeaders?: boolean;
 }>;
 
-export type CellContextShape = {
+export interface CellContextShape {
   cellEditorConfig: null | CellEditorConfig;
-  cellEditorPlugins: null | JSX.Element | Array<JSX.Element>;
+  cellEditorPlugins: null | JSX.Element | JSX.Element[];
   set: (
     cellEditorConfig: null | CellEditorConfig,
-    cellEditorPlugins: null | JSX.Element | Array<JSX.Element>,
+    cellEditorPlugins: null | JSX.Element | JSX.Element[],
   ) => void;
-};
+}
 
 export type CellEditorConfig = Readonly<{
   namespace: string;
@@ -77,7 +81,7 @@ export const CellContext = createContext<CellContextShape>({
 export function TableContext({ children }: { children: JSX.Element }) {
   const [contextValue, setContextValue] = useState<{
     cellEditorConfig: null | CellEditorConfig;
-    cellEditorPlugins: null | JSX.Element | Array<JSX.Element>;
+    cellEditorPlugins: null | JSX.Element | JSX.Element[];
   }>({
     cellEditorConfig: null,
     cellEditorPlugins: null,
@@ -238,7 +242,7 @@ export function TablePlugin({
   children,
 }: {
   cellEditorConfig: CellEditorConfig;
-  children: JSX.Element | Array<JSX.Element>;
+  children: JSX.Element | JSX.Element[];
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
   const cellContext = useContext(CellContext);

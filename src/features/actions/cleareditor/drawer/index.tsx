@@ -1,19 +1,25 @@
 import './index.scss';
 import * as React from 'react';
-import { CLEAR_EDITOR_COMMAND, LexicalEditor } from 'lexical';
-import Button from 'payload/dist/admin/components/elements/Button';
+import { useState } from 'react';
+
 import { useEditDepth } from 'payload/components/utilities';
+import Button from 'payload/dist/admin/components/elements/Button';
 import {
   Drawer,
   formatDrawerSlug,
 } from 'payload/dist/admin/components/elements/Drawer';
-import { useModal } from '@faceless-ui/modal';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
-import { EditorConfig } from '../../../../types';
+
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useState } from 'react';
+
+import { useModal } from '@faceless-ui/modal';
+import { CLEAR_EDITOR_COMMAND, LexicalEditor } from 'lexical';
+
 import { useEditorConfigContext } from '../../../../fields/LexicalRichText/LexicalEditorComponent';
+import { type EditorConfig } from '../../../../types';
+
 
 const baseClass = 'rich-text-clear-editor-drawer';
 

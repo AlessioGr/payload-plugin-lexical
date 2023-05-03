@@ -5,8 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+import { useEffect } from 'react';
+import * as React from 'react';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $wrapNodeInElement, mergeRegister } from '@lexical/utils';
+
 import {
   $createParagraphNode,
   $createRangeSelection,
@@ -22,24 +26,23 @@ import {
   DRAGOVER_COMMAND,
   DRAGSTART_COMMAND,
   DROP_COMMAND,
-  LexicalCommand,
-  LexicalEditor,
+  type LexicalCommand,
+  type LexicalEditor,
 } from 'lexical';
-import { useEffect } from 'react';
-import * as React from 'react';
-import { CAN_USE_DOM } from '../../shared/canUseDOM';
 
 import {
   $createImageNode,
   $isImageNode,
   ImageNode,
-  ImagePayload,
+  type ImagePayload,
 } from '../../nodes/ImageNode';
+import { CAN_USE_DOM } from '../../shared/canUseDOM';
+
 
 export type InsertImagePayload = Readonly<ImagePayload>;
 
 const getDOMSelection = (targetWindow: Window | null): Selection | null =>
-  CAN_USE_DOM ? (targetWindow || window).getSelection() : null;
+  CAN_USE_DOM ? ((targetWindow != null) || window).getSelection() : null;
 
 export const INSERT_IMAGE_COMMAND: LexicalCommand<InsertImagePayload> =
   createCommand('INSERT_IMAGE_COMMAND');
@@ -82,7 +85,7 @@ export default function UploadPlugin({
             }
           });
 
-          /*const relatedCollection = collections.find((coll) => {
+          /* const relatedCollection = collections.find((coll) => {
             console.log('coll.slug', coll.slug, 'insertImagePayload.relationTo', insertImagePayload.relationTo);
             return coll.slug === insertImagePayload.relationTo;
           });
@@ -179,11 +182,11 @@ let img = null;
 
 function onDragStart(event: DragEvent): boolean {
   const node = getImageNodeInSelection();
-  if (!node) {
+  if (node == null) {
     return false;
   }
   const { dataTransfer } = event;
-  if (!dataTransfer) {
+  if (dataTransfer == null) {
     return false;
   }
   dataTransfer.setData('text/plain', '_');
@@ -209,7 +212,7 @@ function onDragStart(event: DragEvent): boolean {
 
 function onDragover(event: DragEvent): boolean {
   const node = getImageNodeInSelection();
-  if (!node) {
+  if (node == null) {
     return false;
   }
   if (!canDropImage(event)) {
@@ -220,11 +223,11 @@ function onDragover(event: DragEvent): boolean {
 
 function onDrop(event: DragEvent, editor: LexicalEditor): boolean {
   const node = getImageNodeInSelection();
-  if (!node) {
+  if (node == null) {
     return false;
   }
   const data = getDragImageData(event);
-  if (!data) {
+  if (data == null) {
     return false;
   }
   event.preventDefault();
@@ -274,11 +277,11 @@ declare global {
 function canDropImage(event: DragEvent): boolean {
   const { target } = event;
   return !!(
-    target &&
+    (target != null) &&
     target instanceof HTMLElement &&
-    !target.closest('code, span.editor-image') &&
-    target.parentElement &&
-    target.parentElement.closest('div.ContentEditable__root')
+    (target.closest('code, span.editor-image') == null) &&
+    (target.parentElement != null) &&
+    (target.parentElement.closest('div.ContentEditable__root') != null)
   );
 }
 
@@ -294,7 +297,7 @@ function getDragSelection(event: DragEvent): Range | null | undefined {
   const domSelection = getDOMSelection(targetWindow);
   if (document.caretRangeFromPoint) {
     range = document.caretRangeFromPoint(event.clientX, event.clientY);
-  } else if (event.rangeParent && domSelection !== null) {
+  } else if ((event.rangeParent != null) && domSelection !== null) {
     domSelection.collapse(event.rangeParent, event.rangeOffset || 0);
     range = domSelection.getRangeAt(0);
   } else {

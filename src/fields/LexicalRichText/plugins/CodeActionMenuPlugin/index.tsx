@@ -8,6 +8,10 @@
 
 import './index.scss';
 
+import { useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
+
 import {
   $isCodeNode,
   CodeNode,
@@ -15,10 +19,8 @@ import {
   normalizeCodeLang,
 } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
 import { $getNearestNodeFromDOMNode } from 'lexical';
-import { useEffect, useRef, useState } from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
 
 import { CopyButton } from './components/CopyButton';
 import { canBePrettier, PrettierButton } from './components/PrettierButton';
@@ -61,7 +63,7 @@ function CodeActionMenuContainer({
         return;
       }
 
-      if (!codeDOMNode) {
+      if (codeDOMNode == null) {
         return;
       }
 
@@ -157,13 +159,13 @@ function getMouseInfo(event: MouseEvent): {
 } {
   const { target } = event;
 
-  if (target && target instanceof HTMLElement) {
+  if ((target != null) && target instanceof HTMLElement) {
     const codeDOMNode = target.closest<HTMLElement>(
       'code.PlaygroundEditorTheme__code',
     );
     const isOutside = !(
-      codeDOMNode ||
-      target.closest<HTMLElement>('div.code-action-menu-container')
+      (codeDOMNode != null) ||
+      (target.closest<HTMLElement>('div.code-action-menu-container') != null)
     );
 
     return { codeDOMNode, isOutside };

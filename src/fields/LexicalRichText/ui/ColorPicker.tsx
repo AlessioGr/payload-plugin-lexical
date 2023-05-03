@@ -91,7 +91,7 @@ export default function ColorPicker({
 
   useEffect(() => {
     // Check if the dropdown is actually active
-    if (innerDivRef.current !== null && onChange) {
+    if (innerDivRef.current !== null && (onChange != null)) {
       onChange(selfColor.hex);
       setInputColor(selfColor.hex);
     }
@@ -174,7 +174,7 @@ function MoveWrapper({
   const divRef = useRef<HTMLDivElement>(null);
 
   const move = (e: React.MouseEvent | MouseEvent): void => {
-    if (divRef.current) {
+    if (divRef.current != null) {
       const { current: div } = divRef;
       const { width, height, left, top } = div.getBoundingClientRect();
 
@@ -240,7 +240,7 @@ export function toHex(value: string): string {
   if (!value.startsWith('#')) {
     const ctx = document.createElement('canvas').getContext('2d');
 
-    if (!ctx) {
+    if (ctx == null) {
       throw new Error('2d context not supported or canvas already initialized');
     }
 
@@ -263,13 +263,13 @@ export function toHex(value: string): string {
 
 function hex2rgb(hex: string): RGB {
   const rbgArr = (
-    hex
+    (hex
       .replace(
         /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
         (m, r, g, b) => '#' + r + r + g + g + b + b,
       )
       .substring(1)
-      .match(/.{2}/g) || []
+      .match(/.{2}/g) != null) || []
   ).map((x) => parseInt(x, 16));
 
   return {

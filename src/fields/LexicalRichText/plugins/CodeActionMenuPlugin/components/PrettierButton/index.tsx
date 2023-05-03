@@ -7,11 +7,13 @@
  */
 import './index.scss';
 
-import { $isCodeNode } from '@lexical/code';
-import { $getNearestNodeFromDOMNode, LexicalEditor } from 'lexical';
-import { Options } from 'prettier';
 import * as React from 'react';
 import { useState } from 'react';
+
+import { $isCodeNode } from '@lexical/code';
+
+import { $getNearestNodeFromDOMNode, type LexicalEditor } from 'lexical';
+import { type Options } from 'prettier';
 
 interface Props {
   lang: string;
@@ -20,10 +22,10 @@ interface Props {
 }
 
 const PRETTIER_PARSER_MODULES = {
-  css: () => import('prettier/parser-postcss'),
-  html: () => import('prettier/parser-html'),
-  js: () => import('prettier/parser-babel'),
-  markdown: () => import('prettier/parser-markdown'),
+  css: async () => await import('prettier/parser-postcss'),
+  html: async () => await import('prettier/parser-html'),
+  js: async () => await import('prettier/parser-babel'),
+  markdown: async () => await import('prettier/parser-markdown'),
 } as const;
 
 type LanguagesType = keyof typeof PRETTIER_PARSER_MODULES;
@@ -82,7 +84,7 @@ export function PrettierButton({ lang, editor, getCodeDOMNode }: Props) {
       const options = getPrettierOptions(lang);
       options.plugins = [await loadPrettierParserByLang(lang)];
 
-      if (!codeDOMNode) {
+      if (codeDOMNode == null) {
         return;
       }
 

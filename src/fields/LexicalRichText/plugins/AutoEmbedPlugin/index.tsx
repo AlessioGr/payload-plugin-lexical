@@ -6,32 +6,36 @@
  *
  */
 
-import {
-  AutoEmbedOption,
-  EmbedConfig,
-  EmbedMatchResult,
-  LexicalAutoEmbedPlugin,
-  URL_MATCHER,
-} from '@lexical/react/LexicalAutoEmbedPlugin';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useMemo, useState } from 'react';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import { useEditDepth } from 'payload/components/utilities';
 import Button from 'payload/dist/admin/components/elements/Button';
-import { DialogActions } from '../../ui/Dialog';
-import { EditorConfig } from '../../../../types';
-import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 import {
   Drawer,
   formatDrawerSlug,
 } from 'payload/dist/admin/components/elements/Drawer';
-import { useEditDepth } from 'payload/components/utilities';
-import { useModal } from '@faceless-ui/modal';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import X from 'payload/dist/admin/components/icons/X';
+
+import {
+  AutoEmbedOption,
+  type EmbedConfig,
+  type EmbedMatchResult,
+  LexicalAutoEmbedPlugin,
+  URL_MATCHER,
+} from '@lexical/react/LexicalAutoEmbedPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { useModal } from '@faceless-ui/modal';
+
+import { type EditorConfig } from '../../../../types';
+
 import './modal.scss';
 import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { DialogActions } from '../../ui/Dialog';
+import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 
 export interface PlaygroundEmbedConfig extends EmbedConfig {
   // Human readable name of the embeded content e.g. Tweet or Google Map.
@@ -44,7 +48,7 @@ export interface PlaygroundEmbedConfig extends EmbedConfig {
   exampleUrl: string;
 
   // For extra searching.
-  keywords: Array<string>;
+  keywords: string[];
 
   // Embed a Figma Project.
   description?: string;
@@ -54,7 +58,7 @@ export function getEmbedConfigs(editorConfig: EditorConfig) {
   const embedConfigs = [];
 
   for (const feature of editorConfig.features) {
-    if (feature.embedConfigs && feature.embedConfigs.length > 0) {
+    if ((feature.embedConfigs != null) && feature.embedConfigs.length > 0) {
       embedConfigs.push(...feature.embedConfigs);
     }
   }
@@ -104,7 +108,7 @@ function AutoEmbedMenu({
   selectedItemIndex: number | null;
   onOptionClick: (option: AutoEmbedOption, index: number) => void;
   onOptionMouseEnter: (index: number) => void;
-  options: Array<AutoEmbedOption>;
+  options: AutoEmbedOption[];
 }) {
   return (
     <div className="typeahead-popover">
@@ -113,8 +117,8 @@ function AutoEmbedMenu({
           <AutoEmbedMenuItem
             index={i}
             isSelected={selectedItemIndex === i}
-            onClick={() => onOptionClick(option, i)}
-            onMouseEnter={() => onOptionMouseEnter(i)}
+            onClick={() => { onOptionClick(option, i); }}
+            onMouseEnter={() => { onOptionMouseEnter(i); }}
             key={option.key}
             option={option}
           />
@@ -201,7 +205,7 @@ export function AutoEmbedDrawer({
       </div>
       <DialogActions>
         <Button
-          disabled={!embedResult}
+          disabled={embedResult == null}
           onClick={onClick}
           data-test-id={`${embedConfig.type}-embed-modal-submit-btn`}>
           Embed
@@ -252,7 +256,7 @@ export default function AutoEmbedPlugin(props: {
             setHighlightedIndex,
           },
         ) =>
-          anchorElementRef.current
+          (anchorElementRef.current != null)
             ? ReactDOM.createPortal(
                 <div
                   className="typeahead-popover auto-embed-menu"

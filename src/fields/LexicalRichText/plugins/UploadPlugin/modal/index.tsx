@@ -1,7 +1,7 @@
-import {
-  ListDrawerProps,
-  UseListDrawer,
-} from 'payload/dist/admin/components/elements/ListDrawer/types';
+import * as React from 'react';
+import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+
+import { useEditDepth } from 'payload/components/utilities';
 import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
 import {
   baseClass,
@@ -9,11 +9,15 @@ import {
   ListDrawerToggler,
 } from 'payload/dist/admin/components/elements/ListDrawer';
 import { ListDrawerContent } from 'payload/dist/admin/components/elements/ListDrawer/DrawerContent';
-import * as React from 'react';
-import { useModal } from '@faceless-ui/modal';
-import { useEditDepth } from 'payload/components/utilities';
+import {
+  type ListDrawerProps,
+  type UseListDrawer,
+} from 'payload/dist/admin/components/elements/ListDrawer/types';
 import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import { useCallback, useEffect, useId, useMemo, useState } from 'react';
+
+import { useModal } from '@faceless-ui/modal';
+
+
 
 export const ListDrawer: React.FC<ListDrawerProps> = (props) => {
   const { drawerSlug } = props;
@@ -54,10 +58,10 @@ export const useListDrawer: UseListDrawer = ({
   }, [modalState, drawerSlug]);
 
   useEffect(() => {
-    if (!collectionSlugs || collectionSlugs.length === 0) {
+    if ((collectionSlugs == null) || collectionSlugs.length === 0) {
       const filteredCollectionSlugs = collections.filter(({ upload }) => {
         if (uploads) {
-          return Boolean(upload) === true;
+          return Boolean(upload);
         }
         return true;
       });

@@ -8,36 +8,42 @@
 
 import './index.scss';
 
+import { useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
+
+import { useEditDepth } from 'payload/components/utilities';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+
 import { $isCodeHighlightNode } from '@lexical/code';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
+
+import { useModal } from '@faceless-ui/modal';
 import {
   $getSelection,
   $isRangeSelection,
   $isTextNode,
   COMMAND_PRIORITY_LOW,
   FORMAT_TEXT_COMMAND,
-  LexicalEditor,
+  type LexicalEditor,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
+
 import {
   $isLinkNode,
-  LinkAttributes,
+  type LinkAttributes,
   TOGGLE_LINK_COMMAND,
 } from '../../../../features/linkplugin/nodes/LinkNodeModified';
-
+import { type EditorConfig } from '../../../../types';
+import { useEditorConfigContext } from '../../LexicalEditorComponent';
 import { getDOMRangeRect } from '../../utils/getDOMRangeRect';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { setFloatingElemPosition } from '../../utils/setFloatingElemPosition';
 import { INSERT_INLINE_COMMAND } from '../CommentPlugin';
-import { EditorConfig } from '../../../../types';
-import { useModal } from '@faceless-ui/modal';
-import { useEditDepth } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { useEditorConfigContext } from '../../LexicalEditorComponent';
+
+
+
 
 function TextFormatFloatingToolbar({
   editor,
@@ -93,7 +99,7 @@ function TextFormatFloatingToolbar({
 
   function mouseMoveListener(e: MouseEvent) {
     if (
-      popupCharStylesEditorRef?.current &&
+      ((popupCharStylesEditorRef?.current) != null) &&
       (e.buttons === 1 || e.buttons === 3)
     ) {
       if (popupCharStylesEditorRef.current.style.pointerEvents !== 'none') {
@@ -109,7 +115,7 @@ function TextFormatFloatingToolbar({
     }
   }
   function mouseUpListener(e: MouseEvent) {
-    if (popupCharStylesEditorRef?.current) {
+    if ((popupCharStylesEditorRef?.current) != null) {
       if (popupCharStylesEditorRef.current.style.pointerEvents !== 'auto') {
         popupCharStylesEditorRef.current.style.pointerEvents = 'auto';
       }
@@ -117,7 +123,7 @@ function TextFormatFloatingToolbar({
   }
 
   useEffect(() => {
-    if (popupCharStylesEditorRef?.current) {
+    if ((popupCharStylesEditorRef?.current) != null) {
       document.addEventListener('mousemove', mouseMoveListener);
       document.addEventListener('mouseup', mouseUpListener);
 
@@ -162,13 +168,13 @@ function TextFormatFloatingToolbar({
     };
 
     window.addEventListener('resize', update);
-    if (scrollerElem) {
+    if (scrollerElem != null) {
       scrollerElem.addEventListener('scroll', update);
     }
 
     return () => {
       window.removeEventListener('resize', update);
-      if (scrollerElem) {
+      if (scrollerElem != null) {
         scrollerElem.removeEventListener('scroll', update);
       }
     };
@@ -275,8 +281,8 @@ function TextFormatFloatingToolbar({
           </button>
           {editorConfig.features.map((feature) => {
             if (
-              feature.floatingTextFormatToolbar &&
-              feature.floatingTextFormatToolbar.components
+              (feature.floatingTextFormatToolbar != null) &&
+              (feature.floatingTextFormatToolbar.components != null)
             ) {
               return feature.floatingTextFormatToolbar?.components?.map(
                 (floatingToolbarItem) => {
@@ -369,7 +375,7 @@ function useFloatingTextFormatToolbar(
       const rawTextContent = selection.getTextContent().replace(/\n/g, '');
       if (!selection.isCollapsed() && rawTextContent === '') {
         setIsText(false);
-        return;
+        
       }
     });
   }, [editor]);

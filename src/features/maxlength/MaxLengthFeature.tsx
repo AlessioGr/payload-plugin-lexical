@@ -1,6 +1,7 @@
-import { Feature } from '../../types';
-import { MaxLengthPlugin } from './plugins';
 import * as React from 'react';
+
+import { MaxLengthPlugin } from './plugins';
+import { type Feature } from '../../types';
 
 export function MaxLengthFeature(props: {
   enabled: boolean;

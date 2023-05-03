@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { LexicalEditor, NodeKey } from 'lexical';
 import { Suspense, useEffect, useState } from 'react';
-
-import { ExtraAttributes, RawImagePayload } from './ImageNode';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
 import { useTranslation } from 'react-i18next';
-import { requests } from 'payload/dist/admin/api';
 
-const ImageComponent = React.lazy(() => import('./ImageComponent'));
+import { requests } from 'payload/dist/admin/api';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+
+import { type LexicalEditor, type NodeKey } from 'lexical';
+
+import { type ExtraAttributes, type RawImagePayload } from './ImageNode';
+
+const ImageComponent = React.lazy(async () => await import('./ImageComponent'));
 
 export default function RawImageComponent({
   rawImagePayload,

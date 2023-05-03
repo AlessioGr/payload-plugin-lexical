@@ -6,6 +6,14 @@
  *
  */
 
+import * as React from 'react';
+
+import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
+import {
+  DecoratorBlockNode,
+  type SerializedDecoratorBlockNode,
+} from '@lexical/react/LexicalDecoratorBlockNode';
+
 import type {
   EditorConfig,
   ElementFormatType,
@@ -15,12 +23,7 @@ import type {
   Spread,
 } from 'lexical';
 
-import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
-import {
-  DecoratorBlockNode,
-  SerializedDecoratorBlockNode,
-} from '@lexical/react/LexicalDecoratorBlockNode';
-import * as React from 'react';
+
 
 type FigmaComponentProps = Readonly<{
   className: Readonly<{
@@ -109,7 +112,7 @@ export class FigmaNode extends DecoratorBlockNode {
   }
 
   decorate(_editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {};
+    const embedBlockTheme = (config.theme.embedBlock != null) || {};
     const className = {
       base: embedBlockTheme.base || '',
       focus: embedBlockTheme.focus || '',

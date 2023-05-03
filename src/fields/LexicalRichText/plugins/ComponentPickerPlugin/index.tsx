@@ -6,6 +6,10 @@
  *
  */
 
+import { useCallback, useMemo, useState } from 'react';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+
 import { $createCodeNode } from '@lexical/code';
 import {
   INSERT_CHECK_LIST_COMMAND,
@@ -22,19 +26,17 @@ import {
 import { $createHeadingNode, $createQuoteNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
 import { INSERT_TABLE_COMMAND } from '@lexical/table';
+
 import {
   $createParagraphNode,
   $getSelection,
   $isRangeSelection,
   FORMAT_ELEMENT_COMMAND,
-  TextNode,
+  type TextNode,
 } from 'lexical';
-import { useCallback, useMemo, useState } from 'react';
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
+import { type EditorConfig } from '../../../../types';
 import { getEmbedConfigs } from '../AutoEmbedPlugin';
-import { EditorConfig } from '../../../../types';
 import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 
 /**
@@ -48,7 +50,7 @@ export class ComponentPickerOption extends TypeaheadOption {
   icon?: JSX.Element;
 
   // For extra searching.
-  keywords: Array<string>;
+  keywords: string[];
 
   // TBD
   keyboardShortcut?: string;
@@ -60,14 +62,14 @@ export class ComponentPickerOption extends TypeaheadOption {
     title: string,
     options: {
       icon?: JSX.Element;
-      keywords?: Array<string>;
+      keywords?: string[];
       keyboardShortcut?: string;
       onSelect: (queryString: string) => void;
     },
   ) {
     super(title);
     this.title = title;
-    this.keywords = options.keywords || [];
+    this.keywords = (options.keywords != null) || [];
     this.icon = options.icon;
     this.keyboardShortcut = options.keyboardShortcut;
     this.onSelect = options.onSelect.bind(this);
@@ -121,7 +123,7 @@ export default function ComponentPickerMenuPlugin(props: {
   });
 
   const getDynamicOptions = useCallback(() => {
-    const options: Array<ComponentPickerOption> = [];
+    const options: ComponentPickerOption[] = [];
 
     if (queryString == null) {
       return options;
@@ -139,7 +141,7 @@ export default function ComponentPickerMenuPlugin(props: {
     const fullTableMatch = fullTableRegex.exec(queryString);
     const partialTableMatch = partialTableRegex.exec(queryString);
 
-    if (fullTableMatch) {
+    if (fullTableMatch != null) {
       const [rows, columns] = fullTableMatch[0]
         .split('x')
         .map((n: string) => parseInt(n, 10));
@@ -149,11 +151,11 @@ export default function ComponentPickerMenuPlugin(props: {
           icon: <i className="icon table" />,
           keywords: ['table'],
           onSelect: () =>
-            // @ts-ignore Correct types, but since they're dynamic TS doesn't like it.
+            // @ts-expect-error Correct types, but since they're dynamic TS doesn't like it.
             editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
         }),
       );
-    } else if (partialTableMatch) {
+    } else if (partialTableMatch != null) {
       const rows = parseInt(partialTableMatch[0], 10);
 
       options.push(
@@ -163,7 +165,7 @@ export default function ComponentPickerMenuPlugin(props: {
               icon: <i className="icon table" />,
               keywords: ['table'],
               onSelect: () =>
-                // @ts-ignore Correct types, but since they're dynamic TS doesn't like it.
+                // @ts-expect-error Correct types, but since they're dynamic TS doesn't like it.
                 editor.dispatchCommand(INSERT_TABLE_COMMAND, { columns, rows }),
             }),
         ),
@@ -174,20 +176,20 @@ export default function ComponentPickerMenuPlugin(props: {
   }, [editor, queryString]);
 
   const options = useMemo(() => {
-    // @ts-ignore
-    // @ts-ignore
+    // @ts-expect-error
+    // @ts-expect-error
     const baseOptions: ComponentPickerOption[] = [];
     baseOptions.push(
       new ComponentPickerOption('Paragraph', {
         icon: <i className="icon paragraph" />,
         keywords: ['normal', 'paragraph', 'p', 'text'],
         onSelect: () =>
-          editor.update(() => {
+          { editor.update(() => {
             const selection = $getSelection();
             if ($isRangeSelection(selection)) {
               $setBlocksType(selection, () => $createParagraphNode());
             }
-          }),
+          }); },
       }),
     );
 
@@ -198,15 +200,15 @@ export default function ComponentPickerMenuPlugin(props: {
             icon: <i className={`icon h${n}`} />,
             keywords: ['heading', 'header', `h${n}`],
             onSelect: () =>
-              editor.update(() => {
+              { editor.update(() => {
                 const selection = $getSelection();
                 if ($isRangeSelection(selection)) {
                   $setBlocksType(selection, () =>
-                    // @ts-ignore Correct types, but since they're dynamic TS doesn't like it.
+                    // @ts-expect-error Correct types, but since they're dynamic TS doesn't like it.
                     $createHeadingNode(`h${n}`),
                   );
                 }
-              }),
+              }); },
           }),
       ),
     );
@@ -265,12 +267,12 @@ export default function ComponentPickerMenuPlugin(props: {
         icon: <i className="icon quote" />,
         keywords: ['block quote'],
         onSelect: () =>
-          editor.update(() => {
+          { editor.update(() => {
             const selection = $getSelection();
             if ($isRangeSelection(selection)) {
               $setBlocksType(selection, () => $createQuoteNode());
             }
-          }),
+          }); },
       }),
     );
 
@@ -279,7 +281,7 @@ export default function ComponentPickerMenuPlugin(props: {
         icon: <i className="icon code" />,
         keywords: ['javascript', 'python', 'js', 'codeblock'],
         onSelect: () =>
-          editor.update(() => {
+          { editor.update(() => {
             const selection = $getSelection();
 
             if ($isRangeSelection(selection)) {
@@ -293,7 +295,7 @@ export default function ComponentPickerMenuPlugin(props: {
                 selection.insertRawText(textContent);
               }
             }
-          }),
+          }); },
       }),
     );
 
@@ -335,7 +337,7 @@ export default function ComponentPickerMenuPlugin(props: {
               icon: <i className={`icon ${alignment}-align`} />,
               keywords: ['align', 'justify', alignment],
               onSelect: () =>
-                // @ts-ignore Correct types, but since they're dynamic TS doesn't like it.
+                // @ts-expect-error Correct types, but since they're dynamic TS doesn't like it.
                 editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, alignment),
             }),
         ),
@@ -344,7 +346,7 @@ export default function ComponentPickerMenuPlugin(props: {
 
     for (const feature of editorConfig.features) {
       if (
-        feature.componentPicker &&
+        (feature.componentPicker != null) &&
         feature.componentPicker.componentPickerOptions &&
         feature.componentPicker.componentPickerOptions.length > 0
       ) {
@@ -361,7 +363,7 @@ export default function ComponentPickerMenuPlugin(props: {
       ? [
           ...dynamicOptions,
           ...baseOptions.filter((option) => {
-            return new RegExp(queryString, 'gi').exec(option.title) ||
+            return (new RegExp(queryString, 'gi').exec(option.title) != null) ||
               option.keywords != null
               ? option.keywords.some((keyword) =>
                   new RegExp(queryString, 'gi').exec(keyword),
@@ -380,7 +382,7 @@ export default function ComponentPickerMenuPlugin(props: {
       matchingString: string,
     ) => {
       editor.update(() => {
-        if (nodeToRemove) {
+        if (nodeToRemove != null) {
           nodeToRemove.remove();
         }
         selectedOption.onSelect(matchingString);
@@ -401,7 +403,7 @@ export default function ComponentPickerMenuPlugin(props: {
           anchorElementRef,
           { selectedIndex, selectOptionAndCleanUp, setHighlightedIndex },
         ) =>
-          anchorElementRef.current && options.length
+          (anchorElementRef.current != null) && (options.length > 0)
             ? ReactDOM.createPortal(
                 <div className="typeahead-popover component-picker-menu">
                   <ul>

@@ -9,48 +9,50 @@ import './index.scss';
 
 // import { $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 
+import { type Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
+import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
+import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
+import { type Fields } from 'payload/dist/admin/components/forms/Form/types';
+import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
+import { type Field } from 'payload/dist/fields/config/types';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
+
+import { useModal } from '@faceless-ui/modal';
 import {
   $getSelection,
   $isRangeSelection,
   COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
-  GridSelection,
+  type GridSelection,
   KEY_ESCAPE_COMMAND,
-  LexicalEditor,
-  NodeSelection,
-  RangeSelection,
+  type LexicalEditor,
+  type NodeSelection,
+  type RangeSelection,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
 
-import { useModal } from '@faceless-ui/modal';
-import { useTranslation } from 'react-i18next';
-
-import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
-import { Fields } from 'payload/dist/admin/components/forms/Form/types';
-import { Field } from 'payload/dist/fields/config/types';
-import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
-import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { LinkDrawer } from './LinkDrawer';
+import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
 import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
+import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
+import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 import {
   $isLinkNode,
-  LinkAttributes,
+  type LinkAttributes,
   TOGGLE_LINK_COMMAND,
 } from '../nodes/LinkNodeModified';
-import { LinkDrawer } from './LinkDrawer';
-import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
-import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
-import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
 
 function LinkEditor({
   editor,
@@ -233,12 +235,12 @@ function LinkEditor({
     ) {
       const domRect: DOMRect | undefined =
         nativeSelection.focusNode?.parentElement?.getBoundingClientRect();
-      if (domRect) {
+      if (domRect != null) {
         domRect.y += 40;
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== 'link-input') {
+    } else if ((activeElement == null) || activeElement.className !== 'link-input') {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
@@ -261,14 +263,14 @@ function LinkEditor({
 
     window.addEventListener('resize', update);
 
-    if (scrollerElem) {
+    if (scrollerElem != null) {
       scrollerElem.addEventListener('scroll', update);
     }
 
     return () => {
       window.removeEventListener('resize', update);
 
-      if (scrollerElem) {
+      if (scrollerElem != null) {
         scrollerElem.removeEventListener('scroll', update);
       }
     };
@@ -334,9 +336,9 @@ function LinkEditor({
             text: data?.text,
           };
 
-          /*if (customFieldSchema) {
+          /* if (customFieldSchema) {
               newNode.fields += data.fields;
-            }*/ //TODO
+            } */ // TODO
 
           editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
         }}
@@ -350,7 +352,7 @@ function LinkEditor({
             className="link-edit"
             role="button"
             tabIndex={0}
-            onMouseDown={(event) => event.preventDefault()}
+            onMouseDown={(event) => { event.preventDefault(); }}
             onClick={() => {
               toggleModal(drawerSlug);
             }}
@@ -359,7 +361,7 @@ function LinkEditor({
             className="link-trash"
             role="button"
             tabIndex={0}
-            onMouseDown={(event) => event.preventDefault()}
+            onMouseDown={(event) => { event.preventDefault(); }}
             onClick={() => {
               editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
             }}

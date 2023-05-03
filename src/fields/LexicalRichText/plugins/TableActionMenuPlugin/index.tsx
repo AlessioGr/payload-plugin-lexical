@@ -6,11 +6,10 @@
  *
  */
 
-import type {
-  DEPRECATED_GridCellNode,
-  ElementNode,
-  LexicalEditor,
-} from 'lexical';
+import * as React from 'react';
+import { type ReactPortal, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 import {
@@ -26,10 +25,11 @@ import {
   $isTableRowNode,
   $unmergeCell,
   getTableSelectionFromTableElement,
-  HTMLTableElementWithWithTableSelectionState,
+  type HTMLTableElementWithWithTableSelectionState,
   TableCellHeaderStates,
   TableCellNode,
 } from '@lexical/table';
+
 import {
   $createParagraphNode,
   $getRoot,
@@ -41,13 +41,16 @@ import {
   DEPRECATED_$getNodeTriplet,
   DEPRECATED_$isGridCellNode,
   DEPRECATED_$isGridSelection,
-  GridSelection,
+  type GridSelection,
+
+  type DEPRECATED_GridCellNode,
+  type ElementNode,
+  LexicalEditor,
 } from 'lexical';
-import * as React from 'react';
-import { ReactPortal, useCallback, useEffect, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+
 import invariant from '../../shared/invariant';
 import ColorPicker from '../../ui/ColorPicker';
+
 
 function computeSelectionCount(selection: GridSelection): {
   columns: number;
@@ -64,7 +67,7 @@ function computeSelectionCount(selection: GridSelection): {
 // of selecting merged cells and non-merged)
 function isGridSelectionRectangular(selection: GridSelection): boolean {
   const nodes = selection.getNodes();
-  const currentRows: Array<number> = [];
+  const currentRows: number[] = [];
   let currentRow = null;
   let expectedColumns = null;
   let currentColumns = 0;
@@ -227,7 +230,7 @@ function TableActionMenu({
 
     window.addEventListener('click', handleClickOutside);
 
-    return () => window.removeEventListener('click', handleClickOutside);
+    return () => { window.removeEventListener('click', handleClickOutside); };
   }, [setIsMenuOpen, contextRef]);
 
   const clearTableSelection = useCallback(() => {
@@ -422,7 +425,7 @@ function TableActionMenu({
       mergeCellButton = (
         <button
           className="item"
-          onClick={() => mergeTableCellsAtSelection()}
+          onClick={() => { mergeTableCellsAtSelection(); }}
           data-test-id="table-merge-cells">
           Merge cells
         </button>
@@ -431,7 +434,7 @@ function TableActionMenu({
       mergeCellButton = (
         <button
           className="item"
-          onClick={() => unmergeTableCellsAtSelection()}
+          onClick={() => { unmergeTableCellsAtSelection(); }}
           data-test-id="table-unmerge-cells">
           Unmerge cells
         </button>
@@ -455,7 +458,7 @@ function TableActionMenu({
       )}
       <button
         className="item"
-        onClick={() => insertTableRowAtSelection(false)}
+        onClick={() => { insertTableRowAtSelection(false); }}
         data-test-id="table-insert-row-above">
         <span className="text">
           Insert{' '}
@@ -465,7 +468,7 @@ function TableActionMenu({
       </button>
       <button
         className="item"
-        onClick={() => insertTableRowAtSelection(true)}
+        onClick={() => { insertTableRowAtSelection(true); }}
         data-test-id="table-insert-row-below">
         <span className="text">
           Insert{' '}
@@ -476,7 +479,7 @@ function TableActionMenu({
       <hr />
       <button
         className="item"
-        onClick={() => insertTableColumnAtSelection(false)}
+        onClick={() => { insertTableColumnAtSelection(false); }}
         data-test-id="table-insert-column-before">
         <span className="text">
           Insert{' '}
@@ -488,7 +491,7 @@ function TableActionMenu({
       </button>
       <button
         className="item"
-        onClick={() => insertTableColumnAtSelection(true)}
+        onClick={() => { insertTableColumnAtSelection(true); }}
         data-test-id="table-insert-column-after">
         <span className="text">
           Insert{' '}
@@ -501,24 +504,24 @@ function TableActionMenu({
       <hr />
       <button
         className="item"
-        onClick={() => deleteTableColumnAtSelection()}
+        onClick={() => { deleteTableColumnAtSelection(); }}
         data-test-id="table-delete-columns">
         <span className="text">Delete column</span>
       </button>
       <button
         className="item"
-        onClick={() => deleteTableRowAtSelection()}
+        onClick={() => { deleteTableRowAtSelection(); }}
         data-test-id="table-delete-rows">
         <span className="text">Delete row</span>
       </button>
       <button
         className="item"
-        onClick={() => deleteTableAtSelection()}
+        onClick={() => { deleteTableAtSelection(); }}
         data-test-id="table-delete">
         <span className="text">Delete table</span>
       </button>
       <hr />
-      <button className="item" onClick={() => toggleTableRowIsHeader()}>
+      <button className="item" onClick={() => { toggleTableRowIsHeader(); }}>
         <span className="text">
           {(tableCellNode.__headerState & TableCellHeaderStates.ROW) ===
           TableCellHeaderStates.ROW
@@ -527,7 +530,7 @@ function TableActionMenu({
           row header
         </span>
       </button>
-      <button className="item" onClick={() => toggleTableColumnIsHeader()}>
+      <button className="item" onClick={() => { toggleTableColumnIsHeader(); }}>
         <span className="text">
           {(tableCellNode.__headerState & TableCellHeaderStates.COLUMN) ===
           TableCellHeaderStates.COLUMN
@@ -596,7 +599,7 @@ function TableCellActionMenuContainer({
       }
 
       setTableMenuCellNode(tableCellNodeFromSelection);
-    } else if (!activeElement) {
+    } else if (activeElement == null) {
       setTableMenuCellNode(null);
     }
   }, [editor]);
@@ -661,7 +664,7 @@ function TableCellActionMenuContainer({
             <TableActionMenu
               contextRef={menuRootRef}
               setIsMenuOpen={setIsMenuOpen}
-              onClose={() => setIsMenuOpen(false)}
+              onClose={() => { setIsMenuOpen(false); }}
               tableCellNode={tableCellNode}
               cellMerge={cellMerge}
             />

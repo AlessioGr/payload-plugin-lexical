@@ -1,18 +1,22 @@
-import { Feature } from '../../../types';
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $getRoot, $isParagraphNode } from 'lexical';
+
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { OPEN_MODAL_COMMAND } from '../../../fields/LexicalRichText/plugins/ModalPlugin';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { $getRoot, $isParagraphNode } from 'lexical';
+
 import { ClearEditorDrawer } from './drawer';
+import { OPEN_MODAL_COMMAND } from '../../../fields/LexicalRichText/plugins/ModalPlugin';
+import { type Feature } from '../../../types';
 
 function ClearEditorAction(): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [isEditorEmpty, setIsEditorEmpty] = useState(true);
 
   useEffect(() => {
-    //Not sure if this here is needed
+    // Not sure if this here is needed
     return editor.registerUpdateListener(
       ({ dirtyElements, prevEditorState, tags }) => {
         editor.getEditorState().read(() => {

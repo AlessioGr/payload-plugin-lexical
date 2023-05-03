@@ -8,8 +8,11 @@
 
 import './Collapsible.scss';
 
+import { useEffect } from 'react';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
+
 import {
   $createParagraphNode,
   $getNodeByKey,
@@ -24,9 +27,8 @@ import {
   DELETE_CHARACTER_COMMAND,
   INSERT_PARAGRAPH_COMMAND,
   KEY_ARROW_DOWN_COMMAND,
-  NodeKey,
+  type NodeKey,
 } from 'lexical';
-import { useEffect } from 'react';
 
 import {
   $createCollapsibleContainerNode,
@@ -161,11 +163,11 @@ export default function CollapsiblePlugin(): JSX.Element | null {
       editor.registerCommand(
         INSERT_PARAGRAPH_COMMAND,
         () => {
-          // @ts-ignore
+          // @ts-expect-error
           const windowEvent: KeyboardEvent | undefined = editor._window?.event;
 
           if (
-            windowEvent
+            (windowEvent != null)
             && (windowEvent.ctrlKey || windowEvent.metaKey)
             && windowEvent.key === 'Enter'
           ) {

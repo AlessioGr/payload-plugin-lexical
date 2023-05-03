@@ -6,9 +6,10 @@
  *
  */
 
-import katex from 'katex';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
+
+import katex from 'katex';
 
 export default function KatexRenderer({
   equation,

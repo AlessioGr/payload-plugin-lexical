@@ -6,11 +6,12 @@
  *
  */
 
-import { $isLinkNode, LinkAttributes } from '../../nodes/LinkNodeModified';
-import type { ElementNode, LexicalEditor, LexicalNode } from 'lexical';
+
+import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $createTextNode,
   $isElementNode,
@@ -18,23 +19,26 @@ import {
   $isTextNode,
   TextNode,
 } from 'lexical';
-import { useEffect } from 'react';
+
 import invariant from '../../../../fields/LexicalRichText/shared/invariant';
 import {
   $createAutoLinkNode,
   $isAutoLinkNode,
   AutoLinkNode,
 } from '../../nodes/AutoLinkNodeModified';
+import { $isLinkNode, type LinkAttributes } from '../../nodes/LinkNodeModified';
+
+import type { ElementNode, LexicalEditor, LexicalNode } from 'lexical';
 
 type ChangeHandler = (url: string | null, prevUrl: string | null) => void;
 
-type LinkMatcherResult = {
+interface LinkMatcherResult {
   attributes?: LinkAttributes;
   index: number;
   length: number;
   text: string;
   url: string;
-};
+}
 
 export type LinkMatcher = (text: string) => LinkMatcherResult | null;
 
@@ -56,12 +60,12 @@ export function createLinkMatcherWithRegExp(
 
 function findFirstMatch(
   text: string,
-  matchers: Array<LinkMatcher>,
+  matchers: LinkMatcher[],
 ): LinkMatcherResult | null {
   for (let i = 0; i < matchers.length; i++) {
     const match = matchers[i](text);
 
-    if (match) {
+    if (match != null) {
       return match;
     }
   }
@@ -131,7 +135,7 @@ function isContentAroundIsValid(
 
 function handleLinkCreation(
   node: TextNode,
-  matchers: Array<LinkMatcher>,
+  matchers: LinkMatcher[],
   onChange: ChangeHandler,
 ): void {
   const nodeText = node.getTextContent();
@@ -140,7 +144,7 @@ function handleLinkCreation(
   let remainingTextNode = node;
   let match;
 
-  while ((match = findFirstMatch(text, matchers)) && match !== null) {
+  while (((match = findFirstMatch(text, matchers)) != null) && match !== null) {
     const matchStart = match.index;
     const matchLength = match.length;
     const matchEnd = matchStart + matchLength;
@@ -169,7 +173,7 @@ function handleLinkCreation(
         ...match.attributes,
       };
 
-      const linkNode = $createAutoLinkNode({ attributes: attributes });
+      const linkNode = $createAutoLinkNode({ attributes });
       const textNode = $createTextNode(match.text);
       textNode.setFormat(linkTextNode.getFormat());
       textNode.setDetail(linkTextNode.getDetail());
@@ -187,7 +191,7 @@ function handleLinkCreation(
 
 function handleLinkEdit(
   linkNode: AutoLinkNode,
-  matchers: Array<LinkMatcher>,
+  matchers: LinkMatcher[],
   onChange: ChangeHandler,
 ): void {
   // Check children are simple text
@@ -220,16 +224,16 @@ function handleLinkEdit(
 
   const url = linkNode.getAttributes()?.url;
   if (url !== match?.url) {
-    let attrs = linkNode.getAttributes();
+    const attrs = linkNode.getAttributes();
     attrs.url = match?.url;
     linkNode.setAttributes(attrs);
     onChange(match.url, url);
   }
 
-  if (match.attributes) {
+  if (match.attributes != null) {
     const rel = linkNode.getAttributes().rel;
     if (rel !== match.attributes.rel) {
-      let attrs = linkNode.getAttributes();
+      const attrs = linkNode.getAttributes();
       attrs.rel = match.attributes.rel || null;
       linkNode.setAttributes(attrs);
       onChange(match.attributes.rel || null, rel);
@@ -241,7 +245,7 @@ function handleLinkEdit(
 // Given the creation preconditions, these can only be simple text nodes.
 function handleBadNeighbors(
   textNode: TextNode,
-  matchers: Array<LinkMatcher>,
+  matchers: LinkMatcher[],
   onChange: ChangeHandler,
 ): void {
   const previousSibling = textNode.getPreviousSibling();
@@ -261,7 +265,7 @@ function handleBadNeighbors(
   }
 }
 
-function replaceWithChildren(node: ElementNode): Array<LexicalNode> {
+function replaceWithChildren(node: ElementNode): LexicalNode[] {
   const children = node.getChildren();
   const childrenLength = children.length;
 
@@ -275,7 +279,7 @@ function replaceWithChildren(node: ElementNode): Array<LexicalNode> {
 
 function useAutoLink(
   editor: LexicalEditor,
-  matchers: Array<LinkMatcher>,
+  matchers: LinkMatcher[],
   onChange?: ChangeHandler,
 ): void {
   useEffect(() => {
@@ -287,7 +291,7 @@ function useAutoLink(
     }
 
     const onChangeWrapped = (url: string | null, prevUrl: string | null) => {
-      if (onChange) {
+      if (onChange != null) {
         onChange(url, prevUrl);
       }
     };
@@ -318,7 +322,7 @@ export function AutoLinkPlugin({
   matchers,
   onChange,
 }: {
-  matchers: Array<LinkMatcher>;
+  matchers: LinkMatcher[];
   onChange?: ChangeHandler;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();

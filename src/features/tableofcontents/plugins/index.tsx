@@ -7,12 +7,14 @@
  */
 import type { TableOfContentsEntry } from '@lexical/react/LexicalTableOfContents';
 import type { HeadingTagType } from '@lexical/rich-text';
+
 import type { NodeKey } from 'lexical';
 
 import './index.scss';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalTableOfContents from '@lexical/react/LexicalTableOfContents';
+
 import { useEffect, useRef, useState } from 'react';
 import * as React from 'react';
 
@@ -46,7 +48,7 @@ function isHeadingBelowTheTopOfThePage(element: HTMLElement): boolean {
 function TableOfContentsList({
   tableOfContents,
 }: {
-  tableOfContents: Array<TableOfContentsEntry>;
+  tableOfContents: TableOfContentsEntry[];
 }): JSX.Element {
   const [selectedKey, setSelectedKey] = useState('');
   const selectedIndex = useRef(0);
@@ -74,7 +76,7 @@ function TableOfContentsList({
         );
         if (currentHeading !== null) {
           if (isHeadingBelowTheTopOfThePage(currentHeading)) {
-            //On natural scroll, user is scrolling up
+            // On natural scroll, user is scrolling up
             while (
               currentHeading !== null &&
               isHeadingBelowTheTopOfThePage(currentHeading) &&
@@ -95,7 +97,7 @@ function TableOfContentsList({
             const prevHeadingKey = tableOfContents[selectedIndex.current][0];
             setSelectedKey(prevHeadingKey);
           } else if (isHeadingAboveViewport(currentHeading)) {
-            //On natural scroll, user is scrolling down
+            // On natural scroll, user is scrolling down
             while (
               currentHeading !== null &&
               isHeadingAboveViewport(currentHeading) &&
@@ -133,7 +135,7 @@ function TableOfContentsList({
     }
 
     document.addEventListener('scroll', onScroll);
-    return () => document.removeEventListener('scroll', onScroll);
+    return () => { document.removeEventListener('scroll', onScroll); };
   }, [tableOfContents, editor]);
 
   return (
@@ -145,7 +147,7 @@ function TableOfContentsList({
               <div className="normal-heading-wrapper" key={key}>
                 <div
                   className="first-heading"
-                  onClick={() => scrollToNode(key, index)}
+                  onClick={() => { scrollToNode(key, index); }}
                   role="button"
                   tabIndex={0}>
                   {('' + text).length > 20
@@ -163,7 +165,7 @@ function TableOfContentsList({
                 }`}
                 key={key}>
                 <div
-                  onClick={() => scrollToNode(key, index)}
+                  onClick={() => { scrollToNode(key, index); }}
                   role="button"
                   className={indent(tag)}
                   tabIndex={0}>

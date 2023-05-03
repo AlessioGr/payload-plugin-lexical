@@ -1,16 +1,20 @@
-import { EditorConfig, Feature } from '../../../types';
 
 import * as React from 'react';
-import {
-  AutoEmbedDrawer,
-  PlaygroundEmbedConfig,
-} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
-import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-import { LexicalEditor } from 'lexical';
+
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+
+import { type ElementTransformer } from '@lexical/markdown';
+import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
+
+import { type LexicalEditor } from 'lexical';
+
 import { $createTweetNode, $isTweetNode, TweetNode } from './nodes/TweetNode';
 import TwitterPlugin, { INSERT_TWEET_COMMAND } from './plugins';
-import { ElementTransformer } from '@lexical/markdown';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import {
+  AutoEmbedDrawer,
+  type PlaygroundEmbedConfig,
+} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
+import { type EditorConfig, type Feature } from '../../../types';
 
 export function TwitterFeature(props: {}): Feature {
   const TwitterEmbedConfig: PlaygroundEmbedConfig = {

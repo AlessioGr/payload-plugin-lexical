@@ -6,16 +6,13 @@
  *
  */
 
-import type {
-  GridSelection,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
+
+import { useCallback, useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $isAtNodeEnd } from '@lexical/selection';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $createTextNode,
   $getNodeByKey,
@@ -27,19 +24,25 @@ import {
   KEY_ARROW_RIGHT_COMMAND,
   KEY_TAB_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect } from 'react';
 
 import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
+import { addSwipeRightListener } from '../../../fields/LexicalRichText/utils/swipe';
 import {
   $createAutocompleteNode,
   AutocompleteNode,
 } from '../nodes/AutocompleteNode';
-import { addSwipeRightListener } from '../../../fields/LexicalRichText/utils/swipe';
 
-type SearchPromise = {
+import type {
+  GridSelection,
+  NodeKey,
+  NodeSelection,
+  RangeSelection,
+} from 'lexical';
+
+interface SearchPromise {
   dismiss: () => void;
   promise: Promise<null | string>;
-};
+}
 
 export const uuid = Math.random()
   .toString(36)
@@ -251,15 +254,15 @@ class AutocompleteServer {
     const dismiss = () => {
       isDismissed = true;
     };
-    const promise: Promise<null | string> = new Promise((resolve, reject) => {
+    const promise = new Promise<null | string>((resolve, reject) => {
       setTimeout(() => {
         if (isDismissed) {
           // TODO cache result
-          return reject('Dismissed');
+          reject('Dismissed'); return;
         }
         const searchTextLength = searchText.length;
         if (searchText === '' || searchTextLength < 4) {
-          return resolve(null);
+          resolve(null); return;
         }
         const char0 = searchText.charCodeAt(0);
         const isCapitalized = char0 >= 65 && char0 <= 90;
@@ -271,16 +274,16 @@ class AutocompleteServer {
             dictionaryWord.startsWith(caseInsensitiveSearchText) ?? null,
         );
         if (match === undefined) {
-          return resolve(null);
+          resolve(null); return;
         }
         const matchCapitalized = isCapitalized
           ? String.fromCharCode(match.charCodeAt(0) - 32) + match.substring(1)
           : match;
         const autocompleteChunk = matchCapitalized.substring(searchTextLength);
         if (autocompleteChunk === '') {
-          return resolve(null);
+          resolve(null); return;
         }
-        return resolve(autocompleteChunk);
+        resolve(autocompleteChunk);
       }, this.LATENCY);
     });
 

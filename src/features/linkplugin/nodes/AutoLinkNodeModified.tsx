@@ -1,15 +1,16 @@
 import {
   $applyNodeReplacement,
   $isElementNode,
-  ElementNode,
-  LexicalNode,
-  RangeSelection,
+  type ElementNode,
+  type LexicalNode,
+  type RangeSelection,
   Spread,
 } from 'lexical';
+
 import {
-  LinkAttributes,
+  type LinkAttributes,
   LinkNode,
-  SerializedLinkNode,
+  type SerializedLinkNode,
 } from './LinkNodeModified';
 
 export type SerializedAutoLinkNode = SerializedLinkNode;
@@ -70,7 +71,7 @@ export function $createAutoLinkNode({
 }: {
   attributes?: LinkAttributes;
 }): AutoLinkNode {
-  return $applyNodeReplacement(new AutoLinkNode({ attributes: attributes }));
+  return $applyNodeReplacement(new AutoLinkNode({ attributes }));
 }
 export function $isAutoLinkNode(
   node: LexicalNode | null | undefined,

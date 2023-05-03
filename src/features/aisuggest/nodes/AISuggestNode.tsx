@@ -6,18 +6,19 @@
  *
  */
 
-import type { Spread } from 'lexical';
+
+import * as React from 'react';
 
 import {
   DecoratorNode,
-  EditorConfig,
-  NodeKey,
-  SerializedLexicalNode,
-} from 'lexical';
-import * as React from 'react';
+  type EditorConfig,
+  type NodeKey,
+  type SerializedLexicalNode,
+ type Spread } from 'lexical';
 
 import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
 import { uuid as UUID } from '../plugins';
+
 
 declare global {
   interface Navigator {

@@ -1,13 +1,15 @@
-import { FieldHook } from 'payload/types';
-import { SerializedEditorState, SerializedLexicalNode } from 'lexical';
-import { Payload } from 'payload';
+import { type FieldHook } from 'payload/types';
+
+import { type SerializedEditorState, type SerializedLexicalNode } from 'lexical';
+import { type Payload } from 'payload';
+
 import {
   ImageNode,
-  RawImagePayload,
-  SerializedImageNode,
+  type RawImagePayload,
+  type SerializedImageNode,
 } from './LexicalRichText/nodes/ImageNode';
 import { getJsonContentFromValue } from './LexicalRichText/PayloadLexicalRichTextFieldComponent';
-import { SerializedLinkNode } from '../features/linkplugin/nodes/LinkNodeModified';
+import { type SerializedLinkNode } from '../features/linkplugin/nodes/LinkNodeModified';
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,
@@ -30,7 +32,7 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
     words: number;
   }> => {
   const { payload } = req;
-  if (!value) {
+  if (value == null) {
     return value;
   }
   const jsonContent = getJsonContentFromValue(value);
@@ -116,7 +118,7 @@ export async function traverseLexicalField(
   }
 
   // Run for its children
-  if (node.children && node.children.length > 0) {
+  if ((node.children != null) && node.children.length > 0) {
     const newChildren = [];
     for (const childNode of node.children) {
       newChildren.push(await traverseLexicalField(payload, childNode, locale));

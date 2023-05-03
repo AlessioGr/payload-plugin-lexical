@@ -16,6 +16,9 @@ import type {
 
 import './ImageNode.scss';
 
+import * as React from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
@@ -24,6 +27,7 @@ import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $getNodeByKey,
   $getSelection,
@@ -38,17 +42,15 @@ import {
   KEY_ESCAPE_COMMAND,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import * as React from 'react';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useSharedHistoryContext } from '../context/SharedHistoryContext';
+import { $isImageNode } from './ImageNode';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
+import { useSharedHistoryContext } from '../context/SharedHistoryContext';
+import { useEditorConfigContext } from '../LexicalEditorComponent';
+import { Settings } from '../settings/Settings';
 import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
-import { $isImageNode } from './ImageNode';
-import { useEditorConfigContext } from '../LexicalEditorComponent';
-import { Settings } from '../settings/Settings';
 
 const imageCache = new Set();
 
@@ -341,7 +343,7 @@ export default function ImageComponent({
             <LexicalNestedComposer initialEditor={caption}>
               {editorConfig.features.map((feature) => {
                 if (
-                  feature.subEditorPlugins &&
+                  (feature.subEditorPlugins != null) &&
                   feature.subEditorPlugins.length > 0
                 ) {
                   return feature.subEditorPlugins.map((subEditorPlugin) => {
@@ -362,7 +364,7 @@ export default function ImageComponent({
                 }
                 ErrorBoundary={LexicalErrorBoundary}
               />
-              {showNestedEditorTreeView === true ? <TreeViewPlugin /> : null}
+              {showNestedEditorTreeView ? <TreeViewPlugin /> : null}
             </LexicalNestedComposer>
           </div>
         )}

@@ -1,16 +1,19 @@
-import { EditorConfig, Feature } from '../../../types';
 
 import * as React from 'react';
 
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+
+import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
+
+import { type LexicalEditor } from 'lexical';
+
+import { YouTubeNode } from './nodes/YouTubeNode';
+import YouTubePlugin, { INSERT_YOUTUBE_COMMAND } from './plugins';
 import {
   AutoEmbedDrawer,
-  PlaygroundEmbedConfig,
+  type PlaygroundEmbedConfig,
 } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
-import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-import { LexicalEditor } from 'lexical';
-import YouTubePlugin, { INSERT_YOUTUBE_COMMAND } from './plugins';
-import { YouTubeNode } from './nodes/YouTubeNode';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { type EditorConfig, type Feature } from '../../../types';
 
 export function YouTubeFeature(props: {}): Feature {
   const YoutubeEmbedConfig: PlaygroundEmbedConfig = {
@@ -34,7 +37,7 @@ export function YouTubeFeature(props: {}): Feature {
           url,
         );
 
-      const id = match ? (match?.[2].length === 11 ? match[2] : null) : null;
+      const id = (match != null) ? (match?.[2].length === 11 ? match[2] : null) : null;
 
       if (id != null) {
         return {

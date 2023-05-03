@@ -6,23 +6,24 @@
  *
  */
 
+import * as React from 'react';
+
 import {
-  DOMConversionMap,
-  DOMConversionOutput,
-  DOMExportOutput,
-  EditorConfig,
-  LexicalNode,
-  SerializedLexicalNode,
-  Spread,
-  LexicalEditor,
-  SerializedEditor,
+  type DOMConversionMap,
+  type DOMConversionOutput,
+  type DOMExportOutput,
+  type EditorConfig,
+  type LexicalNode,
+  type SerializedLexicalNode,
+  type Spread,
+  type LexicalEditor,
+  type SerializedEditor,
   createEditor,
   $applyNodeReplacement, DecoratorNode,
 } from 'lexical';
 
-import * as React from 'react';
 
-const RawImageComponent = React.lazy(() => import('./RawImageComponent'));
+const RawImageComponent = React.lazy(async () => await import('./RawImageComponent'));
 
 /* export interface ImagePayload {
   altText: string;
@@ -132,7 +133,7 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
     this.__rawImagePayload = rawImagePayload;
     this.__extraAttributes = extraAttributes;
     this.__showCaption = showCaption || false;
-    this.__caption = caption || createEditor();
+    this.__caption = (caption != null) || createEditor();
     this.__captionsEnabled = captionsEnabled || captionsEnabled === undefined;
   }
 

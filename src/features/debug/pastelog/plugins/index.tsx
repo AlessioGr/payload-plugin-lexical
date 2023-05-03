@@ -6,10 +6,12 @@
  *
  */
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { COMMAND_PRIORITY_NORMAL, PASTE_COMMAND } from 'lexical';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { COMMAND_PRIORITY_NORMAL, PASTE_COMMAND } from 'lexical';
 
 export default function PasteLogPlugin(): JSX.Element {
   const [editor] = useLexicalComposerContext();
@@ -24,7 +26,7 @@ export default function PasteLogPlugin(): JSX.Element {
         (e: ClipboardEvent) => {
           const { clipboardData } = e;
           const allData: string[] = [];
-          if (clipboardData && clipboardData.types) {
+          if ((clipboardData != null) && clipboardData.types) {
             clipboardData.types.forEach((type) => {
               allData.push(type.toUpperCase(), clipboardData.getData(type));
             });

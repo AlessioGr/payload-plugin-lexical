@@ -1,16 +1,19 @@
-import { EditorConfig, Feature } from '../../../types';
 
 import * as React from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useCallback } from 'react';
-import { $createTextNode, $getRoot } from 'lexical';
+
 import { $createCodeNode, $isCodeNode } from '@lexical/code';
 import {
   $convertFromMarkdownString,
   $convertToMarkdownString,
 } from '@lexical/markdown';
-import { PLAYGROUND_TRANSFORMERS } from '../../../fields/LexicalRichText/plugins/MarkdownTransformers';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { $createTextNode, $getRoot } from 'lexical';
+
 import { useEditorConfigContext } from '../../..';
+import { PLAYGROUND_TRANSFORMERS } from '../../../fields/LexicalRichText/plugins/MarkdownTransformers';
+import { EditorConfig, type Feature } from '../../../types';
 
 function ConvertFromMarkdownAction(): JSX.Element {
   const [editor] = useLexicalComposerContext();

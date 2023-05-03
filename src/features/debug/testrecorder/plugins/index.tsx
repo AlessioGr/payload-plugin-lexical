@@ -6,19 +6,23 @@
  *
  */
 
+
+import * as React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
+
+import { IS_APPLE } from '../../../../fields/LexicalRichText/shared/environment';
+import useLayoutEffect from '../../../../fields/LexicalRichText/shared/useLayoutEffect';
+
 import type {
   GridSelection,
   LexicalEditor,
   NodeSelection,
   RangeSelection,
 } from 'lexical';
-
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { $createParagraphNode, $createTextNode, $getRoot } from 'lexical';
-import * as React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { IS_APPLE } from '../../../../fields/LexicalRichText/shared/environment';
-import useLayoutEffect from '../../../../fields/LexicalRichText/shared/useLayoutEffect';
 
 const copy = (text: string | null) => {
   const textArea = document.createElement('textarea');
@@ -143,12 +147,12 @@ const keyPresses = new Set([
   'ArrowDown',
 ]);
 
-type Step = {
+interface Step {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   value: any;
   count: number;
   name: string;
-};
+}
 
 type Steps = Step[];
 
@@ -293,7 +297,7 @@ ${steps.map(formatStep).join('\n')}
   }, [editor, isRecording, pushStep]);
 
   useLayoutEffect(() => {
-    if (preRef.current) {
+    if (preRef.current != null) {
       preRef.current.scrollTo(0, preRef.current.scrollHeight);
     }
   }, [generateTestContent]);
@@ -304,7 +308,7 @@ ${steps.map(formatStep).join('\n')}
       if (testContent !== null) {
         setTemplatedTest(testContent);
       }
-      if (preRef.current) {
+      if (preRef.current != null) {
         preRef.current.scrollTo(0, preRef.current.scrollHeight);
       }
     }
@@ -327,7 +331,7 @@ ${steps.map(formatStep).join('\n')}
           ) {
             const browserSelection = window.getSelection();
             if (
-              browserSelection &&
+              (browserSelection != null) &&
               (browserSelection.anchorNode == null ||
                 browserSelection.focusNode == null)
             ) {

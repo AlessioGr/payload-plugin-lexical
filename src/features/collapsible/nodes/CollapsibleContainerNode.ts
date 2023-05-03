@@ -7,16 +7,16 @@
  */
 
 import {
-  DOMConversionMap,
-  DOMConversionOutput,
-  DOMExportOutput,
-  EditorConfig,
+  type DOMConversionMap,
+  type DOMConversionOutput,
+  type DOMExportOutput,
+  type EditorConfig,
   ElementNode,
-  LexicalEditor,
-  LexicalNode,
-  NodeKey,
-  SerializedElementNode,
-  Spread,
+  type LexicalEditor,
+  type LexicalNode,
+  type NodeKey,
+  type SerializedElementNode,
+  type Spread,
 } from 'lexical';
 
 type SerializedCollapsibleContainerNode = Spread<
@@ -59,7 +59,7 @@ export class CollapsibleContainerNode extends ElementNode {
     dom.addEventListener('toggle', () => {
       const open = editor.getEditorState().read(() => this.getOpen());
       if (open !== dom.open) {
-        editor.update(() => this.toggleOpen());
+        editor.update(() => { this.toggleOpen(); });
       }
     });
     return dom;

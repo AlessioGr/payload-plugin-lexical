@@ -7,9 +7,19 @@
  */
 import './index.scss';
 
+import * as React from 'react';
+import {
+  type DragEvent as ReactDragEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import { createPortal } from 'react-dom';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { eventFiles } from '@lexical/rich-text';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $getNearestNodeFromDOMNode,
   $getNodeByKey,
@@ -18,16 +28,8 @@ import {
   COMMAND_PRIORITY_LOW,
   DRAGOVER_COMMAND,
   DROP_COMMAND,
-  LexicalEditor,
+  type LexicalEditor,
 } from 'lexical';
-import * as React from 'react';
-import {
-  DragEvent as ReactDragEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { createPortal } from 'react-dom';
 
 import { isHTMLElement } from '../../utils/guard';
 import { Point } from '../../utils/point';
@@ -121,7 +123,7 @@ function getBlockElement(
 }
 
 function isOnMenu(element: HTMLElement): boolean {
-  return !!element.closest(`.${DRAGGABLE_BLOCK_MENU_CLASSNAME}`);
+  return !(element.closest(`.${DRAGGABLE_BLOCK_MENU_CLASSNAME}`) == null);
 }
 
 function setMenuPosition(
@@ -129,7 +131,7 @@ function setMenuPosition(
   floatingElem: HTMLElement,
   anchorElem: HTMLElement,
 ) {
-  if (!targetElem) {
+  if (targetElem == null) {
     floatingElem.style.opacity = '0';
     floatingElem.style.transform = 'translate(-10000px, -10000px)';
     return;
@@ -197,7 +199,7 @@ function setTargetLine(
 }
 
 function hideTargetLine(targetLineElem: HTMLElement | null) {
-  if (targetLineElem) {
+  if (targetLineElem != null) {
     targetLineElem.style.opacity = '0';
     targetLineElem.style.transform = 'translate(-10000px, -10000px)';
   }
@@ -247,7 +249,7 @@ function useDraggableBlockMenu(
   }, [scrollerElem, anchorElem, editor]);
 
   useEffect(() => {
-    if (menuRef.current) {
+    if (menuRef.current != null) {
       setMenuPosition(draggableBlockElem, menuRef.current, anchorElem);
     }
   }, [anchorElem, draggableBlockElem]);
@@ -287,18 +289,18 @@ function useDraggableBlockMenu(
       const { target, dataTransfer, pageY } = event;
       const dragData = dataTransfer?.getData(DRAG_DATA_FORMAT) || '';
       const draggedNode = $getNodeByKey(dragData);
-      if (!draggedNode) {
+      if (draggedNode == null) {
         return false;
       }
       if (!isHTMLElement(target)) {
         return false;
       }
       const targetBlockElem = getBlockElement(anchorElem, editor, event);
-      if (!targetBlockElem) {
+      if (targetBlockElem == null) {
         return false;
       }
       const targetNode = $getNearestNodeFromDOMNode(targetBlockElem);
-      if (!targetNode) {
+      if (targetNode == null) {
         return false;
       }
       if (targetNode === draggedNode) {
@@ -336,14 +338,14 @@ function useDraggableBlockMenu(
 
   function onDragStart(event: ReactDragEvent<HTMLDivElement>): void {
     const { dataTransfer } = event;
-    if (!dataTransfer || !draggableBlockElem) {
+    if (!dataTransfer || (draggableBlockElem == null)) {
       return;
     }
     setDragImage(dataTransfer, draggableBlockElem);
     let nodeKey = '';
     editor.update(() => {
       const node = $getNearestNodeFromDOMNode(draggableBlockElem);
-      if (node) {
+      if (node != null) {
         nodeKey = node.getKey();
       }
     });

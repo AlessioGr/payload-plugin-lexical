@@ -1,12 +1,14 @@
-import { Field } from 'payload/types';
+import { type FieldBase } from 'payload/dist/fields/config/types';
+import { type Field } from 'payload/types';
+
 import { cloneDeep } from 'lodash';
-import { FieldBase } from 'payload/dist/fields/config/types';
+
+import { populateLexicalRelationships } from './LexicalAfterReadHook';
 import {
   LexicalRichTextFieldComponent,
   LexicalRichTextCell,
 } from './LexicalRichText';
-import { defaultEditorConfig, EditorConfig } from '../types';
-import { populateLexicalRelationships } from './LexicalAfterReadHook';
+import { defaultEditorConfig, type EditorConfig } from '../types';
 
 export function lexicalRichTextField(
   props: Omit<FieldBase, 'name'> & {
@@ -18,11 +20,11 @@ export function lexicalRichTextField(
 
   const defaultEditorConfigCloned = cloneDeep(defaultEditorConfig);
 
-  const finalEditorConfig: EditorConfig = !editorConfigModifier
+  const finalEditorConfig: EditorConfig = (editorConfigModifier == null)
     ? defaultEditorConfigCloned
     : editorConfigModifier(defaultEditorConfigCloned);
 
-  if (props?.editorConfigModifier) {
+  if ((props?.editorConfigModifier) != null) {
     delete props.editorConfigModifier;
   }
 

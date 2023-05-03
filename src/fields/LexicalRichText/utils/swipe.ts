@@ -8,12 +8,12 @@
 
 type Force = [number, number];
 type Listener = (force: Force, e: TouchEvent) => void;
-type ElementValues = {
+interface ElementValues {
   start: null | Force;
   listeners: Set<Listener>;
   handleTouchstart: (e: TouchEvent) => void;
   handleTouchend: (e: TouchEvent) => void;
-};
+}
 
 const elements = new WeakMap<HTMLElement, ElementValues>();
 
@@ -61,7 +61,7 @@ function addListener(element: HTMLElement, cb: Listener): () => void {
     elements.set(element, elementValues);
   }
   elementValues.listeners.add(cb);
-  return () => deleteListener(element, cb);
+  return () => { deleteListener(element, cb); };
 }
 
 function deleteListener(element: HTMLElement, cb: Listener): void {

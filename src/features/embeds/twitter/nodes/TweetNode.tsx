@@ -6,6 +6,16 @@
  *
  */
 
+
+import * as React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
+import {
+  DecoratorBlockNode,
+  type SerializedDecoratorBlockNode,
+} from '@lexical/react/LexicalDecoratorBlockNode';
+
 import type {
   DOMConversionMap,
   DOMConversionOutput,
@@ -17,14 +27,6 @@ import type {
   NodeKey,
   Spread,
 } from 'lexical';
-
-import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
-import {
-  DecoratorBlockNode,
-  SerializedDecoratorBlockNode,
-} from '@lexical/react/LexicalDecoratorBlockNode';
-import * as React from 'react';
-import { useCallback, useEffect, useRef, useState } from 'react';
 
 const WIDGET_SCRIPT_URL = 'https://platform.twitter.com/widgets.js';
 
@@ -85,11 +87,11 @@ function TweetComponent({
       setIsTweetLoading(false);
       isTwitterScriptLoading = false;
 
-      if (onLoad) {
+      if (onLoad != null) {
         onLoad();
       }
     } catch (error) {
-      if (onError) {
+      if (onError != null) {
         onError(String(error));
       }
     }
@@ -105,7 +107,7 @@ function TweetComponent({
         script.async = true;
         document.body.appendChild(script);
         script.onload = createTweet;
-        if (onError) {
+        if (onError != null) {
           script.onerror = onError as OnErrorEventHandler;
         }
       } else {
@@ -204,7 +206,7 @@ export class TweetNode extends DecoratorBlockNode {
   }
 
   decorate(editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {};
+    const embedBlockTheme = (config.theme.embedBlock != null) || {};
     const className = {
       base: embedBlockTheme.base || '',
       focus: embedBlockTheme.focus || '',

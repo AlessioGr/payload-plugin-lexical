@@ -10,13 +10,13 @@ import type { Ref, RefObject } from 'react';
 import './EquationEditor.scss';
 
 import * as React from 'react';
-import { ChangeEvent, forwardRef } from 'react';
+import { type ChangeEvent, forwardRef } from 'react';
 
-type BaseEquationEditorProps = {
+interface BaseEquationEditorProps {
   equation: string;
   inline: boolean;
   setEquation: (equation: string) => void;
-};
+}
 
 function EquationEditor(
   { equation, setEquation, inline }: BaseEquationEditorProps,

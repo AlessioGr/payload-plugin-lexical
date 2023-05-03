@@ -6,16 +6,13 @@
  *
  */
 
-import type {
-  GridSelection,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
+
+import { useCallback, useEffect, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $isAtNodeEnd } from '@lexical/selection';
 import { mergeRegister } from '@lexical/utils';
+
 import {
   $createTextNode,
   $getNodeByKey,
@@ -27,16 +24,22 @@ import {
   KEY_ARROW_RIGHT_COMMAND,
   KEY_TAB_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useState } from 'react';
 
 import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
-import { $createAISuggestNode, AISuggestNode } from '../nodes/AISuggestNode';
 import { addSwipeRightListener } from '../../../fields/LexicalRichText/utils/swipe';
+import { $createAISuggestNode, AISuggestNode } from '../nodes/AISuggestNode';
 
-type SearchPromise = {
+import type {
+  GridSelection,
+  NodeKey,
+  NodeSelection,
+  RangeSelection,
+} from 'lexical';
+
+interface SearchPromise {
   dismiss: () => void;
   promise: Promise<null | string>;
-};
+}
 
 export const uuid = Math.random()
   .toString(36)
@@ -51,11 +54,11 @@ function $search(
     return [false, ''];
   }
   const node = selection.getNodes()[0];
-  /*const { anchor } = selection;
+  /* const { anchor } = selection;
   // Check siblings?
   if (!$isTextNode(node) || !node.isSimpleText() || !$isAtNodeEnd(anchor)) {
     return [false, ''];
-  }*/
+  } */
 
   // Here we make sure to not only search the current node / paragraph, but also add
   // all the PREVIOUS text, if it is short enough.
@@ -148,7 +151,7 @@ export default function AISuggestPlugin(): JSX.Element | null {
             // Outdated
             return;
           }
-          //console.log('lastSearchMilis', lastSearchMilis, 'Now: ', Date.now());
+          // console.log('lastSearchMilis', lastSearchMilis, 'Now: ', Date.now());
           if (Date.now() < lastSearchMilis) {
             // Search has been replaced by a better search
             return;
@@ -313,21 +316,21 @@ class AutocompleteServer {
     const dismiss = () => {
       isDismissed = true;
     };
-    const promise: Promise<null | string> = new Promise((resolve, reject) => {
+    const promise = new Promise<null | string>((resolve, reject) => {
       setTimeout(() => {
         if (isDismissed) {
           // TODO cache result
-          return reject('Dismissed');
+          reject('Dismissed'); return;
         }
         const searchTextLength = searchText.length;
         if (searchText === '' || searchTextLength < 4) {
-          return resolve(null);
+          resolve(null); return;
         }
 
         const messagePromise = this.getMessage(searchText);
 
         if (messagePromise === undefined) {
-          return resolve(null);
+          resolve(null); return;
         }
 
         resolve(messagePromise);

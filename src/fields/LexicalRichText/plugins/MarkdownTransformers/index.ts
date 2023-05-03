@@ -11,13 +11,12 @@ import {
   $convertToMarkdownString,
   CHECK_LIST,
   ELEMENT_TRANSFORMERS,
-  ElementTransformer,
+  type ElementTransformer,
   TEXT_FORMAT_TRANSFORMERS,
   TEXT_MATCH_TRANSFORMERS,
-  TextMatchTransformer,
-  Transformer,
+  type TextMatchTransformer,
+  type Transformer,
 } from '@lexical/markdown';
-
 import {
   $createTableCellNode,
   $createTableNode,
@@ -30,11 +29,12 @@ import {
   TableNode,
   TableRowNode,
 } from '@lexical/table';
-import { $isParagraphNode, $isTextNode, LexicalNode } from 'lexical';
 
+import { $isParagraphNode, $isTextNode, type LexicalNode } from 'lexical';
+
+import { type EditorConfig } from '../../../../types';
 import { $isImageNode, ImageNode } from '../../nodes/ImageNode';
 
-import { EditorConfig } from '../../../../types';
 
 export const IMAGE: TextMatchTransformer = {
   dependencies: [ImageNode],
@@ -111,7 +111,7 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
       // Header row
       if (TABLE_ROW_DIVIDER_REG_EXP.test(match[0])) {
         const table = parentNode.getPreviousSibling();
-        if (!table || !$isTableNode(table)) {
+        if ((table == null) || !$isTableNode(table)) {
           return;
         }
 
@@ -144,7 +144,7 @@ export const TABLE: (editorConfig: EditorConfig) => ElementTransformer = (
       let sibling = parentNode.getPreviousSibling();
       let maxCells = matchCells.length;
 
-      while (sibling) {
+      while (sibling != null) {
         if (!$isParagraphNode(sibling)) {
           break;
         }
@@ -227,9 +227,9 @@ const createTableCell = (
 const mapToTableCells = (
   textContent: string,
   editorConfig: EditorConfig,
-): Array<TableCellNode> | null => {
+): TableCellNode[] | null => {
   const match = textContent.match(TABLE_ROW_REG_EXP);
-  if (!match || !match[1]) {
+  if ((match == null) || !match[1]) {
     return null;
   }
 
@@ -238,7 +238,7 @@ const mapToTableCells = (
 
 export const PLAYGROUND_TRANSFORMERS: (
   editorConfig: EditorConfig,
-) => Array<Transformer> = (editorConfig) => {
+) => Transformer[] = (editorConfig) => {
   const defaultTransformers = [
     TABLE(editorConfig),
     IMAGE,
@@ -250,7 +250,7 @@ export const PLAYGROUND_TRANSFORMERS: (
 
   for (const feature of editorConfig.features) {
     if (
-      feature.markdownTransformers
+      (feature.markdownTransformers != null)
       && feature.markdownTransformers.length > 0
     ) {
       for (const transformer of feature.markdownTransformers) {
