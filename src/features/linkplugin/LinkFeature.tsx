@@ -1,32 +1,31 @@
-import { Feature } from '../../types';
 import * as React from 'react';
+
+import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin';
+
 import FloatingLinkEditorPlugin from './floatingLinkEditor';
-import LinkPlugin from './plugins/link';
+import { AutoLinkNode } from './nodes/AutoLinkNodeModified';
 import {
   $isLinkNode,
   LinkAttributes,
   LinkNode,
   TOGGLE_LINK_COMMAND,
 } from './nodes/LinkNodeModified';
-import { AutoLinkNode } from './nodes/AutoLinkNodeModified';
 import AutoLinkPlugin from './plugins/autoLink/';
-import LexicalClickableLinkPlugin from '@lexical/react/LexicalClickableLinkPlugin';
+import LinkPlugin from './plugins/link';
+import { type Feature } from '../../types';
 
-/*import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
+/* import { getSelectedNode } from '../../fields/LexicalRichText/utils/getSelectedNode';
 import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from 'lexical';
 import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
 import { useState, useCallback, useEffect } from 'react';
 */
-export function LinkFeature(props: {}): Feature {
-  //TODO: Modularize link modal, toolbarplugin and floatingtexttoolbarplugin
+export function LinkFeature(): Feature {
+  // TODO: Modularize link modal, toolbarplugin and floatingtexttoolbarplugin
 
   return {
     floatingAnchorElemPlugins: [
       (floatingAnchorElem) => (
-        <FloatingLinkEditorPlugin
-          anchorElem={floatingAnchorElem}
-          key="floatinglinkeditor"
-        />
+        <FloatingLinkEditorPlugin anchorElem={floatingAnchorElem} key="floatinglinkeditor" />
       ),
     ],
     tablePlugins: [
@@ -117,6 +116,6 @@ export function LinkFeature(props: {}): Feature {
                     );
                 }
             ]
-        }*/
+        } */
   };
 }

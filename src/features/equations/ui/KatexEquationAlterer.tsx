@@ -5,22 +5,22 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import './KatexEquationAlterer.scss';
-
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import Button from 'payload/dist/admin/components/elements/Button';
 
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
 import KatexRenderer from './KatexRenderer';
 
-type Props = {
+import './KatexEquationAlterer.scss';
+
+interface Props {
   initialEquation?: string;
   onConfirm: (equation: string, inline: boolean) => void;
-};
+}
 
 export default function KatexEquationAlterer({
   onConfirm,
@@ -66,12 +66,13 @@ export default function KatexEquationAlterer({
       </div>
       <div className="KatexEquationAlterer_defaultRow">Visualization </div>
       <div className="KatexEquationAlterer_centerRow">
-        <ErrorBoundary onError={(e) => editor._onError(e)} fallback={null}>
-          <KatexRenderer
-            equation={equation}
-            inline={false}
-            onDoubleClick={() => null}
-          />
+        <ErrorBoundary
+          onError={(e) => {
+            editor._onError(e);
+          }}
+          fallback={null}
+        >
+          <KatexRenderer equation={equation} inline={false} onDoubleClick={() => null} />
         </ErrorBoundary>
       </div>
       <div className="KatexEquationAlterer_dialogActions">

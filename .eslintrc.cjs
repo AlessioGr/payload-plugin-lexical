@@ -15,7 +15,9 @@ module.exports = {
   ],
   ignorePatterns: [
     '.eslintrc.cjs',
+    'demo',
     'node_modules',
+    'serialize-example',
     'mongodb',
     'src/payload.config.ts',
     'src/server.ts',
@@ -26,7 +28,6 @@ module.exports = {
     'build',
     'dist',
     '/media',
-    '/demo/uploads',
     'vitest.config.ts',
     'prettier.config.js',
     'commitlint.config.js'
@@ -118,11 +119,12 @@ module.exports = {
         'newlines-between': 'always',
         pathGroups: [
           { pattern: 'react*', group: 'builtin', position: 'before' },
-          { pattern: '@lexical*/**', group: 'external', position: 'before' },
-          { pattern: '~/lib/**', group: 'parent', position: 'before' },
-          { pattern: '~/modules/**', group: 'parent', position: 'after' },
-          { pattern: '~/ui/**', group: 'parent', position: 'after' },
-          { pattern: '~/styles/**', group: 'parent', position: 'after' }
+          { pattern: 'payload*/**', group: 'external', position: 'before' },
+          { pattern: 'lexical*/**', group: 'external', position: 'before' },
+          { pattern: 'lib/**', group: 'parent', position: 'before' },
+          { pattern: 'modules/**', group: 'parent', position: 'after' },
+          { pattern: 'ui/**', group: 'parent', position: 'after' },
+          { pattern: 'styles/**', group: 'parent', position: 'after' }
         ],
         pathGroupsExcludedImportTypes: [],
         alphabetize: {
@@ -171,5 +173,8 @@ module.exports = {
     // add this back.  Requires explicitly setting propTypes on all custom
     // components.
     'react/prop-types': ['off'],
+
+    // 2023-05-02: Relaxed for now, but should be revisited.
+    '@typescript-eslint/restrict-template-expressions': 'off'
   }
 }

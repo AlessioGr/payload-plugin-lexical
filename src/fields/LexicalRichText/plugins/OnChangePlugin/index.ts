@@ -6,14 +6,16 @@
  *
  */
 
-import type { EditorState, LexicalEditor } from 'lexical';
+import { useEffect } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEffect } from 'react';
+
+import { deepEqual } from '../../../../tools/deepEqual';
+import { type CommentStore } from '../../commenting';
 import useLayoutEffect from '../../shared/useLayoutEffect';
 import { useCommentsContext } from '../CommentPlugin';
-import { CommentStore } from '../../commenting';
-import { deepEqual } from '../../../../tools/deepEqual';
+
+import type { EditorState, LexicalEditor } from 'lexical';
 
 export function OnChangePlugin({
   ignoreHistoryMergeTagChange = true,
@@ -27,7 +29,7 @@ export function OnChangePlugin({
     editorState: EditorState,
     editor: LexicalEditor,
     tags: Set<string>,
-    commentStore: CommentStore,
+    commentStore?: CommentStore
   ) => void;
   value: any;
 }): null {
@@ -35,40 +37,31 @@ export function OnChangePlugin({
   const commentsContext = useCommentsContext();
 
   useEffect(() => {
-    const valueJson = value.jsonContent;
+    const valueJson = value?.jsonContent;
     const editorState = editor.getEditorState();
 
     // In case the value is changed from outside (e.g. through some beforeChange hook in payload),
     // we need to update the lexical editor to reflect the new value.
-    if (!deepEqual(valueJson, editorState.toJSON())) {
+    if (valueJson != null && !deepEqual(valueJson, editorState.toJSON())) {
       const editorState = editor.parseEditorState(valueJson);
       editor.setEditorState(editorState);
-    } else {
     }
   }, [value]);
 
   useLayoutEffect(() => {
-    if (onChange) {
+    if (onChange != null) {
       return editor.registerUpdateListener(
-        ({
-          editorState,
-          dirtyElements,
-          dirtyLeaves,
-          prevEditorState,
-          tags,
-        }) => {
+        ({ editorState, dirtyElements, dirtyLeaves, prevEditorState, tags }) => {
           if (
-            (ignoreSelectionChange
-              && dirtyElements.size === 0
-              && dirtyLeaves.size === 0)
-            || (ignoreHistoryMergeTagChange && tags.has('history-merge'))
-            || prevEditorState.isEmpty()
+            (ignoreSelectionChange && dirtyElements.size === 0 && dirtyLeaves.size === 0) ||
+            (ignoreHistoryMergeTagChange && tags.has('history-merge')) ||
+            prevEditorState.isEmpty()
           ) {
             return;
           }
 
           onChange(editorState, editor, tags, commentsContext.commentStore);
-        },
+        }
       );
     }
   }, [

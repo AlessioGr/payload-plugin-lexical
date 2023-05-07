@@ -6,15 +6,15 @@
  *
  */
 
-import type { Klass, LexicalNode } from 'lexical';
-
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { HashtagNode } from '@lexical/hashtag';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 
 import { ImageNode } from './ImageNode';
-import { EditorConfig } from '../../../types';
+import { type EditorConfig } from '../../../types';
+
+import type { Klass, LexicalNode } from 'lexical';
 
 function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
   const nodes: Array<Klass<LexicalNode>> = [
@@ -29,7 +29,7 @@ function TableCellNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
   ];
 
   for (const feature of editorConfig.features) {
-    if (feature.tableCellNodes && feature.tableCellNodes.length > 0) {
+    if (feature.tableCellNodes != null && feature.tableCellNodes.length > 0) {
       for (const node of feature.tableCellNodes) {
         nodes.push(node);
       }

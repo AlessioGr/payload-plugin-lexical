@@ -6,6 +6,14 @@
  *
  */
 
+import * as React from 'react';
+
+import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
+import {
+  DecoratorBlockNode,
+  type SerializedDecoratorBlockNode,
+} from '@lexical/react/LexicalDecoratorBlockNode';
+
 import type {
   EditorConfig,
   ElementFormatType,
@@ -14,13 +22,6 @@ import type {
   NodeKey,
   Spread,
 } from 'lexical';
-
-import { BlockWithAlignableContents } from '@lexical/react/LexicalBlockWithAlignableContents';
-import {
-  DecoratorBlockNode,
-  SerializedDecoratorBlockNode,
-} from '@lexical/react/LexicalDecoratorBlockNode';
-import * as React from 'react';
 
 type FigmaComponentProps = Readonly<{
   className: Readonly<{
@@ -37,12 +38,9 @@ function FigmaComponent({
   format,
   nodeKey,
   documentID,
-}: FigmaComponentProps) {
+}: FigmaComponentProps): JSX.Element {
   return (
-    <BlockWithAlignableContents
-      className={className}
-      format={format}
-      nodeKey={nodeKey}>
+    <BlockWithAlignableContents className={className} format={format} nodeKey={nodeKey}>
       <iframe
         width="560"
         height="315"
@@ -103,17 +101,19 @@ export class FigmaNode extends DecoratorBlockNode {
 
   getTextContent(
     _includeInert?: boolean | undefined,
-    _includeDirectionless?: false | undefined,
+    _includeDirectionless?: false | undefined
   ): string {
     return `https://www.figma.com/file/${this.__id}`;
   }
 
   decorate(_editor: LexicalEditor, config: EditorConfig): JSX.Element {
-    const embedBlockTheme = config.theme.embedBlock || {};
-    const className = {
-      base: embedBlockTheme.base || '',
-      focus: embedBlockTheme.focus || '',
-    };
+    let className;
+    if (config.theme.embedBlock != null) {
+      className = {
+        base: config.theme.embedBlock?.base ?? '',
+        focus: config.theme.embedBlock?.focus ?? '',
+      };
+    }
     return (
       <FigmaComponent
         className={className}
@@ -133,8 +133,6 @@ export function $createFigmaNode(documentID: string): FigmaNode {
   return new FigmaNode(documentID);
 }
 
-export function $isFigmaNode(
-  node: FigmaNode | LexicalNode | null | undefined,
-): node is FigmaNode {
+export function $isFigmaNode(node: FigmaNode | LexicalNode | null | undefined): node is FigmaNode {
   return node instanceof FigmaNode;
 }

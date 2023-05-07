@@ -1,8 +1,9 @@
-import { EditorConfig, Feature } from '../../../types';
-
 import * as React from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
 import { importFile } from '@lexical/file';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { EditorConfig, type Feature } from '../../../types';
 
 function ImportAction(): JSX.Element {
   const [editor] = useLexicalComposerContext();
@@ -15,13 +16,14 @@ function ImportAction(): JSX.Element {
         importFile(editor);
       }}
       title="Import"
-      aria-label="Import editor state from JSON">
+      aria-label="Import editor state from JSON"
+    >
       <i className="import" />
     </button>
   );
 }
 
-export function ImportFeature(props: {}): Feature {
+export function ImportFeature(): Feature {
   return {
     actions: [<ImportAction key="import" />],
   };

@@ -1,6 +1,7 @@
-import { Feature } from '../../types';
 import * as React from 'react';
+
 import TableOfContentsPlugin from './plugins';
+import { type Feature } from '../../types';
 
 export function TableOfContentsFeature(props: { enabled: boolean }): Feature {
   const { enabled = false } = props;
@@ -8,10 +9,12 @@ export function TableOfContentsFeature(props: { enabled: boolean }): Feature {
   return {
     plugins: [
       {
-        component: enabled && (
+        component: enabled ? (
           <div key="tableofcontents">
             <TableOfContentsPlugin />
           </div>
+        ) : (
+          <></>
         ),
         position: 'bottomInContainer',
       },

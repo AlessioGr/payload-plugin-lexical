@@ -7,11 +7,12 @@
  */
 import './index.scss';
 
-import { $isCodeNode } from '@lexical/code';
-import { $getNearestNodeFromDOMNode, LexicalEditor } from 'lexical';
-import { Options } from 'prettier';
 import * as React from 'react';
 import { useState } from 'react';
+
+import { $isCodeNode } from '@lexical/code';
+import { $getNearestNodeFromDOMNode, type LexicalEditor } from 'lexical';
+import { type Options } from 'prettier';
 
 interface Props {
   lang: string;
@@ -20,19 +21,23 @@ interface Props {
 }
 
 const PRETTIER_PARSER_MODULES = {
-  css: () => import('prettier/parser-postcss'),
-  html: () => import('prettier/parser-html'),
-  js: () => import('prettier/parser-babel'),
-  markdown: () => import('prettier/parser-markdown'),
+  css: async () => await import('prettier/parser-postcss'),
+  html: async () => await import('prettier/parser-html'),
+  js: async () => await import('prettier/parser-babel'),
+  markdown: async () => await import('prettier/parser-markdown'),
 } as const;
 
 type LanguagesType = keyof typeof PRETTIER_PARSER_MODULES;
 
+// TODO: review this function return type
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 async function loadPrettierParserByLang(lang: string) {
   const dynamicImport = PRETTIER_PARSER_MODULES[lang as LanguagesType];
   return await dynamicImport();
 }
 
+// TODO: review this function return type
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 async function loadPrettierFormat() {
   const { format } = await import('prettier/standalone');
   return format;
@@ -61,16 +66,14 @@ export function canBePrettier(lang: string): boolean {
 
 function getPrettierOptions(lang: string): Options {
   const options = PRETTIER_OPTIONS_BY_LANG[lang];
-  if (!options) {
-    throw new Error(
-      `CodeActionMenuPlugin: Prettier does not support this language: ${lang}`,
-    );
+  if (options == null) {
+    throw new Error(`CodeActionMenuPlugin: Prettier does not support this language: ${lang}`);
   }
 
   return options;
 }
 
-export function PrettierButton({ lang, editor, getCodeDOMNode }: Props) {
+export function PrettierButton({ lang, editor, getCodeDOMNode }: Props): JSX.Element {
   const [syntaxError, setSyntaxError] = useState<string>('');
   const [tipsVisible, setTipsVisible] = useState<boolean>(false);
 
@@ -82,7 +85,7 @@ export function PrettierButton({ lang, editor, getCodeDOMNode }: Props) {
       const options = getPrettierOptions(lang);
       options.plugins = [await loadPrettierParserByLang(lang)];
 
-      if (!codeDOMNode) {
+      if (codeDOMNode == null) {
         return;
       }
 
@@ -113,7 +116,7 @@ export function PrettierButton({ lang, editor, getCodeDOMNode }: Props) {
     }
   }
 
-  function setError(error: unknown) {
+  function setError(error: unknown): void {
     if (error instanceof Error) {
       setSyntaxError(error.message);
       setTipsVisible(true);
@@ -122,13 +125,13 @@ export function PrettierButton({ lang, editor, getCodeDOMNode }: Props) {
     }
   }
 
-  function handleMouseEnter() {
+  function handleMouseEnter(): void {
     if (syntaxError !== '') {
       setTipsVisible(true);
     }
   }
 
-  function handleMouseLeave() {
+  function handleMouseLeave(): void {
     if (syntaxError !== '') {
       setTipsVisible(false);
     }
@@ -140,20 +143,19 @@ export function PrettierButton({ lang, editor, getCodeDOMNode }: Props) {
         className="menu-item"
         onClick={(e) => {
           e.preventDefault();
-          handleClick();
+          void handleClick();
         }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        aria-label="prettier">
-        {syntaxError ? (
+        aria-label="prettier"
+      >
+        {syntaxError != null ? (
           <i className="format prettier-error" />
         ) : (
           <i className="format prettier" />
         )}
       </button>
-      {tipsVisible ? (
-        <pre className="code-error-tips">{syntaxError}</pre>
-      ) : null}
+      {tipsVisible ? <pre className="code-error-tips">{syntaxError}</pre> : null}
     </div>
   );
 }

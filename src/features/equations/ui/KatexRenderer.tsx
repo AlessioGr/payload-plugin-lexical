@@ -6,9 +6,10 @@
  *
  */
 
-import katex from 'katex';
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
+
+import katex from 'katex';
 
 export default function KatexRenderer({
   equation,
@@ -42,12 +43,7 @@ export default function KatexRenderer({
     // without having a physical space.
     <React.Fragment>
       <img src="#" alt="" />
-      <span
-        role="button"
-        tabIndex={-1}
-        onDoubleClick={onDoubleClick}
-        ref={katexElementRef}
-      />
+      <span role="button" tabIndex={-1} onDoubleClick={onDoubleClick} ref={katexElementRef} />
       <img src="#" alt="" />
     </React.Fragment>
   );

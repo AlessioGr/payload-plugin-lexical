@@ -6,7 +6,7 @@
  *
  */
 
-import type { LexicalCommand, LexicalEditor, RangeSelection } from 'lexical';
+import { useEffect, useRef, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import {
@@ -17,19 +17,16 @@ import {
   REDO_COMMAND,
   UNDO_COMMAND,
 } from 'lexical';
-import { useEffect, useRef, useState } from 'react';
 
 import useReport from '../../../../fields/LexicalRichText/hooks/useReport';
 
-export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> = createCommand(
-  'SPEECH_TO_TEXT_COMMAND',
-);
+import type { LexicalCommand, LexicalEditor, RangeSelection } from 'lexical';
+
+export const SPEECH_TO_TEXT_COMMAND: LexicalCommand<boolean> =
+  createCommand('SPEECH_TO_TEXT_COMMAND');
 
 const VOICE_COMMANDS: Readonly<
-  Record<
-    string,
-    (arg0: { editor: LexicalEditor; selection: RangeSelection }) => void
-  >
+  Record<string, (arg0: { editor: LexicalEditor; selection: RangeSelection }) => void>
 > = {
   '\n': ({ selection }) => {
     selection.insertParagraph();
@@ -42,6 +39,7 @@ const VOICE_COMMANDS: Readonly<
   },
 };
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 export function isSUPPORT_SPEECH_RECOGNITION(): boolean {
   return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
 }
@@ -50,8 +48,8 @@ function SpeechToTextPlugin(): null {
   const [editor] = useLexicalComposerContext();
   const [isEnabled, setIsEnabled] = useState<boolean>(false);
   const SpeechRecognition =
-    // @ts-ignore
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+    // @ts-expect-error: TODO: no idea
+    window.SpeechRecognition ?? window.webkitSpeechRecognition;
   const recognition = useRef<typeof SpeechRecognition | null>(null);
   const report = useReport();
 
@@ -60,40 +58,37 @@ function SpeechToTextPlugin(): null {
       recognition.current = new SpeechRecognition();
       recognition.current.continuous = true;
       recognition.current.interimResults = true;
-      recognition.current.addEventListener(
-        'result',
-        (event: typeof SpeechRecognition) => {
-          const resultItem = event.results.item(event.resultIndex);
-          const { transcript } = resultItem.item(0);
-          report(transcript);
+      recognition.current.addEventListener('result', (event: typeof SpeechRecognition) => {
+        const resultItem = event.results.item(event.resultIndex);
+        const { transcript } = resultItem.item(0);
+        report(transcript);
 
-          if (!resultItem.isFinal) {
-            return;
-          }
+        if (resultItem.isFinal == null) {
+          return;
+        }
 
-          editor.update(() => {
-            const selection = $getSelection();
+        editor.update(() => {
+          const selection = $getSelection();
 
-            if ($isRangeSelection(selection)) {
-              const command = VOICE_COMMANDS[transcript.toLowerCase().trim()];
+          if ($isRangeSelection(selection)) {
+            const command = VOICE_COMMANDS[transcript.toLowerCase().trim()];
 
-              if (command) {
-                command({
-                  editor,
-                  selection,
-                });
-              } else if (transcript.match(/\s*\n\s*/)) {
-                selection.insertParagraph();
-              } else {
-                selection.insertText(transcript);
-              }
+            if (command != null) {
+              command({
+                editor,
+                selection,
+              });
+            } else if (transcript.match(/\s*\n\s*/) != null) {
+              selection.insertParagraph();
+            } else {
+              selection.insertText(transcript);
             }
-          });
-        },
-      );
+          }
+        });
+      });
     }
 
-    if (recognition.current) {
+    if (recognition.current != null) {
       if (isEnabled) {
         recognition.current.start();
       } else {
@@ -114,7 +109,7 @@ function SpeechToTextPlugin(): null {
         setIsEnabled(_isEnabled);
         return true;
       },
-      COMMAND_PRIORITY_EDITOR,
+      COMMAND_PRIORITY_EDITOR
     );
   }, [editor]);
 

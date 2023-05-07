@@ -6,6 +6,11 @@
  *
  */
 
+import * as React from 'react';
+import { Suspense } from 'react';
+
+import { DecoratorNode } from 'lexical';
+
 import type {
   DOMConversionMap,
   DOMConversionOutput,
@@ -18,41 +23,34 @@ import type {
   Spread,
 } from 'lexical';
 
-import { DecoratorNode } from 'lexical';
-import * as React from 'react';
-import { Suspense } from 'react';
-
-export type Cell = {
+export interface Cell {
   colSpan: number;
   json: string;
   type: 'normal' | 'header';
   id: string;
   width: number | null;
-};
+}
 
-export type Row = {
-  cells: Array<Cell>;
+export interface Row {
+  cells: Cell[];
   height: null | number;
   id: string;
-};
+}
 
-export type Rows = Array<Row>;
+export type Rows = Row[];
 
-export const cellHTMLCache: Map<string, string> = new Map();
-export const cellTextContentCache: Map<string, string> = new Map();
+export const cellHTMLCache = new Map<string, string>();
+export const cellTextContentCache = new Map<string, string>();
 
 const emptyEditorJSON =
   '{"root":{"children":[{"children":[],"direction":null,"format":"","indent":0,"type":"paragraph","version":1}],"direction":null,"format":"","indent":0,"type":"root","version":1}}';
 
-const plainTextEditorJSON = (text: string) =>
+const plainTextEditorJSON = (text: string): string =>
   text === ''
     ? emptyEditorJSON
     : `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":${text},"type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`;
 
-const TableComponent = React.lazy(
-  // @ts-ignore
-  () => import('./TableComponent'),
-);
+const TableComponent = React.lazy(async () => await import('./TableComponent'));
 
 export function createUID(): string {
   return Math.random()
@@ -92,17 +90,15 @@ export function extractRowsFromHTML(tableElem: HTMLTableElement): Rows {
   for (let y = 0; y < rowElems.length; y++) {
     const rowElem = rowElems[y];
     const cellElems = rowElem.querySelectorAll('td,th');
-    if (!cellElems || cellElems.length === 0) {
+    if (cellElems.length === 0) {
       continue;
     }
-    const cells: Array<Cell> = [];
+    const cells: Cell[] = [];
     for (let x = 0; x < cellElems.length; x++) {
       const cellElem = cellElems[x] as HTMLElement;
       const isHeader = cellElem.nodeName === 'TH';
       const cell = createCell(isHeader ? 'header' : 'normal');
-      cell.json = plainTextEditorJSON(
-        JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')),
-      );
+      cell.json = plainTextEditorJSON(JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')));
       cells.push(cell);
     }
     const row = createRow();
@@ -114,24 +110,22 @@ export function extractRowsFromHTML(tableElem: HTMLTableElement): Rows {
 
 function convertTableElement(domNode: HTMLElement): null | DOMConversionOutput {
   const rowElems = domNode.querySelectorAll('tr');
-  if (!rowElems || rowElems.length === 0) {
+  if (rowElems.length === 0) {
     return null;
   }
   const rows: Rows = [];
   for (let y = 0; y < rowElems.length; y++) {
     const rowElem = rowElems[y];
     const cellElems = rowElem.querySelectorAll('td,th');
-    if (!cellElems || cellElems.length === 0) {
+    if (cellElems.length === 0) {
       continue;
     }
-    const cells: Array<Cell> = [];
+    const cells: Cell[] = [];
     for (let x = 0; x < cellElems.length; x++) {
       const cellElem = cellElems[x] as HTMLElement;
       const isHeader = cellElem.nodeName === 'TH';
       const cell = createCell(isHeader ? 'header' : 'normal');
-      cell.json = plainTextEditorJSON(
-        JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')),
-      );
+      cell.json = plainTextEditorJSON(JSON.stringify(cellElem.innerText.replace(/\n/g, ' ')));
       cells.push(cell);
     }
     const row = createRow();
@@ -143,7 +137,7 @@ function convertTableElement(domNode: HTMLElement): null | DOMConversionOutput {
 
 export function exportTableCellsToHTML(
   rows: Rows,
-  rect?: { startX: number; endX: number; startY: number; endY: number },
+  rect?: { startX: number; endX: number; startY: number; endY: number }
 ): HTMLElement {
   const table = document.createElement('table');
   const colGroup = document.createElement('colgroup');
@@ -174,10 +168,8 @@ export function exportTableCellsToHTML(
       x++
     ) {
       const cell = cells[x];
-      const cellElem = document.createElement(
-        cell.type === 'header' ? 'th' : 'td',
-      );
-      cellElem.innerHTML = cellHTMLCache.get(cell.json) || '';
+      const cellElem = document.createElement(cell.type === 'header' ? 'th' : 'td');
+      cellElem.innerHTML = cellHTMLCache.get(cell.json) ?? '';
       rowElem.appendChild(cellElem);
     }
     tBody.appendChild(rowElem);
@@ -226,7 +218,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
 
   constructor(rows?: Rows, key?: NodeKey) {
     super(key);
-    this.__rows = rows || [];
+    this.__rows = rows ?? [];
   }
 
   createDOM(): HTMLElement {
@@ -252,11 +244,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       for (let x = startX; x < endX; x++) {
         const cell = cells[x];
         const mergeCell = mergeCells[x - startX];
-        const cellClone = {
-          ...cell,
-          json: mergeCell.json,
-          type: mergeCell.type,
-        };
+        const cellClone = { ...cell, json: mergeCell.json, type: mergeCell.type };
         cellsClone[x] = cellClone;
       }
       rows[y] = rowClone;
@@ -297,7 +285,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
       const cells = row.cells;
       const cellsClone = Array.from(cells);
       const rowClone = { ...row, cells: cellsClone };
-      const type = (cells[x] || cells[x - 1]).type;
+      const type = (cells[x] ?? cells[x - 1]).type;
       cellsClone.splice(x, 0, createCell(type));
       rows[y] = rowClone;
     }
@@ -335,7 +323,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
   insertRowAt(y: number): void {
     const self = this.getWritable();
     const rows = self.__rows;
-    const prevRow = rows[y] || rows[y - 1];
+    const prevRow = rows[y] ?? rows[y - 1];
     const cellCount = prevRow.cells.length;
     const row = createRow();
     for (let x = 0; x < cellCount; x++) {
@@ -383,11 +371,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
   decorate(_: LexicalEditor, config: EditorConfig): JSX.Element {
     return (
       <Suspense>
-        <TableComponent
-          nodeKey={this.__key}
-          theme={config.theme}
-          rows={this.__rows}
-        />
+        <TableComponent nodeKey={this.__key} theme={config.theme} rows={this.__rows} />
       </Suspense>
     );
   }
@@ -397,9 +381,7 @@ export class TableNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $isTableNode(
-  node: LexicalNode | null | undefined,
-): node is TableNode {
+export function $isTableNode(node: LexicalNode | null | undefined): node is TableNode {
   return node instanceof TableNode;
 }
 
@@ -410,18 +392,14 @@ export function $createTableNode(rows: Rows): TableNode {
 export function $createTableNodeWithDimensions(
   rowCount: number,
   columnCount: number,
-  includeHeaders = true,
+  includeHeaders = true
 ): TableNode {
   const rows: Rows = [];
   for (let y = 0; y < columnCount; y++) {
     const row: Row = createRow();
     rows.push(row);
     for (let x = 0; x < rowCount; x++) {
-      row.cells.push(
-        createCell(
-          includeHeaders === true && (y === 0 || x === 0) ? 'header' : 'normal',
-        ),
-      );
+      row.cells.push(createCell(includeHeaders && (y === 0 || x === 0) ? 'header' : 'normal'));
     }
   }
   return new TableNode(rows);

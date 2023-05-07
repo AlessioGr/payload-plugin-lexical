@@ -13,11 +13,11 @@ export function setFloatingElemPositionForLinkEditor(
   floatingElem: HTMLElement,
   anchorElem: HTMLElement,
   verticalGap: number = VERTICAL_GAP,
-  horizontalOffset: number = HORIZONTAL_OFFSET,
+  horizontalOffset: number = HORIZONTAL_OFFSET
 ): void {
   const scrollerElem = anchorElem.parentElement;
 
-  if (targetRect === null || !scrollerElem) {
+  if (targetRect === null || scrollerElem == null) {
     floatingElem.style.opacity = '0';
     floatingElem.style.transform = 'translate(-10000px, -10000px)';
     return;

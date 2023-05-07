@@ -6,7 +6,6 @@
  *
  */
 
-import type { Klass, LexicalNode } from 'lexical';
 
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { HashtagNode } from '@lexical/hashtag';
@@ -15,10 +14,12 @@ import { MarkNode } from '@lexical/mark';
 import { OverflowNode } from '@lexical/overflow';
 import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
-import { TableNode as NewTableNode } from './TableNode';
 
 import { ImageNode } from './ImageNode';
+import { TableNode as NewTableNode } from './TableNode';
+
 import type { EditorConfig } from '../../../types';
+import type { Klass, LexicalNode } from 'lexical';
 
 function PlaygroundNodes(
   editorConfig: EditorConfig,
@@ -45,7 +46,7 @@ function PlaygroundNodes(
   );
 
   for (const feature of editorConfig.features) {
-    if (feature.nodes && feature.nodes.length > 0) {
+    if ((feature.nodes != null) && feature.nodes.length > 0) {
       for (const node of feature.nodes) {
         nodes.push(node);
       }

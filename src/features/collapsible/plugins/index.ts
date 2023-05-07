@@ -8,6 +8,8 @@
 
 import './Collapsible.scss';
 
+import { useEffect } from 'react';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import {
@@ -24,9 +26,8 @@ import {
   DELETE_CHARACTER_COMMAND,
   INSERT_PARAGRAPH_COMMAND,
   KEY_ARROW_DOWN_COMMAND,
-  NodeKey,
+  type NodeKey,
 } from 'lexical';
-import { useEffect } from 'react';
 
 import {
   $createCollapsibleContainerNode,
@@ -44,6 +45,7 @@ import {
   $createCollapsibleTitleNode,
 } from '../nodes/CollapsibleTitleNode';
 
+// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
 export const INSERT_COLLAPSIBLE_COMMAND = createCommand<void>();
 export const TOGGLE_COLLAPSIBLE_COMMAND = createCommand<NodeKey>();
 
@@ -52,14 +54,10 @@ export default function CollapsiblePlugin(): JSX.Element | null {
 
   useEffect(() => {
     if (
-      !editor.hasNodes([
-        CollapsibleContainerNode,
-        CollapsibleTitleNode,
-        CollapsibleContentNode,
-      ])
+      !editor.hasNodes([CollapsibleContainerNode, CollapsibleTitleNode, CollapsibleContentNode])
     ) {
       throw new Error(
-        'CollapsiblePlugin: CollapsibleContainerNode, CollapsibleTitleNode, or CollapsibleContentNode not registered on editor',
+        'CollapsiblePlugin: CollapsibleContainerNode, CollapsibleTitleNode, or CollapsibleContentNode not registered on editor'
       );
     }
 
@@ -86,9 +84,9 @@ export default function CollapsiblePlugin(): JSX.Element | null {
       editor.registerNodeTransform(CollapsibleContainerNode, (node) => {
         const children = node.getChildren();
         if (
-          children.length !== 2
-          || !$isCollapsibleTitleNode(children[0])
-          || !$isCollapsibleContentNode(children[1])
+          children.length !== 2 ||
+          !$isCollapsibleTitleNode(children[0]) ||
+          !$isCollapsibleContentNode(children[1])
         ) {
           for (const child of children) {
             node.insertBefore(child);
@@ -105,9 +103,9 @@ export default function CollapsiblePlugin(): JSX.Element | null {
         () => {
           const selection = $getSelection();
           if (
-            !$isRangeSelection(selection)
-            || !selection.isCollapsed()
-            || selection.anchor.offset !== 0
+            !$isRangeSelection(selection) ||
+            !selection.isCollapsed() ||
+            selection.anchor.offset !== 0
           ) {
             return false;
           }
@@ -126,7 +124,7 @@ export default function CollapsiblePlugin(): JSX.Element | null {
           container.setOpen(true);
           return true;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       // When collapsible is the last child pressing down arrow will insert paragraph
       // below it to allow adding more content. It's similar what $insertBlockNode
@@ -142,7 +140,7 @@ export default function CollapsiblePlugin(): JSX.Element | null {
 
           const container = $findMatchingParent(
             selection.anchor.getNode(),
-            $isCollapsibleContainerNode,
+            $isCollapsibleContainerNode
           );
 
           if (container === null) {
@@ -155,25 +153,25 @@ export default function CollapsiblePlugin(): JSX.Element | null {
           }
           return false;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       // Handling CMD+Enter to toggle collapsible element collapsed state
       editor.registerCommand(
         INSERT_PARAGRAPH_COMMAND,
         () => {
-          // @ts-ignore
+          // @ts-expect-error: need note
           const windowEvent: KeyboardEvent | undefined = editor._window?.event;
 
           if (
-            windowEvent
-            && (windowEvent.ctrlKey || windowEvent.metaKey)
-            && windowEvent.key === 'Enter'
+            windowEvent != null &&
+            (windowEvent.ctrlKey || windowEvent.metaKey) &&
+            windowEvent.key === 'Enter'
           ) {
             const selection = $getPreviousSelection();
             if ($isRangeSelection(selection) && selection.isCollapsed()) {
               const parent = $findMatchingParent(
                 selection.anchor.getNode(),
-                (node) => $isElementNode(node) && !node.isInline(),
+                (node) => $isElementNode(node) && !node.isInline()
               );
 
               if ($isCollapsibleTitleNode(parent)) {
@@ -189,7 +187,7 @@ export default function CollapsiblePlugin(): JSX.Element | null {
 
           return false;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         INSERT_COLLAPSIBLE_COMMAND,
@@ -202,20 +200,15 @@ export default function CollapsiblePlugin(): JSX.Element | null {
             }
 
             const title = $createCollapsibleTitleNode();
-            const content = $createCollapsibleContentNode().append(
-              $createParagraphNode(),
-            );
-            const container = $createCollapsibleContainerNode(true).append(
-              title,
-              content,
-            );
+            const content = $createCollapsibleContentNode().append($createParagraphNode());
+            const container = $createCollapsibleContainerNode(true).append(title, content);
             selection.insertNodes([container]);
             title.selectStart();
           });
 
           return true;
         },
-        COMMAND_PRIORITY_EDITOR,
+        COMMAND_PRIORITY_EDITOR
       ),
       editor.registerCommand(
         TOGGLE_COLLAPSIBLE_COMMAND,
@@ -229,8 +222,8 @@ export default function CollapsiblePlugin(): JSX.Element | null {
 
           return true;
         },
-        COMMAND_PRIORITY_EDITOR,
-      ),
+        COMMAND_PRIORITY_EDITOR
+      )
     );
   }, [editor]);
   return null;

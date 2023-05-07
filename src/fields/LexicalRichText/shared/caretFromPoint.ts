@@ -8,7 +8,7 @@
 
 export default function caretFromPoint(
   x: number,
-  y: number,
+  y: number
 ): null | {
   offset: number;
   node: Node;
@@ -22,9 +22,10 @@ export default function caretFromPoint(
       node: range.startContainer,
       offset: range.startOffset,
     };
-    // @ts-ignore
-  } if (document.caretPositionFromPoint !== 'undefined') {
-    // @ts-ignore FF - no types
+  }
+  // @ts-expect-error FF - no types
+  if (document.caretPositionFromPoint !== 'undefined') {
+    // @ts-expect-error FF - no types
     const range = document.caretPositionFromPoint(x, y);
     if (range === null) {
       return null;

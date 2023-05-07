@@ -5,26 +5,31 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { debounce } from 'lodash';
 import { useMemo, useRef } from 'react';
 
-export function useDebounce<T extends(...args: never[]) => void>(
+import { debounce } from 'lodash';
+
+// TODO: eslint typescript - there are lots of good debounce hooks out there
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export function useDebounce<T extends (...args: never[]) => void>(
   fn: T,
   ms: number,
-  maxWait?: number) {
+  maxWait?: number
+) {
   const funcRef = useRef<T | null>(null);
   funcRef.current = fn;
 
   return useMemo(
-    () => debounce(
-      (...args: Parameters<T>) => {
-        if (funcRef.current) {
-          funcRef.current(...args);
-        }
-      },
-      ms,
-      { maxWait },
-    ),
-    [ms, maxWait],
+    () =>
+      debounce(
+        (...args: Parameters<T>) => {
+          if (funcRef.current != null) {
+            funcRef.current(...args);
+          }
+        },
+        ms,
+        { maxWait }
+      ),
+    [ms, maxWait]
   );
 }

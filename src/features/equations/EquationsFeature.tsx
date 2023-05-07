@@ -1,19 +1,18 @@
-import { EditorConfig, Feature } from '../../types';
-import {
-  $createEquationNode,
-  $isEquationNode,
-  EquationNode,
-} from './node/EquationNode';
-import EquationsPlugin, { InsertEquationDrawer } from './plugin';
 import * as React from 'react';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { LexicalEditor } from 'lexical';
-import { DropDownItem } from '../../fields/LexicalRichText/ui/DropDown';
-import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
-import { TextMatchTransformer } from '@lexical/markdown';
-import { ComponentPickerOption } from '../../fields/LexicalRichText/plugins/ComponentPickerPlugin';
 
-export function EquationsFeature(props: {}): Feature {
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+
+import { type TextMatchTransformer } from '@lexical/markdown';
+import { type LexicalEditor } from 'lexical';
+
+import { $createEquationNode, $isEquationNode, EquationNode } from './node/EquationNode';
+import EquationsPlugin, { InsertEquationDrawer } from './plugin';
+import { ComponentPickerOption } from '../../fields/LexicalRichText/plugins/ComponentPickerPlugin';
+import { OPEN_MODAL_COMMAND } from '../../fields/LexicalRichText/plugins/ModalPlugin';
+import { DropDownItem } from '../../fields/LexicalRichText/ui/DropDown';
+import { type EditorConfig, type Feature } from '../../types';
+
+export function EquationsFeature(): Feature {
   const equationMarkdownTextMatchTransformer: TextMatchTransformer = {
     dependencies: [EquationNode],
     export: (node) => {
@@ -36,8 +35,8 @@ export function EquationsFeature(props: {}): Feature {
 
   const componentPickerOption = (
     editor: LexicalEditor,
-    editorConfig: EditorConfig,
-  ) =>
+    editorConfig: EditorConfig
+  ): ComponentPickerOption =>
     new ComponentPickerOption('Equation', {
       icon: <i className="icon equation" />,
       keywords: ['equation', 'latex', 'math'],
@@ -78,7 +77,8 @@ export function EquationsFeature(props: {}): Feature {
               onClick={() => {
                 editor.dispatchCommand(OPEN_MODAL_COMMAND, 'equation');
               }}
-              className="item">
+              className="item"
+            >
               <i className="icon equation" />
               <span className="text">Equation</span>
             </DropDownItem>

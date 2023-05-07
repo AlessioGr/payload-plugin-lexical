@@ -6,6 +6,8 @@
  *
  */
 
+import { useEffect } from 'react';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
 import {
@@ -15,17 +17,17 @@ import {
   COMMAND_PRIORITY_LOW,
   PASTE_COMMAND,
 } from 'lexical';
-import { useEffect } from 'react';
+
 import {
-  LinkAttributes,
+  type LinkAttributes,
   LinkNode,
   toggleLink,
   TOGGLE_LINK_COMMAND,
 } from '../../nodes/LinkNodeModified';
 
-type Props = {
+interface Props {
   validateUrl?: (url: string) => boolean;
-};
+}
 
 export function LinkPlugin({ validateUrl }: Props): null {
   const [editor] = useLexicalComposerContext();
@@ -39,13 +41,11 @@ export function LinkPlugin({ validateUrl }: Props): null {
         TOGGLE_LINK_COMMAND,
         (payload: LinkAttributes & { text?: string }) => {
           console.log('Payload received:', payload);
-          let linkAttributes = payload;
+          const linkAttributes = payload;
 
-          //validate
+          // validate
           if (linkAttributes?.linkType === 'custom') {
-            if (
-              !(validateUrl === undefined || validateUrl(linkAttributes?.url))
-            ) {
+            if (!(validateUrl === undefined || validateUrl(linkAttributes?.url as string))) {
               return false;
             }
           }
@@ -53,7 +53,7 @@ export function LinkPlugin({ validateUrl }: Props): null {
           toggleLink(linkAttributes);
           return true;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       validateUrl !== undefined
         ? editor.registerCommand(
@@ -84,11 +84,11 @@ export function LinkPlugin({ validateUrl }: Props): null {
               }
               return false;
             },
-            COMMAND_PRIORITY_LOW,
+            COMMAND_PRIORITY_LOW
           )
         : () => {
-            // Don't paste arbritrary text as a link when there's no validate function
-          },
+            // Don't paste arbitrary text as a link when there's no validate function
+          }
     );
   }, [editor, validateUrl]);
 

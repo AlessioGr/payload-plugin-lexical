@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { LexicalEditor, NodeKey } from 'lexical';
 import { Suspense, useEffect, useState } from 'react';
-
-import { ExtraAttributes, RawImagePayload } from './ImageNode';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
 import { useTranslation } from 'react-i18next';
-import { requests } from 'payload/dist/admin/api';
 
-const ImageComponent = React.lazy(() => import('./ImageComponent'));
+import { requests } from 'payload/dist/admin/api';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+
+import { type LexicalEditor, type NodeKey } from 'lexical';
+
+import { type ExtraAttributes, type RawImagePayload } from './ImageNode';
+
+const ImageComponent = React.lazy(async () => await import('./ImageComponent'));
 
 export default function RawImageComponent({
   rawImagePayload,
@@ -35,7 +37,7 @@ export default function RawImageComponent({
   const [imageData, setImageData] = useState<any>(null);
 
   useEffect(() => {
-    async function loadImageData() {
+    async function loadImageData(): Promise<void> {
       const relatedCollection = collections.find((coll) => {
         return coll.slug === rawImagePayload.relationTo;
       });
@@ -46,36 +48,33 @@ export default function RawImageComponent({
           headers: {
             'Accept-Language': i18n.language,
           },
-        },
+        }
       );
       const json = await response.json();
 
       const imagePayload = {
         altText: json?.text,
         height:
-          extraAttributes && extraAttributes.heightOverride
-            ? extraAttributes.heightOverride
-            : json?.height,
+          extraAttributes?.heightOverride != null ? extraAttributes.heightOverride : json?.height,
         maxWidth:
-          extraAttributes && extraAttributes.widthOverride
-            ? extraAttributes.widthOverride
-            : json?.width,
+          extraAttributes?.widthOverride != null ? extraAttributes.widthOverride : json?.width,
         src: json?.url,
       };
 
       setImageData(imagePayload);
     }
 
-    loadImageData();
+    void loadImageData();
   }, []);
 
   return (
     <Suspense fallback={<p>Loading image...</p>}>
-      {imageData ? (
+      {imageData != null ? (
         <ImageComponent
           src={imageData.src}
           altText={imageData.altText}
-          width={undefined}
+          // TODO: eslint typescript - not sure what this does? was set to undefined
+          width="inherit"
           height={imageData.height}
           maxWidth={imageData.maxWidth}
           nodeKey={nodeKey}

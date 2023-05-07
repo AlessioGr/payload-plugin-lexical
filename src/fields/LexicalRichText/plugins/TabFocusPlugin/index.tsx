@@ -6,14 +6,10 @@
  *
  */
 
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import {
-  $getSelection,
-  $isRangeSelection,
-  $setSelection,
-  FOCUS_COMMAND,
-} from 'lexical';
 import { useEffect } from 'react';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { $getSelection, $isRangeSelection, $setSelection, FOCUS_COMMAND } from 'lexical';
 
 const COMMAND_PRIORITY_LOW = 1;
 const TAB_TO_FOCUS_INTERVAL = 100;
@@ -21,7 +17,7 @@ const TAB_TO_FOCUS_INTERVAL = 100;
 let lastTabKeyDownTimestamp = 0;
 let hasRegisteredKeyDownListener = false;
 
-function registerKeyTimeStampTracker() {
+function registerKeyTimeStampTracker(): void {
   window.addEventListener(
     'keydown',
     (event: KeyboardEvent) => {
@@ -30,7 +26,7 @@ function registerKeyTimeStampTracker() {
         lastTabKeyDownTimestamp = event.timeStamp;
       }
     },
-    true,
+    true
   );
 }
 
@@ -48,16 +44,13 @@ export default function TabFocusPlugin(): null {
       (event: FocusEvent) => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
-          if (
-            lastTabKeyDownTimestamp + TAB_TO_FOCUS_INTERVAL >
-            event.timeStamp
-          ) {
+          if (lastTabKeyDownTimestamp + TAB_TO_FOCUS_INTERVAL > event.timeStamp) {
             $setSelection(selection.clone());
           }
         }
         return false;
       },
-      COMMAND_PRIORITY_LOW,
+      COMMAND_PRIORITY_LOW
     );
   }, [editor]);
 

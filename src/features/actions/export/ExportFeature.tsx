@@ -1,8 +1,9 @@
-import { EditorConfig, Feature } from '../../../types';
-
 import * as React from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
 import { exportFile } from '@lexical/file';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+
+import { EditorConfig, type Feature } from '../../../types';
 
 function ExportAction(): JSX.Element {
   const [editor] = useLexicalComposerContext();
@@ -18,13 +19,14 @@ function ExportAction(): JSX.Element {
         });
       }}
       title="Export"
-      aria-label="Export editor state to JSON">
+      aria-label="Export editor state to JSON"
+    >
       <i className="export" />
     </button>
   );
 }
 
-export function ExportFeature(props: {}): Feature {
+export function ExportFeature(): Feature {
   return {
     actions: [<ExportAction key="export" />],
   };

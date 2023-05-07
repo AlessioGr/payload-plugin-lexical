@@ -6,12 +6,7 @@
  *
  */
 
-import type {
-  GridSelection,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
+import { useCallback, useEffect, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $isAtNodeEnd } from '@lexical/selection';
@@ -27,16 +22,17 @@ import {
   KEY_ARROW_RIGHT_COMMAND,
   KEY_TAB_COMMAND,
 } from 'lexical';
-import { useCallback, useEffect, useState } from 'react';
 
 import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
-import { $createAISuggestNode, AISuggestNode } from '../nodes/AISuggestNode';
 import { addSwipeRightListener } from '../../../fields/LexicalRichText/utils/swipe';
+import { $createAISuggestNode, AISuggestNode } from '../nodes/AISuggestNode';
 
-type SearchPromise = {
+import type { GridSelection, NodeKey, NodeSelection, RangeSelection } from 'lexical';
+
+interface SearchPromise {
   dismiss: () => void;
   promise: Promise<null | string>;
-};
+}
 
 export const uuid = Math.random()
   .toString(36)
@@ -45,40 +41,38 @@ export const uuid = Math.random()
 
 // TODO lookup should be custom
 function $search(
-  selection: null | RangeSelection | NodeSelection | GridSelection,
+  selection: null | RangeSelection | NodeSelection | GridSelection
 ): [boolean, string] {
   if (!$isRangeSelection(selection) || !selection.isCollapsed()) {
     return [false, ''];
   }
   const node = selection.getNodes()[0];
-  /*const { anchor } = selection;
+  /* const { anchor } = selection;
   // Check siblings?
   if (!$isTextNode(node) || !node.isSimpleText() || !$isAtNodeEnd(anchor)) {
     return [false, ''];
-  }*/
+  } */
 
   // Here we make sure to not only search the current node / paragraph, but also add
   // all the PREVIOUS text, if it is short enough.
   let text = node.getTextContent();
 
   const parentText =
-    node?.getParent()?.getParent()?.getTextContent() ??
-    node?.getParent()?.getTextContent();
+    node?.getParent()?.getParent()?.getTextContent() ?? node?.getParent()?.getTextContent();
 
-  if (
-    parentText &&
-    parentText.length < 600 &&
-    parentText.length > text?.length
-  ) {
+  if (parentText != null && parentText.length < 600 && parentText.length > text?.length) {
     // text is parent text UNTIL text:
     text =
-      text && text.length > 0
+      text != null && text.length > 0
         ? parentText.substring(0, parentText.indexOf(text)) + text
         : parentText;
-  } else if ((!text || text.length < 5) && parentText.length >= 600) {
+  } else if ((text == null || text.length < 5) && parentText != null && parentText.length >= 600) {
     // Use only the last 600 characters of the parent text
     // text = parentText.substring(parentText.length - 600);
-    // TODO: This has 2 problems: (1) for some reason it repeats the query in an endless loop and (2) it may include text AFTER the current selection. There needs to be a solution better than parentText.indexOf(text) so that this elseif isn't even needed.
+    // TODO: This has 2 problems: (1) for some reason it repeats the query in an
+    // endless loop and (2) it may include text AFTER the current selection.
+    // There needs to be a solution better than parentText.indexOf(text) so that
+    // this elseif isn't even needed.
   }
 
   if (text.length < 5) {
@@ -111,11 +105,10 @@ export default function AISuggestPlugin(): JSX.Element | null {
     let lastSearchMilis = -1;
     let counter = 0;
 
-    function $clearSuggestion() {
-      const aiSuggestNode =
-        aiSuggestNodeKey !== null ? $getNodeByKey(aiSuggestNodeKey) : null;
-      if (aiSuggestNode !== null && aiSuggestNode.isAttached()) {
-        aiSuggestNode.remove();
+    function $clearSuggestion(): void {
+      const aiSuggestNode = aiSuggestNodeKey !== null ? $getNodeByKey(aiSuggestNodeKey) : null;
+      if (aiSuggestNode?.isAttached() ?? false) {
+        aiSuggestNode?.remove();
         aiSuggestNodeKey = null;
       }
       if (searchPromise !== null) {
@@ -130,8 +123,8 @@ export default function AISuggestPlugin(): JSX.Element | null {
     function updateAsyncSuggestion(
       refSearchPromise: SearchPromise,
       newSuggestion: null | string,
-      thisSuggestionCounter: number,
-    ) {
+      thisSuggestionCounter: number
+    ): void {
       if (searchPromise !== refSearchPromise || newSuggestion === null) {
         // Outdated or no suggestion
         return;
@@ -140,15 +133,11 @@ export default function AISuggestPlugin(): JSX.Element | null {
         () => {
           const selection = $getSelection();
           const [hasMatch, match] = $search(selection);
-          if (
-            !hasMatch ||
-            match !== lastMatch ||
-            !$isRangeSelection(selection)
-          ) {
+          if (!hasMatch || match !== lastMatch || !$isRangeSelection(selection)) {
             // Outdated
             return;
           }
-          //console.log('lastSearchMilis', lastSearchMilis, 'Now: ', Date.now());
+          // console.log('lastSearchMilis', lastSearchMilis, 'Now: ', Date.now());
           if (Date.now() < lastSearchMilis) {
             // Search has been replaced by a better search
             return;
@@ -163,34 +152,33 @@ export default function AISuggestPlugin(): JSX.Element | null {
 
           newSuggestion = lastText.endsWith(' ')
             ? newSuggestion
-            : newSuggestion?.startsWith(',') || newSuggestion?.startsWith('.')
+            : (newSuggestion?.startsWith(',') ?? false) || (newSuggestion?.startsWith('.') ?? false)
             ? newSuggestion
-            : ` ${newSuggestion}`;
+            : ` ${newSuggestion ?? ''}`;
           lastSuggestion = newSuggestion;
           setSuggestion(newSuggestion);
 
-          const aiSuggestNode =
-            aiSuggestNodeKey !== null ? $getNodeByKey(aiSuggestNodeKey) : null;
-          if (aiSuggestNode !== null && aiSuggestNode.isAttached()) {
-            aiSuggestNode.remove();
+          const aiSuggestNode = aiSuggestNodeKey !== null ? $getNodeByKey(aiSuggestNodeKey) : null;
+          if (aiSuggestNode?.isAttached() ?? false) {
+            aiSuggestNode?.remove();
           }
           const node = $createAISuggestNode(uuid);
           aiSuggestNodeKey = node.getKey();
           selection.insertNodes([node]);
           $setSelection(selectionCopy);
         },
-        { tag: 'history-merge' },
+        { tag: 'history-merge' }
       );
     }
 
-    function handleAISuggestNodeTransform(node: AISuggestNode) {
+    function handleAISuggestNodeTransform(node: AISuggestNode): void {
       const key = node.getKey();
       if (node.__uuid === uuid && key !== aiSuggestNodeKey) {
         // Max one Autocomplete node per session
         $clearSuggestion();
       }
     }
-    function handleUpdate() {
+    function handleUpdate(): void {
       editor.update(() => {
         const selection = $getSelection();
         const [hasMatch, match] = $search(selection);
@@ -207,7 +195,7 @@ export default function AISuggestPlugin(): JSX.Element | null {
     }
 
     // Must be run from inside an editor.update()
-    function handleActualUpdate(match: string) {
+    function handleActualUpdate(match: string): void {
       $clearSuggestion();
       searchPromise = query(match);
       // Searching...
@@ -241,21 +229,21 @@ export default function AISuggestPlugin(): JSX.Element | null {
       $clearSuggestion();
       return true;
     }
-    function $handleKeypressCommand(e: Event) {
+    function $handleKeypressCommand(e: Event): boolean {
       if ($handleAISuggestIntent()) {
         e.preventDefault();
         return true;
       }
       return false;
     }
-    function handleSwipeRight(_force: number, e: TouchEvent) {
+    function handleSwipeRight(_force: number, e: TouchEvent): void {
       editor.update(() => {
         if ($handleAISuggestIntent()) {
           e.preventDefault();
         }
       });
     }
-    function unmountSuggestion() {
+    function unmountSuggestion(): void {
       editor.update(() => {
         $clearSuggestion();
       });
@@ -266,20 +254,10 @@ export default function AISuggestPlugin(): JSX.Element | null {
     return mergeRegister(
       editor.registerNodeTransform(AISuggestNode, handleAISuggestNodeTransform),
       editor.registerUpdateListener(handleUpdate),
-      editor.registerCommand(
-        KEY_TAB_COMMAND,
-        $handleKeypressCommand,
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        KEY_ARROW_RIGHT_COMMAND,
-        $handleKeypressCommand,
-        COMMAND_PRIORITY_LOW,
-      ),
-      ...(rootElem !== null
-        ? [addSwipeRightListener(rootElem, handleSwipeRight)]
-        : []),
-      unmountSuggestion,
+      editor.registerCommand(KEY_TAB_COMMAND, $handleKeypressCommand, COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_ARROW_RIGHT_COMMAND, $handleKeypressCommand, COMMAND_PRIORITY_LOW),
+      ...(rootElem !== null ? [addSwipeRightListener(rootElem, handleSwipeRight)] : []),
+      unmountSuggestion
     );
   }, [editor, query, setSuggestion]);
 
@@ -295,12 +273,9 @@ class AutocompleteServer {
 
   getMessage = async (searchText: string): Promise<string> => {
     // make request to our /openai-completion endpoint
-    const response = await fetch(
-      `/api/openai-completion?text=${encodeURIComponent(searchText)}`,
-      {
-        method: 'GET',
-      },
-    );
+    const response = await fetch(`/api/openai-completion?text=${encodeURIComponent(searchText)}`, {
+      method: 'GET',
+    });
     const json = await response.json();
     const match = json?.match;
 
@@ -310,24 +285,28 @@ class AutocompleteServer {
   query = (searchText: string): SearchPromise => {
     let isDismissed = false;
 
-    const dismiss = () => {
+    const dismiss = (): void => {
       isDismissed = true;
     };
-    const promise: Promise<null | string> = new Promise((resolve, reject) => {
+    const promise = new Promise<null | string>((resolve, reject) => {
       setTimeout(() => {
         if (isDismissed) {
           // TODO cache result
-          return reject('Dismissed');
+          // eslint-disable-next-line prefer-promise-reject-errors
+          reject('Dismissed');
+          return;
         }
         const searchTextLength = searchText.length;
         if (searchText === '' || searchTextLength < 4) {
-          return resolve(null);
+          resolve(null);
+          return;
         }
 
         const messagePromise = this.getMessage(searchText);
 
         if (messagePromise === undefined) {
-          return resolve(null);
+          resolve(null);
+          return;
         }
 
         resolve(messagePromise);

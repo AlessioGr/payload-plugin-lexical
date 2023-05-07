@@ -2,11 +2,7 @@ import { Field } from 'payload/types';
 import { lexicalRichTextField } from '../../../src//fields/lexicalRichTextField';
 import { LinkFeature } from '../../../src';
 
-function lexicalRichText(props?: {
-  name?: string;
-  label?: string;
-  debug?: boolean;
-}): Field {
+function lexicalRichText(props?: { name?: string; label?: string; debug?: boolean }): Field {
   return lexicalRichTextField({
     name: props?.name ? props?.name : 'lexical_richtext',
     label: props?.label ? props?.label : 'Rich Text',

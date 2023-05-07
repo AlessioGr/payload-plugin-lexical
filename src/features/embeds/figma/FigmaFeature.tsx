@@ -1,17 +1,19 @@
-import { EditorConfig, Feature } from '../../../types';
-
 import * as React from 'react';
-import FigmaPlugin, { INSERT_FIGMA_COMMAND } from './plugins';
-import { FigmaNode } from './nodes/FigmaNode';
-import {
-  AutoEmbedDrawer,
-  PlaygroundEmbedConfig,
-} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
-import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-import { LexicalEditor } from 'lexical';
+
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
-export function FigmaFeature(props: {}): Feature {
+import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { type LexicalEditor } from 'lexical';
+
+import { FigmaNode } from './nodes/FigmaNode';
+import FigmaPlugin, { INSERT_FIGMA_COMMAND } from './plugins';
+import {
+  AutoEmbedDrawer,
+  type PlaygroundEmbedConfig,
+} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
+import { type EditorConfig, type Feature } from '../../../types';
+
+export function FigmaFeature(): Feature {
   const FigmaEmbedConfig: PlaygroundEmbedConfig = {
     contentName: 'Figma Document',
 
@@ -28,9 +30,7 @@ export function FigmaFeature(props: {}): Feature {
     // Determine if a given URL is a match and return url data.
     parseUrl: (text: string) => {
       const match =
-        /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(
-          text,
-        );
+        /https:\/\/([\w.-]+\.)?figma.com\/(file|proto)\/([0-9a-zA-Z]{22,128})(?:\/.*)?$/.exec(text);
 
       if (match != null) {
         return {

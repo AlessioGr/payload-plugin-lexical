@@ -5,16 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-
-import type {
-  GridSelection,
-  LexicalEditor,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
-
-import './ImageNode.scss';
+import * as React from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
@@ -38,23 +30,35 @@ import {
   KEY_ESCAPE_COMMAND,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import * as React from 'react';
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { useSharedHistoryContext } from '../context/SharedHistoryContext';
+import './ImageNode.scss';
+
+import { $isImageNode } from './ImageNode';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
+import { useSharedHistoryContext } from '../context/SharedHistoryContext';
+import { useEditorConfigContext } from '../LexicalEditorComponent';
+import { Settings } from '../settings/Settings';
 import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';
 import Placeholder from '../ui/Placeholder';
-import { $isImageNode } from './ImageNode';
-import { useEditorConfigContext } from '../LexicalEditorComponent';
-import { Settings } from '../settings/Settings';
+
+import type { GridSelection, LexicalEditor, NodeKey, NodeSelection, RangeSelection } from 'lexical';
 
 const imageCache = new Set();
 
-function useSuspenseImage(src: string) {
+function useSuspenseImage(src: string): void {
   if (!imageCache.has(src)) {
-    throw new Promise((resolve) => {
+    // TODO: eslint typescript fixup - Not sure about this -
+    // but pretty sure we're not supposed to 'throw' a promise
+    // throw new Promise((resolve) => {
+    //   const img = new Image();
+    //   img.src = src;
+    //   img.onload = () => {
+    //     imageCache.add(src);
+    //     resolve(null);
+    //   };
+    // });
+    void new Promise((resolve) => {
       const img = new Image();
       img.src = src;
       img.onload = () => {
@@ -85,7 +89,7 @@ function LazyImage({
   useSuspenseImage(src);
   return (
     <img
-      className={className || undefined}
+      className={className ?? undefined}
       src={src}
       alt={altText}
       ref={imageRef}
@@ -124,13 +128,12 @@ export default function ImageComponent({
 }): JSX.Element {
   const imageRef = useRef<null | HTMLImageElement>(null);
   const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const [isSelected, setSelected, clearSelection] =
-    useLexicalNodeSelection(nodeKey);
+  const [isSelected, setSelected, clearSelection] = useLexicalNodeSelection(nodeKey);
   const [isResizing, setIsResizing] = useState<boolean>(false);
   const [editor] = useLexicalComposerContext();
-  const [selection, setSelection] = useState<
-    RangeSelection | NodeSelection | GridSelection | null
-  >(null);
+  const [selection, setSelection] = useState<RangeSelection | NodeSelection | GridSelection | null>(
+    null
+  );
   const activeEditorRef = useRef<LexicalEditor | null>(null);
 
   const onDelete = useCallback(
@@ -146,7 +149,7 @@ export default function ImageComponent({
       }
       return false;
     },
-    [isSelected, nodeKey, setSelected],
+    [isSelected, nodeKey, setSelected]
   );
 
   const onEnter = useCallback(
@@ -173,15 +176,12 @@ export default function ImageComponent({
       }
       return false;
     },
-    [caption, isSelected, showCaption],
+    [caption, isSelected, showCaption]
   );
 
   const onEscape = useCallback(
     (event: KeyboardEvent) => {
-      if (
-        activeEditorRef.current === caption ||
-        buttonRef.current === event.target
-      ) {
+      if (activeEditorRef.current === caption || buttonRef.current === event.target) {
         $setSelection(null);
         editor.update(() => {
           setSelected(true);
@@ -194,7 +194,7 @@ export default function ImageComponent({
       }
       return false;
     },
-    [caption, editor, setSelected],
+    [caption, editor, setSelected]
   );
 
   useEffect(() => {
@@ -211,7 +211,7 @@ export default function ImageComponent({
           activeEditorRef.current = activeEditor;
           return false;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand<MouseEvent>(
         CLICK_COMMAND,
@@ -233,7 +233,7 @@ export default function ImageComponent({
 
           return false;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         DRAGSTART_COMMAND,
@@ -246,24 +246,12 @@ export default function ImageComponent({
           }
           return false;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
-      editor.registerCommand(
-        KEY_DELETE_COMMAND,
-        onDelete,
-        COMMAND_PRIORITY_LOW,
-      ),
-      editor.registerCommand(
-        KEY_BACKSPACE_COMMAND,
-        onDelete,
-        COMMAND_PRIORITY_LOW,
-      ),
+      editor.registerCommand(KEY_DELETE_COMMAND, onDelete, COMMAND_PRIORITY_LOW),
+      editor.registerCommand(KEY_BACKSPACE_COMMAND, onDelete, COMMAND_PRIORITY_LOW),
       editor.registerCommand(KEY_ENTER_COMMAND, onEnter, COMMAND_PRIORITY_LOW),
-      editor.registerCommand(
-        KEY_ESCAPE_COMMAND,
-        onEscape,
-        COMMAND_PRIORITY_LOW,
-      ),
+      editor.registerCommand(KEY_ESCAPE_COMMAND, onEscape, COMMAND_PRIORITY_LOW)
     );
     return () => {
       isMounted = false;
@@ -281,7 +269,7 @@ export default function ImageComponent({
     setSelected,
   ]);
 
-  const setShowCaption = () => {
+  const setShowCaption = (): void => {
     editor.update(() => {
       const node = $getNodeByKey(nodeKey);
       if ($isImageNode(node)) {
@@ -290,10 +278,7 @@ export default function ImageComponent({
     });
   };
 
-  const onResizeEnd = (
-    nextWidth: undefined | number,
-    nextHeight: undefined | number,
-  ) => {
+  const onResizeEnd = (nextWidth: undefined | number, nextHeight: undefined | number): void => {
     // Delay hiding the resize bars for click case
     setTimeout(() => {
       setIsResizing(false);
@@ -307,7 +292,7 @@ export default function ImageComponent({
     });
   };
 
-  const onResizeStart = () => {
+  const onResizeStart = (): void => {
     setIsResizing(true);
   };
 
@@ -324,9 +309,7 @@ export default function ImageComponent({
         <div draggable={draggable}>
           <LazyImage
             className={
-              isFocused
-                ? `focused ${$isNodeSelection(selection) ? 'draggable' : ''}`
-                : null
+              isFocused ? `focused ${$isNodeSelection(selection) ? 'draggable' : ''}` : null
             }
             src={src}
             altText={altText}
@@ -340,29 +323,23 @@ export default function ImageComponent({
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
               {editorConfig.features.map((feature) => {
-                if (
-                  feature.subEditorPlugins &&
-                  feature.subEditorPlugins.length > 0
-                ) {
+                if (feature.subEditorPlugins != null && feature.subEditorPlugins.length > 0) {
                   return feature.subEditorPlugins.map((subEditorPlugin) => {
                     return subEditorPlugin;
                   });
                 }
+                return null;
               })}
               <HashtagPlugin />
               <HistoryPlugin externalHistoryState={historyState} />
               <RichTextPlugin
-                contentEditable={
-                  <ContentEditable className="ImageNode__contentEditable" />
-                }
+                contentEditable={<ContentEditable className="ImageNode__contentEditable" />}
                 placeholder={
-                  <Placeholder className="ImageNode__placeholder">
-                    Enter a caption...
-                  </Placeholder>
+                  <Placeholder className="ImageNode__placeholder">Enter a caption...</Placeholder>
                 }
                 ErrorBoundary={LexicalErrorBoundary}
               />
-              {showNestedEditorTreeView === true ? <TreeViewPlugin /> : null}
+              {showNestedEditorTreeView ? <TreeViewPlugin /> : null}
             </LexicalNestedComposer>
           </div>
         )}

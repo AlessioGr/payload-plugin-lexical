@@ -7,6 +7,10 @@
  */
 import './index.scss';
 
+import * as React from 'react';
+import { type DragEvent as ReactDragEvent, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
+
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { eventFiles } from '@lexical/rich-text';
 import { mergeRegister } from '@lexical/utils';
@@ -18,16 +22,8 @@ import {
   COMMAND_PRIORITY_LOW,
   DRAGOVER_COMMAND,
   DROP_COMMAND,
-  LexicalEditor,
+  type LexicalEditor,
 } from 'lexical';
-import * as React from 'react';
-import {
-  DragEvent as ReactDragEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { createPortal } from 'react-dom';
 
 import { isHTMLElement } from '../../utils/guard';
 import { Point } from '../../utils/point';
@@ -63,7 +59,7 @@ function getTopLevelNodeKeys(editor: LexicalEditor): string[] {
 function getBlockElement(
   anchorElem: HTMLElement,
   editor: LexicalEditor,
-  event: MouseEvent,
+  event: MouseEvent
 ): HTMLElement | null {
   const anchorElementRect = anchorElem.getBoundingClientRect();
   const topLevelNodeKeys = getTopLevelNodeKeys(editor);
@@ -121,15 +117,15 @@ function getBlockElement(
 }
 
 function isOnMenu(element: HTMLElement): boolean {
-  return !!element.closest(`.${DRAGGABLE_BLOCK_MENU_CLASSNAME}`);
+  return !(element.closest(`.${DRAGGABLE_BLOCK_MENU_CLASSNAME}`) == null);
 }
 
 function setMenuPosition(
   targetElem: HTMLElement | null,
   floatingElem: HTMLElement,
-  anchorElem: HTMLElement,
-) {
-  if (!targetElem) {
+  anchorElem: HTMLElement
+): void {
+  if (targetElem == null) {
     floatingElem.style.opacity = '0';
     floatingElem.style.transform = 'translate(-10000px, -10000px)';
     return;
@@ -151,10 +147,7 @@ function setMenuPosition(
   floatingElem.style.transform = `translate(${left}px, ${top}px)`;
 }
 
-function setDragImage(
-  dataTransfer: DataTransfer,
-  draggableBlockElem: HTMLElement,
-) {
+function setDragImage(dataTransfer: DataTransfer, draggableBlockElem: HTMLElement): void {
   const { transform } = draggableBlockElem.style;
 
   // Remove dragImage borders
@@ -170,13 +163,12 @@ function setTargetLine(
   targetLineElem: HTMLElement,
   targetBlockElem: HTMLElement,
   mouseY: number,
-  anchorElem: HTMLElement,
-) {
+  anchorElem: HTMLElement
+): void {
   const targetStyle = window.getComputedStyle(targetBlockElem);
   const { top: targetBlockElemTop, height: targetBlockElemHeight } =
     targetBlockElem.getBoundingClientRect();
-  const { top: anchorTop, width: anchorWidth } =
-    anchorElem.getBoundingClientRect();
+  const { top: anchorTop, width: anchorWidth } = anchorElem.getBoundingClientRect();
 
   let lineTop = targetBlockElemTop;
   // At the bottom of the target
@@ -190,14 +182,12 @@ function setTargetLine(
   const left = TEXT_BOX_HORIZONTAL_PADDING - SPACE;
 
   targetLineElem.style.transform = `translate(${left}px, ${top}px)`;
-  targetLineElem.style.width = `${
-    anchorWidth - (TEXT_BOX_HORIZONTAL_PADDING - SPACE) * 2
-  }px`;
+  targetLineElem.style.width = `${anchorWidth - (TEXT_BOX_HORIZONTAL_PADDING - SPACE) * 2}px`;
   targetLineElem.style.opacity = '.4';
 }
 
-function hideTargetLine(targetLineElem: HTMLElement | null) {
-  if (targetLineElem) {
+function hideTargetLine(targetLineElem: HTMLElement | null): void {
+  if (targetLineElem != null) {
     targetLineElem.style.opacity = '0';
     targetLineElem.style.transform = 'translate(-10000px, -10000px)';
   }
@@ -206,18 +196,17 @@ function hideTargetLine(targetLineElem: HTMLElement | null) {
 function useDraggableBlockMenu(
   editor: LexicalEditor,
   anchorElem: HTMLElement,
-  isEditable: boolean,
+  isEditable: boolean
 ): JSX.Element {
   const scrollerElem = anchorElem.parentElement;
 
   const menuRef = useRef<HTMLDivElement>(null);
   const targetLineRef = useRef<HTMLDivElement>(null);
   const isDraggingBlockRef = useRef<boolean>(false);
-  const [draggableBlockElem, setDraggableBlockElem] =
-    useState<HTMLElement | null>(null);
+  const [draggableBlockElem, setDraggableBlockElem] = useState<HTMLElement | null>(null);
 
   useEffect(() => {
-    function onMouseMove(event: MouseEvent) {
+    function onMouseMove(event: MouseEvent): void {
       const { target } = event;
       if (!isHTMLElement(target)) {
         setDraggableBlockElem(null);
@@ -233,7 +222,7 @@ function useDraggableBlockMenu(
       setDraggableBlockElem(_draggableBlockElem);
     }
 
-    function onMouseLeave() {
+    function onMouseLeave(): void {
       setDraggableBlockElem(null);
     }
 
@@ -247,7 +236,7 @@ function useDraggableBlockMenu(
   }, [scrollerElem, anchorElem, editor]);
 
   useEffect(() => {
-    if (menuRef.current) {
+    if (menuRef.current != null) {
       setMenuPosition(draggableBlockElem, menuRef.current, anchorElem);
     }
   }, [anchorElem, draggableBlockElem]);
@@ -285,20 +274,20 @@ function useDraggableBlockMenu(
         return false;
       }
       const { target, dataTransfer, pageY } = event;
-      const dragData = dataTransfer?.getData(DRAG_DATA_FORMAT) || '';
+      const dragData = dataTransfer?.getData(DRAG_DATA_FORMAT) ?? '';
       const draggedNode = $getNodeByKey(dragData);
-      if (!draggedNode) {
+      if (draggedNode == null) {
         return false;
       }
       if (!isHTMLElement(target)) {
         return false;
       }
       const targetBlockElem = getBlockElement(anchorElem, editor, event);
-      if (!targetBlockElem) {
+      if (targetBlockElem == null) {
         return false;
       }
       const targetNode = $getNearestNodeFromDOMNode(targetBlockElem);
-      if (!targetNode) {
+      if (targetNode == null) {
         return false;
       }
       if (targetNode === draggedNode) {
@@ -322,28 +311,28 @@ function useDraggableBlockMenu(
         (event) => {
           return onDragover(event);
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         DROP_COMMAND,
         (event) => {
           return onDrop(event);
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [anchorElem, editor]);
 
   function onDragStart(event: ReactDragEvent<HTMLDivElement>): void {
     const { dataTransfer } = event;
-    if (!dataTransfer || !draggableBlockElem) {
+    if (dataTransfer == null || draggableBlockElem == null) {
       return;
     }
     setDragImage(dataTransfer, draggableBlockElem);
     let nodeKey = '';
     editor.update(() => {
       const node = $getNearestNodeFromDOMNode(draggableBlockElem);
-      if (node) {
+      if (node != null) {
         nodeKey = node.getKey();
       }
     });
@@ -363,12 +352,13 @@ function useDraggableBlockMenu(
         ref={menuRef}
         draggable
         onDragStart={onDragStart}
-        onDragEnd={onDragEnd}>
+        onDragEnd={onDragEnd}
+      >
         <div className={isEditable ? 'icon' : ''} />
       </div>
       <div className="draggable-block-target-line" ref={targetLineRef} />
     </React.Fragment>,
-    anchorElem,
+    anchorElem
   );
 }
 

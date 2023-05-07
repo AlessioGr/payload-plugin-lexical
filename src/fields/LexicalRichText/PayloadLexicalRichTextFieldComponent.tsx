@@ -1,29 +1,32 @@
-import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription';
-import Label from 'payload/dist/admin/components/forms/Label';
-import Error from 'payload/dist/admin/components/forms/Error';
-import { Comments, CommentStore } from './commenting';
-const baseClass = 'lexicalRichTextEditor';
-import { $generateHtmlFromNodes } from '@lexical/html';
-
-import { useField, withCondition } from 'payload/components/forms';
-import { LexicalEditorComponent } from './LexicalEditorComponent';
 import React, { useCallback } from 'react';
-
-import {
-  $getRoot,
-  EditorState,
-  LexicalEditor,
-  SerializedEditorState,
-} from 'lexical';
-import { Props } from './types';
-import { Validate } from 'payload/types';
-import defaultValue from './settings/defaultValue';
-import { deepEqual } from '../../tools/deepEqual';
-import './payload.scss';
-import { $convertToMarkdownString } from '@lexical/markdown';
 import { ErrorBoundary } from 'react-error-boundary';
 
-function fallbackRender({ error, resetErrorBoundary }) {
+import { useField, withCondition } from 'payload/components/forms';
+import Error from 'payload/dist/admin/components/forms/Error';
+import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription';
+import Label from 'payload/dist/admin/components/forms/Label';
+import { type Validate } from 'payload/types';
+
+import { $generateHtmlFromNodes } from '@lexical/html';
+import { $convertToMarkdownString } from '@lexical/markdown';
+import {
+  $getRoot,
+  type EditorState,
+  type LexicalEditor,
+  type SerializedEditorState,
+} from 'lexical';
+
+import { type Comments, type CommentStore } from './commenting';
+import { LexicalEditorComponent } from './LexicalEditorComponent';
+import defaultValue from './settings/defaultValue';
+import { type Props } from './types';
+import { deepEqual } from '../../tools/deepEqual';
+
+import './payload.scss';
+
+const baseClass = 'lexicalRichTextEditor';
+
+function fallbackRender({ error, resetErrorBoundary }): JSX.Element {
   // Call resetErrorBoundary() to reset the error boundary and retry the render.
 
   return (
@@ -55,13 +58,13 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     } = {},
   } = props;
 
-  const path = pathFromProps || name;
+  const path = pathFromProps ?? name;
 
   const memoizedValidate = useCallback(
-    (value, validationOptions) => {
-      return lexicalValidate(value, { ...validationOptions, required }); //TODO use "validate" here so people can customize their validate. Sadly that breaks for some reason (it uses no validate rather than lexical as default one if that's done)
+    async (value, validationOptions) => {
+      return await lexicalValidate(value, { ...validationOptions, required }); // TODO use "validate" here so people can customize their validate. Sadly that breaks for some reason (it uses no validate rather than lexical as default one if that's done)
     },
-    [validate, required],
+    [validate, required]
   );
 
   const field = useField<{
@@ -73,7 +76,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     html?: string;
     markdown?: string;
   }>({
-    path: path, // required
+    path, // required
     validate: memoizedValidate,
     condition,
   });
@@ -98,8 +101,8 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
     'field-type',
     className,
     showError && 'error',
-    readOnly && `${baseClass}--read-only`,
-    !hideGutter && `${baseClass}--gutter`,
+    (readOnly ?? false) && `${baseClass}--read-only`,
+    !(hideGutter ?? false) && `${baseClass}--gutter`,
   ]
     .filter(Boolean)
     .join(' ');
@@ -110,51 +113,47 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
       style={{
         ...style,
         width,
-      }}>
+      }}
+    >
       <div className={`${baseClass}__wrap`}>
-        <Error showError={showError} message={errorMessage} />
-        <Label
-          htmlFor={`field-${path.replace(/\./gi, '__')}`}
-          label={label}
-          required={required}
-        />
+        <Error showError={showError} message={errorMessage ?? ''} />
+        <Label htmlFor={`field-${path.replace(/\./gi, '__')}`} label={label} required={required} />
 
         <ErrorBoundary
           fallbackRender={fallbackRender}
           onReset={(details) => {
             // Reset the state of your app so the error doesn't happen again
-          }}>
+          }}
+        >
           <LexicalEditorComponent
             onChange={(
               editorState: EditorState,
               editor: LexicalEditor,
               tags: Set<string>,
-              commentStore: CommentStore,
+              commentStore: CommentStore
             ) => {
               const json = editorState.toJSON();
               const valueJsonContent = getJsonContentFromValue(value);
               if (
-                !readOnly &&
-                valueJsonContent &&
+                !(readOnly ?? false) &&
+                Boolean(valueJsonContent) &&
                 !deepEqual(json, valueJsonContent)
               ) {
                 const textContent = editor.getEditorState().read(() => {
                   return $getRoot().getTextContent();
                 });
                 const preview =
-                  textContent?.length > 100
-                    ? `${textContent.slice(0, 100)}\u2026`
-                    : textContent;
+                  textContent?.length > 100 ? `${textContent.slice(0, 100)}\u2026` : textContent;
 
-                let html: string;
-                if (editorConfig?.output?.html?.enabled) {
+                let html: string = '';
+                if (editorConfig?.output?.html?.enabled != null) {
                   html = editor.getEditorState().read(() => {
                     return $generateHtmlFromNodes(editor, null);
                   });
                 }
 
-                let markdown: string;
-                if (editorConfig?.output?.markdown?.enabled) {
+                let markdown: string = '';
+                if (editorConfig?.output?.markdown?.enabled != null) {
                   markdown = editor.getEditorState().read(() => {
                     return $convertToMarkdownString();
                   });
@@ -162,12 +161,12 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
 
                 setValue({
                   jsonContent: json,
-                  preview: preview,
+                  preview,
                   characters: textContent?.length,
                   words: textContent?.split(' ').length,
                   comments: commentStore.getComments(),
-                  html: html,
-                  markdown: markdown,
+                  html,
+                  markdown,
                 });
               }
             }}
@@ -184,14 +183,11 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
   );
 };
 
-export const lexicalValidate: Validate<unknown, unknown, any> = (
-  value,
-  { t, required },
-) => {
-  if (required) {
+export const lexicalValidate: Validate<unknown, unknown, any> = (value, { t, required }) => {
+  if (required != null) {
     const jsonContent = getJsonContentFromValue(value);
 
-    if (jsonContent && !deepEqual(jsonContent, defaultValue)) {
+    if (jsonContent != null && !deepEqual(jsonContent, defaultValue)) {
       return true;
     }
     return t('validation:required');
@@ -200,11 +196,11 @@ export const lexicalValidate: Validate<unknown, unknown, any> = (
   return true;
 };
 
-export function getJsonContentFromValue(value) {
-  if (!value?.jsonContent) {
+export function getJsonContentFromValue(value): any {
+  if (value?.jsonContent == null) {
     return value;
   }
-  if (value?.jsonContent?.jsonContent) {
+  if (value?.jsonContent?.jsonContent != null) {
     return getJsonContentFromValue(value?.jsonContent);
   }
 

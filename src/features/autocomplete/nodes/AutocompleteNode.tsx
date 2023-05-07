@@ -6,15 +6,15 @@
  *
  */
 
-import type { Spread } from 'lexical';
+import * as React from 'react';
 
 import {
   DecoratorNode,
-  EditorConfig,
-  NodeKey,
-  SerializedLexicalNode,
+  type EditorConfig,
+  type NodeKey,
+  type SerializedLexicalNode,
+  type Spread,
 } from 'lexical';
-import * as React from 'react';
 
 import { useSharedAutocompleteContext } from '../../../fields/LexicalRichText/context/SharedAutocompleteContext';
 import { uuid as UUID } from '../plugins';
@@ -46,9 +46,7 @@ export class AutocompleteNode extends DecoratorNode<JSX.Element | null> {
     return 'autocomplete';
   }
 
-  static importJSON(
-    serializedNode: SerializedAutocompleteNode,
-  ): AutocompleteNode {
+  static importJSON(serializedNode: SerializedAutocompleteNode): AutocompleteNode {
     const node = $createAutocompleteNode(serializedNode.uuid);
     return node;
   }
@@ -67,11 +65,7 @@ export class AutocompleteNode extends DecoratorNode<JSX.Element | null> {
     this.__uuid = uuid;
   }
 
-  updateDOM(
-    prevNode: unknown,
-    dom: HTMLElement,
-    config: EditorConfig,
-  ): boolean {
+  updateDOM(prevNode: unknown, dom: HTMLElement, config: EditorConfig): boolean {
     return false;
   }
 

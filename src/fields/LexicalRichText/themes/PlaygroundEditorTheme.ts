@@ -89,8 +89,7 @@ const theme: EditorThemeClasses = {
   tableAddRows: 'PlaygroundEditorTheme__tableAddRows',
   tableCell: 'PlaygroundEditorTheme__tableCell',
   tableCellActionButton: 'PlaygroundEditorTheme__tableCellActionButton',
-  tableCellActionButtonContainer:
-    'PlaygroundEditorTheme__tableCellActionButtonContainer',
+  tableCellActionButtonContainer: 'PlaygroundEditorTheme__tableCellActionButtonContainer',
   tableCellEditing: 'PlaygroundEditorTheme__tableCellEditing',
   tableCellHeader: 'PlaygroundEditorTheme__tableCellHeader',
   tableCellPrimarySelected: 'PlaygroundEditorTheme__tableCellPrimarySelected',

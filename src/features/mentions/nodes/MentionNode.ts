@@ -6,6 +6,8 @@
  *
  */
 
+import { $applyNodeReplacement, TextNode } from 'lexical';
+
 import type {
   Spread,
   DOMConversionMap,
@@ -17,8 +19,6 @@ import type {
   SerializedTextNode,
 } from 'lexical';
 
-import { $applyNodeReplacement, TextNode } from 'lexical';
-
 export type SerializedMentionNode = Spread<
   {
     mentionName: string;
@@ -26,9 +26,7 @@ export type SerializedMentionNode = Spread<
   SerializedTextNode
 >;
 
-function convertMentionElement(
-  domNode: HTMLElement,
-): DOMConversionOutput | null {
+function convertMentionElement(domNode: HTMLElement): DOMConversionOutput | null {
   const { textContent } = domNode;
 
   if (textContent !== null) {
@@ -117,8 +115,6 @@ export function $createMentionNode(mentionName: string): MentionNode {
   return $applyNodeReplacement(mentionNode);
 }
 
-export function $isMentionNode(
-  node: LexicalNode | null | undefined,
-): node is MentionNode {
+export function $isMentionNode(node: LexicalNode | null | undefined): node is MentionNode {
   return node instanceof MentionNode;
 }

@@ -9,7 +9,7 @@
 import './Placeholder.scss';
 
 import * as React from 'react';
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 
 export default function Placeholder({
   children,
@@ -18,5 +18,5 @@ export default function Placeholder({
   children: ReactNode;
   className?: string;
 }): JSX.Element {
-  return <div className={className || 'Placeholder__root'}>{children}</div>;
+  return <div className={className ?? 'Placeholder__root'}>{children}</div>;
 }

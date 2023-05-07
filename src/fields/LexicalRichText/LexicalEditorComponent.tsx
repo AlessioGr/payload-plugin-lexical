@@ -6,11 +6,11 @@
  *
  */
 
+import * as React from 'react';
+import { createContext, type ReactNode, useContext, useMemo } from 'react';
+
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import * as React from 'react';
-import { createContext, ReactNode, useContext, useMemo } from 'react';
-import { EditorConfig } from '../../types';
 
 import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
@@ -19,18 +19,14 @@ import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { CommentsContext } from './plugins/CommentPlugin';
 import { TableContext } from './plugins/TablePlugin';
 import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
-import { OnChangeProps } from './types';
+import { type OnChangeProps } from './types';
+import { type EditorConfig } from '../../types';
+import { defaultEditorConfig } from '../../types';
+
 import './index.scss';
 
 const LexicalEditor: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig,
-    initialComments,
-    value,
-    setValue,
-  } = props;
+  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 
   const initialConfig = {
     editorState: initialJSON != null ? JSON.stringify(initialJSON) : undefined,
@@ -44,7 +40,7 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <EditorConfigContext editorConfig={editorConfig}>
+      <EditorConfigProvider editorConfig={editorConfig}>
         <SharedHistoryContext>
           <TableContext>
             <SharedAutocompleteContext>
@@ -60,35 +56,32 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
                   />
                 </div>
                 {editorConfig.features.map((feature) => {
-                  if (feature.plugins && feature.plugins.length > 0) {
+                  if (feature.plugins != null && feature.plugins.length > 0) {
                     return feature.plugins.map((plugin) => {
                       if (plugin.position === 'outside') {
                         return plugin.component;
+                      } else {
+                        return null;
                       }
                     });
+                  } else {
+                    return null;
                   }
                 })}
               </CommentsContext>
             </SharedAutocompleteContext>
           </TableContext>
         </SharedHistoryContext>
-      </EditorConfigContext>
+      </EditorConfigProvider>
     </LexicalComposer>
   );
 };
 
 export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
-  const {
-    onChange,
-    initialJSON,
-    editorConfig,
-    initialComments,
-    value,
-    setValue,
-  } = props;
+  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 
   return (
-    //<SettingsContext>
+    // <SettingsContext>
     <LexicalEditor
       onChange={onChange}
       initialJSON={initialJSON}
@@ -97,47 +90,42 @@ export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
       value={value}
       setValue={setValue}
     />
-    //</SettingsContext>
+    // </SettingsContext>
   );
 };
 
-type ContextShape = {
-  editorConfig?: EditorConfig;
-  uuid?: string;
-};
-
-const Context: React.Context<ContextShape> = createContext({});
-function generateQuickGuid() {
+function generateQuickGuid(): string {
   return (
-    Math.random().toString(36).substring(2, 15) +
-    Math.random().toString(36).substring(2, 15)
-  );
+    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+  ).toString();
 }
-export const EditorConfigContext = ({
+interface ContextType {
+  editorConfig: EditorConfig;
+  uuid: string;
+}
+
+const Context: React.Context<ContextType> = createContext({
+  editorConfig: defaultEditorConfig,
+  uuid: generateQuickGuid(),
+});
+
+export const EditorConfigProvider = ({
   children,
   editorConfig,
 }: {
-  children: ReactNode;
+  children: React.ReactNode;
   editorConfig: EditorConfig;
 }): JSX.Element => {
   const [editor] = useLexicalComposerContext();
+  const editorContext = useMemo(() => ({ editorConfig, uuid: generateQuickGuid() }), [editor]);
 
-  let editorContextShape: ContextShape;
+  return <Context.Provider value={editorContext}>{children}</Context.Provider>;
+};
 
-  if (!editorConfig) {
-    throw new Error('editorConfig is required');
-  } else {
-    let uuid = (editorContextShape = useMemo(
-      () => ({ editorConfig: editorConfig, uuid: '' + generateQuickGuid() }),
-      [editor],
-    ));
+export function useEditorConfigContext(): ContextType {
+  const context = useContext(Context);
+  if (context === undefined) {
+    throw new Error('useTheme must be used within an EditorConfigProvider');
   }
-
-  return (
-    <Context.Provider value={editorContextShape}>{children}</Context.Provider>
-  );
-};
-
-export const useEditorConfigContext = (): ContextShape => {
-  return useContext(Context);
-};
+  return context;
+}

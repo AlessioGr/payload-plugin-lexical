@@ -6,7 +6,7 @@
  *
  */
 
-export default function warnOnlyOnce(message: string) {
+export default function warnOnlyOnce(message: string): (() => void) | undefined {
   if (process.env.NODE_ENV === 'production') {
     // return if not dev
     return;

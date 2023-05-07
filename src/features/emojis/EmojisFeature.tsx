@@ -1,9 +1,10 @@
-import { EditorConfig, Feature } from '../../types';
-import { EmojiNode } from './nodes/EmojiNode';
-import EmojisPlugin from './plugins';
 import * as React from 'react';
 
-export function EmojisFeature(props: {}): Feature {
+import { EmojiNode } from './nodes/EmojiNode';
+import EmojisPlugin from './plugins';
+import { EditorConfig, type Feature } from '../../types';
+
+export function EmojisFeature(): Feature {
   return {
     plugins: [
       {

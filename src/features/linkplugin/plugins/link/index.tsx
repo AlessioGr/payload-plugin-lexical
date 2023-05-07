@@ -7,8 +7,8 @@
  */
 
 import * as React from 'react';
-import { LinkPlugin as LexicalLinkPlugin } from './ReactLinkPluginModified';
 
+import { LinkPlugin as LexicalLinkPlugin } from './ReactLinkPluginModified';
 import { validateUrl } from '../../../../fields/LexicalRichText/utils/url';
 
 export default function LinkPlugin(): JSX.Element {

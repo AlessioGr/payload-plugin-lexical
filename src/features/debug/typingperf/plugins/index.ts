@@ -35,10 +35,10 @@ export default function TypingPerfPlugin(): JSX.Element | null {
     let start = 0;
     let timerId: ReturnType<typeof setTimeout> | null;
     let keyPressTimerId: ReturnType<typeof setTimeout> | null;
-    let log: Array<DOMHighResTimeStamp> = [];
+    let log: DOMHighResTimeStamp[] = [];
     let invalidatingEvent = false;
 
-    const measureEventEnd = function logKeyPress() {
+    const measureEventEnd = function logKeyPress(): void {
       if (keyPressTimerId != null) {
         if (invalidatingEvent) {
           invalidatingEvent = false;
@@ -51,7 +51,7 @@ export default function TypingPerfPlugin(): JSX.Element | null {
       }
     };
 
-    const measureEventStart = function measureEvent() {
+    const measureEventStart = function measureEvent(): void {
       if (timerId != null) {
         clearTimeout(timerId);
         timerId = null;
@@ -63,9 +63,7 @@ export default function TypingPerfPlugin(): JSX.Element | null {
       // Schedule a timer to report the results.
       timerId = setTimeout(() => {
         const total = log.reduce((a, b) => a + b, 0);
-        const reportedText = `Typing Perf: ${
-          Math.round((total / log.length) * 100) / 100
-        }ms`;
+        const reportedText = `Typing Perf: ${Math.round((total / log.length) * 100) / 100}ms`;
         report(reportedText);
         log = [];
       }, 2000);
@@ -74,7 +72,7 @@ export default function TypingPerfPlugin(): JSX.Element | null {
       start = performance.now();
     };
 
-    const beforeInputHandler = function beforeInputHandler(event: InputEvent) {
+    const beforeInputHandler = function beforeInputHandler(event: InputEvent): void {
       if (!validInputTypes.has(event.inputType) || invalidatingEvent) {
         invalidatingEvent = false;
         return;
@@ -83,7 +81,7 @@ export default function TypingPerfPlugin(): JSX.Element | null {
       measureEventStart();
     };
 
-    const keyDownHandler = function keyDownHandler(event: KeyboardEvent) {
+    const keyDownHandler = function keyDownHandler(event: KeyboardEvent): void {
       const { keyCode } = event;
 
       if (keyCode === 8 || keyCode === 13) {
@@ -91,11 +89,11 @@ export default function TypingPerfPlugin(): JSX.Element | null {
       }
     };
 
-    const pasteHandler = function pasteHandler() {
+    const pasteHandler = function pasteHandler(): void {
       invalidatingEvent = true;
     };
 
-    const cutHandler = function cutHandler() {
+    const cutHandler = function cutHandler(): void {
       invalidatingEvent = true;
     };
 

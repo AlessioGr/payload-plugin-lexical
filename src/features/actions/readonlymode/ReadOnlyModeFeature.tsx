@@ -1,10 +1,11 @@
-import { EditorConfig, Feature } from '../../../types';
-
 import * as React from 'react';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect, useState } from 'react';
+
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { mergeRegister } from '@lexical/utils';
-import { LexicalEditor } from 'lexical';
+import { type LexicalEditor } from 'lexical';
+
+import { EditorConfig, type Feature } from '../../../types';
 
 async function sendEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());
@@ -24,7 +25,7 @@ async function sendEditorState(editor: LexicalEditor): Promise<void> {
 
 async function validateEditorState(editor: LexicalEditor): Promise<void> {
   const stringifiedEditorState = JSON.stringify(editor.getEditorState());
-  let response = null;
+  let response;
   try {
     response = await fetch('http://localhost:1235/validateEditorState', {
       body: stringifiedEditorState,
@@ -37,10 +38,8 @@ async function validateEditorState(editor: LexicalEditor): Promise<void> {
   } catch {
     // NO-OP
   }
-  if (response !== null && response.status === 403) {
-    throw new Error(
-      'Editor state validation failed! Server did not accept changes.',
-    );
+  if (response != null && response.status === 403) {
+    throw new Error('Editor state validation failed! Server did not accept changes.');
   }
 }
 
@@ -52,25 +51,23 @@ function ReadOnlyModeAction(): JSX.Element {
     return mergeRegister(
       editor.registerEditableListener((editable) => {
         setIsEditable(editable);
-      }),
+      })
     );
   }, [editor]);
 
   useEffect(() => {
-    return editor.registerUpdateListener(
-      ({ dirtyElements, prevEditorState, tags }) => {
-        // If we are in read only mode, send the editor state
-        // to server and ask for validation if possible.
-        if (
-          !isEditable &&
-          dirtyElements.size > 0 &&
-          !tags.has('historic') &&
-          !tags.has('collaboration')
-        ) {
-          validateEditorState(editor);
-        }
-      },
-    );
+    return editor.registerUpdateListener(({ dirtyElements, prevEditorState, tags }) => {
+      // If we are in read only mode, send the editor state
+      // to server and ask for validation if possible.
+      if (
+        !isEditable &&
+        dirtyElements.size > 0 &&
+        !tags.has('historic') &&
+        !tags.has('collaboration')
+      ) {
+        void validateEditorState(editor);
+      }
+    });
   }, [editor, isEditable]);
 
   return (
@@ -80,18 +77,19 @@ function ReadOnlyModeAction(): JSX.Element {
         event.preventDefault();
         // Send latest editor state to commenting validation server
         if (isEditable) {
-          sendEditorState(editor);
+          void sendEditorState(editor);
         }
         editor.setEditable(!editor.isEditable());
       }}
       title="Read-Only Mode"
-      aria-label={`${!isEditable ? 'Unlock' : 'Lock'} read-only mode`}>
+      aria-label={`${!isEditable ? 'Unlock' : 'Lock'} read-only mode`}
+    >
       <i className={!isEditable ? 'unlock' : 'lock'} />
     </button>
   );
 }
 
-export function ReadOnlyModeFeature(props: {}): Feature {
+export function ReadOnlyModeFeature(): Feature {
   return {
     actions: [<ReadOnlyModeAction key="readonly" />],
   };

@@ -9,6 +9,23 @@ import './index.scss';
 
 // import { $isAutoLinkNode, $isLinkNode, TOGGLE_LINK_COMMAND } from '@lexical/link';
 
+import { type Dispatch, useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { createPortal } from 'react-dom';
+import { useTranslation } from 'react-i18next';
+
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
+import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
+import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
+import { type Fields } from 'payload/dist/admin/components/forms/Form/types';
+import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
+import { type Field } from 'payload/dist/fields/config/types';
+
+import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $findMatchingParent, mergeRegister } from '@lexical/utils';
 import {
@@ -17,40 +34,20 @@ import {
   COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_HIGH,
   COMMAND_PRIORITY_LOW,
-  GridSelection,
+  type GridSelection,
   KEY_ESCAPE_COMMAND,
-  LexicalEditor,
-  NodeSelection,
-  RangeSelection,
+  type LexicalEditor,
+  type NodeSelection,
+  type RangeSelection,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import { Dispatch, useCallback, useEffect, useRef, useState } from 'react';
-import * as React from 'react';
-import { createPortal } from 'react-dom';
 
-import { useModal } from '@faceless-ui/modal';
-import { useTranslation } from 'react-i18next';
-
-import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
-import { Fields } from 'payload/dist/admin/components/forms/Form/types';
-import { Field } from 'payload/dist/fields/config/types';
-import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
-import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
-import {
-  $isLinkNode,
-  LinkAttributes,
-  TOGGLE_LINK_COMMAND,
-} from '../nodes/LinkNodeModified';
 import { LinkDrawer } from './LinkDrawer';
-import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
+import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
+import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
+import { $isLinkNode, type LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
 
 function LinkEditor({
   editor,
@@ -159,19 +156,19 @@ function LinkEditor({
         };
 
         if (parent.getAttributes()?.linkType === 'custom') {
-          setLinkUrl(parent.getAttributes()?.url);
-          setLinkLabel(null);
+          setLinkUrl(parent.getAttributes()?.url ?? '');
+          setLinkLabel('');
         } else {
           // internal
           setLinkUrl(
             `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
               parent.getAttributes()?.doc?.value
-            }`,
+            }`
           );
           setLinkLabel(
             `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
               parent.getAttributes()?.doc?.value
-            }`,
+            }`
           );
         }
       } else if ($isLinkNode(node)) {
@@ -182,30 +179,30 @@ function LinkEditor({
         };
 
         if (node.getAttributes()?.linkType === 'custom') {
-          setLinkUrl(node.getAttributes()?.url);
-          setLinkLabel(null);
+          setLinkUrl(node.getAttributes()?.url ?? '');
+          setLinkLabel('');
         } else {
           // internal
           setLinkUrl(
-            `/admin/collections/${parent.getAttributes()?.doc?.relationTo}/${
-              parent.getAttributes()?.doc?.value
-            }`,
+            `/admin/collections/${parent?.getAttributes()?.doc?.relationTo}/${
+              parent?.getAttributes()?.doc?.value
+            }`
           );
           setLinkLabel(
-            `relation to ${parent.getAttributes()?.doc?.relationTo}: ${
-              parent.getAttributes()?.doc?.value
-            }`,
+            `relation to ${parent?.getAttributes()?.doc?.relationTo}: ${
+              parent?.getAttributes()?.doc?.value
+            }`
           );
         }
       } else {
         setLinkUrl('');
-        setLinkLabel(null);
+        setLinkLabel('');
       }
 
-      buildStateFromSchema({
+      void buildStateFromSchema({
         fieldSchema,
         data,
-        user,
+        user: user ?? undefined,
         operation: 'create',
         locale,
         t,
@@ -233,18 +230,18 @@ function LinkEditor({
     ) {
       const domRect: DOMRect | undefined =
         nativeSelection.focusNode?.parentElement?.getBoundingClientRect();
-      if (domRect) {
+      if (domRect != null) {
         domRect.y += 40;
         setFloatingElemPositionForLinkEditor(domRect, editorElem, anchorElem);
       }
       setLastSelection(selection);
-    } else if (!activeElement || activeElement.className !== 'link-input') {
+    } else if (activeElement == null || activeElement.className !== 'link-input') {
       if (rootElement !== null) {
         setFloatingElemPositionForLinkEditor(null, editorElem, anchorElem);
       }
       setLastSelection(null);
       setLinkUrl('');
-      setLinkLabel(null);
+      setLinkLabel('');
     }
 
     return true;
@@ -253,7 +250,7 @@ function LinkEditor({
   useEffect(() => {
     const scrollerElem = anchorElem.parentElement;
 
-    const update = () => {
+    const update = (): void => {
       editor.getEditorState().read(() => {
         updateLinkEditor();
       });
@@ -261,14 +258,14 @@ function LinkEditor({
 
     window.addEventListener('resize', update);
 
-    if (scrollerElem) {
+    if (scrollerElem != null) {
       scrollerElem.addEventListener('scroll', update);
     }
 
     return () => {
       window.removeEventListener('resize', update);
 
-      if (scrollerElem) {
+      if (scrollerElem != null) {
         scrollerElem.removeEventListener('scroll', update);
       }
     };
@@ -288,7 +285,7 @@ function LinkEditor({
           updateLinkEditor();
           return true;
         },
-        COMMAND_PRIORITY_LOW,
+        COMMAND_PRIORITY_LOW
       ),
       editor.registerCommand(
         KEY_ESCAPE_COMMAND,
@@ -299,8 +296,8 @@ function LinkEditor({
           }
           return false;
         },
-        COMMAND_PRIORITY_HIGH,
-      ),
+        COMMAND_PRIORITY_HIGH
+      )
     );
   }, [editor, updateLinkEditor, setIsLink, isLink]);
 
@@ -334,9 +331,9 @@ function LinkEditor({
             text: data?.text,
           };
 
-          /*if (customFieldSchema) {
+          /* if (customFieldSchema) {
               newNode.fields += data.fields;
-            }*/ //TODO
+            } */ // TODO
 
           editor.dispatchCommand(TOGGLE_LINK_COMMAND, newNode);
         }}
@@ -344,13 +341,15 @@ function LinkEditor({
       {isLink && !isModalOpen(drawerSlug) && (
         <div className="link-input">
           <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-            {linkLabel ?? linkUrl}
+            {linkLabel?.length > 0 ? linkLabel : linkUrl}
           </a>
           <div
             className="link-edit"
             role="button"
             tabIndex={0}
-            onMouseDown={(event) => event.preventDefault()}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
             onClick={() => {
               toggleModal(drawerSlug);
             }}
@@ -359,7 +358,9 @@ function LinkEditor({
             className="link-trash"
             role="button"
             tabIndex={0}
-            onMouseDown={(event) => event.preventDefault()}
+            onMouseDown={(event) => {
+              event.preventDefault();
+            }}
             onClick={() => {
               editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
             }}
@@ -372,7 +373,7 @@ function LinkEditor({
 
 function useFloatingLinkEditorToolbar(
   editor: LexicalEditor,
-  anchorElem: HTMLElement,
+  anchorElem: HTMLElement
 ): JSX.Element | null {
   const [activeEditor, setActiveEditor] = useState(editor);
   const [isLink, setIsLink] = useState(false);
@@ -395,18 +396,18 @@ function useFloatingLinkEditorToolbar(
     return mergeRegister(
       editor.registerUpdateListener(({ editorState }) => {
         editorState.read(() => {
-          updateToolbar();
+          void updateToolbar();
         });
       }),
       editor.registerCommand(
         SELECTION_CHANGE_COMMAND,
         (_payload, newEditor) => {
-          updateToolbar();
+          void updateToolbar();
           setActiveEditor(newEditor);
           return false;
         },
-        COMMAND_PRIORITY_CRITICAL,
-      ),
+        COMMAND_PRIORITY_CRITICAL
+      )
     );
   }, [editor, updateToolbar]);
 
@@ -417,7 +418,7 @@ function useFloatingLinkEditorToolbar(
       isLink={isLink}
       setIsLink={setIsLink}
     />,
-    anchorElem,
+    anchorElem
   );
 }
 

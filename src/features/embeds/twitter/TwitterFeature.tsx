@@ -1,18 +1,20 @@
-import { EditorConfig, Feature } from '../../../types';
-
 import * as React from 'react';
-import {
-  AutoEmbedDrawer,
-  PlaygroundEmbedConfig,
-} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
-import { EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
-import { LexicalEditor } from 'lexical';
-import { $createTweetNode, $isTweetNode, TweetNode } from './nodes/TweetNode';
-import TwitterPlugin, { INSERT_TWEET_COMMAND } from './plugins';
-import { ElementTransformer } from '@lexical/markdown';
+
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 
-export function TwitterFeature(props: {}): Feature {
+import { type ElementTransformer } from '@lexical/markdown';
+import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
+import { type LexicalEditor } from 'lexical';
+
+import { $createTweetNode, $isTweetNode, TweetNode } from './nodes/TweetNode';
+import TwitterPlugin, { INSERT_TWEET_COMMAND } from './plugins';
+import {
+  AutoEmbedDrawer,
+  type PlaygroundEmbedConfig,
+} from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
+import { type EditorConfig, type Feature } from '../../../types';
+
+export function TwitterFeature(): Feature {
   const TwitterEmbedConfig: PlaygroundEmbedConfig = {
     // e.g. Tweet or Google Map.
     contentName: 'Tweet',
@@ -32,8 +34,7 @@ export function TwitterFeature(props: {}): Feature {
 
     // Determine if a given URL is a match and return url data.
     parseUrl: (text: string) => {
-      const match =
-        /^https:\/\/twitter\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)$/.exec(text);
+      const match = /^https:\/\/twitter\.com\/(#!\/)?(\w+)\/status(es)*\/(\d+)$/.exec(text);
 
       if (match != null) {
         return {
@@ -77,16 +78,13 @@ export function TwitterFeature(props: {}): Feature {
     markdownTransformers: [tweetMarkdownElementTransformer],
     modals: [
       {
-        modal: (props: {
-          activeEditor: LexicalEditor;
-          editorConfig: EditorConfig;
-        }) => AutoEmbedDrawer({ embedConfig: TwitterEmbedConfig }),
+        modal: (props: { activeEditor: LexicalEditor; editorConfig: EditorConfig }) =>
+          AutoEmbedDrawer({ embedConfig: TwitterEmbedConfig }),
         openModalCommand: {
           type: 'autoembed-' + TwitterEmbedConfig.type,
           command: (toggleModal, editDepth, uuid) => {
             const autoEmbedDrawerSlug = formatDrawerSlug({
-              slug:
-                `lexicalRichText-autoembed-` + TwitterEmbedConfig.type + uuid,
+              slug: `lexicalRichText-autoembed-` + TwitterEmbedConfig.type + uuid,
               depth: editDepth,
             });
 

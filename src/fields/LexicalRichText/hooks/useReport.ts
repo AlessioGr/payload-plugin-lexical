@@ -23,7 +23,7 @@ const getElement = (): HTMLElement => {
     element.style.background = 'rgba(240, 240, 240, 0.4)';
     element.style.borderRadius = '20px';
 
-    if (document.body) {
+    if (document.body != null) {
       document.body.appendChild(element);
     }
   }
@@ -31,16 +31,14 @@ const getElement = (): HTMLElement => {
   return element;
 };
 
-export default function useReport(): (
-  arg0: string,
-) => ReturnType<typeof setTimeout> {
+export default function useReport(): (arg0: string) => ReturnType<typeof setTimeout> {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cleanup = useCallback(() => {
     if (timer !== null) {
       clearTimeout(timer.current as ReturnType<typeof setTimeout>);
     }
 
-    if (document.body) {
+    if (document.body != null) {
       document.body.removeChild(getElement());
     }
   }, []);
@@ -59,6 +57,6 @@ export default function useReport(): (
       timer.current = setTimeout(cleanup, 1000);
       return timer.current;
     },
-    [cleanup],
+    [cleanup]
   );
 }
