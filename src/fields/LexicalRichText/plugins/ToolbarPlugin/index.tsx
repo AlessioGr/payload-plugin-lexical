@@ -61,11 +61,13 @@ import {
   CAN_REDO_COMMAND,
   CAN_UNDO_COMMAND,
   COMMAND_PRIORITY_CRITICAL,
+  COMMAND_PRIORITY_NORMAL,
   // eslint-disable-next-line camelcase
   DEPRECATED_$isGridSelection,
   FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
   INDENT_CONTENT_COMMAND,
+  KEY_MODIFIER_COMMAND,
   OUTDENT_CONTENT_COMMAND,
   REDO_COMMAND,
   SELECTION_CHANGE_COMMAND,
@@ -83,6 +85,7 @@ import { IS_APPLE } from '../../shared/environment';
 import DropDown, { DropDownItem } from '../../ui/DropDown';
 import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import { getSelectedNode } from '../../utils/getSelectedNode';
+import { sanitizeUrl } from '../../utils/url';
 import { getEmbedConfigs } from '../AutoEmbedPlugin';
 import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 
@@ -538,6 +541,26 @@ export default function ToolbarPlugin(props: { editorConfig: EditorConfig }): JS
       )
     );
   }, [activeEditor, editor, $updateToolbar]);
+
+  useEffect(() => {
+    return activeEditor.registerCommand(
+      KEY_MODIFIER_COMMAND,
+      (payload) => {
+        const event: KeyboardEvent = payload;
+        const { code, ctrlKey, metaKey } = event;
+
+        if (code === 'KeyK' && (ctrlKey || metaKey)) {
+          event.preventDefault();
+          return activeEditor.dispatchCommand(
+            TOGGLE_LINK_COMMAND,
+            sanitizeUrl('https://') as LinkAttributes
+          );
+        }
+        return false;
+      },
+      COMMAND_PRIORITY_NORMAL
+    );
+  }, [activeEditor, isLink]);
 
   const applyStyleText = useCallback(
     (styles: Record<string, string>) => {
