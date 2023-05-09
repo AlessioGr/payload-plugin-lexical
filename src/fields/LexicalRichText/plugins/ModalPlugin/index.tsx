@@ -12,7 +12,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import { COMMAND_PRIORITY_NORMAL, createCommand, type LexicalCommand } from 'lexical';
 
 import { type EditorConfig } from '../../../../types';
-import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { useEditorConfigContext } from '../../EditorConfigProvider';
 import { type ImagePayload } from '../../nodes/ImageNode';
 import { InsertTableDialog, InsertNewTableDialog } from '../TablePlugin';
 import { INSERT_IMAGE_COMMAND } from '../UploadPlugin';

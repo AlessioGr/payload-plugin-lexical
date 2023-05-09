@@ -19,10 +19,7 @@ const LexicalBeforeChange: CollectionConfig = {
         });
 
         await headlessEditor.update(() => {
-          $convertFromMarkdownString(
-            'Somedateee ' + Date.now().toString(),
-            TRANSFORMERS,
-          );
+          $convertFromMarkdownString('Somedateee ' + Date.now().toString(), TRANSFORMERS);
         });
 
         const textContent = headlessEditor.getEditorState().read(() => {
@@ -30,9 +27,7 @@ const LexicalBeforeChange: CollectionConfig = {
         });
         console.log('New textcontent', textContent);
         const preview =
-          textContent?.length > 100
-            ? `${textContent.slice(0, 100)}\u2026`
-            : textContent;
+          textContent?.length > 100 ? `${textContent.slice(0, 100)}\u2026` : textContent;
 
         const lexicalValue = {
           jsonContent: headlessEditor.getEditorState().toJSON(),

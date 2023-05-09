@@ -50,6 +50,8 @@ import { type OnChangeProps } from './types';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
 
+import './Editor.scss';
+
 export const Editor: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 

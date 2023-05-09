@@ -4,13 +4,9 @@ import { type FieldHook } from 'payload/types';
 import { type SerializedEditorState, type SerializedLexicalNode } from 'lexical';
 import { type Payload } from 'payload';
 
-import {
-  ImageNode,
-  type RawImagePayload,
-  type SerializedImageNode,
-} from './LexicalRichText/nodes/ImageNode';
-import { getJsonContentFromValue } from './LexicalRichText/PayloadLexicalRichTextFieldComponent';
-import { type SerializedLinkNode } from '../features/linkplugin/nodes/LinkNodeModified';
+import { getJsonContentFromValue } from './FieldComponent';
+import { ImageNode, type RawImagePayload, type SerializedImageNode } from './nodes/ImageNode';
+import { type SerializedLinkNode } from '../../features/linkplugin/nodes/LinkNodeModified';
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,

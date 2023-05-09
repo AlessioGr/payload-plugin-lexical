@@ -7,10 +7,7 @@
  */
 
 import React, { useState } from 'react';
-import {
-  Drawer,
-  formatDrawerSlug,
-} from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import './index.scss';
 
@@ -30,16 +27,14 @@ import X from 'payload/dist/admin/components/icons/X';
 import { TOGGLE_INLINE_PRODUCT_COMMAND } from '../../plugins/InlineProductPlugin';
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEditorConfigContext } from '../../../../../../src/fields/LexicalRichText/LexicalEditorComponent';
+import { useEditorConfigContext } from '../../../../../../src/fields/LexicalRichText/EditorConfigProvider';
 import { EditorConfig } from '../../../../../../src/types';
 
 type Props = {};
 
 const baseClass = 'inlineProduct-drawer';
 
-export function InsertInlineProductDrawer(props: {
-  editorConfig: EditorConfig;
-}): JSX.Element {
+export function InsertInlineProductDrawer(props: { editorConfig: EditorConfig }): JSX.Element {
   const { uuid } = useEditorConfigContext();
 
   const [editor] = useLexicalComposerContext();
@@ -90,13 +85,15 @@ export function InsertInlineProductDrawer(props: {
       key={inlineProductDrawerSlug}
       slug={inlineProductDrawerSlug}
       className={baseClass}
-      title="Add Inline Product">
+      title="Add Inline Product"
+    >
       <Form
         onSubmit={(fields: Fields) => {
           const data = reduceFieldsToValues(fields, true);
           onProductConfirm(data);
         }}
-        initialState={initialState}>
+        initialState={initialState}
+      >
         <RenderFields
           fieldTypes={fieldTypes}
           readOnly={false}

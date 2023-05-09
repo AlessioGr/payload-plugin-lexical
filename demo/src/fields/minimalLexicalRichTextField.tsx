@@ -1,5 +1,5 @@
 import { Field } from 'payload/types';
-import { lexicalRichTextField } from '../../../src//fields/lexicalRichTextField';
+import { lexicalRichTextField } from '../../../src//fields/LexicalRichText';
 import { LinkFeature } from '../../../src';
 
 function lexicalRichText(props?: { name?: string; label?: string; debug?: boolean }): Field {

@@ -12,7 +12,7 @@ import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { CLEAR_EDITOR_COMMAND, LexicalEditor } from 'lexical';
 
-import { useEditorConfigContext } from '../../../../fields/LexicalRichText/LexicalEditorComponent';
+import { useEditorConfigContext } from '../../../../fields/LexicalRichText/EditorConfigProvider';
 import { type EditorConfig } from '../../../../types';
 
 const baseClass = 'rich-text-clear-editor-drawer';

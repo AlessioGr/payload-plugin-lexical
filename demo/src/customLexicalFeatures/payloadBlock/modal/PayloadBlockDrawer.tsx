@@ -7,10 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import {
-  Drawer,
-  formatDrawerSlug,
-} from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import './index.scss';
 
@@ -32,16 +29,14 @@ import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth'
 import { PayloadBlockAttributes } from '../nodes/PayloadBlockNode';
 import { TOGGLE_PAYLOAD_BLOCK_COMMAND } from '../plugins/PayloadBlockPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import { useEditorConfigContext } from '../../../../../src/fields/LexicalRichText/LexicalEditorComponent';
+import { useEditorConfigContext } from '../../../../../src/fields/LexicalRichText/EditorConfigProvider';
 import type { EditorConfig } from '../../../../../src/types';
 
 type Props = {};
 
 const baseClass = 'payloadBlock-modal';
 
-export function InsertPayloadBlockDialog(props: {
-  editorConfig: EditorConfig;
-}): JSX.Element {
+export function InsertPayloadBlockDialog(props: { editorConfig: EditorConfig }): JSX.Element {
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
   const { toggleModal, closeModal } = useModal();
@@ -58,16 +53,12 @@ export function InsertPayloadBlockDialog(props: {
   const [initialState, setInitialState] = useState<Fields>({});
   const { t } = useTranslation('fields');
 
-  const [block, setBlock] = useState<{ block: Block; fieldSchema: Field[] }>(
-    null,
-  );
+  const [block, setBlock] = useState<{ block: Block; fieldSchema: Field[] }>(null);
 
   useEffect(() => {
     async function loadBlock() {
       console.log('Importing block...');
-      const blockImport = await (
-        await import(`../../../../../blocks/InsertYourBlockHere`)
-      ).default;
+      const blockImport = await (await import(`../../../../../blocks/InsertYourBlockHere`)).default;
 
       setBlock({
         block: blockImport,
@@ -98,7 +89,8 @@ export function InsertPayloadBlockDialog(props: {
       key={drawerSlug}
       slug={drawerSlug}
       className={baseClass}
-      title={`Add ${block?.block?.slug ?? 'unknown'} Block`}>
+      title={`Add ${block?.block?.slug ?? 'unknown'} Block`}
+    >
       {block ? (
         <>
           <Form
@@ -106,7 +98,8 @@ export function InsertPayloadBlockDialog(props: {
               const data = reduceFieldsToValues(fields, true);
               onProductConfirm(data);
             }}
-            initialState={initialState}>
+            initialState={initialState}
+          >
             <RenderFields
               fieldTypes={fieldTypes}
               readOnly={false}

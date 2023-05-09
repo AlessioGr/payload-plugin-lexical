@@ -17,12 +17,12 @@ import {
 } from 'lexical';
 
 import { type Comments, type CommentStore } from './commenting';
-import { LexicalEditorComponent } from './LexicalEditorComponent';
+import { EditorProviders } from './EditorProviders';
 import defaultValue from './settings/defaultValue';
 import { type Props } from './types';
 import { deepEqual } from '../../tools/deepEqual';
 
-import './payload.scss';
+import './FieldComponent.scss';
 
 const baseClass = 'lexicalRichTextEditor';
 
@@ -37,7 +37,7 @@ function fallbackRender({ error, resetErrorBoundary }): JSX.Element {
   );
 }
 
-const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
+const FieldComponent: React.FC<Props> = (props) => {
   const {
     editorConfig,
     path: pathFromProps,
@@ -125,7 +125,7 @@ const LexicalRichTextFieldComponent2: React.FC<Props> = (props) => {
             // Reset the state of your app so the error doesn't happen again
           }}
         >
-          <LexicalEditorComponent
+          <EditorProviders
             onChange={(
               editorState: EditorState,
               editor: LexicalEditor,
@@ -207,4 +207,4 @@ export function getJsonContentFromValue(value): any {
   return value?.jsonContent;
 }
 
-export default withCondition(LexicalRichTextFieldComponent2);
+export default withCondition(FieldComponent);

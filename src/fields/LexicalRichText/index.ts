@@ -3,9 +3,9 @@ import { type Field } from 'payload/types';
 
 import { cloneDeep } from 'lodash';
 
+import { LexicalRichTextFieldComponent, LexicalRichTextCell } from './FieldComponentLazy';
 import { populateLexicalRelationships } from './LexicalAfterReadHook';
-import { LexicalRichTextFieldComponent, LexicalRichTextCell } from './LexicalRichText';
-import { defaultEditorConfig, type EditorConfig } from '../types';
+import { defaultEditorConfig, type EditorConfig } from '../../types';
 
 export function lexicalRichTextField(
   props: Omit<FieldBase, 'name'> & {

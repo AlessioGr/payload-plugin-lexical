@@ -32,7 +32,7 @@ import {
   LexicalEditor,
 } from 'lexical';
 
-import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
+import { useEditorConfigContext } from '../../../fields/LexicalRichText/EditorConfigProvider';
 import { type EditorConfig } from '../../../types';
 import { $createEquationNode, EquationNode } from '../node/EquationNode';
 import KatexEquationAlterer from '../ui/KatexEquationAlterer';

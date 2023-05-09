@@ -27,7 +27,7 @@ import {
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import { type EditorConfig } from '../../../../types';
-import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { useEditorConfigContext } from '../../EditorConfigProvider';
 import { DialogActions } from '../../ui/Dialog';
 import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 

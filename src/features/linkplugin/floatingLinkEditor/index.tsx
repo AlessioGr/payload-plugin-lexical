@@ -43,7 +43,7 @@ import {
 } from 'lexical';
 
 import { LinkDrawer } from './LinkDrawer';
-import { useEditorConfigContext } from '../../../fields/LexicalRichText/LexicalEditorComponent';
+import { useEditorConfigContext } from '../../../fields/LexicalRichText/EditorConfigProvider';
 import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';

@@ -40,7 +40,8 @@ export function InlineProductFeature(props: {}): Feature {
               onClick={() => {
                 editor.dispatchCommand(OPEN_MODAL_COMMAND, 'inlineProduct');
               }}
-              className="item">
+              className="item"
+            >
               <i className="icon product" />
               <span className="text">Inline Product</span>
             </DropDownItem>

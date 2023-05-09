@@ -14,7 +14,8 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 
 import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
-import { Editor } from './LexicalRichText';
+import { Editor } from './Editor';
+import { EditorConfigProvider } from './EditorConfigProvider';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { CommentsContext } from './plugins/CommentPlugin';
 import { TableContext } from './plugins/TablePlugin';
@@ -23,9 +24,7 @@ import { type OnChangeProps } from './types';
 import { type EditorConfig } from '../../types';
 import { defaultEditorConfig } from '../../types';
 
-import './index.scss';
-
-const LexicalEditor: React.FC<OnChangeProps> = (props) => {
+export const EditorProviders: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
 
   const initialConfig = {
@@ -76,56 +75,3 @@ const LexicalEditor: React.FC<OnChangeProps> = (props) => {
     </LexicalComposer>
   );
 };
-
-export const LexicalEditorComponent: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
-
-  return (
-    // <SettingsContext>
-    <LexicalEditor
-      onChange={onChange}
-      initialJSON={initialJSON}
-      editorConfig={editorConfig}
-      initialComments={initialComments}
-      value={value}
-      setValue={setValue}
-    />
-    // </SettingsContext>
-  );
-};
-
-function generateQuickGuid(): string {
-  return (
-    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-  ).toString();
-}
-interface ContextType {
-  editorConfig: EditorConfig;
-  uuid: string;
-}
-
-const Context: React.Context<ContextType> = createContext({
-  editorConfig: defaultEditorConfig,
-  uuid: generateQuickGuid(),
-});
-
-export const EditorConfigProvider = ({
-  children,
-  editorConfig,
-}: {
-  children: React.ReactNode;
-  editorConfig: EditorConfig;
-}): JSX.Element => {
-  const [editor] = useLexicalComposerContext();
-  const editorContext = useMemo(() => ({ editorConfig, uuid: generateQuickGuid() }), [editor]);
-
-  return <Context.Provider value={editorContext}>{children}</Context.Provider>;
-};
-
-export function useEditorConfigContext(): ContextType {
-  const context = useContext(Context);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within an EditorConfigProvider');
-  }
-  return context;
-}

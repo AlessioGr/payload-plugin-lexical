@@ -36,7 +36,7 @@ import './ImageNode.scss';
 import { $isImageNode } from './ImageNode';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
-import { useEditorConfigContext } from '../LexicalEditorComponent';
+import { useEditorConfigContext } from '../EditorConfigProvider';
 import { Settings } from '../settings/Settings';
 import ContentEditable from '../ui/ContentEditable';
 import ImageResizer from '../ui/ImageResizer';

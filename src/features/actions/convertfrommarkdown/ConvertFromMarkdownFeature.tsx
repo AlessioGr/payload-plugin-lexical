@@ -6,7 +6,7 @@ import { $convertFromMarkdownString, $convertToMarkdownString } from '@lexical/m
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $createTextNode, $getRoot } from 'lexical';
 
-import { useEditorConfigContext } from '../../..';
+import { useEditorConfigContext } from '../../../fields/LexicalRichText/EditorConfigProvider';
 import { PLAYGROUND_TRANSFORMERS } from '../../../fields/LexicalRichText/plugins/MarkdownTransformers';
 import { type Feature } from '../../../types';
 

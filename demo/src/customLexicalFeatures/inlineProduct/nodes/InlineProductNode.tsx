@@ -21,17 +21,10 @@ import {
 } from 'lexical';
 
 import { $wrapNodeInElement, addClassNamesToElement } from '@lexical/utils';
-import {
-  $applyNodeReplacement,
-  $getSelection,
-  $isRangeSelection,
-  Spread,
-} from 'lexical';
+import { $applyNodeReplacement, $getSelection, $isRangeSelection, Spread } from 'lexical';
 import { DecoratorNode } from 'lexical';
 import * as React from 'react';
-const ProductDisplayComponent = React.lazy(
-  () => import('./ProductDisplayComponent'),
-);
+const ProductDisplayComponent = React.lazy(() => import('./ProductDisplayComponent'));
 
 export type Display =
   | 'name'
@@ -73,13 +66,7 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
     });
   }
 
-  constructor({
-    attributes = {},
-    key,
-  }: {
-    attributes: InlineProductAttributes;
-    key?: NodeKey;
-  }) {
+  constructor({ attributes = {}, key }: { attributes: InlineProductAttributes; key?: NodeKey }) {
     super(key);
     this.__attributes = attributes;
   }
@@ -89,7 +76,7 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
 
     addClassNamesToElement(
       element,
-      /*config.theme.inlineProduct*/ 'PlaygroundEditorTheme__inlineProduct',
+      /*config.theme.inlineProduct*/ 'PlaygroundEditorTheme__inlineProduct'
     );
     return element;
   }
@@ -99,9 +86,7 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
     return false;
   }
 
-  static importJSON(
-    serializedNode: SerializedInlineProductNode,
-  ): InlineProductNode {
+  static importJSON(serializedNode: SerializedInlineProductNode): InlineProductNode {
     const node = $createInlineProductNode(serializedNode.attributes);
     return node;
   }
@@ -151,7 +136,7 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
   extractWithChild(
     child: LexicalNode,
     selection: RangeSelection | NodeSelection | GridSelection,
-    destination: 'clone' | 'html',
+    destination: 'clone' | 'html'
   ): boolean {
     if (!$isRangeSelection(selection)) {
       return false;
@@ -168,23 +153,17 @@ export class InlineProductNode extends DecoratorNode<JSX.Element> {
   }
 }
 
-export function $createInlineProductNode(
-  attributes?: InlineProductAttributes,
-): InlineProductNode {
-  return $applyNodeReplacement(
-    new InlineProductNode({ attributes: attributes }),
-  );
+export function $createInlineProductNode(attributes?: InlineProductAttributes): InlineProductNode {
+  return $applyNodeReplacement(new InlineProductNode({ attributes: attributes }));
 }
 
 export function $isInlineProductNode(
-  node: LexicalNode | null | undefined,
+  node: LexicalNode | null | undefined
 ): node is InlineProductNode {
   return node instanceof InlineProductNode;
 }
 
-export function toggleInlineProduct(
-  inlineProductData: InlineProductAttributes,
-): void {
+export function toggleInlineProduct(inlineProductData: InlineProductAttributes): void {
   const selection = $getSelection();
 
   const inlineProductNode = $createInlineProductNode(inlineProductData);

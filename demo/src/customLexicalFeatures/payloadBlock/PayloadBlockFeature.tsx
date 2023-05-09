@@ -41,7 +41,8 @@ export function PayloadBlockFeature(props: {}): Feature {
               onClick={() => {
                 editor.dispatchCommand(OPEN_MODAL_COMMAND, 'payloadBlock');
               }}
-              className="item">
+              className="item"
+            >
               <i className="icon block" />
               <span className="text">Payload Block</span>
             </DropDownItem>

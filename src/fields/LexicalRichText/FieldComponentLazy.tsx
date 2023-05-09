@@ -4,14 +4,12 @@ import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEff
 
 import { type Props } from './types';
 
-const LexicalRichTextFieldComponent2 = lazy(
-  async () => await import('./PayloadLexicalRichTextFieldComponent')
-);
+const FieldComponent = lazy(async () => await import('./FieldComponent'));
 
 export const LexicalRichTextFieldComponent: React.FC<Props> = (props) => {
   return (
     <Suspense fallback={<ShimmerEffect height="35vh" />}>
-      <LexicalRichTextFieldComponent2 {...props} />
+      <FieldComponent {...props} />
     </Suspense>
   );
 };

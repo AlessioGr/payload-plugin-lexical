@@ -78,7 +78,7 @@ import {
   TOGGLE_LINK_COMMAND,
 } from '../../../../features/linkplugin/nodes/LinkNodeModified';
 import { type EditorConfig } from '../../../../types';
-import { useEditorConfigContext } from '../../LexicalEditorComponent';
+import { useEditorConfigContext } from '../../EditorConfigProvider';
 import { IS_APPLE } from '../../shared/environment';
 import DropDown, { DropDownItem } from '../../ui/DropDown';
 import DropdownColorPicker from '../../ui/DropdownColorPicker';

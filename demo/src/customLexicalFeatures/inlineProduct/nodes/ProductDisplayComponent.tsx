@@ -36,14 +36,11 @@ export default function ProductDisplayComponent({
 
   useEffect(() => {
     async function loadProductData() {
-      const response = await requests.get(
-        `${serverURL}${api}/${doc?.relationTo}/${doc.value}`,
-        {
-          headers: {
-            'Accept-Language': i18n.language,
-          },
+      const response = await requests.get(`${serverURL}${api}/${doc?.relationTo}/${doc.value}`, {
+        headers: {
+          'Accept-Language': i18n.language,
         },
-      );
+      });
       const json = await response.json();
 
       const shops = json?.product?.shops;
@@ -66,13 +63,7 @@ export default function ProductDisplayComponent({
         if (shops.length > 0) {
           setProductData({
             href: undefined,
-            label:
-              json?.title +
-              ' (' +
-              best_shop_price +
-              ' ' +
-              best_shop_price_currency +
-              ')',
+            label: json?.title + ' (' + best_shop_price + ' ' + best_shop_price_currency + ')',
           });
         }
       } else if (display === 'affiliate_link_best_shop_label_name_and_price') {
