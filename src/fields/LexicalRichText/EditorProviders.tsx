@@ -7,10 +7,8 @@
  */
 
 import * as React from 'react';
-import { createContext, type ReactNode, useContext, useMemo } from 'react';
 
 import { LexicalComposer } from '@lexical/react/LexicalComposer';
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 
 import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
@@ -21,8 +19,6 @@ import { CommentsContext } from './plugins/CommentPlugin';
 import { TableContext } from './plugins/TablePlugin';
 import LexicalEditorTheme from './themes/LexicalEditorTheme';
 import { type OnChangeProps } from './types';
-import { type EditorConfig } from '../../types';
-import { defaultEditorConfig } from '../../types';
 
 export const EditorProviders: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;

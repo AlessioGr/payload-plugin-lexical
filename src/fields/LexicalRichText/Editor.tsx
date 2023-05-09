@@ -54,20 +54,14 @@ import './Editor.scss';
 
 export const Editor: React.FC<OnChangeProps> = (props) => {
   const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
-
   const { historyState } = useSharedHistoryContext();
-
   const { isRichText, isCharLimit, isCharLimitUtf8, tableCellMerge, tableCellBackgroundColor } =
     Settings;
-
   const isEditable = useLexicalEditable();
-
   const text = isRichText ? 'Enter some rich text...' : 'Enter some plain text...';
   const placeholder = <Placeholder>{text}</Placeholder>;
   const [floatingAnchorElem, setFloatingAnchorElem] = useState<HTMLDivElement | null>(null);
-
   const [isSmallWidthViewport, setIsSmallWidthViewport] = useState<boolean>(false);
-
   const onRef = (_floatingAnchorElem: HTMLDivElement): void => {
     if (_floatingAnchorElem !== null) {
       setFloatingAnchorElem(_floatingAnchorElem);
