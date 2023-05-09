@@ -1412,13 +1412,13 @@ button.item.dropdown-item-active i {
   z-index: 3;
 }
 
-.PlaygroundEditorTheme__blockCursor {
+.LexicalEditorTheme__blockCursor {
   display: block;
   pointer-events: none;
   position: absolute;
 }
 
-.PlaygroundEditorTheme__blockCursor:after {
+.LexicalEditorTheme__blockCursor:after {
   content: '';
   display: block;
   position: absolute;

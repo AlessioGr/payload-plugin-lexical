@@ -65,4 +65,4 @@ export { OPEN_MODAL_COMMAND } from './fields/LexicalRichText/plugins/ModalPlugin
 export * from './fields/LexicalRichText/ui/DropDown';
 export * from './fields/LexicalRichText/EditorProviders';
 export * from './fields/LexicalRichText/nodes/PlaygroundNodes';
-export * from './fields/LexicalRichText/themes/PlaygroundEditorTheme';
+export * from './fields/LexicalRichText/themes/LexicalEditorTheme';

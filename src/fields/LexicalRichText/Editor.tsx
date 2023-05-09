@@ -45,7 +45,7 @@ import ToolbarPlugin from './plugins/ToolbarPlugin';
 import UploadPlugin from './plugins/UploadPlugin';
 import { Settings } from './settings/Settings';
 import { CAN_USE_DOM } from './shared/canUseDOM';
-import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
+import LexicalEditorTheme from './themes/LexicalEditorTheme';
 import { type OnChangeProps } from './types';
 import ContentEditable from './ui/ContentEditable';
 import Placeholder from './ui/Placeholder';
@@ -80,7 +80,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
     onError: (error: Error) => {
       throw error;
     },
-    theme: PlaygroundEditorTheme,
+    theme: LexicalEditorTheme,
   };
 
   useEffect(() => {

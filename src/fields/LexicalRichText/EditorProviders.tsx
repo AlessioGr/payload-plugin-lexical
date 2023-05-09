@@ -19,7 +19,7 @@ import { EditorConfigProvider } from './EditorConfigProvider';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
 import { CommentsContext } from './plugins/CommentPlugin';
 import { TableContext } from './plugins/TablePlugin';
-import PlaygroundEditorTheme from './themes/PlaygroundEditorTheme';
+import LexicalEditorTheme from './themes/LexicalEditorTheme';
 import { type OnChangeProps } from './types';
 import { type EditorConfig } from '../../types';
 import { defaultEditorConfig } from '../../types';
@@ -34,7 +34,7 @@ export const EditorProviders: React.FC<OnChangeProps> = (props) => {
     onError: (error: Error) => {
       throw error;
     },
-    theme: PlaygroundEditorTheme,
+    theme: LexicalEditorTheme,
   };
 
   return (

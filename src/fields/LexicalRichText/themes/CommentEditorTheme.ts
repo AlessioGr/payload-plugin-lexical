@@ -6,7 +6,7 @@
  *
  */
 
-import baseTheme from './PlaygroundEditorTheme';
+import baseTheme from './LexicalEditorTheme';
 
 import type { EditorThemeClasses } from 'lexical';
 
