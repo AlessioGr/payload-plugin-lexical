@@ -6,15 +6,12 @@
  *
  */
 
-import './modal.scss';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 
 import Button from 'payload/dist/admin/components/elements/Button';
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
-import X from 'payload/dist/admin/components/icons/X';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
+import TextInput from 'payload/dist/admin/components/forms/field-types/Text/Input';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -30,11 +27,10 @@ import {
   type LexicalNode,
 } from 'lexical';
 
-import { useEditorConfigContext } from '../../LexicalEditorComponent';
 import { $createTableNodeWithDimensions, TableNode } from '../../nodes/TableNode';
 import invariant from '../../shared/invariant';
-import { DialogActions } from '../../ui/Dialog';
-import TextInput from '../../ui/TextInput';
+
+import './modal.scss';
 
 export type InsertTableCommandPayload = Readonly<{
   columns: string;
@@ -99,18 +95,11 @@ export function TableContext({ children }: { children: JSX.Element }): JSX.Eleme
 
 const baseClass = 'rich-text-table-modal';
 
-export function InsertTableDialog(): JSX.Element {
-  const { uuid } = useEditorConfigContext();
-
-  const editDepth = useEditDepth();
+// eslint-disable-next-line no-empty-pattern
+export function InsertTableDialog({ drawerSlug }: { drawerSlug: string }): JSX.Element {
   const [editor] = useLexicalComposerContext();
-  const [activeEditor, setActiveEditor] = useState(editor);
-  const tableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-table` + uuid,
-    depth: editDepth,
-  });
-  const { toggleModal, closeModal } = useModal();
-
+  const [activeEditor] = useState(editor);
+  const { closeModal } = useModal();
   const [rows, setRows] = useState('5');
   const [columns, setColumns] = useState('5');
   const [isDisabled, setIsDisabled] = useState(true);
@@ -118,111 +107,134 @@ export function InsertTableDialog(): JSX.Element {
   useEffect(() => {
     const row = Number(rows);
     const column = Number(columns);
-    if (row != null && row > 0 && row <= 500 && column != null && column > 0 && column <= 50) {
+    if (row !== 0 && row > 0 && row <= 500 && column !== 0 && column > 0 && column <= 50) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
   }, [rows, columns]);
 
-  const onClick = (): void => {
+  const handleOnSubmit = (): void => {
     activeEditor.dispatchCommand(INSERT_TABLE_COMMAND, {
       columns,
       rows,
     });
 
-    closeModal(tableDrawerSlug);
+    closeModal(drawerSlug);
+  };
+
+  // TODO - validate
+  const handleOnRowsChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setRows(event.target.value);
+  };
+
+  // TODO - validate
+  const handleOnColumnsChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setColumns(event.target.value);
   };
 
   return (
-    <Drawer slug={tableDrawerSlug} key={tableDrawerSlug} className={baseClass} title="Add table">
+    <Drawer slug={drawerSlug} key={drawerSlug} className={baseClass} title="Add table">
       <React.Fragment>
         <TextInput
+          name="rows"
+          path=""
           placeholder={'# of rows (1-500)'}
           label="Rows"
-          onChange={setRows}
+          onChange={handleOnRowsChange}
           value={rows}
           data-test-id="table-modal-rows"
-          type="number"
         />
         <TextInput
+          name="columns"
+          path=""
           placeholder={'# of columns (1-50)'}
           label="Columns"
-          onChange={setColumns}
+          onChange={handleOnColumnsChange}
           value={columns}
           data-test-id="table-modal-columns"
-          type="number"
         />
-        <DialogActions data-test-id="table-model-confirm-insert">
-          <Button disabled={isDisabled} onClick={onClick}>
+        <div
+          className="rich-text-table-modal__modal-actions"
+          data-test-id="table-model-confirm-insert"
+        >
+          <Button disabled={isDisabled} onClick={handleOnSubmit}>
             Confirm
           </Button>
-        </DialogActions>
+        </div>
       </React.Fragment>
     </Drawer>
   );
 }
 
-export function InsertNewTableDialog(): JSX.Element {
-  const { uuid } = useEditorConfigContext();
-
-  const editDepth = useEditDepth();
+// eslint-disable-next-line no-empty-pattern
+export function InsertNewTableDialog({ drawerSlug }: { drawerSlug: string }): JSX.Element {
   const [editor] = useLexicalComposerContext();
-  const [activeEditor, setActiveEditor] = useState(editor);
-  const newTableDrawerSlug = formatDrawerSlug({
-    slug: `lexicalRichText-add-newtable` + uuid,
-    depth: editDepth,
-  });
-  const { toggleModal, closeModal } = useModal();
-
-  const [rows, setRows] = useState('');
-  const [columns, setColumns] = useState('');
+  const [activeEditor] = useState(editor);
+  const { closeModal } = useModal();
+  const [rows, setRows] = useState('5');
+  const [columns, setColumns] = useState('5');
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
     const row = Number(rows);
     const column = Number(columns);
-    if (row != null && row > 0 && row <= 500 && column != null && column > 0 && column <= 50) {
+    if (row !== 0 && row > 0 && row <= 500 && column !== 0 && column > 0 && column <= 50) {
       setIsDisabled(false);
     } else {
       setIsDisabled(true);
     }
   }, [rows, columns]);
 
-  const onClick = (): void => {
+  const handleOnSubmit = (): void => {
     activeEditor.dispatchCommand(INSERT_NEW_TABLE_COMMAND, { columns, rows });
-    closeModal(newTableDrawerSlug);
+    closeModal(drawerSlug);
+  };
+
+  // TODO - validate
+  const handleOnRowsChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setRows(event.target.value);
+  };
+
+  // TODO - validate
+  const handleOnColumnsChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setColumns(event.target.value);
   };
 
   return (
     <Drawer
-      slug={newTableDrawerSlug}
-      key={newTableDrawerSlug}
+      slug={drawerSlug}
+      key={drawerSlug}
       className={baseClass}
       title="Add new table (Experimental)"
     >
       <React.Fragment>
         <TextInput
+          name="rows"
+          path=""
           placeholder={'# of rows (1-500)'}
           label="Rows"
-          onChange={setRows}
+          onChange={handleOnRowsChange}
           value={rows}
           data-test-id="table-modal-rows"
-          type="number"
         />
         <TextInput
+          name="columns"
+          path=""
           placeholder={'# of columns (1-50)'}
           label="Columns"
-          onChange={setColumns}
+          onChange={handleOnColumnsChange}
           value={columns}
           data-test-id="table-modal-columns"
-          type="number"
         />
-        <DialogActions data-test-id="table-modal-confirm-insert">
-          <Button disabled={isDisabled} onClick={onClick}>
+        <div
+          className="rich-text-table-modal__modal-actions"
+          data-test-id="table-modal-confirm-insert"
+        >
+          <Button disabled={isDisabled} onClick={handleOnSubmit}>
             Confirm
           </Button>
-        </DialogActions>
+        </div>
       </React.Fragment>
     </Drawer>
   );

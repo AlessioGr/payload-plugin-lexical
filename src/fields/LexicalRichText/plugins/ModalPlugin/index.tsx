@@ -1,12 +1,5 @@
 import * as React from 'react';
-import {
-  useCallback,
-  useState,
-  ReactNode,
-  useMemo,
-  createContext,
-  useContext,
-} from 'react';
+import { useCallback, useState, ReactNode, useMemo, createContext, useContext } from 'react';
 
 import { useConfig } from 'payload/components/utilities';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
@@ -16,11 +9,7 @@ import { type SanitizedCollectionConfig } from 'payload/types';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
-import {
-  COMMAND_PRIORITY_NORMAL,
-  createCommand,
-  type LexicalCommand,
-} from 'lexical';
+import { COMMAND_PRIORITY_NORMAL, createCommand, type LexicalCommand } from 'lexical';
 
 import { type EditorConfig } from '../../../../types';
 import { useEditorConfigContext } from '../../LexicalEditorComponent';
@@ -32,13 +21,10 @@ import { ListDrawer } from '../UploadPlugin/modal';
 export const OPEN_MODAL_COMMAND: LexicalCommand<'upload' | 'table' | string> =
   createCommand('OPEN_MODAL_COMMAND');
 
-export default function ModalPlugin(props: {
-  editorConfig: EditorConfig;
-}): JSX.Element {
+export default function ModalPlugin(props: { editorConfig: EditorConfig }): JSX.Element {
   const editorConfig = props.editorConfig;
   const [editor] = useLexicalComposerContext();
   const [activeEditor, setActiveEditor] = useState(editor);
-
   const { uuid } = useEditorConfigContext();
   const {
     toggleModal = () => {
@@ -56,6 +42,16 @@ export default function ModalPlugin(props: {
     depth: editDepth,
   });
 
+  const addTableDrawerSlug = formatDrawerSlug({
+    slug: `lexicalRichText-add-table` + uuid,
+    depth: editDepth,
+  });
+
+  const addNewTableDrawerSlug = formatDrawerSlug({
+    slug: `lexicalRichText-add-newtable` + uuid,
+    depth: editDepth,
+  });
+
   // Register commands:
   editor.registerCommand<'upload' | 'table' | string>(
     OPEN_MODAL_COMMAND,
@@ -63,27 +59,15 @@ export default function ModalPlugin(props: {
       if (toOpen === 'upload') {
         toggleModal(addUploadDrawerSlug);
       } else if (toOpen === 'table') {
-        const addTableDrawerSlug = formatDrawerSlug({
-          slug: `lexicalRichText-add-table` + uuid,
-          depth: editDepth,
-        });
         toggleModal(addTableDrawerSlug);
       } else if (toOpen === 'newtable') {
-        const addNewTableDrawerSlug = formatDrawerSlug({
-          slug: `lexicalRichText-add-newtable` + uuid,
-          depth: editDepth,
-        });
         toggleModal(addNewTableDrawerSlug);
       } else {
         for (const feature of editorConfig.features) {
-          if ((feature.modals != null) && feature.modals.length > 0) {
+          if (feature.modals != null && feature.modals.length > 0) {
             for (const featureModal of feature.modals) {
               if (toOpen === featureModal.openModalCommand.type) {
-                featureModal.openModalCommand.command(
-                  toggleModal,
-                  editDepth,
-                  uuid,
-                );
+                featureModal.openModalCommand.command(toggleModal, editDepth, uuid);
                 return true;
               }
             }
@@ -93,35 +77,32 @@ export default function ModalPlugin(props: {
 
       return true;
     },
-    COMMAND_PRIORITY_NORMAL,
+    COMMAND_PRIORITY_NORMAL
   );
 
   // For upload
-  interface options { uploads: boolean }
+  interface options {
+    uploads: boolean;
+  }
 
   type FilteredCollectionsT = (
     collections: SanitizedCollectionConfig[],
-    options?: options,
+    options?: options
   ) => SanitizedCollectionConfig[];
-  const filterRichTextCollections: FilteredCollectionsT = (
-    collections,
-    options,
-  ) => {
-    return collections.filter(
-      ({ admin: { enableRichTextRelationship }, upload }) => {
-        if (options?.uploads != null) {
-          return enableRichTextRelationship && Boolean(upload);
-        }
+  const filterRichTextCollections: FilteredCollectionsT = (collections, options) => {
+    return collections.filter(({ admin: { enableRichTextRelationship }, upload }) => {
+      if (options?.uploads != null) {
+        return enableRichTextRelationship && Boolean(upload);
+      }
 
-        return upload != null ? false : enableRichTextRelationship;
-      },
-    );
+      return upload != null ? false : enableRichTextRelationship;
+    });
   };
 
   const uploads = true; // TODO: what does it do?
   const { collections } = useConfig();
   const [enabledCollectionSlugs] = React.useState(() =>
-    filterRichTextCollections(collections, { uploads }).map(({ slug }) => slug),
+    filterRichTextCollections(collections, { uploads }).map(({ slug }) => slug)
   );
 
   /* const [
@@ -144,21 +125,18 @@ export default function ModalPlugin(props: {
       });
       closeModal(addUploadDrawerSlug);
     },
-    [editor, closeModal],
+    [editor, closeModal]
   );
   const insertUpload = ({ value, relationTo, activeEditor }): void => {
     console.log('insertUpload value:', value, 'relationTo:', relationTo);
-
     const imagePayload: ImagePayload = {
       rawImagePayload: {
         value,
         relationTo,
       },
     };
-
     activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, imagePayload);
     console.log('Dispatched insert image command');
-
     // injectVoidElement(editor, upload);
   };
 
@@ -170,17 +148,16 @@ export default function ModalPlugin(props: {
         collectionSlugs={enabledCollectionSlugs}
       />
 
-      <InsertTableDialog />
-      <InsertNewTableDialog />
+      <InsertTableDialog drawerSlug={addTableDrawerSlug} />
+      <InsertNewTableDialog drawerSlug={addNewTableDrawerSlug} />
 
       {editorConfig.features.map((feature) => {
-        if ((feature.modals != null) && feature.modals.length > 0) {
+        if (feature.modals != null && feature.modals.length > 0) {
           return feature.modals.map((customModal) => {
-            return customModal?.modal != null
-              ? customModal.modal({ editorConfig })
-              : null;
+            return customModal?.modal != null ? customModal.modal({ editorConfig }) : null;
           });
-        } return null
+        }
+        return null;
       })}
     </>
   );
