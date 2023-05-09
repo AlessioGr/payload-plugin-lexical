@@ -21,7 +21,7 @@ const Lexical: CollectionConfig = {
     lexicalRichTextField({
       name: 'lexicalRichTextEditor',
       label: 'Lexical Rich Text Editor',
-      required: true,
+      // required: true,
       admin: {
         readOnly: false,
       },
