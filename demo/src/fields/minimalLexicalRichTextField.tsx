@@ -19,7 +19,7 @@ function lexicalRichText(props?: { name?: string; label?: string; debug?: boolea
       defaultEditorConfig.toggles.comments.enabled = false;
       //defaultEditorConfig.toggles.upload.enabled = false;
 
-      defaultEditorConfig.features = [LinkFeature({})];
+      defaultEditorConfig.features = [LinkFeature()];
 
       return defaultEditorConfig;
     },
