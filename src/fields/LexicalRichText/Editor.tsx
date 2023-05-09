@@ -92,7 +92,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
         setIsSmallWidthViewport(isNextSmallWidthViewport);
       }
     };
-
+    updateViewPortWidth();
     window.addEventListener('resize', updateViewPortWidth);
 
     return () => {
