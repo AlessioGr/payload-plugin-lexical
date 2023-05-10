@@ -22,10 +22,6 @@ export function lexicalRichTextField(
       ? defaultEditorConfigCloned
       : editorConfigModifier(defaultEditorConfigCloned);
 
-  if (props?.editorConfigModifier != null) {
-    delete props.editorConfigModifier;
-  }
-
   return {
     name: name ?? 'richText',
     type: 'richText',

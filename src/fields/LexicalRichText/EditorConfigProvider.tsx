@@ -7,10 +7,9 @@ import { defaultEditorConfig } from '../../types';
 
 import type { EditorConfig } from '../../types';
 
+// Should always produce a 20 character pseudo-random string
 function generateQuickGuid(): string {
-  return (
-    Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-  ).toString();
+  return Math.random().toString(36).substring(2, 12) + Math.random().toString(36).substring(2, 12);
 }
 interface ContextType {
   editorConfig: EditorConfig;
