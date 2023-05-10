@@ -50,18 +50,18 @@ function ClearEditorAction(): JSX.Element {
 
 export function ClearEditorFeature(): Feature {
   return {
-    actions: [<ClearEditorAction key="cleareditor" />],
+    actions: [<ClearEditorAction key="clear-editor" />],
     modals: [
       {
         modal: ClearEditorDrawer,
         openModalCommand: {
           type: 'clear-editor',
           command: (toggleModal, editDepth, uuid) => {
-            const addEquationDrawerSlug = formatDrawerSlug({
-              slug: `lexicalRichText-clear-editor` + uuid,
+            const clearEditorDrawerSlug = formatDrawerSlug({
+              slug: `lexicalRichText-clear-editor-${uuid}`,
               depth: editDepth,
             });
-            toggleModal(addEquationDrawerSlug);
+            toggleModal(clearEditorDrawerSlug);
           },
         },
       },
