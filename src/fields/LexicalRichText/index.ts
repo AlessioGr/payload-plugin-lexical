@@ -13,7 +13,7 @@ export function lexicalRichTextField(
     editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig;
   }
 ): Field {
-  const { name, label, editorConfigModifier } = props;
+  const { name, label, admin, hooks, editorConfigModifier, ...rest } = props;
 
   const defaultEditorConfigCloned = cloneDeep(defaultEditorConfig);
 
@@ -30,13 +30,13 @@ export function lexicalRichTextField(
     name: name ?? 'richText',
     type: 'richText',
     label: label ?? 'Rich Text',
-    ...props,
+    ...rest,
     hooks: {
-      ...props.hooks,
+      ...hooks,
       afterRead: [populateLexicalRelationships],
     },
     admin: {
-      ...props.admin,
+      ...admin,
       components: {
         Field: (args) =>
           LexicalRichTextFieldComponent({
