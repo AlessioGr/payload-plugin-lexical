@@ -6,7 +6,6 @@
  *
  */
 
-
 import { CodeHighlightNode, CodeNode } from '@lexical/code';
 import { HashtagNode } from '@lexical/hashtag';
 import { ListItemNode, ListNode } from '@lexical/list';
@@ -16,14 +15,13 @@ import { HeadingNode, QuoteNode } from '@lexical/rich-text';
 import { TableCellNode, TableNode, TableRowNode } from '@lexical/table';
 
 import { ImageNode } from './ImageNode';
+import { InlineImageNode } from './InlineImageNode/InlineImageNode';
 import { TableNode as NewTableNode } from './TableNode';
 
 import type { EditorConfig } from '../../../types';
 import type { Klass, LexicalNode } from 'lexical';
 
-function PlaygroundNodes(
-  editorConfig: EditorConfig,
-): Array<Klass<LexicalNode>> {
+function PlaygroundNodes(editorConfig: EditorConfig): Array<Klass<LexicalNode>> {
   const nodes: Array<Klass<LexicalNode>> = [];
   if (editorConfig.toggles.tables.enabled) {
     nodes.push(NewTableNode, TableNode, TableCellNode, TableRowNode);
@@ -31,6 +29,7 @@ function PlaygroundNodes(
 
   if (editorConfig.toggles.upload.enabled) {
     nodes.push(ImageNode);
+    nodes.push(InlineImageNode);
   }
 
   nodes.push(
@@ -42,11 +41,11 @@ function PlaygroundNodes(
     HashtagNode,
     CodeHighlightNode,
     OverflowNode,
-    MarkNode,
+    MarkNode
   );
 
   for (const feature of editorConfig.features) {
-    if ((feature.nodes != null) && feature.nodes.length > 0) {
+    if (feature.nodes != null && feature.nodes.length > 0) {
       for (const node of feature.nodes) {
         nodes.push(node);
       }

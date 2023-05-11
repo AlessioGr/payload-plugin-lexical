@@ -33,6 +33,7 @@ import ComponentPickerPlugin from './plugins/ComponentPickerPlugin';
 import DragDropPaste from './plugins/DragDropPastePlugin';
 import DraggableBlockPlugin from './plugins/DraggableBlockPlugin';
 import FloatingTextFormatToolbarPlugin from './plugins/FloatingTextFormatToolbarPlugin';
+import InlineImagePlugin from './plugins/InlineImagePlugin';
 import ListMaxIndentLevelPlugin from './plugins/ListMaxIndentLevelPlugin';
 import MarkdownShortcutPlugin from './plugins/MarkdownShortcutPlugin';
 import ModalPlugin from './plugins/ModalPlugin';
@@ -179,7 +180,12 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
                 <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
               </NewTablePlugin>
             )}
-            {editorConfig.toggles.upload.enabled && <UploadPlugin captionsEnabled={false} />}
+            {editorConfig.toggles.upload.enabled && (
+              <>
+                <UploadPlugin captionsEnabled={false} />
+                <InlineImagePlugin collection="media" />
+              </>
+            )}
             <OnChangePlugin
               onChange={(editorState, editor, tags, commentStore) => {
                 onChange(editorState, editor, tags, commentStore);

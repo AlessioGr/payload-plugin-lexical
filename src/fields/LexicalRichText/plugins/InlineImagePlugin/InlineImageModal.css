@@ -1,0 +1,8 @@
+.InlineImagePlugin--modal-media-display {
+  margin-bottom: 2em;
+}
+
+.InlineImagePlugin--modal-actions {
+  display: flex;
+  gap: 12px;
+}

@@ -87,6 +87,7 @@ import DropdownColorPicker from '../../ui/DropdownColorPicker';
 import { getSelectedNode } from '../../utils/getSelectedNode';
 import { sanitizeUrl } from '../../utils/url';
 import { getEmbedConfigs } from '../AutoEmbedPlugin';
+import { OPEN_INLINE_IMAGE_MODAL_COMMAND } from '../InlineImagePlugin';
 import { OPEN_MODAL_COMMAND } from '../ModalPlugin';
 
 import type { LexicalEditor, NodeKey } from 'lexical';
@@ -905,15 +906,26 @@ export default function ToolbarPlugin(props: { editorConfig: EditorConfig }): JS
             buttonIconClassName="icon plus"
           >
             {editorConfig.toggles.upload.enabled && editorConfig.toggles.upload.display && (
-              <DropDownItem
-                onClick={() => {
-                  editor.dispatchCommand(OPEN_MODAL_COMMAND, 'upload');
-                }}
-                className="item"
-              >
-                <i className="icon image" />
-                <span className="text">Upload</span>
-              </DropDownItem>
+              <>
+                <DropDownItem
+                  onClick={() => {
+                    editor.dispatchCommand(OPEN_MODAL_COMMAND, 'upload');
+                  }}
+                  className="item"
+                >
+                  <i className="icon image" />
+                  <span className="text">Upload</span>
+                </DropDownItem>
+                <DropDownItem
+                  onClick={() => {
+                    activeEditor.dispatchCommand(OPEN_INLINE_IMAGE_MODAL_COMMAND, null);
+                  }}
+                  className="item"
+                >
+                  <i className="icon image" />
+                  <span className="text">Inline Image</span>
+                </DropDownItem>
+              </>
             )}
             {
               editorConfig.toggles.tables.enabled && editorConfig.toggles.tables.display && (

@@ -1,0 +1,208 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ *
+ */
+
+.LexicalEditor__inline-image {
+  cursor: default;
+  display: inline-block;
+  position: relative;
+  z-index: 1;
+  /* user-select: none; */
+}
+
+.LexicalEditor__inline-image img {
+  max-width: 100%;
+  cursor: default;
+}
+
+.LexicalEditor__inline-image img.focused {
+  outline: 2px solid rgb(60, 132, 244);
+  /* user-select: none; */
+}
+
+.LexicalEditor__inline-image img.focused.draggable {
+  cursor: grab;
+}
+
+.LexicalEditor__inline-image img.focused.draggable:active {
+  cursor: grabbing;
+}
+
+.LexicalEditor__inline-image.position-full {
+  width: 100%;
+  margin: 1em 0 1em 0;
+}
+
+.LexicalEditor__inline-image.position-full img {
+  width: 100%
+}
+
+.LexicalEditor__inline-image.position-left {
+  float: left;
+  width: 50%;
+  margin: 0.75rem 1.5rem 0.75rem 0;
+}
+
+.LexicalEditor__inline-image.position-right {
+  float: right;
+  width: 50%;
+  /* The illusion of a 0 right margin looks too far right, so set right to 0.45rem */
+  margin: 0.75rem 0.45rem 0.75rem 1.5rem;
+}
+
+.LexicalEditor__inline-image .image-edit-button {
+  display: block;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 6px 8px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  min-width: 60px;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.LexicalEditor__inline-image .image-edit-button:hover {
+  background-color: rgba(60, 132, 244, 0.5);
+}
+
+.LexicalEditor__inline-image .InlineImageNode__caption_container {
+  display: block;
+  position: relative;
+  background-color: #f4f4f4;
+  min-width: 100%;
+  color: #000;
+  overflow: hidden;
+}
+
+.LexicalEditor__inline-image .InlineImageNode__caption_container .tree-view-output {
+  margin: 0;
+  border-radius: 0;
+}
+
+.LexicalEditor__inline-image .image-caption-button:hover {
+  background-color: rgba(60, 132, 244, 0.5);
+}
+
+.LexicalEditor__inline-image .image-resizer {
+  display: block;
+  width: 7px;
+  height: 7px;
+  position: absolute;
+  background-color: rgb(60, 132, 244);
+  border: 1px solid #fff;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-n {
+  top: -6px;
+  left: 48%;
+  cursor: n-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-ne {
+  top: -6px;
+  right: -6px;
+  cursor: ne-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-e {
+  bottom: 48%;
+  right: -6px;
+  cursor: e-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-se {
+  bottom: -2px;
+  right: -6px;
+  cursor: nwse-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-s {
+  bottom: -2px;
+  left: 48%;
+  cursor: s-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-sw {
+  bottom: -2px;
+  left: -6px;
+  cursor: sw-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-w {
+  bottom: 48%;
+  left: -6px;
+  cursor: w-resize;
+}
+
+.LexicalEditor__inline-image .image-resizer.image-resizer-nw {
+  top: -6px;
+  left: -6px;
+  cursor: nw-resize;
+}
+
+.InlineImageNode__container.focused {
+  outline: 2px solid rgb(60, 132, 244);
+  /* user-select: none; */
+}
+
+.InlineImageNode__contentEditable {
+  min-height: 20px;
+  border: 0px;
+  resize: none;
+  cursor: text;
+  caret-color: rgb(5, 5, 5);
+  display: block;
+  position: relative;
+  tab-size: 1;
+  outline: 0px;
+  padding: 10px;
+  user-select: text;
+  font-size: 14px;
+  line-height: 1.4em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.InlineImageNode__contentEditable p {
+  margin-bottom: 0.25em
+}
+
+.InlineImageNode__placeholder {
+  font-size: 12px;
+  color: #888;
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 10px;
+  left: 10px;
+  right: unset;
+  user-select: none;
+  white-space: nowrap;
+  display: inline-block;
+  pointer-events: none;
+}
+
+
+html[data-theme='dark'] .InlineImageNode__contentEditable {
+  color: #eeeeee;
+  caret-color: auto;
+}
+
+html[data-theme='dark'] .LexicalEditor__inline-image .InlineImageNode__caption_container {
+  background-color: #222222;
+}
+
+
+html[data-theme='dark'] .InlineImageNode__placeholder {
+  color: #888;
+}
