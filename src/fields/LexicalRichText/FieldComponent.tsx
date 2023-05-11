@@ -184,15 +184,13 @@ const FieldComponent: React.FC<Props> = (props) => {
 };
 
 export const lexicalValidate: Validate<unknown, unknown, any> = (value, { t, required }) => {
-  if (required != null) {
+  if (required != null && required === true) {
     const jsonContent = getJsonContentFromValue(value);
-
     if (jsonContent != null && !deepEqual(jsonContent, defaultValue)) {
       return true;
     }
     return t('validation:required');
   }
-
   return true;
 };
 
@@ -203,7 +201,6 @@ export function getJsonContentFromValue(value): any {
   if (value?.jsonContent?.jsonContent != null) {
     return getJsonContentFromValue(value?.jsonContent);
   }
-
   return value?.jsonContent;
 }
 
