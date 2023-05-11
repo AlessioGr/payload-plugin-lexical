@@ -55,7 +55,7 @@ import type { Position, InlineImageNodePayload } from './types';
 import type { InlineImageModalPayload } from '../../plugins/InlineImagePlugin/types';
 import type { GridSelection, LexicalEditor, NodeKey, NodeSelection, RangeSelection } from 'lexical';
 
-import './InlineImageNode-component.css';
+import './InlineImageNodeComponent.css';
 
 const imageCache = new Set();
 

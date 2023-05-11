@@ -28,7 +28,7 @@ import type {
   Spread,
 } from 'lexical';
 
-const InlineImageComponent = React.lazy(async () => await import('./InlineImageNode-component'));
+const InlineImageComponent = React.lazy(async () => await import('./InlineImageNodeComponent'));
 
 function convertInlineImageElement(domNode: Node): null | DOMConversionOutput {
   if (domNode instanceof HTMLImageElement) {

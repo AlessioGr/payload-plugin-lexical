@@ -60,6 +60,7 @@ const theme: EditorThemeClasses = {
     h6: 'LexicalEditorTheme__h6',
   },
   image: 'editor-image',
+  inlineImage: 'LexicalEditor__inline-image',
   indent: 'LexicalEditorTheme__indent',
   link: 'LexicalEditorTheme__link',
   list: {
