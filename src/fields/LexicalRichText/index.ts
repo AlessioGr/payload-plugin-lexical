@@ -8,12 +8,12 @@ import { populateLexicalRelationships } from './LexicalAfterReadHook';
 import { defaultEditorConfig, type EditorConfig } from '../../types';
 
 export function lexicalRichTextField(
-  props: Omit<FieldBase, 'name'> & {
+  args: Omit<FieldBase, 'name'> & {
     name?: string;
     editorConfigModifier?: (defaultEditorConfig: EditorConfig) => EditorConfig;
   }
 ): Field {
-  const { name, label, admin, hooks, editorConfigModifier, ...rest } = props;
+  const { name, label, admin, hooks, editorConfigModifier, ...rest } = args;
 
   const defaultEditorConfigCloned = cloneDeep(defaultEditorConfig);
 
