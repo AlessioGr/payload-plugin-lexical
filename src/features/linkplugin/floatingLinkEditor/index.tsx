@@ -341,7 +341,7 @@ function LinkEditor({
       {isLink && !isModalOpen(drawerSlug) && (
         <div className="link-input">
           <a href={linkUrl} target="_blank" rel="noopener noreferrer">
-            {linkLabel?.length > 0 ? linkLabel : linkUrl}
+            {linkLabel != null && linkLabel.length > 0 ? linkLabel : linkUrl}
           </a>
           <div
             className="link-edit"
