@@ -134,6 +134,10 @@ const FieldComponent: React.FC<Props> = (props) => {
             ) => {
               const json = editorState.toJSON();
               const valueJsonContent = getJsonContentFromValue(value);
+              // TODO: Wondering why the deepEqual here since if we set
+              // ignoreSelectionChange={true} in our OnChangePlugin instances
+              // - a call here means that something _must_ have changed - and so
+              // not sure that we need to do any comparison at all?
               if (
                 !(readOnly ?? false) &&
                 Boolean(valueJsonContent) &&
