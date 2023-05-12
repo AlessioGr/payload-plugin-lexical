@@ -188,7 +188,10 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
             )}
             <OnChangePlugin
               onChange={(editorState, editor, tags, commentStore) => {
-                onChange(editorState, editor, tags, commentStore);
+                // Ignore any onChange event triggered by focus only
+                if (!tags.has('focus') || tags.size > 1) {
+                  onChange(editorState, editor, tags, commentStore);
+                }
               }}
               value={value}
             />
