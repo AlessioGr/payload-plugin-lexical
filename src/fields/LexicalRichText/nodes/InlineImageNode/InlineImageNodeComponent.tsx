@@ -20,6 +20,7 @@ import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
@@ -53,7 +54,14 @@ import Placeholder from '../../ui/Placeholder';
 import type { InlineImageNode } from './InlineImageNode';
 import type { Position, InlineImageNodePayload } from './types';
 import type { InlineImageModalPayload } from '../../plugins/InlineImagePlugin/types';
-import type { GridSelection, LexicalEditor, NodeKey, NodeSelection, RangeSelection } from 'lexical';
+import type {
+  GridSelection,
+  LexicalEditor,
+  EditorState,
+  NodeKey,
+  NodeSelection,
+  RangeSelection,
+} from 'lexical';
 
 import './InlineImageNodeComponent.css';
 
@@ -361,6 +369,22 @@ export default function InlineImageComponent({
           {showCaption && (
             <div className="InlineImageNode__caption_container">
               <LexicalNestedComposer initialEditor={caption}>
+                <OnChangePlugin
+                  onChange={(
+                    editorState: EditorState,
+                    editor: LexicalEditor,
+                    tags: Set<string>
+                  ) => {
+                    // TODO: Create a shared 'onChange' context provider so that
+                    // caption change events can be registered with the parent
+                    // editor - in turn triggering the parent editor onChange
+                    // event, and therefore updating editorState and the field
+                    // value in Payload (Save Draft and Publish Changes will then
+                    // become 'enabled' from the caption as well as the parent
+                    // editor content.)
+                    console.log('onChange from caption component');
+                  }}
+                />
                 <AutoFocusPlugin />
                 <LinkPlugin />
                 <FloatingLinkEditorPlugin />
