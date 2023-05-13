@@ -297,6 +297,7 @@ function TextFormatFloatingToolbar({
           })}
           {editorConfig.toggles.comments.enabled && (
             <button
+              type="button"
               onClick={insertComment}
               className={'popup-item spaced insert-comment'}
               aria-label="Insert comment"
