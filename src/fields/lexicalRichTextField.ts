@@ -33,7 +33,10 @@ export function lexicalRichTextField(
     ...props,
     hooks: {
       ...props.hooks,
-      afterRead: [populateLexicalRelationships],
+      afterRead: [
+        populateLexicalRelationships,
+        ...(props.hooks?.afterRead || []),
+      ],
     },
     admin: {
       ...props.admin,
