@@ -99,12 +99,16 @@ export class LinkNode extends ElementNode {
 
     element.rel = '';
 
+    if (this.__attributes?.newTab === true && this.__attributes?.linkType === 'custom') {
+      element.rel = manageRel(element.rel, 'add', 'noopener');
+    }
+
     if (this.__attributes?.sponsored ?? false) {
-      element.rel += 'sponsored';
+      element.rel = manageRel(element.rel, 'add', 'sponsored');
     }
 
     if (this.__attributes?.nofollow ?? false) {
-      element.rel += ' nofollow';
+      element.rel = manageRel(element.rel, 'add', 'nofollow');
     }
 
     if (this.__attributes?.rel !== null) {
@@ -134,34 +138,43 @@ export class LinkNode extends ElementNode {
       anchor.removeAttribute('href');
     }
 
-    if (newTab !== prevNode.__attributes?.newTab) {
-      if (newTab ?? false) {
-        anchor.target = '_blank';
-      } else {
-        anchor.removeAttribute('target');
-      }
-    }
-
+    // TODO: not 100% sure why we're settign rel to '' - revisit
+    // Start rel config here, then check newTab below
     if (anchor.rel == null) {
       anchor.rel = '';
     }
 
-    if (sponsored !== prevNode.__attributes.sponsored) {
-      if (sponsored ?? false) {
-        anchor.rel += 'sponsored';
+    if (newTab !== prevNode.__attributes?.newTab) {
+      if (newTab ?? false) {
+        anchor.target = '_blank';
+        if (this.__attributes?.linkType === 'custom') {
+          anchor.rel = manageRel(anchor.rel, 'add', 'noopener');
+        }
       } else {
-        anchor.rel.replace(' sponsored', '').replace('sponsored', '');
+        anchor.removeAttribute('target');
+        anchor.rel = manageRel(anchor.rel, 'remove', 'noopener');
       }
     }
 
     if (nofollow !== prevNode.__attributes.nofollow) {
       if (nofollow ?? false) {
-        anchor.rel += 'nofollow';
+        anchor.rel = manageRel(anchor.rel, 'add', 'nofollow');
       } else {
-        anchor.rel.replace(' nofollow', '').replace('nofollow', '');
+        anchor.rel = manageRel(anchor.rel, 'remove', 'nofollow');
       }
     }
 
+    if (sponsored !== prevNode.__attributes.sponsored) {
+      if (sponsored ?? false) {
+        anchor.rel = manageRel(anchor.rel, 'add', 'sponsored');
+      } else {
+        anchor.rel = manageRel(anchor.rel, 'remove', 'sponsored');
+      }
+    }
+
+    // TODO - revisit - I don't think there can be any other rel
+    // values other than nofollow and noopener - so not
+    // sure why anchor.rel += rel below
     if (rel !== prevNode.__attributes.rel) {
       if (rel != null) {
         anchor.rel += rel;
@@ -169,6 +182,7 @@ export class LinkNode extends ElementNode {
         anchor.removeAttribute('rel');
       }
     }
+
     return false;
   }
 
@@ -422,4 +436,22 @@ function $getAncestor(
   let parent: null | LexicalNode = node;
   while (parent !== null && (parent = parent.getParent()) !== null && !predicate(parent));
   return parent;
+}
+
+function manageRel(input: string, action: 'add' | 'remove', value: string): string {
+  let result: string;
+  let mutableInput = `${input}`;
+  if (action === 'add') {
+    // if we somehow got out of sync - clean up
+    if (mutableInput.includes(value)) {
+      const re = new RegExp(value, 'g');
+      mutableInput = mutableInput.replace(re, '').trim();
+    }
+    mutableInput = mutableInput.trim();
+    result = mutableInput.length === 0 ? `${value}` : `${mutableInput} ${value}`;
+  } else {
+    const re = new RegExp(value, 'g');
+    result = mutableInput.replace(re, '').trim();
+  }
+  return result;
 }
