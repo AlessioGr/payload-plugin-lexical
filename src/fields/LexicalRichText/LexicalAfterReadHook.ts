@@ -9,6 +9,8 @@ import type { SerializedLinkNode } from '../../features/linkplugin/nodes/LinkNod
 import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import type { Payload } from 'payload';
 
+// TODO - types and error handling?
+
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,
   {
@@ -50,21 +52,20 @@ async function loadUploadData(
   payload: Payload,
   rawImagePayload: RawImagePayload,
   locale: string
-): Promise<any> {
-  let uploadData;
+): Promise<GeneratedTypes | null> {
+  // TODO: Adjustable depth
   try {
-    uploadData = await payload.findByID({
+    const doc = await payload.findByID({
       collection: rawImagePayload.relationTo, // required
       id: rawImagePayload.value.id, // required
       depth: 2,
       locale,
     });
+    return doc;
   } catch (e) {
-    console.warn(e);
+    console.error(e);
     return null;
   }
-
-  return uploadData;
 }
 
 async function loadInternalLinkDocData(
@@ -72,17 +73,20 @@ async function loadInternalLinkDocData(
   value: string,
   relationTo: string,
   locale: string
-): Promise<GeneratedTypes> {
+): Promise<GeneratedTypes | null> {
   // TODO: Adjustable depth
-
-  const foundDoc = await payload.findByID({
-    collection: relationTo, // required
-    id: value, // required
-    depth: 2,
-    locale,
-  });
-
-  return foundDoc;
+  try {
+    const doc = await payload.findByID({
+      collection: relationTo, // required
+      id: value, // required
+      depth: 2,
+      locale,
+    });
+    return doc;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
 
 async function loadInlineImageData(
@@ -90,22 +94,24 @@ async function loadInlineImageData(
   value: string,
   relationTo: string,
   locale: string
-): Promise<any> {
-  let data;
+): Promise<GeneratedTypes | null> {
+  // TODO: Adjustable depth
   try {
-    data = await payload.findByID({
+    const doc = await payload.findByID({
       collection: relationTo, // required
       id: value, // required
       depth: 2,
       locale,
     });
+    return doc;
   } catch (e) {
-    console.warn(e);
+    console.error(e);
     return null;
   }
-  return data;
 }
 
+// TODO: concurrency optimization? Promise.all and
+// https://www.npmjs.com/package/p-map
 export async function traverseLexicalField(
   payload: Payload,
   node: SerializedLexicalNode & { children?: SerializedLexicalNode[] },
@@ -115,9 +121,11 @@ export async function traverseLexicalField(
   if (node.type === 'upload') {
     const { rawImagePayload } = node as SerializedImageNode;
     // const extraAttributes: ExtraAttributes = node["extraAttributes"];
-    const uploadData = await loadUploadData(payload, rawImagePayload, locale);
-    if (uploadData != null) {
-      (node as SerializedImageNode).data = uploadData;
+    if (rawImagePayload?.relationTo != null && rawImagePayload?.value?.id != null) {
+      const data = await loadUploadData(payload, rawImagePayload, locale);
+      if (data != null) {
+        (node as SerializedImageNode).data = data;
+      }
     }
   } else if (
     node.type === 'link' &&
@@ -125,19 +133,21 @@ export async function traverseLexicalField(
     (node as SerializedLinkNode).attributes.linkType === 'internal'
   ) {
     const { attributes } = node as SerializedLinkNode;
-    const foundDoc = await loadInternalLinkDocData(
-      payload,
-      attributes?.doc?.value ?? '',
-      attributes?.doc?.relationTo ?? '',
-      locale
-    );
-    if (foundDoc != null && attributes?.doc?.data != null) {
-      // TODO: not sure about this
-      attributes.doc.data = foundDoc;
+    if (attributes?.doc?.value != null && attributes?.doc?.relationTo != null) {
+      const data = await loadInternalLinkDocData(
+        payload,
+        attributes.doc.value,
+        attributes.doc.relationTo,
+        locale
+      );
+      if (data != null && attributes?.doc?.data != null) {
+        // TODO: not sure about this
+        attributes.doc.data = data;
+      }
     }
   } else if (node.type === 'inline-image') {
     const { doc } = node as SerializedInlineImageNode;
-    if (doc != null) {
+    if (doc?.value != null && doc?.relationTo != null) {
       const data = await loadInlineImageData(payload, doc.value, doc.relationTo, locale);
       if (data != null) {
         (node as SerializedInlineImageNode).doc.data = data;
