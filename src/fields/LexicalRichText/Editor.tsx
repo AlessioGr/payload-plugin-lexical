@@ -187,6 +187,10 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               </>
             )}
             <OnChangePlugin
+              // TODO: Revist and confirm. Selection changes can be ignore here, reducing the
+              // frequency that the FieldComponent and Payload receive updates.
+              // Selection changes are only needed if you are saving selection state
+              ignoreSelectionChange={true}
               onChange={(editorState, editor, tags, commentStore) => {
                 // Ignore any onChange event triggered by focus only
                 if (!tags.has('focus') || tags.size > 1) {

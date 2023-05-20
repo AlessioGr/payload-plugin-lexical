@@ -370,6 +370,9 @@ export default function InlineImageComponent({
             <div className="InlineImageNode__caption_container">
               <LexicalNestedComposer initialEditor={caption}>
                 <OnChangePlugin
+                  // TODO: enable this when the shared OnChangeProvider
+                  // has been implemented
+                  // ignoreSelectionChange={true}
                   onChange={(
                     editorState: EditorState,
                     editor: LexicalEditor,

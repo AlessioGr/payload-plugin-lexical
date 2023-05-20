@@ -134,15 +134,14 @@ const FieldComponent: React.FC<Props> = (props) => {
             ) => {
               const json = editorState.toJSON();
               const valueJsonContent = getJsonContentFromValue(value);
-              // TODO: Wondering why the deepEqual here since if we set
+              // TODO: Wondering why the deepEqual was here since if we set
               // ignoreSelectionChange={true} in our OnChangePlugin instances
               // - a call here means that something _must_ have changed - and so
               // not sure that we need to do any comparison at all?
-              if (
-                !(readOnly ?? false) &&
-                Boolean(valueJsonContent) &&
-                !deepEqual(json, valueJsonContent)
-              ) {
+              // TODO: Revisit if neccessary, but Lexical confirmed that ignoreSelectionChange={true}
+              // should be fine in this case, and so we don't need to deepEqual and can trust
+              // that an onChange event here means 'something' actually changed.
+              if (!(readOnly ?? false) && valueJsonContent != null) {
                 const textContent = editor.getEditorState().read(() => {
                   return $getRoot().getTextContent();
                 });
