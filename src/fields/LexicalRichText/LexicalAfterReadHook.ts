@@ -125,6 +125,9 @@ export async function traverseLexicalField(
   }
 
   // Run for its children
+  // TODO: I'm not sure how this will affect the 'depth' option for
+  // each related document. I believe it will effectivly retrieve the
+  // entire tree (i.e. all children, ignoring depth)
   if (node.children != null && node.children.length > 0) {
     const newChildren: SerializedLexicalNode[] = [];
     for (const childNode of node.children) {
