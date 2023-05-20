@@ -1,12 +1,13 @@
-import { type Config as GeneratedTypes } from 'payload/dist/generated-types';
-import { type FieldHook } from 'payload/types';
-
-import { type SerializedEditorState, type SerializedLexicalNode } from 'lexical';
-import { type Payload } from 'payload';
+import type { Config as GeneratedTypes } from 'payload/dist/generated-types';
+import type { FieldHook } from 'payload/types';
 
 import { getJsonContentFromValue } from './FieldComponent';
-import { ImageNode, type RawImagePayload, type SerializedImageNode } from './nodes/ImageNode';
-import { type SerializedLinkNode } from '../../features/linkplugin/nodes/LinkNodeModified';
+
+import type { RawImagePayload, SerializedImageNode } from './nodes/ImageNode';
+import type { SerializedInlineImageNode } from './nodes/InlineImageNode';
+import type { SerializedLinkNode } from '../../features/linkplugin/nodes/LinkNodeModified';
+import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
+import type { Payload } from 'payload';
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,
@@ -83,6 +84,28 @@ async function loadInternalLinkDocData(
 
   return foundDoc;
 }
+
+async function loadInlineImageData(
+  payload: Payload,
+  value: string,
+  relationTo: string,
+  locale: string
+): Promise<any> {
+  let data;
+  try {
+    data = await payload.findByID({
+      collection: relationTo, // required
+      id: value, // required
+      depth: 2,
+      locale,
+    });
+  } catch (e) {
+    console.warn(e);
+    return null;
+  }
+  return data;
+}
+
 export async function traverseLexicalField(
   payload: Payload,
   node: SerializedLexicalNode & { children?: SerializedLexicalNode[] },
@@ -111,6 +134,14 @@ export async function traverseLexicalField(
     if (foundDoc != null && attributes?.doc?.data != null) {
       // TODO: not sure about this
       attributes.doc.data = foundDoc;
+    }
+  } else if (node.type === 'inline-image') {
+    const { doc } = node as SerializedInlineImageNode;
+    if (doc != null) {
+      const data = await loadInlineImageData(payload, doc.value, doc.relationTo, locale);
+      if (data != null) {
+        (node as SerializedInlineImageNode).doc.data = data;
+      }
     }
   }
 
