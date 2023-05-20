@@ -105,7 +105,14 @@ export async function traverseLexicalField(
         locale
       );
       if (relation != null) {
-        attributes.doc.data = relation;
+        // TODO: revisit
+        // I think these are the only properties we need to build a
+        // link on the client - id, title, and slug. The collection slug is
+        // already part of attributes?.doc?.relationTo
+        // and so this should be everything that's needed - whether building
+        // a complete URL, or a framework router link
+        const { id, title, slug } = relation;
+        attributes.doc.data = { id, title, slug };
       }
     }
   } else if (node.type === 'inline-image') {
@@ -128,6 +135,9 @@ export async function traverseLexicalField(
   // TODO: I'm not sure how this will affect the 'depth' option for
   // each related document. I believe it will effectivly retrieve the
   // entire tree (i.e. all children, ignoring depth)
+  // See the test solution for link node above, where we only take
+  // const { id, title, slug } = relation;
+  // TODO: revist - depth option in loadRelated above
   if (node.children != null && node.children.length > 0) {
     const newChildren: SerializedLexicalNode[] = [];
     for (const childNode of node.children) {
