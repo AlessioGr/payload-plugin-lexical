@@ -3,13 +3,14 @@ import type { FieldHook } from 'payload/types';
 
 import { getJsonContentFromValue } from './FieldComponent';
 
-import type { RawImagePayload, SerializedImageNode } from './nodes/ImageNode';
+import type { SerializedImageNode } from './nodes/ImageNode';
 import type { SerializedInlineImageNode } from './nodes/InlineImageNode';
 import type { SerializedLinkNode } from '../../features/linkplugin/nodes/LinkNodeModified';
 import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import type { Payload } from 'payload';
 
 // TODO - types and error handling?
+// TODO - is depth working?
 
 type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any,
@@ -48,62 +49,22 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
   return value;
 };
 
-async function loadUploadData(
-  payload: Payload,
-  rawImagePayload: RawImagePayload,
-  locale: string
-): Promise<GeneratedTypes | null> {
-  // TODO: Adjustable depth
-  try {
-    const doc = await payload.findByID({
-      collection: rawImagePayload.relationTo, // required
-      id: rawImagePayload.value.id, // required
-      depth: 2,
-      locale,
-    });
-    return doc;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-}
-
-async function loadInternalLinkDocData(
+async function loadRelated<T extends keyof GeneratedTypes['collections']>(
   payload: Payload,
   value: string,
-  relationTo: string,
+  relationTo: T,
+  depth: number,
   locale: string
-): Promise<GeneratedTypes | null> {
+): Promise<Partial<GeneratedTypes['collections'][T]> | null> {
   // TODO: Adjustable depth
   try {
-    const doc = await payload.findByID({
+    const relatedDoc = await payload.findByID({
       collection: relationTo, // required
       id: value, // required
-      depth: 2,
+      depth,
       locale,
     });
-    return doc;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-}
-
-async function loadInlineImageData(
-  payload: Payload,
-  value: string,
-  relationTo: string,
-  locale: string
-): Promise<GeneratedTypes | null> {
-  // TODO: Adjustable depth
-  try {
-    const doc = await payload.findByID({
-      collection: relationTo, // required
-      id: value, // required
-      depth: 2,
-      locale,
-    });
-    return doc;
+    return relatedDoc;
   } catch (e) {
     console.error(e);
     return null;
@@ -122,35 +83,43 @@ export async function traverseLexicalField(
     const { rawImagePayload } = node as SerializedImageNode;
     // const extraAttributes: ExtraAttributes = node["extraAttributes"];
     if (rawImagePayload?.relationTo != null && rawImagePayload?.value?.id != null) {
-      const data = await loadUploadData(payload, rawImagePayload, locale);
-      if (data != null) {
-        (node as SerializedImageNode).data = data;
-      }
-    }
-  } else if (
-    node.type === 'link' &&
-    (node as SerializedLinkNode).attributes.linkType != null &&
-    (node as SerializedLinkNode).attributes.linkType === 'internal'
-  ) {
-    const { attributes } = node as SerializedLinkNode;
-    if (attributes?.doc?.value != null && attributes?.doc?.relationTo != null) {
-      const data = await loadInternalLinkDocData(
+      const relation = await loadRelated(
         payload,
-        attributes.doc.value,
-        attributes.doc.relationTo,
+        rawImagePayload.value.id,
+        rawImagePayload.relationTo as keyof GeneratedTypes['collections'],
+        1,
         locale
       );
-      if (data != null && attributes?.doc?.data != null) {
-        // TODO: not sure about this
-        attributes.doc.data = data;
+      if (relation != null) {
+        (node as SerializedImageNode).data = relation;
+      }
+    }
+  } else if (node.type === 'link') {
+    const { attributes } = node as SerializedLinkNode;
+    if (attributes?.doc?.value != null && attributes?.doc?.relationTo != null) {
+      const relation = await loadRelated(
+        payload,
+        attributes.doc.value,
+        attributes.doc.relationTo as keyof GeneratedTypes['collections'],
+        1,
+        locale
+      );
+      if (relation != null) {
+        attributes.doc.data = relation;
       }
     }
   } else if (node.type === 'inline-image') {
     const { doc } = node as SerializedInlineImageNode;
     if (doc?.value != null && doc?.relationTo != null) {
-      const data = await loadInlineImageData(payload, doc.value, doc.relationTo, locale);
-      if (data != null) {
-        (node as SerializedInlineImageNode).doc.data = data;
+      const relation = await loadRelated(
+        payload,
+        doc.value,
+        doc.relationTo as keyof GeneratedTypes['collections'],
+        1,
+        locale
+      );
+      if (relation != null) {
+        (node as SerializedInlineImageNode).doc.data = relation;
       }
     }
   }
