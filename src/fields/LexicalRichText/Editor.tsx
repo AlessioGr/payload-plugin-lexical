@@ -180,7 +180,7 @@ export const Editor: React.FC<Omit<OnChangeProps, 'onChange'>> = (props) => {
                 </React.Fragment>
                 <HistoryPlugin />
                 <UploadPlugin captionsEnabled={false} />
-                <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
+                <FloatingTextFormatToolbarPlugin />
               </NewTablePlugin>
             )}
             {editorConfig.toggles.upload.enabled && (

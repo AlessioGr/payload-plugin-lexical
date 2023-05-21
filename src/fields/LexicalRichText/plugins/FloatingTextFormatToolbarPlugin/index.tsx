@@ -52,7 +52,6 @@ function TextFormatFloatingToolbar({
   isStrikethrough,
   isSubscript,
   isSuperscript,
-  editorConfig,
 }: {
   editor: LexicalEditor;
   anchorElem: HTMLElement;
@@ -64,11 +63,10 @@ function TextFormatFloatingToolbar({
   isSubscript: boolean;
   isSuperscript: boolean;
   isUnderline: boolean;
-  editorConfig: EditorConfig;
 }): JSX.Element {
   const popupCharStylesEditorRef = useRef<HTMLDivElement | null>(null);
 
-  const { uuid } = useEditorConfigContext();
+  const { uuid, editorConfig } = useEditorConfigContext();
   const { openModal } = useModal();
   const editDepth = useEditDepth();
   const linkDrawerSlug = formatDrawerSlug({
@@ -313,8 +311,7 @@ function TextFormatFloatingToolbar({
 
 function useFloatingTextFormatToolbar(
   editor: LexicalEditor,
-  anchorElem: HTMLElement,
-  editorConfig: EditorConfig
+  anchorElem: HTMLElement
 ): JSX.Element | null {
   const [isText, setIsText] = useState(false);
   const [isLink, setIsLink] = useState(false);
@@ -418,7 +415,6 @@ function useFloatingTextFormatToolbar(
       isSuperscript={isSuperscript}
       isUnderline={isUnderline}
       isCode={isCode}
-      editorConfig={editorConfig}
     />,
     anchorElem
   );
@@ -426,11 +422,9 @@ function useFloatingTextFormatToolbar(
 
 export default function FloatingTextFormatToolbarPlugin({
   anchorElem = document.body,
-  editorConfig,
 }: {
   anchorElem?: HTMLElement;
-  editorConfig: EditorConfig;
 }): JSX.Element | null {
   const [editor] = useLexicalComposerContext();
-  return useFloatingTextFormatToolbar(editor, anchorElem, editorConfig);
+  return useFloatingTextFormatToolbar(editor, anchorElem);
 }

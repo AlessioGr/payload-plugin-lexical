@@ -8,6 +8,7 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
+
 import * as React from 'react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
@@ -15,7 +16,6 @@ import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer'
 import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
 
 import { useModal } from '@faceless-ui/modal';
-import { AutoFocusPlugin } from '@lexical/react/LexicalAutoFocusPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
@@ -42,10 +42,9 @@ import {
 
 import { $isInlineImageNode } from './InlineImageNode';
 import FloatingLinkEditorPlugin from '../../../../features/linkplugin/floatingLinkEditor/index';
-import LinkPlugin from '../../../../features/linkplugin/plugins/link/';
+import LinkPlugin from '../../../../features/linkplugin/plugins/link';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
 import { useSharedOnChange } from '../../context/SharedOnChangeProvider';
-import { useEditorConfigContext } from '../../EditorConfigProvider';
 import FloatingTextFormatToolbarPlugin from '../../plugins/FloatingTextFormatToolbarPlugin/index';
 import { InlineImageModal } from '../../plugins/InlineImagePlugin/InlineImageModal';
 import { getPreferredSize } from '../../plugins/InlineImagePlugin/utils';
@@ -55,14 +54,7 @@ import Placeholder from '../../ui/Placeholder';
 import type { InlineImageNode } from './InlineImageNode';
 import type { Position, InlineImageNodePayload } from './types';
 import type { InlineImageModalPayload } from '../../plugins/InlineImagePlugin/types';
-import type {
-  GridSelection,
-  LexicalEditor,
-  EditorState,
-  NodeKey,
-  NodeSelection,
-  RangeSelection,
-} from 'lexical';
+import type { GridSelection, LexicalEditor, NodeKey, NodeSelection, RangeSelection } from 'lexical';
 
 import './InlineImageNodeComponent.css';
 
@@ -145,7 +137,6 @@ export default function InlineImageComponent({
   caption: LexicalEditor;
   nodeKey: NodeKey;
 }): JSX.Element {
-  const { uuid, editorConfig } = useEditorConfigContext();
   const [editor] = useLexicalComposerContext();
   const { onChange } = useSharedOnChange();
   const { historyState } = useSharedHistoryContext();
@@ -388,10 +379,9 @@ export default function InlineImageComponent({
                     if (onChange != null) onChange(editorState, editor, nestedTags);
                   }}
                 />
-                <AutoFocusPlugin />
                 <LinkPlugin />
                 <FloatingLinkEditorPlugin />
-                <FloatingTextFormatToolbarPlugin editorConfig={editorConfig} />
+                <FloatingTextFormatToolbarPlugin />
                 <HistoryPlugin externalHistoryState={historyState} />
                 <RichTextPlugin
                   contentEditable={<ContentEditable className="InlineImageNode__contentEditable" />}
