@@ -223,10 +223,7 @@ export const Editor: React.FC<Omit<OnChangeProps, 'onChange'>> = (props) => {
                 {editorConfig.toggles.tables.enabled && (
                   <TableCellActionMenuPlugin anchorElem={floatingAnchorElem} cellMerge={true} />
                 )}
-                <FloatingTextFormatToolbarPlugin
-                  anchorElem={floatingAnchorElem}
-                  editorConfig={editorConfig}
-                />
+                <FloatingTextFormatToolbarPlugin anchorElem={floatingAnchorElem} />
               </React.Fragment>
             )}
           </React.Fragment>
