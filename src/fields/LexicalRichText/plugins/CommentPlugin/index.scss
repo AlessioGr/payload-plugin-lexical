@@ -83,6 +83,7 @@ i.add-comment {
     opacity: 0;
     transform: translateY(50px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -198,6 +199,7 @@ i.comments {
     opacity: 0;
     transform: translateX(300px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -261,8 +263,7 @@ i.send {
 
 .CommentPlugin_CommentsPanel_SendButton:hover i.send {
   opacity: 1;
-  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg)
-    brightness(100%) contrast(92%);
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg) brightness(100%) contrast(92%);
 }
 
 .CommentPlugin_CommentsPanel_SendButton[disabled] i.send {
@@ -305,8 +306,7 @@ i.send {
   transition: all 0.2s linear;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread.active
-  .CommentPlugin_CommentsPanel_List_Comment:hover {
+.CommentPlugin_CommentsPanel_List_Thread.active .CommentPlugin_CommentsPanel_List_Comment:hover {
   background-color: inherit;
 }
 
@@ -341,8 +341,7 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_List_Thread:first-child,
-.CommentPlugin_CommentsPanel_List_Thread
-  + .CommentPlugin_CommentsPanel_List_Thread {
+.CommentPlugin_CommentsPanel_List_Thread+.CommentPlugin_CommentsPanel_List_Thread {
   border-top: none;
 }
 
@@ -384,20 +383,17 @@ i.send {
   list-style-type: none;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread_Comments
-  .CommentPlugin_CommentsPanel_List_Comment:first-child {
+.CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment:first-child {
   border: none;
   margin-left: 0;
   padding-left: 5px;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread_Comments
-  .CommentPlugin_CommentsPanel_List_Comment:first-child.CommentPlugin_CommentsPanel_List_Comment:last-child {
+.CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment:first-child.CommentPlugin_CommentsPanel_List_Comment:last-child {
   padding-bottom: 5px;
 }
 
-.CommentPlugin_CommentsPanel_List_Thread_Comments
-  .CommentPlugin_CommentsPanel_List_Comment {
+.CommentPlugin_CommentsPanel_List_Thread_Comments .CommentPlugin_CommentsPanel_List_Comment {
   padding-left: 10px;
   border-left: 5px solid #eee;
   margin-left: 5px;
@@ -419,18 +415,15 @@ i.send {
 }
 
 .CommentPlugin_CommentsPanel_DeletedComment,
-.CommentPlugin_CommentsPanel_List_Comment:hover
-  .CommentPlugin_CommentsPanel_List_DeleteButton,
-.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover
-  .CommentPlugin_CommentsPanel_List_DeleteButton {
+.CommentPlugin_CommentsPanel_List_Comment:hover .CommentPlugin_CommentsPanel_List_DeleteButton,
+.CommentPlugin_CommentsPanel_List_Thread_QuoteBox:hover .CommentPlugin_CommentsPanel_List_DeleteButton {
   opacity: 0.5;
 }
 
 .CommentPlugin_CommentsPanel_List_DeleteButton:hover {
   background-color: transparent !important;
   opacity: 1;
-  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg)
-    brightness(100%) contrast(92%);
+  filter: invert(45%) sepia(98%) saturate(2299%) hue-rotate(201deg) brightness(100%) contrast(92%);
 }
 
 .CommentPlugin_CommentsPanel_List_DeleteButton i.delete {
@@ -443,4 +436,13 @@ i.send {
   vertical-align: -10px;
   background-image: url(../../images/icons/trash3.svg);
   transition: opacity 0.2s linear;
+}
+
+html[data-theme='dark'] {
+
+  i.comments,
+  i.comments span {
+    filter: invert(1) brightness(1.2);
+  }
+
 }
