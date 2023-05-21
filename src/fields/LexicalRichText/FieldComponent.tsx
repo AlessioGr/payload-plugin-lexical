@@ -167,7 +167,8 @@ const FieldComponent: React.FC<Props> = (props) => {
                   preview,
                   characters: textContent?.length,
                   words: textContent?.split(' ').length,
-                  comments: commentStore.getComments(),
+                  // TODO: not sure about this but running out of time today!
+                  comments: commentStore != null ? commentStore.getComments() : value?.comments,
                   html,
                   markdown,
                 });

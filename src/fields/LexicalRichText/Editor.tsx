@@ -23,6 +23,7 @@ import { TablePlugin } from '@lexical/react/LexicalTablePlugin';
 import useLexicalEditable from '@lexical/react/useLexicalEditable';
 
 import { useSharedHistoryContext } from './context/SharedHistoryContext';
+import { useSharedOnChange } from './context/SharedOnChangeProvider';
 import TableCellNodes from './nodes/TableCellNodes';
 import ActionsPlugin from './plugins/ActionsPlugin';
 import AutoEmbedPlugin from './plugins/AutoEmbedPlugin';
@@ -53,8 +54,10 @@ import Placeholder from './ui/Placeholder';
 
 import './Editor.scss';
 
-export const Editor: React.FC<OnChangeProps> = (props) => {
-  const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
+export const Editor: React.FC<Omit<OnChangeProps, 'onChange'>> = (props) => {
+  // const { onChange, initialJSON, editorConfig, initialComments, value, setValue } = props;
+  const { initialJSON, editorConfig, initialComments, value, setValue } = props;
+  const { onChange } = useSharedOnChange();
   const { historyState } = useSharedHistoryContext();
   const { isRichText, isCharLimit, isCharLimitUtf8, tableCellMerge, tableCellBackgroundColor } =
     Settings;
@@ -194,7 +197,7 @@ export const Editor: React.FC<OnChangeProps> = (props) => {
               onChange={(editorState, editor, tags, commentStore) => {
                 // Ignore any onChange event triggered by focus only
                 if (!tags.has('focus') || tags.size > 1) {
-                  onChange(editorState, editor, tags, commentStore);
+                  if (onChange != null) onChange(editorState, editor, tags, commentStore);
                 }
               }}
               value={value}

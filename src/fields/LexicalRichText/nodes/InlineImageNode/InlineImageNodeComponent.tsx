@@ -44,6 +44,7 @@ import { $isInlineImageNode } from './InlineImageNode';
 import FloatingLinkEditorPlugin from '../../../../features/linkplugin/floatingLinkEditor/index';
 import LinkPlugin from '../../../../features/linkplugin/plugins/link/';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
+import { useSharedOnChange } from '../../context/SharedOnChangeProvider';
 import { useEditorConfigContext } from '../../EditorConfigProvider';
 import FloatingTextFormatToolbarPlugin from '../../plugins/FloatingTextFormatToolbarPlugin/index';
 import { InlineImageModal } from '../../plugins/InlineImagePlugin/InlineImageModal';
@@ -146,6 +147,7 @@ export default function InlineImageComponent({
 }): JSX.Element {
   const { uuid, editorConfig } = useEditorConfigContext();
   const [editor] = useLexicalComposerContext();
+  const { onChange } = useSharedOnChange();
   const { historyState } = useSharedHistoryContext();
   const editDepth = useEditDepth();
   const imageRef = useRef<null | HTMLImageElement>(null);
@@ -370,22 +372,20 @@ export default function InlineImageComponent({
             <div className="InlineImageNode__caption_container">
               <LexicalNestedComposer initialEditor={caption}>
                 <OnChangePlugin
-                  // TODO: enable this when the shared OnChangeProvider
-                  // has been implemented
-                  // ignoreSelectionChange={true}
-                  onChange={(
-                    editorState: EditorState,
-                    editor: LexicalEditor,
-                    tags: Set<string>
-                  ) => {
-                    // TODO: Create a shared 'onChange' context provider so that
+                  ignoreSelectionChange={true}
+                  onChange={(nestedEditorState, nestedEditor, nestedTags) => {
+                    // Note: Shared 'onChange' context provider so that
                     // caption change events can be registered with the parent
                     // editor - in turn triggering the parent editor onChange
                     // event, and therefore updating editorState and the field
                     // value in Payload (Save Draft and Publish Changes will then
                     // become 'enabled' from the caption as well as the parent
                     // editor content.)
-                    console.log('onChange from caption component');
+
+                    // Parent editor state - not the LexicalNestedComposer in this case
+                    // although there are other ways that this could be used.
+                    const editorState = editor.getEditorState();
+                    if (onChange != null) onChange(editorState, editor, nestedTags);
                   }}
                 />
                 <AutoFocusPlugin />

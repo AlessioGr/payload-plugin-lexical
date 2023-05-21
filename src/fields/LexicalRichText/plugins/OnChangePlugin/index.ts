@@ -36,17 +36,23 @@ export function OnChangePlugin({
   const [editor] = useLexicalComposerContext();
   const commentsContext = useCommentsContext();
 
-  useEffect(() => {
-    const valueJson = value?.jsonContent;
-    const editorState = editor.getEditorState();
+  // TODO: revisit - this was generating the following error
+  // Warning: flushSync was called from inside a lifecycle method. React cannot flush when
+  // React is already rendering. Consider moving this call to a scheduler task or micro task.
+  // NOTE: Also since ignoreSelectionChange is now true - we don't need to perform the
+  // deepEqual onChange. Any onChange event received will mean 'something' has really changed.
+  // See related notes in FieldComponent.tsx
+  // useEffect(() => {
+  //   const valueJson = value?.jsonContent;
+  //   const editorState = editor.getEditorState();
 
-    // In case the value is changed from outside (e.g. through some beforeChange hook in payload),
-    // we need to update the lexical editor to reflect the new value.
-    if (valueJson != null && !deepEqual(valueJson, editorState.toJSON())) {
-      const editorState = editor.parseEditorState(valueJson);
-      editor.setEditorState(editorState);
-    }
-  }, [value]);
+  //   // In case the value is changed from outside (e.g. through some beforeChange hook in payload),
+  //   // we need to update the lexical editor to reflect the new value.
+  //   if (valueJson != null && !deepEqual(valueJson, editorState.toJSON())) {
+  //     const editorState = editor.parseEditorState(valueJson);
+  //     editor.setEditorState(editorState);
+  //   }
+  // }, [value]);
 
   useLayoutEffect(() => {
     if (onChange != null) {

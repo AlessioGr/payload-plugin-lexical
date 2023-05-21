@@ -12,6 +12,7 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 
 import { SharedAutocompleteContext } from './context/SharedAutocompleteContext';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
+import { SharedOnChangeProvider } from './context/SharedOnChangeProvider';
 import { Editor } from './Editor';
 import { EditorConfigProvider } from './EditorConfigProvider';
 import PlaygroundNodes from './nodes/PlaygroundNodes';
@@ -39,31 +40,32 @@ export const EditorProviders: React.FC<OnChangeProps> = (props) => {
         <SharedHistoryContext>
           <TableContext>
             <SharedAutocompleteContext>
-              <CommentsContext initialComments={initialComments}>
-                <div className="editor-shell">
-                  <Editor
-                    onChange={onChange}
-                    initialJSON={initialJSON}
-                    editorConfig={editorConfig}
-                    initialComments={initialComments}
-                    value={value}
-                    setValue={setValue}
-                  />
-                </div>
-                {editorConfig.features.map((feature) => {
-                  if (feature.plugins != null && feature.plugins.length > 0) {
-                    return feature.plugins.map((plugin) => {
-                      if (plugin.position === 'outside') {
-                        return plugin.component;
-                      } else {
-                        return null;
-                      }
-                    });
-                  } else {
-                    return null;
-                  }
-                })}
-              </CommentsContext>
+              <SharedOnChangeProvider onChange={onChange}>
+                <CommentsContext initialComments={initialComments}>
+                  <div className="editor-shell">
+                    <Editor
+                      initialJSON={initialJSON}
+                      editorConfig={editorConfig}
+                      initialComments={initialComments}
+                      value={value}
+                      setValue={setValue}
+                    />
+                  </div>
+                  {editorConfig.features.map((feature) => {
+                    if (feature.plugins != null && feature.plugins.length > 0) {
+                      return feature.plugins.map((plugin) => {
+                        if (plugin.position === 'outside') {
+                          return plugin.component;
+                        } else {
+                          return null;
+                        }
+                      });
+                    } else {
+                      return null;
+                    }
+                  })}
+                </CommentsContext>
+              </SharedOnChangeProvider>
             </SharedAutocompleteContext>
           </TableContext>
         </SharedHistoryContext>
