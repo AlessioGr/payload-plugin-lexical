@@ -59,7 +59,7 @@ export function InlineImageModal({
     (collection) => collection.slug === collectionFromProps
   );
   const selectMediaDrawerSlug = formatListDrawerSlug({
-    uuid,
+    uuid: `${uuid}-inline-image`, // NOTE: while there are two ListDrawers registered - they must have unique IDs (see the ModalPlugin)
     depth: editDepth,
   });
 

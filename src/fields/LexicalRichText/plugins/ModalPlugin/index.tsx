@@ -38,7 +38,7 @@ export default function ModalPlugin(props: { editorConfig: EditorConfig }): JSX.
   const editDepth = useEditDepth();
 
   const addUploadDrawerSlug = formatListDrawerSlug({
-    uuid,
+    uuid: `${uuid}-upload`, // NOTE: while there are two ListDrawers registered - they must have unique IDs (see the InlineImagePlugin)
     depth: editDepth,
   });
 
