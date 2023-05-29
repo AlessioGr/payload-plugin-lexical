@@ -13,6 +13,7 @@ import LexicalErrorBoundary from '@lexical/react/LexicalErrorBoundary';
 import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
 import { mergeRegister } from '@lexical/utils';
@@ -36,6 +37,7 @@ import './ImageNode.scss';
 import { $isImageNode } from './ImageNode';
 import TreeViewPlugin from '../../../features/debug/treeview/plugins';
 import { useSharedHistoryContext } from '../context/SharedHistoryContext';
+import { useSharedOnChange } from '../context/SharedOnChangeProvider';
 import { useEditorConfigContext } from '../EditorConfigProvider';
 import { Settings } from '../settings/Settings';
 import ContentEditable from '../ui/ContentEditable';
@@ -135,6 +137,7 @@ export default function ImageComponent({
     null
   );
   const activeEditorRef = useRef<LexicalEditor | null>(null);
+  const { onChange } = useSharedOnChange();
 
   const onDelete = useCallback(
     (payload: KeyboardEvent) => {
@@ -322,6 +325,23 @@ export default function ImageComponent({
         {showCaption && (
           <div className="image-caption-container">
             <LexicalNestedComposer initialEditor={caption}>
+              <OnChangePlugin
+                ignoreSelectionChange={true}
+                onChange={(nestedEditorState, nestedEditor, nestedTags) => {
+                  // Note: Shared 'onChange' context provider so that
+                  // caption change events can be registered with the parent
+                  // editor - in turn triggering the parent editor onChange
+                  // event, and therefore updating editorState and the field
+                  // value in Payload (Save Draft and Publish Changes will then
+                  // become 'enabled' from the caption as well as the parent
+                  // editor content.)
+
+                  // Parent editor state - not the LexicalNestedComposer in this case
+                  // although there are other ways that this could be used.
+                  const editorState = editor.getEditorState();
+                  if (onChange != null) onChange(editorState, editor, nestedTags);
+                }}
+              />
               {editorConfig.features.map((feature) => {
                 if (feature.subEditorPlugins != null && feature.subEditorPlugins.length > 0) {
                   return feature.subEditorPlugins.map((subEditorPlugin) => {
