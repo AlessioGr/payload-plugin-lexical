@@ -156,7 +156,9 @@ export default function AutocompletePlugin(): JSX.Element | null {
             }
           })
           .catch((e) => {
-            console.error(e);
+            if (e !== 'Dismissed') {
+              console.error(e);
+            }
           });
         lastMatch = match;
       });
