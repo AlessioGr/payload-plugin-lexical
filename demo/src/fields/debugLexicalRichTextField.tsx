@@ -31,6 +31,7 @@ function lexicalRichText(props?: { name?: string; label?: string; debug?: boolea
     name: props?.name ? props?.name : 'lexical_richtext',
     label: props?.label ? props?.label : 'Rich Text',
     localized: true,
+    required: true,
     editorConfigModifier: (defaultEditorConfig) => {
       defaultEditorConfig.debug = props?.debug ? props?.debug : false;
       defaultEditorConfig.toggles.textColor.enabled = true;

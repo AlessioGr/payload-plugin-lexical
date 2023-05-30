@@ -78,7 +78,7 @@ const FieldComponent: React.FC<Props> = (props) => {
   }>({
     path, // required
     validate: memoizedValidate,
-    condition,
+    condition: condition ?? undefined,
   });
 
   // Here is what `useField` sends back
@@ -126,6 +126,11 @@ const FieldComponent: React.FC<Props> = (props) => {
           }}
         >
           <EditorProviders
+            initialJSON={getJsonContentFromValue(value)}
+            editorConfig={editorConfig}
+            initialComments={value?.comments}
+            value={value}
+            setValue={setValue}
             onChange={(
               editorState: EditorState,
               editor: LexicalEditor,
@@ -133,7 +138,7 @@ const FieldComponent: React.FC<Props> = (props) => {
               commentStore: CommentStore
             ) => {
               const json = editorState.toJSON();
-              const valueJsonContent = getJsonContentFromValue(value);
+              // const valueJsonContent = getJsonContentFromValue(value);
               // TODO: Wondering why the deepEqual was here since if we set
               // ignoreSelectionChange={true} in our OnChangePlugin instances
               // - a call here means that something _must_ have changed - and so
@@ -141,7 +146,8 @@ const FieldComponent: React.FC<Props> = (props) => {
               // TODO: Revisit if neccessary, but Lexical confirmed that ignoreSelectionChange={true}
               // should be fine in this case, and so we don't need to deepEqual and can trust
               // that an onChange event here means 'something' actually changed.
-              if (!(readOnly ?? false) && valueJsonContent != null) {
+              // if (!(readOnly ?? false) && valueJsonContent != null) {
+              if (!(readOnly ?? false)) {
                 const textContent = editor.getEditorState().read(() => {
                   return $getRoot().getTextContent();
                 });
@@ -174,11 +180,6 @@ const FieldComponent: React.FC<Props> = (props) => {
                 });
               }
             }}
-            initialJSON={getJsonContentFromValue(value)}
-            editorConfig={editorConfig}
-            initialComments={value?.comments}
-            value={value}
-            setValue={setValue}
           />
           <FieldDescription value={value} description={description} />
         </ErrorBoundary>
