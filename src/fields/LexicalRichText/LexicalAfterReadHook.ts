@@ -108,7 +108,11 @@ export async function traverseLexicalField(
         (node as SerializedImageNode).data = relation;
       }
     }
-  } else if (node.type === 'link') {
+  } else if (
+    node.type === 'link' &&
+    (node as SerializedLinkNode).attributes.linkType != null &&
+    (node as SerializedLinkNode).attributes.linkType === 'internal'
+  ) {
     const { attributes } = node as SerializedLinkNode;
     if (attributes?.doc?.value != null && attributes?.doc?.relationTo != null) {
       const relation = await loadRelated(
