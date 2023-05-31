@@ -21,7 +21,7 @@ const Lexical: CollectionConfig = {
     lexicalRichTextField({
       name: 'lexicalRichTextEditor',
       label: 'Lexical Rich Text Editor',
-      required: true,
+      // required: true, cannot seed with requried: true
       admin: {
         readOnly: false,
       },
