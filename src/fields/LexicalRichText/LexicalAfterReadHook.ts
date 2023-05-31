@@ -23,7 +23,14 @@ type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any
 >;
 
+// A little dangerous - if there was any possibility of this
+// being set, and then not 'unset' all afterRead hooks
+// would be blocked.
+let hookInitiator: string | undefined;
+// let traverseCount = 0;
+
 export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({
+  data,
   value,
   req,
 }): Promise<null | {
@@ -33,52 +40,59 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
   words: number;
 }> => {
   const { payload } = req;
+
   if (value == null) {
     return null;
   }
+
+  // console.log(`populateLexicalRelationships called for: ${data?.id} ${data?.title}`);
+
+  // When draft revisions are enabled - we'll get an 'afterRead' hook for
+  // each revision although data.id will be undefined.
+  if (data?.id == null) {
+    return value;
+  }
+
+  // set the hook initiator in a global value above
+  if (hookInitiator == null && data?.id != null) {
+    hookInitiator = data.id;
+    // console.log('Intiator set to: ', hookInitiator);
+  }
+
+  // block any other afterRead hooks - preventing
+  // infinite recursion of internal link resolution
+  if (hookInitiator != null && data?.id != null) {
+    if (hookInitiator !== data.id) {
+      // console.log(`Non-initiator was blocked: ${data.id} ${data.title}`);
+      return value;
+    }
+  }
+
+  // NOTE: we're modifying the props on jsonContent and
+  // so not sure that the newChildren clone was needed here.
   const jsonContent = getJsonContentFromValue(value);
   if (jsonContent?.root?.children != null) {
-    const newChildren: SerializedLexicalNode[] = [];
     for (const childNode of jsonContent.root.children) {
-      newChildren.push(await traverseLexicalField(payload, childNode, ''));
+      await traverseLexicalField(payload, childNode, '');
     }
-    jsonContent.root.children = newChildren;
   }
-  value.jsonContent = { ...jsonContent };
+
+  // if we made it this far our hook initiator completed
+  // so unset the guard
+  hookInitiator = undefined;
+  // console.log('Hook initiator unset');
 
   return value;
 };
 
-async function loadRelated<T extends keyof GeneratedTypes['collections']>(
-  payload: Payload,
-  value: string,
-  relationTo: T,
-  depth: number,
-  locale: string
-): Promise<Partial<GeneratedTypes['collections'][T]> | null> {
-  // TODO: Adjustable depth
-  try {
-    const relatedDoc = await payload.findByID({
-      collection: relationTo, // required
-      id: value, // required
-      depth,
-      locale,
-    });
-    return relatedDoc;
-  } catch (e) {
-    console.error(e);
-    return null;
-  }
-}
-
-// TODO: concurrency optimization? Promise.all and
-// https://www.npmjs.com/package/p-map
 export async function traverseLexicalField(
   payload: Payload,
   node: SerializedLexicalNode & { children?: SerializedLexicalNode[] },
   locale: string
-): Promise<SerializedLexicalNode> {
+): Promise<void> {
   // Find replacements
+  // traverseCount += 1;
+  // console.log('Traverse count: ', traverseCount);
   if (node.type === 'upload') {
     const { rawImagePayload } = node as SerializedImageNode;
     // const extraAttributes: ExtraAttributes = node["extraAttributes"];
@@ -132,19 +146,33 @@ export async function traverseLexicalField(
   }
 
   // Run for its children
-  // TODO: I'm not sure how this will affect the 'depth' option for
-  // each related document. I believe it will effectivly retrieve the
-  // entire tree (i.e. all children, ignoring depth)
-  // See the test solution for link node above, where we only take
-  // const { id, title, slug } = relation;
-  // TODO: revist - depth option in loadRelated above
+  // NOTE: we're modifying the props on jsonContent and
+  // so not sure that the newChildren clone was needed here.
   if (node.children != null && node.children.length > 0) {
-    const newChildren: SerializedLexicalNode[] = [];
     for (const childNode of node.children) {
-      newChildren.push(await traverseLexicalField(payload, childNode, locale));
+      await traverseLexicalField(payload, childNode, locale);
     }
-    node.children = newChildren;
   }
+}
 
-  return node;
+async function loadRelated<T extends keyof GeneratedTypes['collections']>(
+  payload: Payload,
+  value: string,
+  relationTo: T,
+  depth: number,
+  locale: string
+): Promise<Partial<GeneratedTypes['collections'][T]> | null> {
+  // TODO: Adjustable depth
+  try {
+    const relatedDoc = await payload.findByID({
+      collection: relationTo, // required
+      id: value, // required
+      depth,
+      locale,
+    });
+    return relatedDoc;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
 }
