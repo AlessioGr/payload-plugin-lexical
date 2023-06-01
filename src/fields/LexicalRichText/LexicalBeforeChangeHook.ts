@@ -3,15 +3,12 @@ import type { FieldHook } from 'payload/types';
 
 import { getJsonContentFromValue } from './FieldComponent';
 
-import type { SerializedImageNode } from './nodes/ImageNode';
 import type { SerializedInlineImageNode } from './nodes/InlineImageNode';
+import type { SerializedLinkNode } from '../../features/linkplugin/nodes/LinkNodeModified';
 import type { SerializedEditorState, SerializedLexicalNode } from 'lexical';
 import type { Payload } from 'payload';
 
-// TODO - types and error handling?
-// TODO - is depth working?
-
-type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
+type LexicalRichTextFieldBeforeChangeFieldHook = FieldHook<
   any,
   {
     jsonContent: SerializedEditorState;
@@ -22,7 +19,7 @@ type LexicalRichTextFieldAfterReadFieldHook = FieldHook<
   any
 >;
 
-export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHook = async ({
+export const updateLexicalRelationships: LexicalRichTextFieldBeforeChangeFieldHook = async ({
   data,
   value,
   req,
@@ -38,8 +35,6 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
     return null;
   }
 
-  // console.log(`populateLexicalRelationships called for: ${data?.id} ${data?.title}`);
-
   // NOTE: we're modifying the props on jsonContent and
   // so not sure that the newChildren clone was needed here.
   const jsonContent = getJsonContentFromValue(value);
@@ -52,43 +47,48 @@ export const populateLexicalRelationships: LexicalRichTextFieldAfterReadFieldHoo
   return value;
 };
 
-// Note: see the comments in LexicalBeforeChangeHook.tsx
-// Internal links are processed there.
-// In this afterRead hook we only process complete document
-// relationships.
+// Note: Any internal links, and any node that has a nested lexical
+// editor is handled here so that internal links can have their
+// title and slug populated and stored within the main document.
+// The LexicalAfterReadHook.tsx is still used to attached
+// relationship documents dynamically on read/request (and
+// of course NOT stored along with the parent document).
 export async function traverseLexicalField(
   payload: Payload,
   node: SerializedLexicalNode & { children?: SerializedLexicalNode[] },
   locale: string
 ): Promise<void> {
-  // Find replacements
-  if (node.type === 'upload') {
-    const { rawImagePayload } = node as SerializedImageNode;
-    // const extraAttributes: ExtraAttributes = node["extraAttributes"];
-    if (rawImagePayload?.relationTo != null && rawImagePayload?.value?.id != null) {
-      const relation = await loadRelated(
-        payload,
-        rawImagePayload.value.id,
-        rawImagePayload.relationTo as keyof GeneratedTypes['collections'],
-        1,
-        locale
-      );
-      if (relation != null) {
-        (node as SerializedImageNode).data = relation;
+  // TODO: if Upload captions are needed - add them here.
+  if (node.type === 'inline-image') {
+    const { caption } = node as SerializedInlineImageNode;
+    if (caption?.editorState?.root?.children != null) {
+      for (const childNode of caption.editorState.root.children) {
+        await traverseLexicalField(payload, childNode, locale);
       }
     }
-  } else if (node.type === 'inline-image') {
-    const { doc } = node as SerializedInlineImageNode;
-    if (doc?.value != null && doc?.relationTo != null) {
+  } else if (
+    node.type === 'link' &&
+    (node as SerializedLinkNode).attributes.linkType != null &&
+    (node as SerializedLinkNode).attributes.linkType === 'internal'
+  ) {
+    const { attributes } = node as SerializedLinkNode;
+    if (attributes?.doc?.value != null && attributes?.doc?.relationTo != null) {
       const relation = await loadRelated(
         payload,
-        doc.value,
-        doc.relationTo as keyof GeneratedTypes['collections'],
+        attributes.doc.value,
+        attributes.doc.relationTo as keyof GeneratedTypes['collections'],
         1,
         locale
       );
       if (relation != null) {
-        (node as SerializedInlineImageNode).doc.data = relation;
+        // TODO: revisit
+        // I think these are the only properties we need to build a
+        // link on the client - id, title, and slug. The collection slug is
+        // already part of attributes?.doc?.relationTo
+        // and so this should be everything that's needed - whether building
+        // a complete URL, or a framework router link
+        const { id, title, slug } = relation;
+        attributes.doc.data = { id, title, slug };
       }
     }
   }

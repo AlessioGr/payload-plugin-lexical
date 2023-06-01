@@ -5,6 +5,7 @@ import { cloneDeep } from 'lodash';
 
 import { LexicalRichTextFieldComponent, LexicalRichTextCell } from './FieldComponentLazy';
 import { populateLexicalRelationships } from './LexicalAfterReadHook';
+import { updateLexicalRelationships } from './LexicalBeforeChangeHook';
 import { defaultEditorConfig, type EditorConfig } from '../../types';
 
 export function lexicalRichTextField(
@@ -29,6 +30,7 @@ export function lexicalRichTextField(
     ...rest,
     hooks: {
       ...hooks,
+      beforeChange: [updateLexicalRelationships],
       afterRead: [populateLexicalRelationships],
     },
     admin: {
