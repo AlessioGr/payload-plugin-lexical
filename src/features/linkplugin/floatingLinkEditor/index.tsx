@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
 import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
 import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
-import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
+import { reduceFieldsToValues } from 'payload/components/forms';
 import { type Fields } from 'payload/dist/admin/components/forms/Form/types';
 import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
 import { useConfig } from 'payload/dist/admin/components/utilities/Config';
@@ -48,6 +48,7 @@ import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelect
 import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 import { $isLinkNode, type LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
+import { useDocumentInfo } from 'payload/components/utilities';
 
 function LinkEditor({
   editor,
@@ -74,6 +75,9 @@ function LinkEditor({
   const { user } = useAuth();
   const locale = useLocale();
   const { t } = useTranslation('fields');
+
+  const { getDocPreferences } = useDocumentInfo();
+
 
   const [initialState, setInitialState] = useState<Fields>({});
   const [fieldSchema] = useState(() => {
@@ -198,17 +202,21 @@ function LinkEditor({
         setLinkUrl('');
         setLinkLabel('');
       }
-
-      void buildStateFromSchema({
-        fieldSchema,
-        data,
-        user: user ?? undefined,
-        operation: 'create',
-        locale,
-        t,
-      }).then((state) => {
-        setInitialState(state);
+      void getDocPreferences().then((preferences) => {
+        void buildStateFromSchema({
+          fieldSchema,
+          data,
+          user: user ?? undefined,
+          operation: 'create',
+          locale,
+          t,
+          preferences,
+        }).then((state) => {
+          setInitialState(state);
+        });
       });
+
+      
     }
 
     const editorElem = editorRef.current;
