@@ -99,8 +99,8 @@ export async function traverseLexicalField(
     }
   } else if (
     node.type === 'link'
-    && (node as SerializedLinkNode).attributes.linkType
-    && (node as SerializedLinkNode).attributes.linkType === 'internal'
+    && (node as SerializedLinkNode).attributes?.linkType
+    && (node as SerializedLinkNode).attributes?.linkType === 'internal'
   ) {
     const { attributes } = node as SerializedLinkNode;
 
