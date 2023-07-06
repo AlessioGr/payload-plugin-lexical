@@ -1,0 +1,47 @@
+@import 'node_modules/payload/dist/admin/scss/styles.scss';
+
+.lexicalRichTextEditor {
+  margin-bottom: base(2);
+  display: flex;
+  isolation: isolate;
+
+  &--gutter {
+    .rich-text__editor {
+      padding-left: $baseline;
+      border-left: 1px solid var(--theme-elevation-100);
+    }
+  }
+
+  &__wrap {
+    width: 100%;
+    position: relative;
+  }
+
+  &--read-only {
+    .editor-shell::after {
+      content: '' !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      background: var(--theme-elevation-100);
+      opacity: 0.5 !important;
+      z-index: 9 !important;
+    }
+  }
+
+  &.error {
+    .editor-shell::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--theme-error-200);
+      opacity: 1;
+      z-index: -1;
+    }
+  }
+}

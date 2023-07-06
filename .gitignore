@@ -1,5 +1,6 @@
 # Project exclude paths
 /demo/node_modules/
+/node_modules/
 
 ### Node ###
 # Logs
@@ -42,7 +43,6 @@ bower_components
 .lock-wscript
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-build/Release
 
 # Dependency directories
 node_modules/
@@ -95,7 +95,6 @@ out
 
 # Nuxt.js build / generate output
 .nuxt
-dist
 
 # Gatsby files
 .cache/
@@ -172,3 +171,4 @@ dist
 
 # End of https://www.toptal.com/developers/gitignore/api/node,visualstudiocode
 demo/.env
+
