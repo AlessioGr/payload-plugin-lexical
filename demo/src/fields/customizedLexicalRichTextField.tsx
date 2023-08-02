@@ -27,6 +27,7 @@ import {
   ConvertFromMarkdownFeature,
 } from '../../../src';
 import { InlineProductFeature } from '../customLexicalFeatures/inlineProduct/InlineProductFeature';
+import { VideoFeature } from '../customLexicalFeatures/video/VideoFeature';
 
 function lexicalRichText(props?: { name?: string; label?: string; debug?: boolean }): Field {
   return lexicalRichTextField({
@@ -68,6 +69,7 @@ function lexicalRichText(props?: { name?: string; label?: string; debug?: boolea
         MaxLengthFeature({ enabled: false, maxLength: 30 }),
         LinkFeature(),
         TableOfContentsFeature({ enabled: false }),
+        VideoFeature({}),
         // AISuggestFeature(),
       ];
 
