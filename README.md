@@ -7,7 +7,7 @@
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta.
 
 > **Note**
-> Lexical will power the next richtext editor, which will be added directly to the Payload 2.0 core and replace the existing Slate-based editor. When it's released, I'll build a converter from this lexical plugin => payload core > lexical.
+> Lexical will power the next richtext editor, which will be added directly to the Payload 2.0 core and replace the existing Slate-based editor. When it's released, I'll build a converter from this lexical plugin => payload core, so you're able to seamlessly migrate over. This should also be able to automatically migrate any custom features/extensions you have built for this plugin, though I cannot make any guarantees.
 
 This plugin already comes packed with a ton of features which the original editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
 
