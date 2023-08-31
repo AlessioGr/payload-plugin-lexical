@@ -1,4 +1,4 @@
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
 import * as React from 'react';
 import { InlineProductNode } from './nodes/InlineProductNode';
 import { InlineProductPlugin } from './plugins/InlineProductPlugin';

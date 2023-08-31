@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
 
 import { useEditDepth } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
 
 import { useModal } from '@faceless-ui/modal';
 import {

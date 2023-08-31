@@ -14,15 +14,16 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
-import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
 import { reduceFieldsToValues } from 'payload/components/forms';
+import { useDocumentInfo } from 'payload/components/utilities';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
+import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema/index';
 import { type Fields } from 'payload/dist/admin/components/forms/Form/types';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
-import { useLocale } from 'payload/dist/admin/components/utilities/Locale';
+import { useAuth } from 'payload/dist/admin/components/utilities/Auth/index';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
+import { useLocale } from 'payload/dist/admin/components/utilities/Locale/index';
 import { type Field } from 'payload/dist/fields/config/types';
 
 import { useModal } from '@faceless-ui/modal';
@@ -42,13 +43,13 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 
-import { LinkDrawer } from './LinkDrawer';
 import { useEditorConfigContext } from '../../../fields/LexicalRichText/EditorConfigProvider';
 import { getSelectedNode } from '../../../fields/LexicalRichText/utils/getSelectedNode';
 import { setFloatingElemPositionForLinkEditor } from '../../../fields/LexicalRichText/utils/setFloatingElemPositionForLinkEditor';
 import { $isAutoLinkNode } from '../nodes/AutoLinkNodeModified';
 import { $isLinkNode, type LinkAttributes, TOGGLE_LINK_COMMAND } from '../nodes/LinkNodeModified';
-import { useDocumentInfo } from 'payload/components/utilities';
+import { LinkDrawer } from './LinkDrawer';
+
 
 function LinkEditor({
   editor,
@@ -216,7 +217,7 @@ function LinkEditor({
         });
       });
 
-      
+
     }
 
     const editorElem = editorRef.current;

@@ -1,17 +1,17 @@
 import * as React from 'react';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
 
 import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { type LexicalEditor } from 'lexical';
 
-import { YouTubeNode } from './nodes/YouTubeNode';
-import YouTubePlugin, { INSERT_YOUTUBE_COMMAND } from './plugins';
 import {
   AutoEmbedDrawer,
   type PlaygroundEmbedConfig,
 } from '../../../fields/LexicalRichText/plugins/AutoEmbedPlugin';
 import { type EditorConfig, type Feature } from '../../../types';
+import { YouTubeNode } from './nodes/YouTubeNode';
+import YouTubePlugin, { INSERT_YOUTUBE_COMMAND } from './plugins';
 
 export function YouTubeFeature(): Feature {
   const YoutubeEmbedConfig: PlaygroundEmbedConfig = {

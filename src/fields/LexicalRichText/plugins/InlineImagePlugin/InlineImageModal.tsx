@@ -3,24 +3,24 @@ import { toast } from 'react-toastify';
 
 import { useConfig } from 'payload/components/utilities';
 import { requests } from 'payload/dist/admin/api';
-import Button from 'payload/dist/admin/components/elements/Button';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
-import FileDetails from 'payload/dist/admin/components/elements/FileDetails';
-import { baseClass, formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer';
+import Button from 'payload/dist/admin/components/elements/Button/index';
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
+import FileDetails from 'payload/dist/admin/components/elements/FileDetails/index';
+import { baseClass, formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer/index';
 import { CheckboxInput } from 'payload/dist/admin/components/forms/field-types/Checkbox/Input';
 import SelectInput from 'payload/dist/admin/components/forms/field-types/Select/Input';
 import TextInput from 'payload/dist/admin/components/forms/field-types/Text/Input';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
 import type { OptionObject } from 'payload/dist/fields/config/types';
 import type { SanitizedCollectionConfig } from 'payload/types';
 
 import { useModal } from '@faceless-ui/modal';
 
-import { InlineImageMediaModal } from './InlineImageMediaModal';
 import { useEditorConfigContext } from '../../EditorConfigProvider';
+import { InlineImageMediaModal } from './InlineImageMediaModal';
 
-import type { InlineImageModalPayload } from './types';
 import type { Position } from '../../nodes/InlineImageNode/types';
+import type { InlineImageModalPayload } from './types';
 
 import './InlineImageModal.css';
 

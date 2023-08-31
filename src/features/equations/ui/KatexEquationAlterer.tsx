@@ -9,7 +9,7 @@ import * as React from 'react';
 import { useCallback, useState } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
-import Button from 'payload/dist/admin/components/elements/Button';
+import Button from 'payload/dist/admin/components/elements/Button/index';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 

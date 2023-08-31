@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "allowJs": true,
-    "module": "commonjs",
+    "module": "Node16",
     "sourceMap": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
@@ -19,7 +19,7 @@
     "skipLibCheck": true,
     "strict": false,
     "resolveJsonModule": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "baseUrl": "./src",
     "paths": {
       "@/*": [

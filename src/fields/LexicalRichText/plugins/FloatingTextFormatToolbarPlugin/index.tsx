@@ -13,7 +13,7 @@ import * as React from 'react';
 import { createPortal } from 'react-dom';
 
 import { useEditDepth } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
 
 import { useModal } from '@faceless-ui/modal';
 import { $isCodeHighlightNode } from '@lexical/code';

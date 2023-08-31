@@ -2,18 +2,18 @@ import * as React from 'react';
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
 import { useEditDepth } from 'payload/components/utilities';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
+import { ListDrawerContent } from 'payload/dist/admin/components/elements/ListDrawer/DrawerContent';
 import {
   baseClass,
   formatListDrawerSlug,
   ListDrawerToggler,
-} from 'payload/dist/admin/components/elements/ListDrawer';
-import { ListDrawerContent } from 'payload/dist/admin/components/elements/ListDrawer/DrawerContent';
+} from 'payload/dist/admin/components/elements/ListDrawer/index';
 import {
   type ListDrawerProps,
   type UseListDrawer,
 } from 'payload/dist/admin/components/elements/ListDrawer/types';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
+import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
 
 import { useModal } from '@faceless-ui/modal';
 

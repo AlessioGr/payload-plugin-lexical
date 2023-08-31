@@ -9,8 +9,8 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import * as React from 'react';
 
-import Button from 'payload/dist/admin/components/elements/Button';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
+import Button from 'payload/dist/admin/components/elements/Button/index';
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
 import TextInput from 'payload/dist/admin/components/forms/field-types/Text/Input';
 
 import { useModal } from '@faceless-ui/modal';

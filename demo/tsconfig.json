@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "commonjs",
+    "module": "Node16",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": false,
@@ -10,7 +10,7 @@
     "outDir": "./dist",
     "rootDir": "../",
     "jsx": "react",
-    "moduleResolution": "Node",
+    "moduleResolution": "Node16",
     "paths": {
       // Tell TS where to find your generated types
       // This is the default location below

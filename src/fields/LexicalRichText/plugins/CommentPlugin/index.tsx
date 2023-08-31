@@ -10,11 +10,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as React from 'react';
 import { createPortal } from 'react-dom';
 
-import Button from 'payload/dist/admin/components/elements/Button';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
-import X from 'payload/dist/admin/components/icons/X';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth';
+import Button from 'payload/dist/admin/components/elements/Button/index';
+import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
+import { useAuth } from 'payload/dist/admin/components/utilities/Auth/index';
 
 import { useModal } from '@faceless-ui/modal';
 import {

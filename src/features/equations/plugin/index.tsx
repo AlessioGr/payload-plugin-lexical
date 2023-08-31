@@ -13,11 +13,8 @@ import './index.scss';
 import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
 
-import Button from 'payload/dist/admin/components/elements/Button';
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
-import X from 'payload/dist/admin/components/icons/X';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useCallback, useState, ReactNode, useMemo, createContext, useContext } from 'react';
+import { useCallback, useState } from 'react';
 
 import { useConfig } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer/index';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
 import { type SanitizedCollectionConfig } from 'payload/types';
 
 import { useModal } from '@faceless-ui/modal';
@@ -90,6 +90,8 @@ export default function ModalPlugin(props: { editorConfig: EditorConfig }): JSX.
     options?: options
   ) => SanitizedCollectionConfig[];
   const filterRichTextCollections: FilteredCollectionsT = (collections, options) => {
+    if(collections == null) return [];
+
     return collections.filter(({ admin: { enableRichTextRelationship }, upload }) => {
       if (options?.uploads != null) {
         return enableRichTextRelationship && Boolean(upload);

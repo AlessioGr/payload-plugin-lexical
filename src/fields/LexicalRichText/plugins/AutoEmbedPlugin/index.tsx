@@ -11,10 +11,10 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 import { useEditDepth } from 'payload/components/utilities';
-import Button from 'payload/dist/admin/components/elements/Button';
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
-import X from 'payload/dist/admin/components/icons/X';
+import Button from 'payload/dist/admin/components/elements/Button/index';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { Gutter } from 'payload/dist/admin/components/elements/Gutter/index';
+import X from 'payload/dist/admin/components/icons/X/index';
 
 import { useModal } from '@faceless-ui/modal';
 import {

@@ -11,6 +11,7 @@ import LexicalDebug from './collections/LexicalDebug';
 import Products from './collections/Products';
 import LexicalMinimal from './collections/LexicalMinimal';
 import LexicalBeforeChange from './collections/LexicalBeforeChange';
+import { adapter } from './adapter';
 
 export default buildConfig({
   serverURL: 'http://localhost:3001',
@@ -29,16 +30,18 @@ export default buildConfig({
               __dirname,
               '../node_modules/react-i18next',
             ),
-            payload: path.join(__dirname, '../node_modules/payload'),
+            // payload: path.join(__dirname, '../node_modules/payload'),
             '@faceless-ui/modal': path.join(
               __dirname,
               '../node_modules/@faceless-ui/modal',
             ),
+            [path.resolve(__dirname, './adapter.js')]: path.resolve(__dirname, './mock.js'),
           },
         },
       };
     },
   },
+  db: adapter,
   collections: [
     Lexical,
     LexicalCustomized,

@@ -4,13 +4,14 @@
   "description": "Lexical plugin for Payload CMS",
   "license": "MIT",
   "main": "dist/index.js",
+  "type": "commonjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
   "scripts": {
     "copyfiles": "copyfiles -u 1 \"src/**/*.{html,css,scss,ttf,woff,woff2,eot,svg,jpg,png}\" dist/",
-    "build": "yarn copyfiles && yarn build:tsc",
+    "build": "pnpm copyfiles && pnpm build:tsc",
     "build:tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint --ext js,jsx,ts,tsx .",
@@ -62,7 +63,8 @@
     "lexical": "0.10.0",
     "lodash": "4.17.21",
     "openai": "^3.3.0",
-    "payload": "^1.10.2",
+    "@payloadcms/db-mongodb": "file:/Users/alessio/Documents/GitHub/payload/packages/db-mongodb/",
+    "payload": "file:/Users/alessio/Documents/GitHub/payload/packages/payload/",
     "react": "^18.2.0",
     "react-dom": "18.2.0",
     "react-error-boundary": "^4.0.10",

@@ -7,7 +7,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
 import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
 import './index.scss';
 

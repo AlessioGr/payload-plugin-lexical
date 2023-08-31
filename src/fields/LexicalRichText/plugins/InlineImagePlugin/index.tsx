@@ -12,8 +12,8 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -38,8 +38,6 @@ import {
   COMMAND_PRIORITY_NORMAL,
 } from 'lexical';
 
-import { InlineImageModal } from './InlineImageModal';
-import { getPreferredSize } from './utils';
 import { useEditorConfigContext } from '../../EditorConfigProvider';
 import {
   $createInlineImageNode,
@@ -47,9 +45,11 @@ import {
   InlineImageNode,
 } from '../../nodes/InlineImageNode';
 import { CAN_USE_DOM } from '../../shared/canUseDOM';
+import { InlineImageModal } from './InlineImageModal';
+import { getPreferredSize } from './utils';
 
-import type { InlineImageModalPayload } from './types';
 import type { InlineImageNodePayload } from '../../nodes/InlineImageNode/types';
+import type { InlineImageModalPayload } from './types';
 
 export type InsertInlineImagePayload = Readonly<InlineImageNodePayload>;
 

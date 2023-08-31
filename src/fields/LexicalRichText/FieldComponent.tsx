@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { useField, withCondition } from 'payload/components/forms';
-import Error from 'payload/dist/admin/components/forms/Error';
-import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription';
-import Label from 'payload/dist/admin/components/forms/Label';
+import Error from 'payload/dist/admin/components/forms/Error/index';
+import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription/index';
+import Label from 'payload/dist/admin/components/forms/Label/index';
 import { type Validate } from 'payload/types';
 
 import { $generateHtmlFromNodes } from '@lexical/html';
@@ -16,11 +16,11 @@ import {
   type SerializedEditorState,
 } from 'lexical';
 
+import { deepEqual } from '../../tools/deepEqual';
 import { type Comments, type CommentStore } from './commenting';
 import { EditorProviders } from './EditorProviders';
 import defaultValue from './settings/defaultValue';
 import { type Props } from './types';
-import { deepEqual } from '../../tools/deepEqual';
 
 import './FieldComponent.scss';
 

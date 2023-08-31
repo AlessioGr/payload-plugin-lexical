@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
 
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { $getRoot, $isParagraphNode } from 'lexical';
 
-import { ClearEditorDrawer } from './drawer';
 import { OPEN_MODAL_COMMAND } from '../../../fields/LexicalRichText/plugins/ModalPlugin';
 import { type Feature } from '../../../types';
+import { ClearEditorDrawer } from './drawer';
 
 function ClearEditorAction(): JSX.Element {
   const [editor] = useLexicalComposerContext();

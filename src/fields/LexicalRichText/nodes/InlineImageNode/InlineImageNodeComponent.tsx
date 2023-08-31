@@ -12,8 +12,8 @@
 import * as React from 'react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -40,7 +40,6 @@ import {
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
 
-import { $isInlineImageNode } from './InlineImageNode';
 import FloatingLinkEditorPlugin from '../../../../features/linkplugin/floatingLinkEditor/index';
 import LinkPlugin from '../../../../features/linkplugin/plugins/link';
 import { useSharedHistoryContext } from '../../context/SharedHistoryContext';
@@ -50,10 +49,11 @@ import { InlineImageModal } from '../../plugins/InlineImagePlugin/InlineImageMod
 import { getPreferredSize } from '../../plugins/InlineImagePlugin/utils';
 import ContentEditable from '../../ui/ContentEditable';
 import Placeholder from '../../ui/Placeholder';
+import { $isInlineImageNode } from './InlineImageNode';
 
+import type { InlineImageModalPayload } from '../../plugins/InlineImagePlugin/types';
 import type { InlineImageNode } from './InlineImageNode';
 import type { Position, InlineImageNodePayload } from './types';
-import type { InlineImageModalPayload } from '../../plugins/InlineImagePlugin/types';
 import type { GridSelection, LexicalEditor, NodeKey, NodeSelection, RangeSelection } from 'lexical';
 
 import './InlineImageNodeComponent.css';
