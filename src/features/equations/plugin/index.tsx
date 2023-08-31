@@ -13,8 +13,8 @@ import './index.scss';
 import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
 
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
+import { Drawer, formatDrawerSlug } from 'payload/components/elements';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';

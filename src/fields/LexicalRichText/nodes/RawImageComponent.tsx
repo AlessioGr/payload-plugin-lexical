@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Suspense, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { requests } from 'payload/dist/admin/api';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
+import { requests } from 'payload/distadmin/api';
+import { useConfig } from 'payload/distadmin/components/utilities/Config/index';
 
 import { type LexicalEditor, type NodeKey } from 'lexical';
 

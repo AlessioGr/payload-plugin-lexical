@@ -1,5 +1,4 @@
-import { type FieldBase } from 'payload/dist/fields/config/types';
-import { type Field } from 'payload/types';
+import { type FieldBase, type Field } from 'payload/types';
 
 import { cloneDeep } from 'lodash';
 

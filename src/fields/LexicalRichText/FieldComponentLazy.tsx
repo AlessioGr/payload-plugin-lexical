@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from 'react';
 
-import { ShimmerEffect } from 'payload/dist/admin/components/elements/ShimmerEffect/index';
+import { ShimmerEffect } from 'payload/distadmin/components/elements/ShimmerEffect/index';
 
 import { type Props } from './types';
 

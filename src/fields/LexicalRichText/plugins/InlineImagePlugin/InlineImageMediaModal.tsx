@@ -1,8 +1,8 @@
 import * as React from 'react';
 
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
-import { ListDrawerContent } from 'payload/dist/admin/components/elements/ListDrawer/DrawerContent';
-import { baseClass } from 'payload/dist/admin/components/elements/ListDrawer/index';
+import { Drawer } from 'payload/components/elements';
+import { ListDrawerContent } from 'payload/distadmin/components/elements/ListDrawer/DrawerContent';
+import { baseClass } from 'payload/distadmin/components/elements/ListDrawer/index';
 
 export function InlineImageMediaModal(props): JSX.Element {
   const { drawerSlug } = props;

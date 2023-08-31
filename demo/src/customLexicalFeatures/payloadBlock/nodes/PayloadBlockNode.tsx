@@ -30,7 +30,7 @@ import {
 import { DecoratorNode } from 'lexical';
 import * as React from 'react';
 import { Block } from 'payload/types';
-import { Data } from 'payload/dist/admin/components/forms/Form/types';
+import { Data } from 'payload/distadmin/components/forms/Form/types';
 const PayloadBlockDisplayComponent = React.lazy(
   () => import('./PayloadBlockDisplayComponent'),
 );

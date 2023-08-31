@@ -7,25 +7,24 @@
  */
 
 import { useState, useEffect } from 'react';
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter';
+import { Drawer, formatDrawerSlug } from 'payload/components/elements';
+import { Gutter } from 'payload/distadmin/components/elements/Gutter/index';
 import './index.scss';
 
 import { useModal } from '@faceless-ui/modal';
 import React from 'react';
-import Button from 'payload/dist/admin/components/elements/Button';
-import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
-import { Fields } from 'payload/dist/admin/components/forms/Form/types';
-import { Block, Field } from 'payload/dist/fields/config/types';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config';
-import Form from 'payload/dist/admin/components/forms/Form';
-import FormSubmit from 'payload/dist/admin/components/forms/Submit';
-import fieldTypes from 'payload/dist/admin/components/forms/field-types';
-import RenderFields from 'payload/dist/admin/components/forms/RenderFields';
+import Button from 'payload/distadmin/components/elements/Button/index';
+import reduceFieldsToValues from 'payload/distadmin/components/forms/Form/reduceFieldsToValues';
+import { Fields } from 'payload/distadmin/components/forms/Form/types';
+import { Block, Field } from 'payload/types';
+import { useConfig } from 'payload/distadmin/components/utilities/Config/index';
+import Form from 'payload/distadmin/components/forms/Form/index';
+import FormSubmit from 'payload/distadmin/components/forms/Submit/index';
+import fieldTypes from 'payload/distadmin/components/forms/field-types/index';
+import RenderFields from 'payload/distadmin/components/forms/RenderFields/index';
 import { useTranslation } from 'react-i18next';
-import X from 'payload/dist/admin/components/icons/X';
 
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
 import { PayloadBlockAttributes } from '../nodes/PayloadBlockNode';
 import { TOGGLE_PAYLOAD_BLOCK_COMMAND } from '../plugins/PayloadBlockPlugin';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';

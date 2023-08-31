@@ -16,15 +16,15 @@ import { useTranslation } from 'react-i18next';
 
 import { reduceFieldsToValues } from 'payload/components/forms';
 import { useDocumentInfo } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
-import { getBaseFields } from 'payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
-import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema/index';
-import { type Fields } from 'payload/dist/admin/components/forms/Form/types';
-import { useAuth } from 'payload/dist/admin/components/utilities/Auth/index';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
-import { useLocale } from 'payload/dist/admin/components/utilities/Locale/index';
-import { type Field } from 'payload/dist/fields/config/types';
+import { formatDrawerSlug } from 'payload/distadmin/components/elements/Drawer/index';
+import { getBaseFields } from 'payload/distadmin/components/forms/field-types/RichText/elements/link/LinkDrawer/baseFields';
+import buildStateFromSchema from 'payload/distadmin/components/forms/Form/buildStateFromSchema/index';
+import { type Fields } from 'payload/distadmin/components/forms/Form/types';
+import { useAuth } from 'payload/distadmin/components/utilities/Auth/index';
+import { useConfig } from 'payload/distadmin/components/utilities/Config/index';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
+import { useLocale } from 'payload/distadmin/components/utilities/Locale/index';
+import { type Field } from 'payload/types';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
@@ -318,7 +318,7 @@ function LinkEditor({
 
   return (
     <div ref={editorRef} className="link-editor">
-      <LinkDrawer // TODO: Might aswell import from payload/dist/admin/components/forms/field-types/RichText/elements/link/LinkDrawer/index.tsx instead?
+      <LinkDrawer // TODO: Might aswell import from payload/distadmin/components/forms/field-types/RichText/elements/link/LinkDrawer/index.tsx instead?
         drawerSlug={drawerSlug}
         fieldSchema={fieldSchema}
         initialState={initialState}

@@ -1,5 +1,5 @@
 import { LexicalEditor } from 'lexical';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { formatDrawerSlug } from 'payload/distadmin/components/elements/Drawer/index';
 import * as React from 'react';
 
 import { PayloadBlockPlugin } from './plugins/PayloadBlockPlugin';

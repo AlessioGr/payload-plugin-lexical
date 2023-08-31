@@ -2,12 +2,12 @@ import * as React from 'react';
 import { Suspense, useEffect, useState } from 'react';
 
 import { Block, Field } from 'payload/types';
-import { Data, Fields } from 'payload/dist/admin/components/forms/Form/types';
-import Form from 'payload/dist/admin/components/forms/Form';
-import FormSubmit from 'payload/dist/admin/components/forms/Submit';
-import fieldTypes from 'payload/dist/admin/components/forms/field-types';
-import RenderFields from 'payload/dist/admin/components/forms/RenderFields';
-import buildStateFromSchema from 'payload/dist/admin/components/forms/Form/buildStateFromSchema';
+import { Data, Fields } from 'payload/distadmin/components/forms/Form/types';
+import Form from 'payload/distadmin/components/forms/Form';
+import FormSubmit from 'payload/distadmin/components/forms/Submit';
+import fieldTypes from 'payload/distadmin/components/forms/field-types';
+import RenderFields from 'payload/distadmin/components/forms/RenderFields';
+import buildStateFromSchema from 'payload/distadmin/components/forms/Form/buildStateFromSchema';
 import { useLocale } from 'payload/components/utilities';
 
 export default function PayloadBlockDisplayComponent({

@@ -1,5 +1,5 @@
-import { Config } from 'payload/dist/config/types';
-import { Field } from 'payload/dist/fields/config/types';
+import { Config } from 'payload/config';
+import { Field } from 'payload/types';
 
 export const getBaseFields = (config: Config): Field[] => [
   {

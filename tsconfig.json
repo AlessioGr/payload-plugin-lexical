@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "strictNullChecks": true,
     "lib": [
       "dom",
       "dom.iterable",
       "esnext"
     ],
-    "target": "es2019",
     "outDir": "./dist",
     "rootDir": "./src",
     "allowJs": true,
-    "module": "Node16",
     "sourceMap": true,
     "jsx": "react-jsx",
     "esModuleInterop": true,
@@ -19,7 +20,6 @@
     "skipLibCheck": true,
     "strict": false,
     "resolveJsonModule": true,
-    "moduleResolution": "Node16",
     "baseUrl": "./src",
     "paths": {
       "@/*": [
@@ -40,5 +40,10 @@
     ".eslintrc.cjs",
     "**/*.spec.js",
     "**/*.spec.ts"
-  ]
+  ],
+  "ts-node": {
+    "swc": true,
+    "transpileOnly": true,
+    "esm": false
+  }
 }

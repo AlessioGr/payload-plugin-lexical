@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
-import fieldTypes from 'payload/dist/admin/components/forms/field-types/index';
-import Form from 'payload/dist/admin/components/forms/Form/index';
-import RenderFields from 'payload/dist/admin/components/forms/RenderFields/index';
-import FormSubmit from 'payload/dist/admin/components/forms/Submit/index';
+import { Drawer } from 'payload/components/elements';
+import fieldTypes from 'payload/distadmin/components/forms/field-types/index';
+import Form from 'payload/distadmin/components/forms/Form/index';
+import RenderFields from 'payload/distadmin/components/forms/RenderFields/index';
+import FormSubmit from 'payload/distadmin/components/forms/Submit/index';
 
 import { type Props } from './types';
 

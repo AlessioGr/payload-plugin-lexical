@@ -1,24 +1,25 @@
 import * as React from 'react';
 import { useCallback, useEffect, useId, useMemo, useState } from 'react';
 
+import { Drawer } from 'payload/components/elements';
 import { useEditDepth } from 'payload/components/utilities';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
-import { ListDrawerContent } from 'payload/dist/admin/components/elements/ListDrawer/DrawerContent';
+import { ListDrawerContent } from 'payload/distadmin/components/elements/ListDrawer/DrawerContent';
 import {
   baseClass,
   formatListDrawerSlug,
   ListDrawerToggler,
-} from 'payload/dist/admin/components/elements/ListDrawer/index';
+} from 'payload/distadmin/components/elements/ListDrawer/index';
 import {
   type ListDrawerProps,
   type UseListDrawer,
-} from 'payload/dist/admin/components/elements/ListDrawer/types';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
+} from 'payload/distadmin/components/elements/ListDrawer/types';
+import { useConfig } from 'payload/distadmin/components/utilities/Config/index';
 
 import { useModal } from '@faceless-ui/modal';
 
 // TODO: Prefer React function definitions over variable declarations and React.FC
 export const ListDrawer: React.FC<ListDrawerProps> = (props) => {
+  console.log('Drawerer:', Drawer);
   const { drawerSlug } = props;
 
   return (

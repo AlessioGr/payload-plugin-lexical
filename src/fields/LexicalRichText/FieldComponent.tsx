@@ -2,9 +2,9 @@ import React, { useCallback } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { useField, withCondition } from 'payload/components/forms';
-import Error from 'payload/dist/admin/components/forms/Error/index';
-import FieldDescription from 'payload/dist/admin/components/forms/FieldDescription/index';
-import Label from 'payload/dist/admin/components/forms/Label/index';
+import Error from 'payload/distadmin/components/forms/Error/index';
+import FieldDescription from 'payload/distadmin/components/forms/FieldDescription/index';
+import Label from 'payload/distadmin/components/forms/Label/index';
 import { type Validate } from 'payload/types';
 
 import { $generateHtmlFromNodes } from '@lexical/html';

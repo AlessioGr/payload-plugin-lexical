@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
+import { formatDrawerSlug } from 'payload/distadmin/components/elements/Drawer/index';
 
 import { type EmbedMatchResult } from '@lexical/react/LexicalAutoEmbedPlugin';
 import { type LexicalEditor } from 'lexical';

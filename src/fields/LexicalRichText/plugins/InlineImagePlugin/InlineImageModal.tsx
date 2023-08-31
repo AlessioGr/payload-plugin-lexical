@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
+import { Drawer } from 'payload/components/elements';
 import { useConfig } from 'payload/components/utilities';
-import { requests } from 'payload/dist/admin/api';
-import Button from 'payload/dist/admin/components/elements/Button/index';
-import { Drawer } from 'payload/dist/admin/components/elements/Drawer/index';
-import FileDetails from 'payload/dist/admin/components/elements/FileDetails/index';
-import { baseClass, formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer/index';
-import { CheckboxInput } from 'payload/dist/admin/components/forms/field-types/Checkbox/Input';
-import SelectInput from 'payload/dist/admin/components/forms/field-types/Select/Input';
-import TextInput from 'payload/dist/admin/components/forms/field-types/Text/Input';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
-import type { OptionObject } from 'payload/dist/fields/config/types';
-import type { SanitizedCollectionConfig } from 'payload/types';
+import { requests } from 'payload/distadmin/api';
+import Button from 'payload/distadmin/components/elements/Button/index';
+import FileDetails from 'payload/distadmin/components/elements/FileDetails/index';
+import { baseClass, formatListDrawerSlug } from 'payload/distadmin/components/elements/ListDrawer/index';
+import { CheckboxInput } from 'payload/distadmin/components/forms/field-types/Checkbox/Input';
+import SelectInput from 'payload/distadmin/components/forms/field-types/Select/Input';
+import TextInput from 'payload/distadmin/components/forms/field-types/Text/Input';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
+import type { OptionObject , SanitizedCollectionConfig } from 'payload/types';
 
 import { useModal } from '@faceless-ui/modal';
 

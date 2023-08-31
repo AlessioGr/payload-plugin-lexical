@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Suspense, useEffect, useState } from 'react';
 
-import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
+import { useConfig } from 'payload/distadmin/components/utilities/Config/index';
 import { useTranslation } from 'react-i18next';
-import { requests } from 'payload/dist/admin/api';
+import { requests } from 'payload/distadmin/api';
 import { Display } from './InlineProductNode';
 import './index.scss';
 

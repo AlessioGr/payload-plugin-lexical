@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "ESNext",
     "module": "Node16",
+    "moduleResolution": "Node16",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "strict": false,
@@ -10,7 +11,6 @@
     "outDir": "./dist",
     "rootDir": "../",
     "jsx": "react",
-    "moduleResolution": "Node16",
     "paths": {
       // Tell TS where to find your generated types
       // This is the default location below
@@ -20,6 +20,8 @@
   "include": ["src", "src/typings"],
   "exclude": ["node_modules", "dist", "build"],
   "ts-node": {
-    "swc": true
+    "swc": true,
+    "transpileOnly": true,
+    "esm": false
   }
 }

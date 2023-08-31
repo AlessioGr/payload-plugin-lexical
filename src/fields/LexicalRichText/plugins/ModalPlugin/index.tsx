@@ -2,9 +2,9 @@ import * as React from 'react';
 import { useCallback, useState } from 'react';
 
 import { useConfig } from 'payload/components/utilities';
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
-import { formatListDrawerSlug } from 'payload/dist/admin/components/elements/ListDrawer/index';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
+import { formatDrawerSlug } from 'payload/distadmin/components/elements/Drawer/index';
+import { formatListDrawerSlug } from 'payload/distadmin/components/elements/ListDrawer/index';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
 import { type SanitizedCollectionConfig } from 'payload/types';
 
 import { useModal } from '@faceless-ui/modal';

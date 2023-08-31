@@ -12,8 +12,8 @@
 import * as React from 'react';
 import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 
-import { formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
+import { formatDrawerSlug } from 'payload/distadmin/components/elements/Drawer/index';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
 
 import { useModal } from '@faceless-ui/modal';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';

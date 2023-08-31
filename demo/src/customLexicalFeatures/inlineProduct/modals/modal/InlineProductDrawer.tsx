@@ -7,24 +7,24 @@
  */
 
 import React, { useState } from 'react';
-import { Drawer, formatDrawerSlug } from 'payload/dist/admin/components/elements/Drawer/index';
-import { Gutter } from 'payload/dist/admin/components/elements/Gutter/index';
+import { Drawer, formatDrawerSlug } from 'payload/components/elements';
+import { Gutter } from 'payload/distadmin/components/elements/Gutter/index';
 import './index.scss';
 
 import { InlineProductAttributes } from '../../nodes/InlineProductNode';
 import { useModal } from '@faceless-ui/modal';
-import Button from 'payload/dist/admin/components/elements/Button/index';
-import reduceFieldsToValues from 'payload/dist/admin/components/forms/Form/reduceFieldsToValues';
-import { Fields } from 'payload/dist/admin/components/forms/Form/types';
+import Button from 'payload/distadmin/components/elements/Button/index';
+import reduceFieldsToValues from 'payload/distadmin/components/forms/Form/reduceFieldsToValues';
+import { Fields } from 'payload/distadmin/components/forms/Form/types';
 import { getBaseFields } from './modalBaseFields';
-import { useConfig } from 'payload/dist/admin/components/utilities/Config/index';
-import Form from 'payload/dist/admin/components/forms/Form/index';
-import FormSubmit from 'payload/dist/admin/components/forms/Submit/index';
-import fieldTypes from 'payload/dist/admin/components/forms/field-types/index';
-import RenderFields from 'payload/dist/admin/components/forms/RenderFields/index';
+import { useConfig } from 'payload/distadmin/components/utilities/Config/index';
+import Form from 'payload/distadmin/components/forms/Form/index';
+import FormSubmit from 'payload/distadmin/components/forms/Submit/index';
+import fieldTypes from 'payload/distadmin/components/forms/field-types/index';
+import RenderFields from 'payload/distadmin/components/forms/RenderFields/index';
 import { useTranslation } from 'react-i18next';
 import { TOGGLE_INLINE_PRODUCT_COMMAND } from '../../plugins/InlineProductPlugin';
-import { useEditDepth } from 'payload/dist/admin/components/utilities/EditDepth/index';
+import { useEditDepth } from 'payload/distadmin/components/utilities/EditDepth/index';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEditorConfigContext } from '../../../../../../src/fields/LexicalRichText/EditorConfigProvider';
 import { EditorConfig } from '../../../../../../src/types';

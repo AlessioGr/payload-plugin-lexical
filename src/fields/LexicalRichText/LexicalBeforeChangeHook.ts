@@ -1,4 +1,4 @@
-import type { Config as GeneratedTypes } from 'payload/dist/generated-types';
+import type { Config as GeneratedTypes } from 'payload/generated-types';
 import type { FieldHook } from 'payload/types';
 
 import { getJsonContentFromValue } from './FieldComponent';
