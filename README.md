@@ -6,12 +6,20 @@
 
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta.
 
-> **Note**
-> Lexical will power the next richtext editor, which will be added directly to the Payload 2.0 core and replace the existing Slate-based editor. When it's released, I'll build a converter from this lexical plugin => payload core, so you're able to seamlessly migrate over.
-> 
-> This should also be able to automatically migrate any custom features/extensions you have built for this plugin, though I cannot make any guarantees.
+This plugin only supports payload 1.x - not 2.x. While this plugin can still be used if you need extra features (tables, color picker, collapsibles etc. etc.), it will not receive further development or support. This plugin is also a good reference for building new Features in the new Lexical editor in Payload core 2.0. It has the same features as the lexical playground, but its API is closer to the new Lexical Payload 2.0 API (which was inspired by this plugin), which makes porting over Features easier.
 
-This plugin already comes packed with a ton of features which the original editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
+> **Note: This plugin and the new lexical in Payload 2.0**
+> Lexical is powering the next richtext editor in Payload 2.0 (I'm calling it Lexical core here). Future development is focused on the new lexical editor rather than the older Slate-based editor.
+>
+> There is a converter you can use to migrate everything from this plugin to the new lexical core. You can find more info about it here: https://payloadcms.com/docs/rich-text/lexical#migrating-from-payload-plugin-lexical
+>
+> Please note that this migrator only migrates **data**, not **features**. While lexical core is more stable and carefully crafted than this plugin, this plugin still has more features which lexical core does not have - for example tables or collapsibles.
+>
+> If you use these features, the data can be migrated over, but it will not be displayed inside the core lexical editor until you migrate the Feature over from this plugin to lexical core as well.
+> 
+> Lexical 2.0 core will eventually get all the missing features, and thus the missing converters. The main focus right now is stability
+
+This plugin already comes packed with a ton of features which the original 1.0 Slate editor doesn't have (from tables & markdown to stuff like speech-to-tech) - all customizable. It's also a lot easier to extend this editor and add new stuff to it!
 
 ## Installation / How to use
 
