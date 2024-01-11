@@ -6,10 +6,10 @@
 
 A plugin for [Payload CMS](https://github.com/payloadcms/payload) whichs adds a [lexical](https://lexical.dev/)-based richtext editor. Lexical is a lot nicer to use than Slate & more modern - it's also maintained by Meta.
 
-This plugin only supports payload 1.x - not 2.x. While this plugin can still be used if you need extra features (tables, color picker, collapsibles etc. etc.), it will not receive further development or support. This plugin is also a **great reference for building new Features in the new Lexical editor in Payload core 2.0**. It has the same features as the lexical playground, but its API is closer to the new Lexical Payload 2.0 API (which was inspired by this plugin), which makes porting over Features easier.
+This plugin only supports payload 1.x - not 2.x. While this plugin can still be used if you need extra features (tables, color picker, collapsibles etc. etc.), it will not receive further development or support. This plugin is also a **great reference for building new Features in the new Lexical editor in Payload core 2.0**. It has the same features as the lexical playground, but its API is closer to the [new Lexical Payload 2.0](https://github.com/payloadcms/payload/tree/main/packages/richtext-lexical) API (which was inspired by this plugin), which makes porting over Features easier.
 
 > **Note: This plugin and the new lexical in Payload 2.0**
-> Lexical is powering the next richtext editor in Payload 2.0 (I'm calling it Lexical core here). Future development is focused on the new lexical editor rather than the older Slate-based editor.
+> Lexical is powering the [next richtext editor in Payload 2.0](https://github.com/payloadcms/payload/tree/main/packages/richtext-lexical) (I'm calling it Lexical core here). Future development is focused on the new lexical editor rather than the older Slate-based editor.
 >
 > There is a converter you can use to migrate everything from this plugin to the new lexical core. You can find more info about it here: https://payloadcms.com/docs/rich-text/lexical#migrating-from-payload-plugin-lexical
 >
